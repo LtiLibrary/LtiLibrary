@@ -1,0 +1,27 @@
+﻿@model Consumer.Models.Assignment
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+}
+
+@* 
+The AssignmentController calculated all the form data, and even the
+form action. All this view needs to do is create the form and ask
+the browser to submit it.
+*@
+<form id="form" action="@ViewBag.Action" method="post">
+    @foreach (var name in ViewBag.NameValues.AllKeys)
+    {
+        <input type="hidden" name="@name" value="@ViewBag.NameValues[name]" />
+    }
+    <input type="hidden" name="oauth_signature" value="@ViewBag.Signature" />
+</form>
+
+@section Scripts {
+<script>
+    $(function () {
+        $("#form").submit();
+    });
+</script>
+}

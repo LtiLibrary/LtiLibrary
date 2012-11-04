@@ -1,0 +1,96 @@
+﻿@model Consumer.Models.Assignment
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Create a new assignment.</h2>
+</hgroup>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Assignment</legend>
+
+        <ol>
+            <li>
+                @Html.LabelFor(model => model.Name)
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Description)
+                @Html.TextAreaFor(model => model.Description, new { @class = "tinymce" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Url)
+                @Html.EditorFor(model => model.Url)
+                @Html.ValidationMessageFor(model => model.Url)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ConsumerKey)
+                @Html.EditorFor(model => model.ConsumerKey)
+                @Html.ValidationMessageFor(model => model.ConsumerKey)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Secret)
+                @Html.EditorFor(model => model.Secret)
+                @Html.ValidationMessageFor(model => model.Secret)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.CustomParameters) 
+                @Html.TextAreaFor(model => model.CustomParameters)
+                @Html.ValidationMessageFor(model => model.CustomParameters)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.LtiVersionId)
+                @Html.DropDownList("LtiVersionId", null, string.Empty, 
+                    new Dictionary<string, object>{
+                        { "class", "chosen" }, 
+                        { "data-placeholder", "Choose an LTI Version..." }
+                    }
+                )
+                @Html.ValidationMessageFor(model => model.LtiVersionId)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.SharingScopeId)
+                @Html.DropDownList("SharingScopeId", null, string.Empty, 
+                    new Dictionary<string, object>{
+                        { "class", "chosen" }, 
+                        { "data-placeholder", "Choose a Sharing Scope..." }
+                    }
+                )
+                @Html.ValidationMessageFor(model => model.SharingScopeId)
+            </li>
+        </ol>
+    </fieldset>
+
+    <div>
+        <input type="submit" value="Create" />
+        @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/chosen.jquery.js")
+    <script>
+        $(function () {
+            $("select.chosen").chosen({ allow_single_deselect: true });
+        });
+    </script>
+    @Scripts.Render("~/Scripts/tiny_mce/jquery.tinymce.js");
+    <script>
+        $(function () {
+            $(".tinymce").tinymce({
+                script_url: "../../Scripts/tiny_mce/tiny_mce.js",
+                theme: "simple",
+                content_css: "../../Content/tiny_mce.css"
+            });
+        });
+    </script>
+}

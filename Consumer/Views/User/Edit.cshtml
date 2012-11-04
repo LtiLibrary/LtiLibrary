@@ -1,0 +1,153 @@
+﻿@model Consumer.Models.User
+
+@{
+    ViewBag.Title = "Profile";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Edit your profile.</h2>
+</hgroup>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.UserId)
+    @Html.HiddenFor(model => model.UserName)
+
+    <div id="accordian">
+        <h3>Display name and email address</h3>
+        <fieldset>
+            <legend>Display name and email address</legend>
+            <ol>
+            <li>
+                @Html.LabelFor(model => model.FirstName)
+                @Html.EditorFor(model => model.FirstName)
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.LastName)
+                @Html.EditorFor(model => model.LastName)
+                @Html.ValidationMessageFor(model => model.LastName)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Email)
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </li>
+            </ol>
+        </fieldset>
+
+        <h3>School and roles</h3>
+        <fieldset>
+            <legend>School and roles</legend>
+            <ol>
+                <li>
+                    @Html.LabelFor(model => model.StateId, "State")
+                    @Html.DropDownList("StateId", null, string.Empty, 
+                        new Dictionary<string, object>{
+                            { "class", "chosen" }, 
+                            { "data-placeholder", "Choose a State..." }
+                        }
+                    )
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.DistrictId, "District")
+                    @Html.DropDownList("DistrictId", null, string.Empty, 
+                        new Dictionary<string, object>{
+                            { "class", "chosen" }, 
+                            { "data-placeholder", "Choose a District..." },
+                            { "data-source", @Url.Action("GetDistricts", "Location") }
+                        }
+                    )
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.SchoolId, "School")
+                    @Html.DropDownList("SchoolId", null, string.Empty, 
+                        new Dictionary<string, object>{
+                            { "class", "chosen" }, 
+                            { "data-placeholder", "Choose a School..." },
+                            { "data-source", @Url.Action("GetSchools", "Location") }
+                        }
+                    )
+                </li>
+                <li>
+                    @Html.CheckBoxFor(model => model.IsTeacher)
+                    @Html.LabelFor(model => model.IsTeacher, "I am a teacher in my school", new { @class = "checkbox" })
+                </li>
+                <li>
+                    @Html.CheckBoxFor(model => model.IsStudent)
+                    @Html.LabelFor(model => model.IsStudent, "I am a student in my school", new { @class = "checkbox" })
+                </li>
+            </ol>
+        </fieldset>
+
+        <h3>Privacy</h3>
+        <fieldset>
+            <legend>Privacy</legend>
+            <ol>
+                <li>
+                    @Html.EditorFor(model => model.SendName)
+                    @Html.LabelFor(model => model.SendName, new { @class = "checkbox" })
+                </li>
+                <li>
+                    @Html.EditorFor(model => model.SendEmail)
+                    @Html.LabelFor(model => model.SendEmail, new { @class = "checkbox" })
+                </li>
+            </ol>
+        </fieldset>
+    </div>
+
+    <div>
+        <input type="submit" value="Save" />
+        @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/chosen.jquery.js")
+    <script>
+        $(function () {
+            // Divide the form into sections using jQuery UI Accordian
+            $("#accordian").accordion();
+            // Convert the location select elements into fancy combo boxes
+            $("select.chosen").chosen({ allow_single_deselect: true });
+            // If the State selection changes, then clear the district and school,
+            // and then reload district (if state is not empty)
+            var StateId = $("#StateId");
+            var DistrictId = $("#DistrictId");
+            var SchoolId = $("#SchoolId");
+            StateId.change(function () {
+                DistrictId.val("").html("<option />").trigger("liszt:updated").trigger("change");
+            });
+            DistrictId.change(function () {
+                SchoolId.val("").html("<option />").trigger("liszt:updated").trigger("change");
+                if (StateId.val() != "" && StateId.val() != DistrictId.data("StateId")) {
+                    $("#DistrictId_chzn > a > span").html("Please wait...");
+                    DistrictId.data("StateId", StateId.val());
+                    $.getJSON(DistrictId.data("source") + "?stateId=" + DistrictId.data("StateId"),
+                        function (result) {
+                            $.each(result, function () {
+                                DistrictId.append($("<option />").val(this.Id).text(this.Name));
+                            });
+                            DistrictId.trigger("liszt:updated");
+                        });
+                }
+            });
+            SchoolId.change(function () {
+                if (DistrictId.val() != "" && DistrictId.val() != SchoolId.data("DistrictId")) {
+                    $("#SchoolId_chzn > a > span").html("Please wait...");
+                    SchoolId.data("DistrictId", DistrictId.val());
+                    $.getJSON(SchoolId.data("source") + "?districtId=" + SchoolId.data("DistrictId"),
+                        function (result) {
+                            $.each(result, function () {
+                                SchoolId.append($("<option />").val(this.Id).text(this.Name));
+                            });
+                            SchoolId.trigger("liszt:updated");
+                        });
+                }
+            });
+        });
+    </script>
+}

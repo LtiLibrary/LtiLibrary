@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Consumer.Models.Assignment>
+
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Home Page</h1>
+            </hgroup>
+            <p>
+                To learn more about LTI visit 
+                <a href="http://developers.imsglobal.org/" title="IMS Global Learning Consortium Website">http://developers.imsglobal.org/</a>.
+                The page features <mark>tutorials, and samples</mark> to help you get the most from LTI.
+                If you have any questions about LTI visit
+                <a href="http://developers.imsglobal.org/forum.html" title="IMS Global Learning Consortium Developer Forum">the IMS developers forum</a>.
+            </p>
+        </div>
+    </section>
+}
+<ol class="round">
+    <li class="one">
+        <h5>Create an Assignment</h5>
+        Register or log in as a teacher and create an assignment. Assignments are links to content or tools provided by LTI Tool Providers.
+    </li>
+
+    <li class="two">
+        <h5>Launch an Assignment</h5>
+        Try launching an assignment anonymously by clicking on the URL, then log in as a teacher or student and launch the assignment by clicking on the name.
+        Many Tool Providers will show a different user experience for each launch.
+    </li>
+
+    <li class="three">
+        <h5>Check out the source code</h5>
+        All of the source code for this application is available on <a target="_blank" href="https://ltisamples.codeplex.com/">CodePlex</a>.
+    </li>
+</ol>
+
+<h1>Assignments</h1>
+
+@if (Model.Count() == 0) {
+    if (Request.IsAuthenticated && Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole))
+    {
+        <text>
+            <p>You have no assignments yet. Why not 
+            @Html.ActionLink("create one", "Create", "Assignment")?</p>
+        </text>
+    } else {
+        <text>
+        <p>There are no public assignments yet. To create an assignment, log in or register
+        as a teacher and create one!</p>
+        </text>
+    }
+} else {
+    <p>If you are logged in, the assignment will be launched using LTI with your role (Teacher and/or Student).
+        If you are not logged in, the assignment will be launched anonymously.
+    @if (Request.IsAuthenticated && Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole)) {
+        <text>
+            You can also 
+            @Html.ActionLink("create a new assignment", "Create", "Assignment").
+        </text>
+    }
+    </p>
+    <table>
+        <tr>
+            <th></th>
+            <th>
+                Name
+            </th>
+            <th>
+                Domain
+            </th>
+            <th></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td class="badge">
+                @if (item.IsLtiLink)
+                {
+                    <img src="~/Images/lti.png" alt="LTI" title="This assignment uses LTI" />
+                }
+            </td>
+            <td class="rowheader">
+                @Html.ActionLink(item.Name, "Details", "Assignment", new { id = item.AssignmentId }, new { title = item.Description ?? item.Name })
+            </td>
+            <td>
+                @(new Uri(item.Url).Host)
+            </td>
+            <td>
+                @Html.ActionLink("Launch", "Launch", "Assignment", new { id = item.AssignmentId }, new { @class = "button", target = "_blank" })
+                @if (Request.IsAuthenticated && item.UserId == WebSecurity.CurrentUserId) {
+                    <text>
+                    @Html.ActionLink("Edit", "Edit", "Assignment", new { id=item.AssignmentId }, new { @class = "button" })
+                    @Html.ActionLink("Delete", "Delete", "Assignment", new { id=item.AssignmentId }, new { @class = "button" })
+                    </text>
+                }
+            </td>
+        </tr>
+    }
+    </table>
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.qtip-1.0.0-rc3.min.js")
+    <script>
+        $(function () {
+            $("a[title]").qtip({
+                style: {
+                    border: {
+                        width: 3,
+                        radius: 6
+                    },
+                    padding: 10,
+                    tip: true,
+                    name: "dark"
+                }
+            });
+        });
+    </script>
+}
+

@@ -1,0 +1,17 @@
+﻿@{
+    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Users", "UserId", "UserName", autoCreateTables: true);
+    if (!Roles.RoleExists(Consumer.Models.UserRoles.TeacherRole))
+    {
+        Roles.CreateRole(Consumer.Models.UserRoles.TeacherRole);
+    }
+    if (!Roles.RoleExists(Consumer.Models.UserRoles.StudentRole))
+    {
+        Roles.CreateRole(Consumer.Models.UserRoles.StudentRole);
+    }
+
+    // WebMail.SmtpServer = "mailserver.example.com";
+    // WebMail.EnableSsl = true;
+    // WebMail.UserName = "username@example.com";
+    // WebMail.Password = "your-password";
+    // WebMail.From = "your-name-here@example.com";
+}

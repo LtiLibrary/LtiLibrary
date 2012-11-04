@@ -1,0 +1,46 @@
+﻿@model Consumer.Models.Assignment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Review assignment details.</h2>
+</hgroup>
+
+<fieldset>
+    <legend>Assignment</legend>
+
+    <ol>
+        <li>
+            @Html.LabelFor(model => model.Name)
+            @Html.DisplayFor(model => model.Name)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Description)
+            @Html.DisplayFor(model => model.Description)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Url)
+            @Html.DisplayFor(model => model.Url)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.ConsumerKey)
+            @Html.DisplayFor(model => model.ConsumerKey )
+        </li>
+        <li>
+            @Html.LabelFor(model => model.Secret)
+            @Html.DisplayFor(model => model.Secret)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.SharingScope.Name)
+            @Html.DisplayFor(model => model.SharingScope.Name)
+        </li>
+    </ol>
+</fieldset>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.AssignmentId }, new { @class = "button" })
+    @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+</p>

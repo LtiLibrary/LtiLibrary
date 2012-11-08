@@ -32,12 +32,8 @@
             @Html.DisplayFor(model => model.ConsumerKey )
         </li>
         <li>
-            @Html.LabelFor(model => model.Secret)
-            @Html.DisplayFor(model => model.Secret)
-        </li>
-        <li>
-            @Html.DisplayFor(model => model.IsPublic)
-            @Html.DisplayNameFor(model => model.IsPublic)
+            @Html.LabelFor(model => model.SharingScope)
+            @Html.DisplayFor(model => model.SharingScope.Name)
         </li>
     </ol>
 </fieldset>

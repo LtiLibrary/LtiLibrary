@@ -176,15 +176,26 @@ namespace Consumer.Controllers
             if (assignment.LtiVersionId == LtiVersion.Version11)
                 AddLti11Parameters(assignment, parameters);
 
-            // Finally, calculate the OAuth signature and send the data over to the view 
-            // for rendering in the client browser. See Views/Assignment/Launch
+            // The LTI spec says to include the querystring parameters
+            // when calculating the signature base string
             var uri = new Uri(assignment.Url);
+            var querystring = HttpUtility.ParseQueryString(uri.Query);
+            parameters.AdditionalParameters.Add(querystring);
+
+            // Calculate the OAuth signature and send the data over to the view 
+            // for rendering in the client browser. See Views/Assignment/Launch
             var signatureBase = SignatureBase.Create("POST", uri, parameters);
             var signatureProvider = new HmacSha1SigningProvider();
 
+            // Now remove the querystring parameters so they are not sent twice
+            // (once in the action URL and once in the form data)
+            foreach (var name in querystring.AllKeys)
+                parameters.AdditionalParameters.Remove(name);
+
+            // Finally fill the ViewBag
             ViewBag.Signature = signatureProvider.ComputeSignature(signatureBase, assignment.Secret,
                 string.Empty);
-            ViewBag.Action = uri.ToString();
+            ViewBag.Action = uri.ToString();           
             ViewBag.NameValues = HttpUtility.ParseQueryString(parameters.ToQueryStringFormat());
         }
 
@@ -215,12 +226,6 @@ namespace Consumer.Controllers
             parameters.SignatureMethod = oauth_signature_method;
             parameters.Timestamp = timestamp;
             parameters.Version = oauth_version;
-
-            // Now add LTI specific parameters, starting with any
-            // parameters that were included in the URL (the LTI spec says
-            // to include these when the signature is calculated).
-            var uri = new Uri(assignment.Url);
-            parameters.AdditionalParameters.Add(HttpUtility.ParseQueryString(uri.Query));
 
             // LTI Header: These identify the request as being an LTI request
             parameters.AdditionalParameters.Add("lti_message_type", lti_message_type);

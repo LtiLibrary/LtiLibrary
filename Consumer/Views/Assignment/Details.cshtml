@@ -15,11 +15,11 @@
     <ol>
         <li>
             @Html.LabelFor(model => model.Name)
-            @Html.DisplayFor(model => model.Name)
+            @Model.Name
         </li>
         <li>
             @Html.LabelFor(model => model.Description)
-            @Html.DisplayFor(model => model.Description)
+            @Html.Raw(Model.Description)
         </li>
         <li>
             @Html.LabelFor(model => model.Url)
@@ -30,11 +30,7 @@
             @Html.DisplayFor(model => model.ConsumerKey )
         </li>
         <li>
-            @Html.LabelFor(model => model.Secret)
-            @Html.DisplayFor(model => model.Secret)
-        </li>
-        <li>
-            @Html.LabelFor(model => model.SharingScope.Name)
+            @Html.LabelFor(model => model.SharingScope)
             @Html.DisplayFor(model => model.SharingScope.Name)
         </li>
     </ol>

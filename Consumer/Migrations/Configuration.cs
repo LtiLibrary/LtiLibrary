@@ -5,11 +5,12 @@ namespace Consumer.Migrations
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Consumer.Models.ConsumerContext>
+    public sealed class Configuration : DbMigrationsConfiguration<Consumer.Models.ConsumerContext>
     {
         public Configuration()
         {
@@ -33,22 +34,42 @@ namespace Consumer.Migrations
 
             context.Configuration.AutoDetectChangesEnabled = false;
             (context as IObjectContextAdapter).ObjectContext.CommandTimeout = 0;
-
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var stream = assembly.GetManifestResourceStream("Consumer.App_Data.States.sql"))
-            using (var reader = new StreamReader(stream))
+            // Tried embedding the sql, but the resulting App.dll was huge, which meant
+            // the publishing was kind of slow. Changed to treating the sql as content
+            // and uploading once.
+            var app_data = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
+            if (context.Database.SqlQuery<int>("select count(0) from States").FirstOrDefault() == 0)
             {
-                context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
+                using (var archive = ZipFile.OpenRead(Path.Combine(app_data, "States.zip")))
+                {
+                    var entry = archive.GetEntry("States.sql");
+                    using (var reader = new StreamReader(entry.Open()))
+                    {
+                        context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
+                    }
+                }
             }
-            using (var stream = assembly.GetManifestResourceStream("Consumer.App_Data.Districts.sql"))
-            using (var reader = new StreamReader(stream))
+            if (context.Database.SqlQuery<int>("select count(0) from Districts").FirstOrDefault() == 0)
             {
-                context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
+                using (var archive = ZipFile.OpenRead(Path.Combine(app_data, "Districts.zip")))
+                {
+                    var entry = archive.GetEntry("Districts.sql");
+                    using (var reader = new StreamReader(entry.Open()))
+                    {
+                        context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
+                    }
+                }
             }
-            using (var stream = assembly.GetManifestResourceStream("Consumer.App_Data.Schools.sql"))
-            using (var reader = new StreamReader(stream))
+            if (context.Database.SqlQuery<int>("select count(0) from Schools").FirstOrDefault() == 0)
             {
-                context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
+                using (var archive = ZipFile.OpenRead(Path.Combine(app_data, "Schools.zip")))
+                {
+                    var entry = archive.GetEntry("Schools.sql");
+                    using (var reader = new StreamReader(entry.Open()))
+                    {
+                        context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
+                    }
+                }
             }
             context.Configuration.AutoDetectChangesEnabled = true;
             (context as IObjectContextAdapter).ObjectContext.CommandTimeout = 30;

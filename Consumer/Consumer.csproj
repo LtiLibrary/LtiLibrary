@@ -66,6 +66,8 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Entity.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -199,9 +201,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="App_Data\Districts.sql" />
-    <EmbeddedResource Include="App_Data\Schools.sql" />
-    <EmbeddedResource Include="App_Data\States.sql" />
+    <Content Include="App_Data\lti-consumer.mdf" />
+    <Content Include="App_Data\lti-consumer_log.ldf">
+      <DependentUpon>lti-consumer.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\themes\base\chosen.css" />
     <Content Include="Content\themes\base\chosen-sprite.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -273,6 +276,9 @@
     <Content Include="Images\ajax-loader.gif" />
     <Content Include="Lib\OAuth.net\OAuthNet.chm" />
     <Content Include="App_Data\Readme.txt" />
+    <Content Include="App_Data\Schools.zip" />
+    <Content Include="App_Data\States.zip" />
+    <Content Include="App_Data\Districts.zip" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Images\lti.png" />
     <Content Include="Lib\OAuth.net\CommonServiceLocator License.txt" />

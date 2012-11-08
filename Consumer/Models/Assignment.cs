@@ -39,6 +39,7 @@ namespace Consumer.Models
         public int LtiVersionId { get; set; }
         [Required]
         public string Name { get; set; }
+        [DataType(DataType.Password)]
         public string Secret { get; set; }
         [Display(Name="Sharing Scope"), ForeignKey("SharingScope")]
         public int SharingScopeId { get; set; }
@@ -47,7 +48,9 @@ namespace Consumer.Models
         [ForeignKey("User")]
         public int UserId { get; set; }
 
+        [Display(Name="LTI Version")]
         public virtual LtiVersion LtiVersion { get; set; }
+        [Display(Name="Sharing Scope")]
         public virtual SharingScope SharingScope { get; set; }
         public virtual User User { get; set; }
 

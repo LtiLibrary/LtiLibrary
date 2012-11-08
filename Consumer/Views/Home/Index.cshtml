@@ -1,5 +1,9 @@
 ﻿@model IEnumerable<Consumer.Models.Assignment>
 
+@{
+    ViewBag.Title = "Home";
+}
+
 @section featured {
     <section class="featured">
         <div class="content-wrapper">
@@ -76,7 +80,7 @@
             <td class="badge">
                 @if (item.IsLtiLink)
                 {
-                    <img src="~/Images/lti.png" alt="LTI" title="This assignment uses LTI" />
+                    <img src="~/Images/lti.png" alt="LTI" title="This assignment uses @item.LtiVersion.Name" />
                 }
             </td>
             <td class="rowheader">
@@ -86,11 +90,15 @@
                 @(new Uri(item.Url).Host)
             </td>
             <td>
-                @Html.ActionLink("Launch", "Launch", "Assignment", new { id = item.AssignmentId }, new { @class = "button", target = "_blank" })
                 @if (Request.IsAuthenticated && item.UserId == WebSecurity.CurrentUserId) {
                     <text>
+                    @Html.ActionLink("Launch", "Launch", "Assignment", new { id = item.AssignmentId }, new { @class = "button", target = "_blank" })
                     @Html.ActionLink("Edit", "Edit", "Assignment", new { id=item.AssignmentId }, new { @class = "button" })
                     @Html.ActionLink("Delete", "Delete", "Assignment", new { id=item.AssignmentId }, new { @class = "button" })
+                    </text>
+                } else {
+                    <text>
+                        @Html.ActionLink("Launch", "Launch", "Assignment", new { id = item.AssignmentId }, new { @class = "button", target = "_blank", title="This will launch the assignment anonymously. Login to launch the assignment with authentication." })
                     </text>
                 }
             </td>
@@ -103,7 +111,7 @@
     @Scripts.Render("~/Scripts/jquery.qtip-1.0.0-rc3.min.js")
     <script>
         $(function () {
-            $("a[title]").qtip({
+            $("a[title],img[title]").qtip({
                 style: {
                     border: {
                         width: 3,

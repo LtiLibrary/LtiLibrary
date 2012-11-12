@@ -10,21 +10,11 @@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th></th>
-    </tr>
-
 @foreach (var item in Model) {
     <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.FirstName)
         </td>
@@ -37,7 +27,10 @@
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.UserId }, new { @class = "button" })
             @Html.ActionLink("Details", "Details", new { id=item.UserId }, new { @class = "button" })
+            @if (item.UserId != WebSecurity.CurrentUserId)
+            {
             @Html.ActionLink("Delete", "Delete", new { id=item.UserId }, new { @class = "button" })
+            }
         </td>
     </tr>
 }

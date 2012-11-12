@@ -235,7 +235,7 @@ namespace Consumer.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                // If the current user is logged in add the new account
+                // If the current user is logged in, add the new account
                 OAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
                 return RedirectToLocal(returnUrl);
             }
@@ -245,7 +245,41 @@ namespace Consumer.Controllers
                 string loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
                 ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
                 ViewBag.ReturnUrl = returnUrl;
-                return View("ExternalLoginConfirmation", new RegisterExternalLoginModel { UserName = result.UserName, ExternalLoginData = loginData });
+                ViewBag.ExtraData = result.ExtraData;
+
+                // Try to get the name and email from the provider
+                string email = null;
+                string firstname = null;
+                string lastname = null;
+
+                if (result.ExtraData.ContainsKey("email"))
+                    email = result.ExtraData["email"];
+                if (result.ExtraData.ContainsKey("firstname"))
+                    firstname = result.ExtraData["firstname"];
+                if (result.ExtraData.ContainsKey("lastname"))
+                    lastname = result.ExtraData["lastname"];
+                if (result.ExtraData.ContainsKey("name"))
+                {
+                    var name = result.ExtraData["name"];
+                    var names = name.Split(' ');
+                    if (names.Length == 1)
+                        lastname = name;
+                    if (names.Length > 1)
+                    {
+                        firstname = names[0];
+                        lastname = string.Join(" ", names.Skip(1).ToList());
+                    }
+                }
+
+                return View("ExternalLoginConfirmation", 
+                    new RegisterExternalLoginModel 
+                    { 
+                        UserName = result.UserName, 
+                        ExternalLoginData = loginData,
+                        Email = email,
+                        Firstname = firstname,
+                        Lastname = lastname
+                    });
             }
         }
 
@@ -275,13 +309,24 @@ namespace Consumer.Controllers
                     if (user == null)
                     {
                         // Insert name into the profile table
-                        db.Users.Add(new User { UserName = model.UserName });
+                        user = new User 
+                        { 
+                            UserName = model.UserName,
+                            Email = model.Email,
+                            FirstName = model.Firstname,
+                            LastName = model.Lastname
+                        };
+                        db.Users.Add(user);
+
                         db.SaveChanges();
 
                         OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-                        OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false);
-
-                        return RedirectToLocal(returnUrl);
+                        if (OAuthWebSecurity.Login(provider, providerUserId, createPersistentCookie: false))
+                        {
+                            // Add the user to Teacher role by default
+                            Roles.AddUserToRole(model.UserName, UserRoles.TeacherRole);
+                        }
+                        return RedirectToAction("Edit", "User", routeValues: new { id = WebSecurity.GetUserId(model.UserName) });
                     }
                     else
                     {

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
 using Consumer.Models;
+using WebMatrix.WebData;
+using Microsoft.Web.WebPages.OAuth;
 
 namespace Consumer.Controllers
 {
@@ -13,7 +15,7 @@ namespace Consumer.Controllers
 
         //
         // GET: /User/
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             return View(db.Users.ToList());
@@ -21,7 +23,7 @@ namespace Consumer.Controllers
 
         //
         // GET: /User/Details/5
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int id = 0)
         {
             User user = db.Users.Find(id);
@@ -128,7 +130,7 @@ namespace Consumer.Controllers
 
         //
         // GET: /User/Delete/5
-
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id = 0)
         {
             User user = db.Users.Find(id);
@@ -141,13 +143,34 @@ namespace Consumer.Controllers
 
         //
         // POST: /User/Delete/5
-
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
             User user = db.Users.Find(id);
-            db.Users.Remove(user);
+
+            // Remove any assignments this user created
+            foreach (var assignment in db.Assignments.Where(a => a.UserId == id))
+            {
+                db.Assignments.Remove(assignment);
+            }
             db.SaveChanges();
+
+            // Remove OAuth credentials if they exist
+            foreach (var account in OAuthWebSecurity.GetAccountsFromUserName(user.UserName))
+            {
+                OAuthWebSecurity.DeleteAccount(account.Provider, account.ProviderUserId);
+            }
+
+            // Remove this user from any roles they may have
+            foreach (var role in Roles.GetRolesForUser(user.UserName))
+            {
+                Roles.RemoveUserFromRole(user.UserName, role);
+            }
+
+            // Remove the user's account
+            Membership.DeleteUser(user.UserName, true);
+
             return RedirectToAction("Index", "Home");
         }
 

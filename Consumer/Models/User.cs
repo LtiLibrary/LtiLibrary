@@ -68,6 +68,9 @@ namespace Consumer.Models
         public string UserName { get; set; }
 
         public string ExternalLoginData { get; set; }
+        public string Email { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
     }
 
     public class LocalPasswordModel

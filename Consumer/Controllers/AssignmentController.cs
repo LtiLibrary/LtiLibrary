@@ -8,9 +8,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Consumer.Models;
+using Consumer.Utility;
 using OAuth.Net.Common;
 using OAuth.Net.Components;
 using WebMatrix.WebData;
+using HtmlAgilityPack;
 
 namespace Consumer.Controllers
 {
@@ -170,6 +172,9 @@ namespace Consumer.Controllers
             // Add recommended and optional parameters
             AddOptionalParameters(assignment, parameters);
 
+            // Add parameters that extend the basic launch data
+            AddExtensionParameters(assignment, parameters);
+
             // Add version specific parameters
             if (assignment.LtiVersionId == LtiVersion.Version10)
                 AddLti10Parameters(assignment, parameters);
@@ -242,16 +247,28 @@ namespace Consumer.Controllers
                 course.Id, assignment.AssignmentId));
             // Note that the title is recommend, but not required.
             parameters.AdditionalParameters.Add("resource_link_title", assignment.Name);
+            // The description is entirely optional, but if you do include it, it
+            // must be converted to plain text.
+            if (!string.IsNullOrWhiteSpace(assignment.Description))
+            {
+                var doc = new HtmlDocument();
+                doc.LoadHtml(assignment.Description);
+
+                parameters.AdditionalParameters.Add("resource_link_description",
+                    doc.ToPlainText());
+            }
 
             return parameters;
         }
 
         /// <summary>
-        /// Add the optional parameters for an LTI 1.x request.
+        /// Add the optional parameters for an LTI 1.x request. Although these are
+        /// optional according to the specification, they are required to pass the
+        /// certification tests.
         /// </summary>
         /// <param name="assignment">The Assignment to be launched.</param>
         /// <param name="parameters">The partially filled OAuthParameters object
-        /// that is being used to collect the data.</param>
+        /// that is being used to collect the launch data.</param>
         private void AddOptionalParameters(Assignment assignment, OAuthParameters parameters)
         {
             var user = db.Users.Find(WebSecurity.CurrentUserId);
@@ -264,7 +281,7 @@ namespace Consumer.Controllers
             parameters.AdditionalParameters.Add("tool_consumer_instance_name",
                 "LTI Consumer Sample");
             parameters.AdditionalParameters.Add("tool_consumer_instance_guid",
-                Request.RequestContext.HttpContext.Request.ApplicationPath);
+                "~/".ToAbsoluteUrl());
 
             // Context: These next parameters further identify where the request coming from.
             // "Context" can be thought of as the course or class. In this sample app, every
@@ -299,6 +316,55 @@ namespace Consumer.Controllers
             // This parameter is recommended.
             parameters.AdditionalParameters.Add("launch_presentation_locale",
                 CultureInfo.CurrentUICulture.Name);
+        }
+
+        /// <summary>
+        /// Add parameters that extend the basic launch data. These are not required
+        /// for certification.
+        /// </summary>
+        /// <param name="assignment">The Assignment to be launched.</param>
+        /// <param name="parameters">The partially filled OAuthParameters object
+        /// that is being used to collect the launch data.</param>
+        private void AddExtensionParameters(Assignment assignment, OAuthParameters parameters)
+        {
+            var user = db.Users.Find(WebSecurity.CurrentUserId);
+            var course = new Course(user);
+
+            // To support K-12 tool providers that need to know the state, district
+            // and school the class is in; let's add them if they are available.
+            if (course.State != null)
+            {
+                parameters.AdditionalParameters.Add("ext_context_state_id",
+                    course.State.StateId);
+                parameters.AdditionalParameters.Add("ext_context_state_name",
+                    course.State.Name);
+            }
+            if (course.District != null)
+            {
+                // LEA stands for Local Education Agency, which is the generic
+                // name for a school district. We have two sourced id's for
+                // districts: one from http://nces.ed.gov, and the other from
+                // the state DOE.
+                parameters.AdditionalParameters.Add("ext_context_lea_sourcedid",
+                    string.Format("{0}:{1},{2}:{3}",
+                        "nces.ed.gov", course.District.DistrictId,
+                        "ext_context_state", course.District.StateDistrictId
+                        ));
+                parameters.AdditionalParameters.Add("ext_context_lea_name",
+                    course.District.Name);
+            }
+            if (course.School != null)
+            {
+                // We also have two sourced id's for schools: one from
+                // http://nces.ed.gov, and the other from the LEA.
+                parameters.AdditionalParameters.Add("ext_context_school_sourcedid",
+                    string.Format("{0}:{1},{2}:{3}",
+                        "nces.ed.gov", course.School.SchoolId,
+                        "ext_context_lea", course.School.DistrictSchoolId
+                        ));
+                parameters.AdditionalParameters.Add("ext_context_school_name",
+                    course.School.Name);
+            }
         }
 
         /// <summary>

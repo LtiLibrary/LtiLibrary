@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Consumer.Models.Assignment>
+﻿@model IEnumerable<Consumer.Models.ScoredAssignment>
 
 @{
     ViewBag.Title = "Home";
@@ -72,6 +72,9 @@
             <th>
                 Domain
             </th>
+            <th>
+                Score
+            </th>
             <th></th>
         </tr>
 
@@ -88,6 +91,9 @@
             </td>
             <td>
                 @(new Uri(item.Url).Host)
+            </td>
+            <td>
+                @item.Score
             </td>
             <td>
                 @if (Request.IsAuthenticated && item.UserId == WebSecurity.CurrentUserId) {

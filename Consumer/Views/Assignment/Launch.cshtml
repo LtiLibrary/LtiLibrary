@@ -1,7 +1,7 @@
-﻿@model Consumer.Models.Assignment
+﻿@model Consumer.Models.LtiRequest
 
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = Model.Title;
     Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
 }
 
@@ -10,12 +10,12 @@ The AssignmentController calculated all the form data, and even the
 form action. All this view needs to do is create the form and ask
 the browser to submit it.
 *@
-<form id="form" action="@ViewBag.Action" method="post">
-    @foreach (var name in ViewBag.NameValues.AllKeys)
+<form id="form" action="@Model.Action" method="post">
+    @foreach (var name in Model.Fields.AllKeys)
     {
-        <input type="hidden" name="@name" value="@ViewBag.NameValues[name]" />
+        <input type="hidden" name="@name" value="@Model.Fields[name]" />
     }
-    <input type="hidden" name="oauth_signature" value="@ViewBag.Signature" />
+    <input type="hidden" name="oauth_signature" value="@Model.Signature" />
 </form>
 
 @section Scripts {

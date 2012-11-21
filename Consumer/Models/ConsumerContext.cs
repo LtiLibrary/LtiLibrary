@@ -10,6 +10,7 @@ namespace Consumer.Models
         public DbSet<District> Districts { get; set; }
         public DbSet<LtiVersion> LtiVersions { get; set; }
         public DbSet<School> Schools { get; set; }
+        public DbSet<Score> Scores { get; set; }
         public DbSet<SharingScope> SharingScopes { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<User> Users { get; set; }

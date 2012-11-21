@@ -55,6 +55,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="OAuth.Net.Common, Version=0.8.1.1, Culture=neutral, PublicKeyToken=32209861c86e8a0d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -72,6 +75,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -183,10 +187,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AssignmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LocationController.cs" />
+    <Compile Include="Controllers\OutcomesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -196,17 +202,30 @@
     <Compile Include="Migrations\201210270548480_Schema.Designer.cs">
       <DependentUpon>201210270548480_Schema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201211180030558_Score.cs" />
+    <Compile Include="Migrations\201211180030558_Score.Designer.cs">
+      <DependentUpon>201211180030558_Score.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ConsumerContext.cs" />
     <Compile Include="Models\Assignment.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\LtiRequest.cs" />
+    <Compile Include="Models\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
+      <DependentUpon>OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Score.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\HtmlDocumentExtensions.cs" />
+    <Compile Include="Utility\LtiUtility.cs" />
     <Compile Include="Utility\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201211180030558_Score.resx">
+      <DependentUpon>201211180030558_Score.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="App_Data\lti-consumer.mdf" />
     <Content Include="App_Data\lti-consumer_log.ldf">
       <DependentUpon>lti-consumer.mdf</DependentUpon>
@@ -285,6 +304,9 @@
     <Content Include="App_Data\Schools.zip" />
     <Content Include="App_Data\States.zip" />
     <Content Include="App_Data\Districts.zip" />
+    <None Include="Models\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Images\lti.png" />
     <Content Include="Lib\OAuth.net\CommonServiceLocator License.txt" />

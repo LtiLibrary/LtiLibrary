@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Consumer.Models.ScoredAssignment>
+﻿@model IEnumerable<Consumer.Models.Course>
 
 @{
     ViewBag.Title = "Home";
@@ -16,20 +16,35 @@
                 The page features <mark>tutorials, and samples</mark> to help you get the most from LTI.
                 If you have any questions about LTI visit
                 <a href="http://developers.imsglobal.org/forum.html" title="IMS Global Learning Consortium Developer Forum">the IMS developers forum</a>.
+
+                To learn more about inBloom visit
+                <a href="http://www.inbloom.org" title="inBloom Website">http://www.inbloom.org</a>.
+                If you have any questions about integrating with inBloom visit
+                <a href="http://www.inbloom.org/sandbox" title="inBloom Developer Site">the inBloom developer site</a>.
             </p>
         </div>
     </section>
 }
 <ol class="round">
     <li class="one">
-        <h5>Create an Assignment</h5>
-        Register or log in as a teacher and create an assignment. Assignments are links to content or tools provided by LTI Tool Providers.
+        <h5>Enroll in a Course</h5>
+        @if (!Request.IsAuthenticated)
+        {
+            <text>Register or login and enroll</text>
+        }
+        else
+        {
+            <text>Enroll</text>
+        }
+        in a course. Courses are simple collections of assignments. 
+        Assignments are links to content or tools provided by LTI Tool Providers.
     </li>
 
     <li class="two">
         <h5>Launch an Assignment</h5>
-        Try launching an assignment anonymously by clicking on the URL, then log in as a teacher or student and launch the assignment by clicking on the name.
-        Many Tool Providers will show a different user experience for each launch.
+        Launch an assignment to see the content or tool at the other end. Try
+        changing your role (teacher or student) in your Profile and try again.
+        Many Tool Providers will show a different user experience depending on your role.
     </li>
 
     <li class="three">
@@ -38,97 +53,43 @@
     </li>
 </ol>
 
-<h1>Assignments</h1>
-
-@if (Model.Count() == 0) {
-    if (Request.IsAuthenticated && Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole))
+@if (Request.IsAuthenticated)
+{
+    if (Model.Count() == 0)
     {
-        <text>
-            <p>You have no assignments yet. Why not 
-            @Html.ActionLink("create one", "Create", "Assignment")?</p>
-        </text>
-    } else {
-        <text>
-        <p>There are no public assignments yet. To create an assignment, log in or register
-        as a teacher and create one!</p>
-        </text>
+        <h3>Courses</h3>
+        <p>There are no courses yet.</p>
     }
-} else {
-    <p>If you are logged in, the assignment will be launched using LTI with your role (Teacher and/or Student).
-        If you are not logged in, the assignment will be launched anonymously.
-    @if (Request.IsAuthenticated && Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole)) {
-        <text>
-            You can also 
-            @Html.ActionLink("create a new assignment", "Create", "Assignment").
-        </text>
-    }
-    </p>
-    <table>
-        <tr>
-            <th></th>
-            <th>
-                Name
-            </th>
-            <th>
-                Domain
-            </th>
-            <th>
-                Score
-            </th>
-            <th></th>
-        </tr>
+    else
+    {
+        <table>
+            <tr>
+                <th>Course</th>
+                <th>Instructor</th>
+            </tr>
 
-    @foreach (var item in Model) {
-        <tr>
-            <td class="badge">
-                @if (item.IsLtiLink)
-                {
-                    <img src="~/Images/lti.png" alt="LTI" title="This assignment uses @item.LtiVersion.Name" />
-                }
-            </td>
-            <td class="rowheader">
-                @Html.ActionLink(item.Name, "Details", "Assignment", new { id = item.AssignmentId }, new { title = item.Description ?? item.Name })
-            </td>
-            <td>
-                @(new Uri(item.Url).Host)
-            </td>
-            <td>
-                @item.Score
-            </td>
-            <td>
-                @if (Request.IsAuthenticated && item.UserId == WebSecurity.CurrentUserId) {
-                    <text>
-                    @Html.ActionLink("Launch", "Launch", "Assignment", new { id = item.AssignmentId }, new { @class = "button", target = "_blank" })
-                    @Html.ActionLink("Edit", "Edit", "Assignment", new { id=item.AssignmentId }, new { @class = "button" })
-                    @Html.ActionLink("Delete", "Delete", "Assignment", new { id=item.AssignmentId }, new { @class = "button" })
-                    </text>
-                } else {
-                    <text>
-                        @Html.ActionLink("Launch", "Launch", "Assignment", new { id = item.AssignmentId }, new { @class = "button", target = "_blank", title="This will launch the assignment anonymously. Login to launch the assignment with authentication." })
-                    </text>
-                }
-            </td>
-        </tr>
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Title, "Details", "Course", new { id=item.CourseId }, null)
+                </td>
+                <td>
+                    @item.Instructor.FullName
+                </td>
+            </tr>
+        }
+
+        </table>
     }
-    </table>
+    if (inBloomLibrary.inBloomSandboxClient.GetCurrentInBloomAccount() != null)
+    {
+        <p>
+            @Html.ActionLink("Import inBloom Sections", "ImportInBloomSections", "Course", null, new { @class = "button" })
+        </p>
+    }
 }
-
-@section Scripts {
-    @Scripts.Render("~/Scripts/jquery.qtip-1.0.0-rc3.min.js")
-    <script>
-        $(function () {
-            $("a[title],img[title]").qtip({
-                style: {
-                    border: {
-                        width: 3,
-                        radius: 6
-                    },
-                    padding: 10,
-                    tip: true,
-                    name: "dark"
-                }
-            });
-        });
-    </script>
+else
+{
+    <h3>Courses</h3>
+    <p>Please register or log in to see the list of available courses.</p>
 }
-

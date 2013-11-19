@@ -9,7 +9,7 @@
 }
 else
 {
-    using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+    using (Html.BeginForm("ExternalLogin", "Account", new { ViewBag.ReturnUrl }))
     {
     @Html.AntiForgeryToken()
     <fieldset id="socialLoginList">
@@ -17,7 +17,11 @@ else
         <p>
         @foreach (AuthenticationClientData p in Model)
         {
-            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" title="Log in using your @p.DisplayName account">@p.DisplayName</button>
+            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" 
+                class="zocial @p.AuthenticationClient.ProviderName.ToLower()"
+                title="Log in using your @p.DisplayName account">
+                    @p.DisplayName
+            </button>
         }
         </p>
     </fieldset>

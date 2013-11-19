@@ -10,15 +10,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BC0F33
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Provider", "Provider\Provider.csproj", "{7CCDFB6F-24BC-4004-81D6-E09DE7C695D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OAuthLibrary", "OAuthLibrary\OAuthLibrary.csproj", "{229D5773-73AA-4581-99D8-B4DE74CED1CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inBloomLibrary", "inBloomLibrary\inBloomLibrary.csproj", "{DE0C3E0F-C2D2-47C5-A57F-AE646F53ABC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary", "LtiLibrary\LtiLibrary.csproj", "{75D41EB6-F34B-4973-86EB-11ABFEE995B0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = Consumer\\Consumer.csproj
 		SccProjectName1 = Consumer
 		SccLocalPath1 = Consumer
+		SccProjectUniqueName2 = Provider\\Provider.csproj
+		SccProjectName2 = Provider
+		SccLocalPath2 = Provider
+		SccProjectUniqueName3 = OAuthLibrary\\OAuthLibrary.csproj
+		SccProjectName3 = OAuthLibrary
+		SccLocalPath3 = OAuthLibrary
+		SccProjectUniqueName4 = inBloomLibrary\\inBloomLibrary.csproj
+		SccProjectName4 = inBloomLibrary
+		SccLocalPath4 = inBloomLibrary
+		SccProjectUniqueName5 = LtiLibrary\\LtiLibrary.csproj
+		SccProjectName5 = LtiLibrary
+		SccLocalPath5 = LtiLibrary
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +49,22 @@ Global
 		{EB702680-71DE-4FA5-B079-48332FBC52DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB702680-71DE-4FA5-B079-48332FBC52DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB702680-71DE-4FA5-B079-48332FBC52DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CCDFB6F-24BC-4004-81D6-E09DE7C695D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CCDFB6F-24BC-4004-81D6-E09DE7C695D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CCDFB6F-24BC-4004-81D6-E09DE7C695D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CCDFB6F-24BC-4004-81D6-E09DE7C695D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{229D5773-73AA-4581-99D8-B4DE74CED1CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{229D5773-73AA-4581-99D8-B4DE74CED1CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{229D5773-73AA-4581-99D8-B4DE74CED1CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{229D5773-73AA-4581-99D8-B4DE74CED1CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE0C3E0F-C2D2-47C5-A57F-AE646F53ABC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE0C3E0F-C2D2-47C5-A57F-AE646F53ABC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE0C3E0F-C2D2-47C5-A57F-AE646F53ABC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE0C3E0F-C2D2-47C5-A57F-AE646F53ABC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75D41EB6-F34B-4973-86EB-11ABFEE995B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75D41EB6-F34B-4973-86EB-11ABFEE995B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75D41EB6-F34B-4973-86EB-11ABFEE995B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75D41EB6-F34B-4973-86EB-11ABFEE995B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

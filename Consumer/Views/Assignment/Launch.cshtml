@@ -1,27 +1,19 @@
-﻿@model Consumer.Models.LtiRequest
+﻿@model Consumer.Models.LaunchModel
 
 @{
-    ViewBag.Title = Model.Title;
-    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+    ViewBag.Title = Model.AssignmentTitle;
+    Layout = "~/Views/Shared/_LayoutLaunch.cshtml";
 }
 
-@* 
-The AssignmentController calculated all the form data, and even the
-form action. All this view needs to do is create the form and ask
-the browser to submit it.
-*@
-<form id="form" action="@Model.Action" method="post">
-    @foreach (var name in Model.Fields.AllKeys)
+<a href="@Model.ReturnUrl">Back to @Model.CourseTitle</a>
+
+<div id="wrap">
+    @if (Model.IsLtiLink)
     {
-        <input type="hidden" name="@name" value="@Model.Fields[name]" />
+        <iframe class="content" src="@Url.Action("LtiLaunch", new { id = Model.AssignmentId })"></iframe>
     }
-    <input type="hidden" name="oauth_signature" value="@Model.Signature" />
-</form>
-
-@section Scripts {
-<script>
-    $(function () {
-        $("#form").submit();
-    });
-</script>
-}
+    else
+    {
+        <iframe class="content" src="@Model.Url"></iframe>
+    }
+</div>

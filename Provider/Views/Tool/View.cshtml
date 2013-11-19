@@ -1,0 +1,22 @@
+﻿@model Provider.Models.Tool
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_LayoutView.cshtml";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<p class="message-success">@ViewBag.StatusMessage</p>
+
+@Html.Action("Context")
+
+@Html.Action("PostScores", new { toolId = Model.ToolId })
+
+<h3 style="border-bottom:1px solid">Content</h3>
+
+@Html.Raw(Model.Content)
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,38 @@
+﻿@model Consumer.Models.ScoredAssignmentModel
+
+<tr>
+    <td>
+        <span title="@(Model.Description ?? Model.Name)">@Model.Name</span>
+    </td>
+    <td>
+        @if (!string.IsNullOrEmpty(Model.Url))
+        {
+            @(new Uri(Model.Url).Host)
+        }
+    </td>
+    @if (Model.Course.EnrolledUsers.Count(u => u.UserId == WebSecurity.CurrentUserId) > 0)
+    {
+        <td>
+            <div class="score">
+                @if (string.IsNullOrEmpty(Model.Score))
+                {
+                    <text>&nbsp;</text>
+                }
+                else
+                {
+                    @Model.Score
+                }
+            </div>
+        </td>
+    }
+    <td>
+        @Html.ActionLink("Launch", "Launch", "Assignment", new { id = Model.AssignmentId, returnUrl = @Request.Url.AbsoluteUri }, 
+            new { @class = "button", target = "_self" })
+        @if (Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Course.Instructor.UserId == WebSecurity.CurrentUserId)
+        {
+            @Html.ActionLink("Details", "Details", "Assignment", new { id = Model.AssignmentId }, new { @class = "button" })
+            @Html.ActionLink("Edit", "Edit", "Assignment", new { id = Model.AssignmentId }, new { @class = "button" })
+            @Html.ActionLink("Delete", "Delete", "Assignment", new { id = Model.AssignmentId }, new { @class = "button" })
+        }
+    </td>
+</tr>

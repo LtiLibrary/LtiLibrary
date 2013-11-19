@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Provider.Models.User>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Register", "Account")
+</p>
+<table>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FirstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.UserId }, new { @class = "button" })
+            @Html.ActionLink("Details", "Details", new { id=item.UserId }, new { @class = "button" })
+            @if (item.UserId != WebSecurity.CurrentUserId)
+            {
+                @Html.ActionLink("Delete", "Delete", new { id=item.UserId }, new { @class = "button" })
+            }
+        </td>
+    </tr>
+}
+
+</table>

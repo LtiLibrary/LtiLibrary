@@ -1,0 +1,58 @@
+﻿@model inBloomLibrary.Models.Tenant
+
+@{
+    ViewBag.Title = Model.inBloomTenantId;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Edit this inBloom Tenant registration.</h2>
+</hgroup>
+
+<p>
+    Note that if you change the @Html.DisplayNameFor(model => model.inBloomTenantId), you will
+    also need to update the Application Registration in your inBloom Sandbox.
+</p>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.TenantId)
+    @Html.HiddenFor(model => model.UserId)
+
+    <fieldset>
+        <legend>Tenant</legend>
+
+        <ol>
+            <li>
+                @Html.LabelFor(model => model.inBloomTenantId)
+                @Html.EditorFor(model => model.inBloomTenantId)
+                @Html.ValidationMessageFor(model => model.inBloomTenantId)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ClientId)
+                @Html.EditorFor(model => model.ClientId)
+                @Html.ValidationMessageFor(model => model.ClientId)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.SharedSecret)
+                @Html.EditorFor(model => model.SharedSecret)
+                @Html.ValidationMessageFor(model => model.SharedSecret)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.LongLivedSessionToken)
+                @Html.EditorFor(model => model.LongLivedSessionToken)
+                @Html.ValidationMessageFor(model => model.LongLivedSessionToken)
+            </li>
+        </ol>
+    </fieldset>
+    
+    <div>
+        <input type="submit" value="Save" />
+        @Html.ActionLink("Back to Details", "Details", new { id = Model.TenantId }, new { @class = "button" })
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

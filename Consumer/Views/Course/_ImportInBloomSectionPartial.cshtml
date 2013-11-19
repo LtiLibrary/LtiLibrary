@@ -1,0 +1,30 @@
+﻿@model Consumer.Models.ImportInBloomSectionModel
+
+<tr>
+    @if (Model.CourseId.HasValue)
+    {
+        <td>
+            @Html.ActionLink(@Model.Name, "Details", "Course", new { id = Model.CourseId }, null)
+        </td>
+        <td>This section has been imported.</td>
+    }
+    else
+    {
+        <td>
+            @Model.Name
+        </td>
+        <td>
+            @using (Html.BeginForm("ImportInBloomSection", "Course"))
+            {
+                @Html.ValidationSummary(true)
+    
+                @Html.HiddenFor(model => model.CourseId)
+                @Html.HiddenFor(model => model.SectionId)
+                <input type="submit" value="Import" />
+            }
+        </td>
+    }        
+</tr>
+
+
+

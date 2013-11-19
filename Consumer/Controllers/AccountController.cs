@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Transactions;
-using System.Web;
-using System.Web.Profile;
 using System.Web.Mvc;
 using System.Web.Security;
 using DotNetOpenAuth.AspNet;
@@ -11,6 +10,8 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using Consumer.Filters;
 using Consumer.Models;
+using OAuthLibrary;
+using inBloomLibrary;
 
 namespace Consumer.Controllers
 {
@@ -171,10 +172,7 @@ namespace Consumer.Controllers
                     {
                         return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
                     }
-                    else
-                    {
-                        ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
-                    }
+                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
                 }
             }
             else
@@ -216,6 +214,21 @@ namespace Consumer.Controllers
             return new ExternalLoginResult(provider, Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
         }
 
+        /// <summary>
+        /// GET: /Account/ExternalLogin2
+        /// 
+        /// Used by SLC Sandbox to login.
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="returnUrl"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ExternalLogin2(string provider, string returnUrl)
+        {
+            return new ExternalLoginResult(provider, Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
+        }
+
         //
         // GET: /Account/ExternalLoginCallback
 
@@ -228,59 +241,65 @@ namespace Consumer.Controllers
                 return RedirectToAction("ExternalLoginFailure");
             }
 
+            string accessToken;
+            result.ExtraData.TryGetValue("accesstoken", out accessToken);
+
             if (OAuthWebSecurity.Login(result.Provider, result.ProviderUserId, createPersistentCookie: false))
             {
+                // Save the access token
+                OAuthTokens.SetAccessToken(result.Provider, result.ProviderUserId, accessToken);
                 return RedirectToLocal(returnUrl);
+            }
+
+            if (User.Identity.IsAuthenticated && result.Provider == inBloomSandboxClient.Name)
+            {
+                // If the new account is from the SLC and the current account is from the SLC,
+                // but they are not a match (i.e. Login failed above), then logout the current
+                // user.
+
+                var currentAccount = inBloomSandboxClient.GetCurrentInBloomAccount();
+                if (currentAccount != null)
+                {
+                    System.Web.HttpContext.Current.User = new GenericPrincipal(
+                        new GenericIdentity(string.Empty), new string[] { });
+                    WebSecurity.Logout();
+                }
             }
 
             if (User.Identity.IsAuthenticated)
             {
                 // If the current user is logged in, add the new account
                 OAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
+                // Save the access token
+                OAuthTokens.SetAccessToken(result.Provider, result.ProviderUserId, accessToken);
                 return RedirectToLocal(returnUrl);
             }
-            else
-            {
-                // User is new, ask for their desired membership name
-                string loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
-                ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
-                ViewBag.ReturnUrl = returnUrl;
-                ViewBag.ExtraData = result.ExtraData;
 
-                // Try to get the name and email from the provider
-                string email = null;
-                string firstname = null;
-                string lastname = null;
+            // User is new, ask for their desired membership name
+            string loginData = OAuthWebSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
+            ViewBag.ProviderDisplayName = OAuthWebSecurity.GetOAuthClientData(result.Provider).DisplayName;
+            ViewBag.ReturnUrl = returnUrl;
+            ViewBag.ExtraData = result.ExtraData;
 
-                if (result.ExtraData.ContainsKey("email"))
-                    email = result.ExtraData["email"];
-                if (result.ExtraData.ContainsKey("firstname"))
-                    firstname = result.ExtraData["firstname"];
-                if (result.ExtraData.ContainsKey("lastname"))
-                    lastname = result.ExtraData["lastname"];
-                if (result.ExtraData.ContainsKey("name"))
-                {
-                    var name = result.ExtraData["name"];
-                    var names = name.Split(' ');
-                    if (names.Length == 1)
-                        lastname = name;
-                    if (names.Length > 1)
-                    {
-                        firstname = names[0];
-                        lastname = string.Join(" ", names.Skip(1).ToList());
-                    }
-                }
+            // Try to get the name and email from the provider
+            string email;
+            string firstname;
+            string lastname;
 
-                return View("ExternalLoginConfirmation", 
-                    new RegisterExternalLoginModel 
-                    { 
-                        UserName = result.UserName, 
-                        ExternalLoginData = loginData,
-                        Email = email,
-                        Firstname = firstname,
-                        Lastname = lastname
-                    });
-            }
+            result.ExtraData.TryGetValue("email", out email);
+            result.ExtraData.TryGetValue("firstname", out firstname);
+            result.ExtraData.TryGetValue("lastname", out lastname);
+
+            return View("ExternalLoginConfirmation", 
+                        new RegisterExternalLoginModel 
+                        { 
+                            UserName = result.UserName, 
+                            AccessToken = accessToken,
+                            ExternalLoginData = loginData,
+                            Email = email,
+                            FirstName = firstname,
+                            LastName = lastname
+                        });
         }
 
         //
@@ -291,8 +310,8 @@ namespace Consumer.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)
         {
-            string provider = null;
-            string providerUserId = null;
+            string provider;
+            string providerUserId;
 
             if (User.Identity.IsAuthenticated || !OAuthWebSecurity.TryDeserializeProviderUserId(model.ExternalLoginData, out provider, out providerUserId))
             {
@@ -313,8 +332,8 @@ namespace Consumer.Controllers
                         { 
                             UserName = model.UserName,
                             Email = model.Email,
-                            FirstName = model.Firstname,
-                            LastName = model.Lastname
+                            FirstName = model.FirstName,
+                            LastName = model.LastName
                         };
                         db.Users.Add(user);
 
@@ -325,13 +344,15 @@ namespace Consumer.Controllers
                         {
                             // Add the user to Teacher role by default
                             Roles.AddUserToRole(model.UserName, UserRoles.TeacherRole);
+
+                            // Save the access token
+                            OAuthTokens.SetAccessToken(provider, providerUserId, model.AccessToken);
                         }
+
                         return RedirectToAction("Edit", "User", routeValues: new { id = WebSecurity.GetUserId(model.UserName) });
                     }
-                    else
-                    {
-                        ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
-                    }
+
+                    ModelState.AddModelError("UserName", "User name already exists. Please enter a different user name.");
                 }
             }
 
@@ -354,7 +375,15 @@ namespace Consumer.Controllers
         public ActionResult ExternalLoginsList(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return PartialView("_ExternalLoginsListPartial", OAuthWebSecurity.RegisteredClientData);
+
+            // Remove the SLC client until there is a way and it makes sense
+            // to ask the user for the SLC tenant they are connecting to.
+
+            var clients = OAuthWebSecurity.RegisteredClientData.
+                Where(c => c.AuthenticationClient.ProviderName != "inbloomsandbox").
+                ToList();
+
+            return PartialView("_ExternalLoginsListPartial", clients);
         }
 
         [ChildActionOnly]
@@ -385,10 +414,7 @@ namespace Consumer.Controllers
             {
                 return Redirect(returnUrl);
             }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
+            return RedirectToAction("Index", "Home");
         }
 
         public enum ManageMessageId

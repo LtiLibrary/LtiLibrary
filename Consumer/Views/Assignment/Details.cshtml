@@ -1,7 +1,7 @@
 ﻿@model Consumer.Models.Assignment
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = Model.Name;
 }
 
 <hgroup class="title">
@@ -17,26 +17,45 @@
             @Html.LabelFor(model => model.Name)
             @Model.Name
         </li>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
         <li>
             @Html.LabelFor(model => model.Description)
             @Html.Raw(Model.Description)
         </li>
+        }
         <li>
             @Html.LabelFor(model => model.Url)
             @Html.DisplayFor(model => model.Url)
         </li>
+        @if (!string.IsNullOrEmpty(Model.ConsumerKey))
+        {
         <li>
             @Html.LabelFor(model => model.ConsumerKey)
-            @Html.DisplayFor(model => model.ConsumerKey )
+            @Html.DisplayFor(model => model.ConsumerKey)
         </li>
+        }
+        @if (!string.IsNullOrEmpty(Model.ConsumerSecret))
+        {
         <li>
-            @Html.LabelFor(model => model.SharingScope)
-            @Html.DisplayFor(model => model.SharingScope.Name)
+            @Html.LabelFor(model => model.ConsumerSecret)
+            @Html.DisplayFor(model => model.ConsumerSecret )
         </li>
+        }
+        @if (!string.IsNullOrEmpty(Model.CustomParameters))
+        {
+        <li>
+            @Html.LabelFor(model => model.CustomParameters)
+            <pre>
+@Html.DisplayFor(model => model.CustomParameters)
+            </pre>
+        </li>
+        }
     </ol>
 </fieldset>
 
 <p>
+    @Html.ActionLink("Launch", "Launch", new { id=Model.AssignmentId }, new { @class = "button", target="_blank" })
     @Html.ActionLink("Edit", "Edit", new { id=Model.AssignmentId }, new { @class = "button" })
-    @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+    @Html.ActionLink("Back to Course", "Details", "Course", new { id = Model.Course.CourseId }, new { @class = "button" })
 </p>

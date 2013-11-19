@@ -17,8 +17,8 @@ body {
 a {
     color: #333;
     outline: none;
-    padding-left: 3px;
-    padding-right: 3px;
+    /*padding-left: 3px;
+    padding-right: 3px;*/
     text-decoration: underline;
 }
 
@@ -96,7 +96,8 @@ h5, h6 {
 }
 
     .main-content {
-        background: url("../Images/accent.png") no-repeat;
+        /*background: url("../Images/accent.png") no-repeat;*/
+        background: url("../Images/heroAccent.png") no-repeat;
         padding-left: 10px;
         padding-top: 30px;
     }
@@ -529,8 +530,9 @@ table {
 th {
     font-size: 1.2em;
     text-align: left;
-    border: none 0px;
+    border: none 0;
     padding-left: 0;
+    padding-right: 0.5em;
 }
 
     th a {
@@ -602,14 +604,30 @@ select.chosen
     width: 300px;
 }
 
-#ajax-loader
+div.score
 {
-    display: none;
-    z-index: 2000;
-    background: url("../../Images/ajax-loader.gif") no-repeat;
-    width: 16px;
-    height: 16px;
+    background-color: #efeeef;
+    border: solid 1px gray;
+    padding: .3em;
+    text-align: center;
 }
+
+/* Gradebook */
+table.gradebook
+{
+    border: 1px solid gray;
+}
+
+    table.gradebook td
+    {
+        border: 1px dotted gray;
+        padding: 0.25em 1em;
+    }
+
+    table.gradebook td.score
+    {
+        text-align: center;
+    }
 
 /********************
 *   Mobile Styles   *

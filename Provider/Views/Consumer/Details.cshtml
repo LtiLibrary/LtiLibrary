@@ -1,0 +1,32 @@
+﻿@model LtiLibrary.Models.Consumer
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Examine the details of this LTI Tool Consumer.</h2>
+</hgroup>
+
+<p>Copy the Key and Secret into the appropriate fields of the Tool Consumer.</p>
+
+<fieldset>
+    <legend>Consumer</legend>
+
+        <ol>
+            <li>
+                @Html.LabelFor(model => model.Key)
+                @Html.DisplayFor(model => model.Key)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Secret)
+                @Html.DisplayFor(model => model.Secret)
+            </li>
+        </ol>
+</fieldset>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ConsumerId }, new { @class = "button" })
+    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+</p>

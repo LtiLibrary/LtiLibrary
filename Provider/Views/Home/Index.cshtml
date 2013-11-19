@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Provider.Models.Tool>
+
+@{
+    ViewBag.Title = "Home";
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>Home Page</h1>
+            </hgroup>
+            <p>
+                To learn more about LTI visit 
+                <a href="http://developers.imsglobal.org/" title="IMS Global Learning Consortium Website">http://developers.imsglobal.org/</a>.
+                The page features <mark>tutorials, and samples</mark> to help you get the most from LTI.
+                If you have any questions about LTI visit
+                <a href="http://developers.imsglobal.org/forum.html" title="IMS Global Learning Consortium Developer Forum">the IMS developers forum</a>.
+            </p>
+        </div>
+    </section>
+}
+<h3>We suggest the following:</h3>
+<ol class="round">
+    
+    <li class="one">
+        <h5>Create a Consumer</h5>
+        Login and create a Consumer account for your LTI consumer (LMS, Portal,
+        or <a href="http://consumer.azurewebsites.net" target="_blank">
+        LTI Sample Consumer</a>). This will also generate the LTI key and
+        secret that you will need in step 3.
+    </li>
+    
+    <li class="two">
+        <h5>Create Some Tools</h5>
+        Create some tools to use in your consumer. 
+        Or use the tools that other authors created below.
+    </li>
+
+    <li class="three">
+        <h5>Consume the Tools</h5>
+        Create LTI links in your consumer web site to the tools you want to use.
+        Add the LTI key and secret for your Consumer, and away you go!
+    </li>
+</ol>
+
+<h3>Tools</h3>
+
+@if (Request.IsAuthenticated)
+{
+    if (!Model.Any())
+    {
+    <text>
+    <p>
+        There are no tools yet.
+    </p>
+    </text>
+    }
+    else
+    {
+        <ul>
+
+        @foreach (var item in Model) {
+            <li class="rowheader">
+                @Html.ActionLink(item.Name, "Details", "Tool", new { id = item.ToolId }, new { title = item.Description })
+            </li>
+        }
+
+        </ul>
+    }
+}
+else
+{
+    <p>Please register or log in to see the list of available tools and content.</p>
+}
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.qtip-1.0.0-rc3.min.js")
+    <script>
+        $(function () {
+            $("a[title],img[title]").qtip({
+                style: {
+                    border: {
+                        width: 3,
+                        radius: 6
+                    },
+                    padding: 10,
+                    tip: true,
+                    name: "dark"
+                }
+            });
+        });
+    </script>
+}

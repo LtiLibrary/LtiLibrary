@@ -22,11 +22,17 @@
                     <nav>
                         <ul id="menu">
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li><a target="_blank" href="http://ltisamples.codeplex.com/SourceControl/BrowseLatest">Source</a></li>
+                            @if (Request.IsAuthenticated) {
+                                <li>@Html.ActionLink("Courses", "Index", "Course")</li>
+                                <li>@Html.ActionLink("inBloom Tenants", "Index", "Tenant")</li>
+                            }
+                            <li><a target="_blank" href="http://andyfmiller.com">Blog</a></li>
+                            <li><a target="_blank" href="http://ltisamples.codeplex.com/SourceControl/BrowseLatest">Source Code</a></li>
                         </ul>
                     </nav>
                 </div>
             </div>
+
         </header>
         <div id="body">
             @RenderSection("featured", required: false)
@@ -37,7 +43,7 @@
         <footer>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p>Copyright &copy; 2012. This work is licensed under a <a rel="license" href="http://www.opensource.org/licenses/ms-pl.html">Microsoft Public License (MS-PL)</a>.</p>
+                    <p>Copyright &copy; 2012. This work is licensed under an <a rel="license" href="http://www.apache.org/licenses/">Apache License 2.0</a>.</p>
                 </div>
             </div>
         </footer>

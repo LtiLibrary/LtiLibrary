@@ -1,4 +1,4 @@
-﻿@model Consumer.Models.Assignment
+﻿@model Consumer.Models.CreateEditAssignmentModel
 
 @{
     ViewBag.Title = "Create";
@@ -12,80 +12,106 @@
 @using (Html.BeginForm()) {
     @Html.ValidationSummary(true)
 
-    <fieldset>
-        <legend>Assignment</legend>
+    <div id="accordian">
+        <h3>Basic Settings</h3>
+        <div>
+            <fieldset>
+                <legend>Assignment</legend>
 
-        <ol>
-            <li>
-                @Html.LabelFor(model => model.Name)
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Description)
-                @Html.TextAreaFor(model => model.Description, new { @class = "tinymce" })
-                @Html.ValidationMessageFor(model => model.Description)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Url)
-                @Html.EditorFor(model => model.Url)
-                @Html.ValidationMessageFor(model => model.Url)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.ConsumerKey)
-                @Html.EditorFor(model => model.ConsumerKey)
-                @Html.ValidationMessageFor(model => model.ConsumerKey)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Secret)
-                @Html.EditorFor(model => model.Secret)
-                @Html.ValidationMessageFor(model => model.Secret)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.CustomParameters) 
-                @Html.TextAreaFor(model => model.CustomParameters)
-                @Html.ValidationMessageFor(model => model.CustomParameters)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.LtiVersionId)
-                @Html.DropDownList("LtiVersionId", null, string.Empty, 
-                    new Dictionary<string, object>{
-                        { "class", "chosen" }, 
-                        { "data-placeholder", "Choose an LTI Version..." }
-                    }
-                )
-                @Html.ValidationMessageFor(model => model.LtiVersionId)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.SharingScopeId)
-                @Html.DropDownList("SharingScopeId", null, string.Empty, 
-                    new Dictionary<string, object>{
-                        { "class", "chosen" }, 
-                        { "data-placeholder", "Choose a Sharing Scope..." }
-                    }
-                )
-                @Html.ValidationMessageFor(model => model.SharingScopeId)
-            </li>
-        </ol>
-    </fieldset>
+                <ol>
+                    <li>
+                        @Html.LabelFor(model => model.Name)
+                        @Html.EditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.Description)
+                        @Html.TextAreaFor(model => model.Description, new { @class = "tinymce" })
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.Url)
+                        @Html.EditorFor(model => model.Url)
+                        @Html.ValidationMessageFor(model => model.Url)
+                    </li>
+                </ol>
+            </fieldset>
+        </div>
 
+        <h3>LTI Settings</h3>
+        <div>
+            <fieldset>
+                <legend>LTI Settings</legend>
+
+                <ol>
+                    <li>
+                        @Html.LabelFor(model => model.ConsumerKey)
+                        @Html.EditorFor(model => model.ConsumerKey)
+                        @Html.ValidationMessageFor(model => model.ConsumerKey)
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.ConsumerSecret)
+                        @Html.EditorFor(model => model.ConsumerSecret)
+                        @Html.ValidationMessageFor(model => model.ConsumerSecret)
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.CustomParameters) 
+                        @Html.TextAreaFor(model => model.CustomParameters)
+                        @Html.ValidationMessageFor(model => model.CustomParameters)
+                    </li>
+                    <li>
+                        You can use these custom substitution parameters to share additional
+                        course context information with the provider.
+
+                        <table>
+                            <tr>
+                                <td><strong>Substitution</strong></td>
+                                <td><strong>Description</strong></td>
+                                <td><strong>Example</strong></td>
+                            </tr>
+                            <tr>
+                                <td>$Context.stateId</td>
+                                <td>The state abbreviation</td>
+                                <td>AL</td>
+                            </tr>
+                            <tr>
+                                <td>$Context.ncesLeaId</td>
+                                <td>The <a href="http://nces.ed.gov" target="_blank">NCES</a> ID for the LEA (e.g. school district)</td>
+                                <td>nces.ed.gov:4101920</td>
+                            </tr>
+                            <tr>
+                                <td>$Context.ncesSchoolId</td>
+                                <td>The <a href="http://nces.ed.gov" target="_blank">NCES</a> ID for the school</td>
+                                <td>nces.ed.gov:410192000554</td>
+                            </tr>
+                            <tr>
+                                <td>$User.username</td>
+                                <td>The username of the user</td>
+                                <td>student</td>
+                            </tr>
+                        </table>
+                    </li>
+                </ol>
+            </fieldset>
+        </div>
+    </div>
+    
     <div>
         <input type="submit" value="Create" />
-        @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+        @Html.ActionLink("Back to Course", "Details", "Course", new { id = Model.CourseId }, new { @class = "button" })
     </div>
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/chosen.jquery.js")
+    @Scripts.Render("~/Scripts/tiny_mce/jquery.tinymce.js")
     <script>
         $(function () {
-            $("select.chosen").chosen({ allow_single_deselect: true });
-        });
-    </script>
-    @Scripts.Render("~/Scripts/tiny_mce/jquery.tinymce.js");
-    <script>
-        $(function () {
+            // Divide the form into sections using jQuery UI Accordian
+            $("#accordian").accordion({
+                heightStyle: "content"
+            });
+            // Add a simple text editor
             $(".tinymce").tinymce({
                 script_url: "../../Scripts/tiny_mce/tiny_mce.js",
                 theme: "simple",

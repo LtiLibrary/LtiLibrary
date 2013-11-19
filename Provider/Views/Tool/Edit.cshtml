@@ -1,0 +1,57 @@
+﻿@model Provider.Models.Tool
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Edit this tool.</h2>
+</hgroup>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Tool</legend>
+
+        @Html.HiddenFor(model => model.ToolId)
+
+        <ol>
+            <li>
+                @Html.LabelFor(model => model.Name)
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Description)
+                @Html.TextAreaFor(model => model.Description, new { @class = "tinymce" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Content)
+                @Html.TextAreaFor(model => model.Content, new { @class = "tinymce" })
+                @Html.ValidationMessageFor(model => model.Content)
+            </li>
+       </ol>
+    </fieldset>
+
+    <div>
+        <input type="submit" value="Save" />
+        @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/tiny_mce/jquery.tinymce.js")
+    <script>
+        $(function () {
+            $(".tinymce").tinymce({
+                script_url: "../../Scripts/tiny_mce/tiny_mce.js",
+                theme: "simple",
+                content_css: "../../Content/tiny_mce.css"
+            });
+        });
+    </script>
+}

@@ -1,0 +1,38 @@
+﻿@model ICollection<Provider.Models.PostScoreModel>
+
+@if (Model.Count > 0 || !string.IsNullOrEmpty(ViewBag.PostScoreMessage))
+{
+    <h3 style="border-bottom:1px solid">External Gradebooks</h3>
+    <p>
+        This section simulates an auto-scoring tool. It would normally not be visible to the user (unless
+        is it some kind of reflection). You can give yourself any score you want!
+    </p>
+    <table>
+        <tr>
+            <td><strong>Consumer</strong></td>
+            <td><strong>Course</strong></td>
+            <td><strong>Score</strong></td>
+            <td></td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            using (Html.BeginForm(actionName: "PostScore", controllerName: "Tool"))
+            {
+                <tr>
+                    <td>@item.ConsumerName</td>
+                    <td>@item.ContextTitle</td>
+                    <td>
+                        @Html.EditorFor(m => item.Score, templateName: "Double", htmlFieldName: "Score")
+                    </td>
+                    <td>
+                        @Html.Hidden("OutcomeId", item.OutcomeId)
+                        @Html.Hidden("ToolId", item.ToolId)
+                        @Html.Hidden("LtiInboundRequestId", item.LtiInboundRequestId)
+                        <input type="submit" value="Send Score" title="Send this score to the consumer" />
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
+

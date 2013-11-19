@@ -1,0 +1,43 @@
+﻿@model inBloomLibrary.Models.Tenant
+
+@{
+    ViewBag.Title = Model.inBloomTenantId;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Delete this inBloom Tenant registration.</h2>
+</hgroup>
+
+<fieldset>
+    <legend>Tenant</legend>
+
+    <ol>
+        <li>
+            @Html.LabelFor(model => model.inBloomTenantId)
+            @Html.DisplayFor(model => model.inBloomTenantId)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.ClientId)
+            @Html.DisplayFor(model => model.ClientId)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.SharedSecret)
+            @Html.DisplayFor(model => model.SharedSecret)
+        </li>
+        <li>
+            @Html.LabelFor(model => model.LongLivedSessionToken)
+            @Html.DisplayFor(model => model.LongLivedSessionToken)
+        </li>
+    </ol>
+</fieldset>
+
+@using (Html.BeginForm()) {
+    <p>
+        <strong>Are you sure you want to delete this?</strong>
+    </p>
+    <p>
+        <input type="submit" value="Delete" />
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "button" })
+    </p>
+}

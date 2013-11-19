@@ -1,7 +1,7 @@
-﻿@model Consumer.Models.User
+﻿@model Consumer.Models.UserProfileModel
 
 @{
-    ViewBag.Title = "Profile";
+    ViewBag.Title = Model.UserName;
 }
 
 <hgroup class="title">
@@ -16,86 +16,63 @@
     @Html.HiddenFor(model => model.UserName)
 
     <div id="accordian">
-        <h3>Display name and email address</h3>
-        <fieldset>
-            <legend>Display name and email address</legend>
-            <ol>
-            <li>
-                @Html.LabelFor(model => model.FirstName)
-                @Html.EditorFor(model => model.FirstName)
-                @Html.ValidationMessageFor(model => model.FirstName)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.LastName)
-                @Html.EditorFor(model => model.LastName)
-                @Html.ValidationMessageFor(model => model.LastName)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Email)
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
-            </li>
-            </ol>
-        </fieldset>
+        <h3>Name and email address</h3>
+        <div>
+            <fieldset>
+                <legend>Name and email address</legend>
+                <ol>
+                <li>
+                    @Html.LabelFor(model => model.FirstName)
+                    @Html.EditorFor(model => model.FirstName)
+                    @Html.ValidationMessageFor(model => model.FirstName)
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.LastName)
+                    @Html.EditorFor(model => model.LastName)
+                    @Html.ValidationMessageFor(model => model.LastName)
+                </li>
+                <li>
+                    @Html.LabelFor(model => model.Email)
+                    @Html.EditorFor(model => model.Email)
+                    @Html.ValidationMessageFor(model => model.Email)
+                </li>
+                </ol>
+            </fieldset>
+        </div>
 
-        <h3>School and roles</h3>
-        <fieldset>
-            <legend>School and roles</legend>
-            <ol>
-                <li>
-                    @Html.LabelFor(model => model.StateId, "State")
-                    @Html.DropDownList("StateId", null, string.Empty, 
-                        new Dictionary<string, object>{
-                            { "class", "chosen" }, 
-                            { "data-placeholder", "Choose a State..." }
-                        }
-                    )
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.DistrictId, "District")
-                    @Html.DropDownList("DistrictId", null, string.Empty, 
-                        new Dictionary<string, object>{
-                            { "class", "chosen" }, 
-                            { "data-placeholder", "Choose a District..." },
-                            { "data-source", @Url.Action("GetDistricts", "Location") }
-                        }
-                    )
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.SchoolId, "School")
-                    @Html.DropDownList("SchoolId", null, string.Empty, 
-                        new Dictionary<string, object>{
-                            { "class", "chosen" }, 
-                            { "data-placeholder", "Choose a School..." },
-                            { "data-source", @Url.Action("GetSchools", "Location") }
-                        }
-                    )
-                </li>
-                <li>
-                    @Html.CheckBoxFor(model => model.IsTeacher)
-                    @Html.LabelFor(model => model.IsTeacher, "I am a teacher in my school", new { @class = "checkbox" })
-                </li>
-                <li>
-                    @Html.CheckBoxFor(model => model.IsStudent)
-                    @Html.LabelFor(model => model.IsStudent, "I am a student in my school", new { @class = "checkbox" })
-                </li>
-            </ol>
-        </fieldset>
+        <h3>Roles</h3>
+        <div>
+            <fieldset>
+                <legend>Roles</legend>
+                <ol>
+                    <li>
+                        @Html.CheckBoxFor(model => model.IsTeacher)
+                        @Html.LabelFor(model => model.IsTeacher, "I am a teacher", new { @class = "checkbox" })
+                    </li>
+                    <li>
+                        @Html.CheckBoxFor(model => model.IsStudent)
+                        @Html.LabelFor(model => model.IsStudent, "I am a student", new { @class = "checkbox" })
+                    </li>
+                </ol>
+            </fieldset>
+        </div>
 
         <h3>Privacy</h3>
-        <fieldset>
-            <legend>Privacy</legend>
-            <ol>
-                <li>
-                    @Html.EditorFor(model => model.SendName)
-                    @Html.LabelFor(model => model.SendName, new { @class = "checkbox" })
-                </li>
-                <li>
-                    @Html.EditorFor(model => model.SendEmail)
-                    @Html.LabelFor(model => model.SendEmail, new { @class = "checkbox" })
-                </li>
-            </ol>
-        </fieldset>
+        <div>
+            <fieldset>
+                <legend>Privacy</legend>
+                <ol>
+                    <li>
+                        @Html.EditorFor(model => model.SendName)
+                        @Html.LabelFor(model => model.SendName, new { @class = "checkbox" })
+                    </li>
+                    <li>
+                        @Html.EditorFor(model => model.SendEmail)
+                        @Html.LabelFor(model => model.SendEmail, new { @class = "checkbox" })
+                    </li>
+                </ol>
+            </fieldset>
+        </div>
     </div>
 
     <div>
@@ -115,36 +92,36 @@
             $("select.chosen").chosen({ allow_single_deselect: true });
             // If the State selection changes, then clear the district and school,
             // and then reload district (if state is not empty)
-            var StateId = $("#StateId");
-            var DistrictId = $("#DistrictId");
-            var SchoolId = $("#SchoolId");
-            StateId.change(function () {
-                DistrictId.val("").html("<option />").trigger("liszt:updated").trigger("change");
+            var stateId = $("#StateId");
+            var districtId = $("#DistrictId");
+            var schoolId = $("#SchoolId");
+            stateId.change(function () {
+                districtId.val("").html("<option />").trigger("liszt:updated").trigger("change");
             });
-            DistrictId.change(function () {
-                SchoolId.val("").html("<option />").trigger("liszt:updated").trigger("change");
-                if (StateId.val() != "" && StateId.val() != DistrictId.data("StateId")) {
+            districtId.change(function () {
+                schoolId.val("").html("<option />").trigger("liszt:updated").trigger("change");
+                if (stateId.val() != "" && stateId.val() != districtId.data("StateId")) {
                     $("#DistrictId_chzn > a > span").html("Please wait...");
-                    DistrictId.data("StateId", StateId.val());
-                    $.getJSON(DistrictId.data("source") + "?stateId=" + DistrictId.data("StateId"),
+                    districtId.data("StateId", stateId.val());
+                    $.getJSON(districtId.data("source") + "?stateId=" + districtId.data("StateId"),
                         function (result) {
                             $.each(result, function () {
-                                DistrictId.append($("<option />").val(this.Id).text(this.Name));
+                                districtId.append($("<option />").val(this.Id).text(this.Name));
                             });
-                            DistrictId.trigger("liszt:updated");
+                            districtId.trigger("liszt:updated");
                         });
                 }
             });
-            SchoolId.change(function () {
-                if (DistrictId.val() != "" && DistrictId.val() != SchoolId.data("DistrictId")) {
+            schoolId.change(function () {
+                if (districtId.val() != "" && districtId.val() != schoolId.data("DistrictId")) {
                     $("#SchoolId_chzn > a > span").html("Please wait...");
-                    SchoolId.data("DistrictId", DistrictId.val());
-                    $.getJSON(SchoolId.data("source") + "?districtId=" + SchoolId.data("DistrictId"),
+                    schoolId.data("DistrictId", districtId.val());
+                    $.getJSON(schoolId.data("source") + "?districtId=" + schoolId.data("DistrictId"),
                         function (result) {
                             $.each(result, function () {
-                                SchoolId.append($("<option />").val(this.Id).text(this.Name));
+                                schoolId.append($("<option />").val(this.Id).text(this.Name));
                             });
-                            SchoolId.trigger("liszt:updated");
+                            schoolId.trigger("liszt:updated");
                         });
                 }
             });

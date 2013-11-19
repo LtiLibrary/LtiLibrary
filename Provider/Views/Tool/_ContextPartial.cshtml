@@ -1,0 +1,45 @@
+﻿@model Provider.Models.ToolUser
+
+<h3 style="border-bottom:1px solid">Consumer Context</h3>
+
+<table>
+    <tr>
+        <td><strong>Name</strong></td>
+        <td>
+            @Model.FirstName @Model.LastName from @Model.ConsumerName
+            @if (!string.IsNullOrWhiteSpace(Model.ReturnUrl))
+            {
+                <a href="@Model.ReturnUrl">Return</a>
+            }
+        </td>
+    </tr>
+    @if (!string.IsNullOrWhiteSpace(Model.Roles))
+    {
+        <tr>
+            <td><strong>Role/s</strong></td>
+            <td>@string.Join(", ", Model.Roles.Split(','))</td>
+        </tr>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.StateName))
+    {
+        <tr>
+            <td><strong>State</strong></td>
+            <td>@Model.StateName</td>
+        </tr>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.DistrictName))
+    {
+        <tr>
+            <td><strong>District</strong></td>
+            <td>@Model.DistrictName</td>
+        </tr>
+    }
+    @if (!string.IsNullOrWhiteSpace(Model.SchoolName))
+    {
+        <tr>
+            <td><strong>School</strong></td>
+            <td>@Model.SchoolName</td>
+        </tr>
+    }
+</table>
+

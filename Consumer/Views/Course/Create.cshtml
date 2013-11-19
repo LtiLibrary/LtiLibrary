@@ -1,0 +1,169 @@
+﻿@model Consumer.Models.CreateEditCourseModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Create a course.</h2>
+</hgroup>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+
+    <div id="accordian">
+        <h3>Course Name</h3>
+        <div>
+            <fieldset>
+                <legend>Course</legend>
+
+                <ol>
+                    <li>
+                        @Html.LabelFor(model => model.Name)
+                        @Html.EditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </li>
+                </ol>
+            </fieldset>
+        </div>
+
+        <h3>Location</h3>
+        <div>
+            <fieldset>
+                <legend>Location</legend>
+
+                <p>
+                    In the LTI 1.x world, the course context is the website (tool_consumer_instance).
+                    For example, if this were a K-12 LMS, this website would be specific
+                    to the school district or educational service district that purchased the LMS.
+                    And if this were a K-12 portal, this website would typically be specific to the
+                    school.
+                    However, most K-12 content and tools are licensed differently; typically to
+                    subsets of schools within the district or ESD. There is also a growing trend
+                    among K-12 providers to differentiate content by state and regional context.
+                </p>
+
+                <p>
+                    To handle the mismatch between the consumer context and the provider context,
+                    this site allows you to set 3 additional values for each course: State, District, 
+                    and School.
+                    If you set the State, then the course context is the state (i.e. it is assumed that
+                    anyone enrolled in the course is within the purview of the State Educational
+                    Association).
+                    Likewise, if you select a district within the state, the context is the
+                    Local Educational Association. And if you select a school within the district,
+                    the context will be limited to that one school.
+                </p>
+
+                <p>
+                    Setting the state, district or school will help the LTI Tool Provider display
+                    the right content or tool. To make sure that providers know which state,
+                    district or school you have set, this site uses the identifiers provided by
+                    the <a href="http://nces.ed.gov">National Center for Educational Statistics</a>.
+                    The state, district and school (if set) are made available as custom
+                    substition parameters in the LTI link:
+                </p>
+                <dl>
+                    <dt>$Location.StateId</dt>
+                    <dd>The state abbreviation (e.g. "AL").</dd>
+                    <dt>$Location.LeaId</dt>
+                    <dd>The NCES ID for the district (or Local Educational
+                        Association).</dd>
+                    <dt>$Location.SchoolId</dt>
+                    <dd>The NCES ID for the school.</dd>
+                </dl>
+            
+                <ol>
+                    <li>
+                        @Html.LabelFor(model => model.StateId)
+                        @Html.DropDownListFor(model => model.StateId, Model.AvailableStates, string.Empty,
+                            new Dictionary<string, object>{
+                                { "class", "chosen" }, 
+                                { "data-placeholder", "Choose a State..." }
+                            }
+                        )
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.DistrictId)
+                        @Html.DropDownListFor(model => model.DistrictId, Model.AvailableDistricts, string.Empty,
+                            new Dictionary<string, object>{
+                                { "class", "chosen" }, 
+                                { "data-placeholder", "Choose a District..." },
+                                { "data-source", @Url.Action("GetDistricts", "Location") }
+                            }
+                        )
+                    </li>
+                    <li>
+                        @Html.LabelFor(model => model.SchoolId)
+                        @Html.DropDownListFor(model => model.SchoolId, Model.AvailableSchools, string.Empty,
+                            new Dictionary<string, object>{
+                                { "class", "chosen" }, 
+                                { "data-placeholder", "Choose a School..." },
+                                { "data-source", @Url.Action("GetSchools", "Location") }
+                            }
+                        )
+                    </li>
+               </ol>
+            </fieldset>
+        </div>
+    </div>
+    
+    <div>
+        <input type="submit" value="Create" />
+        @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/chosen.jquery.js")
+    <script>
+        $(function () {
+            // Divide the form into sections using jQuery UI Accordian
+            $("#accordian").accordion({
+                heightStyle: "content"
+            });
+            // Convert the location select elements into fancy combo boxes
+            $("select.chosen").chosen({ allow_single_deselect: true });
+            // Convert the location select elements into fancy combo boxes
+            $("select.chosen").chosen({ allow_single_deselect: true });
+            // If the State selection changes, then clear the district and school,
+            // and then reload district (if state is not empty)
+            var StateId = $("#StateId");
+            var DistrictId = $("#DistrictId");
+            var SchoolId = $("#SchoolId");
+            StateId.change(function () {
+                DistrictId.val("").html("<option />").trigger("liszt:updated").trigger("change");
+            });
+            DistrictId.change(function () {
+                SchoolId.val("").html("<option />").trigger("liszt:updated").trigger("change");
+                if (StateId.val() != "" && StateId.val() != DistrictId.data("StateId")) {
+                    $("#DistrictId_chzn > a > span").html("Please wait...");
+                    DistrictId.data("StateId", StateId.val());
+                    $.getJSON(DistrictId.data("source") + "?stateId=" + DistrictId.data("StateId"),
+                        function (result) {
+                            $.each(result, function () {
+                                DistrictId.append($("<option />").val(this.Id).text(this.Name));
+                            });
+                            DistrictId.trigger("liszt:updated");
+                        });
+                }
+            });
+            SchoolId.change(function () {
+                if (DistrictId.val() != "" && DistrictId.val() != SchoolId.data("DistrictId")) {
+                    $("#SchoolId_chzn > a > span").html("Please wait...");
+                    SchoolId.data("DistrictId", DistrictId.val());
+                    $.getJSON(SchoolId.data("source") + "?districtId=" + SchoolId.data("DistrictId"),
+                        function (result) {
+                            $.each(result, function () {
+                                SchoolId.append($("<option />").val(this.Id).text(this.Name));
+                            });
+                            SchoolId.trigger("liszt:updated");
+                        });
+                }
+            });
+        });
+    </script>
+}

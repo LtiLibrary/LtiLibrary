@@ -8,7 +8,7 @@
     <h2>Associate your @ViewBag.ProviderDisplayName account.</h2>
 </hgroup>
 
-@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ReturnUrl = ViewBag.ReturnUrl })) {
+@using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ViewBag.ReturnUrl })) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
@@ -20,16 +20,17 @@
             logging in.
         </p>
         <ol>
-            <li class="name">
+            <li>
                 @Html.LabelFor(m => m.UserName)
                 @Html.TextBoxFor(m => m.UserName)
                 @Html.ValidationMessageFor(m => m.UserName)
             </li>
         </ol>
+        @Html.HiddenFor(m => m.AccessToken)
         @Html.HiddenFor(m => m.ExternalLoginData)
         @Html.HiddenFor(m => m.Email)
-        @Html.HiddenFor(m => m.Firstname)
-        @Html.HiddenFor(m => m.Lastname)
+        @Html.HiddenFor(m => m.FirstName)
+        @Html.HiddenFor(m => m.LastName)
         <input type="submit" value="Register" />
     </fieldset>
 }

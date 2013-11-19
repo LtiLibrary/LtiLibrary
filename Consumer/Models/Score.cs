@@ -1,15 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Consumer.Models
+﻿namespace Consumer.Models
 {
     public class Score
     {
-        [Key, DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int ScoreId { get; set; }
-
         public int AssignmentId { get; set; }
-        public decimal DecimalValue { get; set; }
+        public double DoubleValue { get; set; }
         public int UserId { get; set; }
+    }
+
+    public class ReadScoreModel
+    {
+        public Score Score { get; set; }
+        public bool IsValid { get; set; }
     }
 }

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Provider.Models.Tool>
+
+@{
+    ViewBag.Title = "Tools";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>A list of all the tools offered by this provider.</h2>
+</hgroup>
+
+<p>
+    Remember, you are one of several users of this sample provider. 
+    Please do not muck with other people's tools.
+</p>
+
+@if (!Model.Any()) {
+    <text>
+        No tools have been created yet.
+    </text>
+} else {
+    <text>
+        <table>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td class="rowheader">
+                    @Html.ActionLink(item.Name, "Details", new { id = item.ToolId }, htmlAttributes: new { title = item.Description })
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.ToolId }, htmlAttributes: new { @class = "button" })
+                    @Html.ActionLink("Details", "Details", new { id=item.ToolId }, htmlAttributes: new { @class = "button" })
+                    @Html.ActionLink("Delete", "Delete", new { id=item.ToolId }, htmlAttributes: new { @class = "button" })
+                </td>
+            </tr>
+        }
+
+        </table>
+    </text>
+}
+<p>
+    @Html.ActionLink("Create New", "Create", routeValues: null, htmlAttributes: new { @class = "button" })
+    @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.qtip-1.0.0-rc3.min.js")
+    <script>
+        $(function () {
+            $("a[title],img[title]").qtip({
+                style: {
+                    border: {
+                        width: 3,
+                        radius: 6
+                    },
+                    padding: 10,
+                    tip: true,
+                    name: "dark"
+                }
+            });
+        });
+    </script>
+}
+

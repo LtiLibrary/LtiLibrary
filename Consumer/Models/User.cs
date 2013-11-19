@@ -1,64 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
-using System.Globalization;
-using System.Web.Security;
 
 namespace Consumer.Models
 {
-    public static class UserRoles
-    {
-        public static string StudentRole = "Student";
-        public static string TeacherRole = "Teacher";
-    }
-
     [Table("Users")]
-    public class User
+    public sealed class User
     {
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
-        public string UserName { get; set; }
-
-        [ForeignKey("District")]
-        public string DistrictId { get; set; }
-        [Display(Name = "Email address"), DataType(DataType.EmailAddress)]
         public string Email { get; set; }
-        [Display(Name = "First name")]
         public string FirstName { get; set; }
-        [Display(Name = "Last name")]
-        public string LastName { get; set; }
-        [ForeignKey("School")]
-        public string SchoolId { get; set; }
-        [Display(Name = "Send my email address to providers when I launch an assignment")]
-        public bool? SendEmail { get; set; }
-        [Display(Name = "Send my name to providers when I launch an assignment")]
-        public bool? SendName { get; set; }
-        [ForeignKey("State")]
-        public string StateId { get; set; }
-
-        public virtual District District { get; set; }
-        public virtual School School { get; set; }
-        public virtual State State { get; set; }
-
         public string FullName
         {
             get
             {
-                return string.Format("{0} {1}",
-                    FirstName,
-                    LastName
-                ).Trim();
+                var fullname = string.Format("{0} {1}", FirstName, LastName).Trim();
+                return string.IsNullOrEmpty(fullname) ? "n/a" : fullname;
             }
         }
+        public string LastName { get; set; }
+        public bool? SendEmail { get; set; }
+        public bool? SendName { get; set; }
+        public string SlcUserId { get; set; }
+        public string UserName { get; set; }
+        public ICollection<Course> Courses { get; set; }
 
-        // Move to a derived model?
-        [NotMapped, Display(Name = "Student")]
+        public User()
+        {
+            Courses = new HashSet<Course>();
+        }
+    }
+
+    public class UserProfileModel
+    {
+        public int UserId { get; set; }
+        [Display(Name = "Email address"), DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+        [Display(Name = "First name")]
+        public string FirstName { get; set; }
+        [Display(Name = "Student")]
         public bool IsStudent { get; set; }
-        [NotMapped, Display(Name = "Teacher")]
+        [Display(Name = "Teacher")]
         public bool IsTeacher { get; set; }
+        [Display(Name = "Last name")]
+        public string LastName { get; set; }
+        [Display(Name = "Send my email address to providers when I launch an assignment")]
+        public bool? SendEmail { get; set; }
+        [Display(Name = "Send my name to providers when I launch an assignment")]
+        public bool? SendName { get; set; }
+        public string UserName { get; set; }
+
+        public UserProfileModel() { }
+        public UserProfileModel(User user)
+        {
+            UserId = user.UserId;
+            Email = user.Email;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            SendEmail = user.SendEmail;
+            SendName = user.SendName;
+            UserName = user.UserName;
+        }
     }
 
     public class RegisterExternalLoginModel
@@ -67,10 +69,11 @@ namespace Consumer.Models
         [Display(Name = "User name")]
         public string UserName { get; set; }
 
+        public string AccessToken { get; set; }
         public string ExternalLoginData { get; set; }
         public string Email { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class LocalPasswordModel

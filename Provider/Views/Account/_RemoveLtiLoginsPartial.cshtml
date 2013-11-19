@@ -1,0 +1,28 @@
+﻿@model ICollection<Provider.Models.LtiLogin>
+
+@if (Model.Count > 0)
+{
+    <h3>Registered LTI accounts</h3>
+    <table>
+        <tbody>
+        @foreach (Provider.Models.LtiLogin ltiLogin in Model)
+        {
+            <tr>
+                <td>@ltiLogin.ConsumerName</td>
+                <td>
+                    @using (Html.BeginForm("Unpair", "Account"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <fieldset>
+                            <legend></legend>
+
+                            @Html.Hidden("consumerUserId", ltiLogin.ConsumerUserId)
+                            <input type="submit" value="Remove" title="Remove this @ltiLogin.ConsumerName credential from your account" />
+                        </fieldset>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -8,7 +8,11 @@
         @foreach (Consumer.Models.ExternalLogin externalLogin in Model)
         {
             <tr>
-                <td>@externalLogin.ProviderDisplayName</td>
+                <td>
+                    <span class="zocial @externalLogin.ProviderDisplayName.ToLower()">
+                        @externalLogin.ProviderDisplayName
+                    </span>
+                </td>
                 <td>
                     @if (ViewBag.ShowRemoveButton)
                     {

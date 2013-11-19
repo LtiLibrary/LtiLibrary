@@ -1,30 +1,23 @@
 ﻿using System.Data;
 using System.Linq;
 using System.Web.Mvc;
+using Consumer.Lti;
 using Consumer.Models;
-using Consumer.Utility;
-using WebMatrix.WebData;
+using inBloomLibrary;
 
 namespace Consumer.Controllers
 {
+    [Authorize]
     public class AssignmentController : Controller
     {
-        private ConsumerContext db = new ConsumerContext();
-
-        //
-        // GET: /Assignment/
-
-        public ActionResult Index()
-        {
-            return View(db.Assignments.ToList());
-        }
+        private readonly ConsumerContext _db = new ConsumerContext();
 
         //
         // GET: /Assignment/Details/5
 
         public ActionResult Details(int id = 0)
         {
-            Assignment assignment = db.Assignments.Find(id);
+            Assignment assignment = _db.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
@@ -35,12 +28,14 @@ namespace Consumer.Controllers
         //
         // GET: /Assignment/Create
 
-        [Authorize(Roles="Teacher")]
-        public ActionResult Create()
+        public ActionResult Create(int courseId)
         {
-            ViewBag.LtiVersionId = new SelectList(db.LtiVersions, "LtiVersionId", "Name", LtiVersion.Version10);
-            ViewBag.SharingScopeId = new SelectList(db.SharingScopes, "SharingScopeId", "Name", SharingScope.Private);
-            return View();
+            var model = new CreateEditAssignmentModel
+            {
+                CourseId = courseId
+            };
+
+            return View(model);
         }
 
         //
@@ -49,120 +44,162 @@ namespace Consumer.Controllers
         // Note that ValidateInput is turned off so that teachers can use HTML in their descriptions
 
         [HttpPost]
-        [Authorize(Roles = "Teacher")]
         [ValidateInput(false)]
-        public ActionResult Create(Assignment assignment)
+        public ActionResult Create(CreateEditAssignmentModel model)
         {
             if (ModelState.IsValid)
             {
-                assignment.UserId = WebSecurity.CurrentUserId;
-                db.Assignments.Add(assignment);
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                var course = _db.Courses.Find(model.CourseId);
+                var assignment = new Assignment
+                {
+                    ConsumerKey = model.ConsumerKey,
+                    ConsumerSecret = model.ConsumerSecret,
+                    Course = course,
+                    CustomParameters = model.CustomParameters,
+                    Description = model.Description,
+                    Name = model.Name,
+                    Url = model.Url
+                };
+
+                _db.Assignments.Add(assignment);
+                _db.SaveChanges();
+
+                if (!string.IsNullOrEmpty(course.inBloomSectionId))
+                {
+                    var assignmentModel = new inBloomLibrary.Models.Assignment
+                    {
+                        AssignmentId = assignment.AssignmentId,
+                        ConsumerKey = assignment.ConsumerKey,
+                        ConsumerSecret = assignment.ConsumerSecret,
+                        CustomParameters = assignment.CustomParameters,
+                        Description = assignment.Description,
+                        Name = assignment.Name,
+                        Url = assignment.Url
+                    };
+                    assignment.inBloomGradebookEntryId = inBloomApi.CreateGradebookEntry(
+                        course.inBloomSectionId, 
+                        assignmentModel);
+                    _db.SaveChanges();
+                }
+
+                return RedirectToAction("Details", "Course", new { id = model.CourseId });
             }
-            ViewBag.LtiVersionId = new SelectList(db.LtiVersions, "LtiVersionId", "Name", assignment.LtiVersionId);
-            ViewBag.SharingScopeId = new SelectList(db.SharingScopes, "SharingScopeId", "Name", assignment.SharingScopeId);
-            return View(assignment);
+            return View(model);
         }
 
         //
         // GET: /Assignment/Edit/5
 
-        [Authorize(Roles = "Teacher")]
         public ActionResult Edit(int id = 0)
         {
-            Assignment assignment = db.Assignments.Find(id);
+            var assignment = _db.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.LtiVersionId = new SelectList(db.LtiVersions, "LtiVersionId", "Name", assignment.LtiVersionId);
-            ViewBag.SharingScopeId = new SelectList(db.SharingScopes, "SharingScopeId", "Name", assignment.SharingScopeId);
-            return View(assignment);
+            var model = new CreateEditAssignmentModel(assignment);
+            return View(model);
         }
 
         //
         // POST: /Assignment/Edit/5
 
         [HttpPost]
-        [Authorize(Roles = "Teacher")]
         [ValidateInput(false)]
-        public ActionResult Edit(Assignment assignment)
+        public ActionResult Edit(CreateEditAssignmentModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(assignment).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index", "Home");
+                var assignment = _db.Assignments.Find(model.AssignmentId);
+                assignment.ConsumerKey = model.ConsumerKey;
+                assignment.ConsumerSecret = model.ConsumerSecret;
+                assignment.Course = _db.Courses.Find(model.CourseId);
+                assignment.CustomParameters = model.CustomParameters;
+                assignment.Description = model.Description;
+                assignment.Name = model.Name;
+                assignment.Url = model.Url;
+                _db.Entry(assignment).State = EntityState.Modified;
+                _db.SaveChanges();
+                return RedirectToAction("Details", "Course", new { id = model.CourseId });
             }
-            ViewBag.LtiVersionId = new SelectList(db.LtiVersions, "LtiVersionId", "Name", assignment.LtiVersionId);
-            ViewBag.SharingScopeId = new SelectList(db.SharingScopes, "SharingScopeId", "Name", assignment.SharingScopeId);
-            return View(assignment);
+            return View(model);
         }
 
         //
         // GET: /Assignment/Delete/5
 
-        [Authorize(Roles = "Teacher")]
         public ActionResult Delete(int id = 0)
         {
-            Assignment assignment = db.Assignments.Find(id);
+            var assignment = _db.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
             }
-            return View(assignment);
+            var model = new DeleteAssignmentModel(assignment);
+            model.DeleteInBloomGradebookEntry = false;
+
+            return View(model);
         }
 
         //
         // POST: /Assignment/Delete/5
 
-        [Authorize(Roles = "Teacher")]
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id, bool deleteInBloomGradebookEntry)
         {
-            foreach (var score in db.Scores.Where(s => s.AssignmentId == id))
-                db.Scores.Remove(score);
-            Assignment assignment = db.Assignments.Find(id);
-            db.Assignments.Remove(assignment);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            var assignment = _db.Assignments.Find(id);
+            if (deleteInBloomGradebookEntry)
+            {
+                inBloomApi.DeleteGradebookEntry(assignment.inBloomGradebookEntryId);
+            }
+
+            var scores = _db.Scores.Where(s => s.AssignmentId == id);
+            foreach (var score in scores.ToList())
+            {
+                _db.Scores.Remove(score);
+            }
+            var courseId = assignment.Course.CourseId;
+            _db.Assignments.Remove(assignment);
+            _db.SaveChanges();
+
+            return RedirectToAction("Details", "Course", new { id = courseId });
         }
 
         //
         // GET: /Assignment/Launch/5
 
-        public ActionResult Launch(int id = 0)
+        public ActionResult Launch(string returnUrl, int id = 0)
         {
-            Assignment assignment = db.Assignments.Find(id);
+            //return new RedirectResult("../LtiLaunch/2");
+            var assignment = _db.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
             }
-        
-            // Public assignments are displayed on the front page even if the
-            // user is not logged in. If the user is anonymous or if the 
-            // assignment does not have an LTI key and secret defined, then
-            // the Launch reverts to a simple redirect (GET). I'm curious to
-            // see how providers handle this.
 
-            if (Request.IsAuthenticated && assignment.IsLtiLink)
-            {
-                using (var lti = new LtiUtility())
-                {
-                    var ltiRequest = lti.CreateLtiRequest(assignment);
-                    return View(ltiRequest);
-                }
-            }
+            var model = new LaunchModel
+            { 
+                AssignmentId = id,
+                AssignmentTitle = assignment.Name,
+                CourseTitle = assignment.Course.Name,
+                IsLtiLink = assignment.IsLtiLink,
+                ReturnUrl = returnUrl,
+                Url = assignment.Url
+            };
+            return View(model);
+        }
 
-            // If the user is not logged in or the assignment does not have an LTI
-            // key and secret, then treat the launch as a simple link.
-            return Redirect(assignment.Url);
+        public ActionResult LtiLaunch(int id = 0)
+        {
+            Assignment assignment = _db.Assignments.Find(id);
+            
+            return View(LtiUtility.CreateLtiRequest(assignment));
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _db.Dispose();
             base.Dispose(disposing);
         }
     }

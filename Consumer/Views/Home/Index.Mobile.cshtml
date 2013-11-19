@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Consumer.Models.Course>
+
+@{
+    ViewBag.Title = "Courses";
+}
+
+@if (Request.IsAuthenticated)
+{
+    if (Model.Count() == 0)
+    {
+    <text>
+    <p>
+        There are no courses yet.
+    </p>
+    </text>
+    }
+    else
+    {
+        <ul data-role="listview" data-filter="true">
+
+        @foreach (var item in Model) {
+            <li>
+                <a href="@Url.Action("Details", "Course", new { id = item.CourseId })">
+                    <h2>@item.Title</h2>
+                    <p>Instructor: @item.Instructor.FullName</p>
+                </a>
+            </li>
+        }
+
+        </ul>
+    }
+}
+else
+{
+    <p>Please register or log in to see the list of available courses.</p>
+    @Html.Partial("_LoginPartial")
+}
+

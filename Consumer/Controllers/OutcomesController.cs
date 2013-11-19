@@ -1,238 +1,138 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Web;
-using System.Web.Http;
-using System.Web.Http.Controllers;
 using Consumer.Models;
-using log4net;
-using OAuth.Net.Common;
-using OAuth.Net.Components;
+using LtiLibrary.Consumer;
+using inBloomLibrary;
 
 namespace Consumer.Controllers
 {
     /// <summary>
-    /// Validate the OAuth Authorization header by checking the body hash
-    /// and signature.
+    /// Implements the LTI Basic Outcomes API.
     /// </summary>
-    public class OAuthAuthorizeAttribute : AuthorizeAttribute
+    public class OutcomesController : OutcomesControllerBase
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly ConsumerContext _db = new ConsumerContext();
 
-        protected override bool IsAuthorized(HttpActionContext actionContext)
+        /// <summary>
+        /// Returns a list of all the known consumer secrets for the given consumer key.
+        /// </summary>
+        /// <param name="consumerKey">The consumer key.</param>
+        /// <returns>The list of consumer secrets.</returns>
+        protected override IList<string> GetConsumerSecrets(string consumerKey)
         {
-            var request = actionContext.Request;
-
-            if (request.Headers.Authorization == null)
-            {
-                log.Info("No Authorization header");
-                return false;
-            }
-
-            if (!request.Headers.Authorization.Scheme.Equals(Constants.OAuthAuthScheme))
-            {
-                log.Info("Authorization scheme is not OAuth");
-                return false;
-            }
-
-            using (var db = new ConsumerContext())
-            {
-                log.Debug("Authorization Params: " + request.Headers.Authorization.Parameter);
-
-                var oauth_consumer_key = string.Empty;
-                var oauth_signature = string.Empty;
-                var oauthParameters = new OAuthParameters();
-
-                // Parse the Authorization parameter and extract the signature
-
-                foreach (var pair in request.Headers.Authorization.Parameter.Split(','))
-                {
-                    var keyValue = pair.Split('=');
-                    var key = keyValue[0];
-                    var value = HttpUtility.UrlDecode(keyValue[1].Trim('"'));
-
-                    if (key.Equals("oauth_signature"))
-                    {
-                        oauth_signature = value;
-                    }
-                    else if (key.StartsWith("oauth_"))
-                    {
-                        if (key.Equals(Constants.ConsumerKeyParameter))
-                            oauth_consumer_key = value;
-                        oauthParameters.AdditionalParameters.Add(key, value);
-                    }
-                }
-
-                // Compare the body hash to make sure the content was not
-                // tampered with
-
-                using (var sha1 = new SHA1CryptoServiceProvider())
-                using (var task = request.Content.ReadAsStreamAsync())
-                {
-                    task.Wait(3000);
-                    if (!task.IsCompleted)
-                    {
-                        log.Error("Timeout reading request content");
-                        return false;
-                    }
-
-                    var hash = sha1.ComputeHash(task.Result);
-                    var hash64 = Convert.ToBase64String(hash);
-                    task.Result.Position = 0;
-
-                    if (!hash64.Equals(oauthParameters.AdditionalParameters["oauth_body_hash"]))
-                    {
-                        log.Info("oauth_body_hash does not match");
-                        return false;
-                    }
-                }
-
-                var signatureProvider = new HmacSha1SigningProvider();
-                var signatureBase = SignatureBase.Create("POST", request.RequestUri, oauthParameters);
-                log.Debug("Signature base: " + signatureBase);
-
-                // The key may be used by multiple providers, so scan them all
-                // until a match is found
-
-                foreach (var assignment in db.Assignments.Where(a => a.ConsumerKey == oauth_consumer_key))
-                {
-                    var signature = signatureProvider.ComputeSignature(signatureBase, assignment.Secret, string.Empty);
-                    if (signature.Equals(oauth_signature))
-                        return true;
-                }
-
-                log.Debug("OAuth signature does not match");
-                return false;
-            }
-        }
-    }
-
-    public class OutcomesController : ApiController
-    {
-        private ConsumerContext db = new ConsumerContext();
-
-        // POST api/outcomes
-
-        [HttpPost, OAuthAuthorize]
-        public imsx_POXEnvelopeType Post(imsx_POXEnvelopeType request)
-        {
-            imsx_POXEnvelopeType response;
-
-            var requestHeader = request.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
-            var requestBody = request.imsx_POXBody;
-
-            if (requestBody.Item is deleteResultRequest)
-            {
-                var deleteRequest = requestBody.Item as deleteResultRequest;
-                var deleteResponse = new deleteResultResponse();
-
-                var score = GetScore(deleteRequest.resultRecord);
-                if (score != null)
-                {
-                    db.Scores.Remove(score);
-                    db.SaveChanges();
-                }
-
-                response = CreateResponse(requestHeader,
-                    string.Format("Score for {0} is deleted",
-                        deleteRequest.resultRecord.sourcedGUID.sourcedId
-                        ));
-                response.imsx_POXBody.Item = deleteResponse;
-                return response;
-            }
-            else if (requestBody.Item is readResultRequest)
-            {
-                var readRequest = requestBody.Item as readResultRequest;
-                var readResponse = new readResultResponse();
-
-                var score = GetScore(readRequest.resultRecord);
-                if (score == null)
-                {
-                    response = CreateResponse(requestHeader,
-                        string.Format("Score for {0} not found",
-                            readRequest.resultRecord.sourcedGUID.sourcedId
-                            ));
-                    response.imsx_POXBody.Item = readResponse;
-                    var header = response.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-                    header.imsx_statusInfo.imsx_codeMinor = new imsx_CodeMinorFieldType[] {
-                        new imsx_CodeMinorFieldType() {
-                            imsx_codeMinorFieldName = "sourcedId",
-                            imsx_codeMinorFieldValue = imsx_CodeMinorValueType.unknownobject
-                        }};
-                }
-                else
-                {
-                    response = CreateResponse(requestHeader,
-                        string.Format("Score for {0} is read",
-                            readRequest.resultRecord.sourcedGUID.sourcedId
-                            ));
-                    readResponse.result = new ResultType();
-                    readResponse.result.resultScore = new TextType();
-                    readResponse.result.resultScore.language = "en-US";
-                    readResponse.result.resultScore.textString = score.DecimalValue.ToString();
-                    response.imsx_POXBody.Item = readResponse;
-                }
-                return response;
-            }
-            else if (requestBody.Item is replaceResultRequest)
-            {
-                var replaceRequest = requestBody.Item as replaceResultRequest;
-                var replaceResponse = new replaceResultResponse();
-
-                var score = GetScore(replaceRequest.resultRecord);
-                if (score == null)
-                {
-                    score = CreateScore(replaceRequest.resultRecord);
-                    db.Scores.Add(score);
-                }
-                score.DecimalValue = GetScoreValue(replaceRequest.resultRecord);
-                db.SaveChanges();
-
-                response = CreateResponse(requestHeader,
-                    string.Format("Score for {0} is now {1}",
-                        replaceRequest.resultRecord.sourcedGUID.sourcedId,
-                        replaceRequest.resultRecord.result.resultScore.textString
-                        ));
-                response.imsx_POXBody.Item = replaceResponse;
-                return response;
-            }
-            else
-            {
-                response = CreateResponse(requestHeader, "Request is not supported");
-                var header = response.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-                header.imsx_statusInfo.imsx_codeMajor = imsx_CodeMajorType.unsupported;
-                return response;
-            }
+            // Every assignment has a consumer key and consumer secret.
+            return _db.Assignments
+                .Where(a => a.ConsumerKey == consumerKey)
+                .Select(assignment => assignment.ConsumerSecret)
+                .Distinct()
+                .ToList();
         }
 
-        private static imsx_POXEnvelopeType CreateResponse(imsx_RequestHeaderInfoType requestHeader, string description)
+        /// <summary>
+        /// Delete the Score that corresponds to the result.
+        /// </summary>
+        /// <param name="result">The LTI result.</param>
+        /// <returns>True if the Score was deleted.</returns>
+        protected override bool DeleteResult(Result result)
         {
-            var response = new imsx_POXEnvelopeType();
-            response.imsx_POXHeader = new imsx_POXHeaderType();
-            response.imsx_POXHeader.Item = new imsx_ResponseHeaderInfoType();
-
-            var item = response.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-            item.imsx_version = imsx_GWSVersionValueType.V10;
-            item.imsx_messageIdentifier = Guid.NewGuid().ToString();
-            item.imsx_statusInfo = new imsx_StatusInfoType();
-
-            var status = item.imsx_statusInfo;
-            status.imsx_codeMajor = imsx_CodeMajorType.success;
-            status.imsx_severity = imsx_SeverityType.status;
-            status.imsx_description = description;
-            status.imsx_messageRefIdentifier = requestHeader.imsx_messageIdentifier;
-
-            response.imsx_POXBody = new imsx_POXBodyType();
-            return response;
+            var model = GetScore(result);
+            if (model.IsValid && model.Score != null)
+            {
+                _db.Scores.Remove(model.Score);
+                _db.SaveChanges();
+                return true;
+            }
+            return false;
         }
 
-        private Score CreateScore(ResultRecordType resultRecord)
+        /// <summary>
+        /// Fill the Result with corresponding Score data.
+        /// </summary>
+        /// <param name="result">The LTI result.</param>
+        /// <returns>True if the Score was found and the Result is valid.</returns>
+        protected override bool ReadResult(Result result)
+        {
+            var score = GetScore(result);
+            if (score.IsValid)
+            {
+                result.DoubleValue = score.Score == null ? default(double?) : score.Score.DoubleValue;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Create or update a Score with the LTI result.
+        /// </summary>
+        /// <param name="result">The LTI result.</param>
+        /// <returns>True if the Score was created or updated.</returns>
+        protected override bool ReplaceResult(Result result)
+        {
+            var score = GetScore(result);
+            if (score.IsValid)
+            {
+                if (score.Score == null)
+                {
+                    score.Score = CreateScore(result);
+                    _db.Scores.Add(score.Score);
+                }
+                if (result.DoubleValue.HasValue)
+                {
+                    score.Score.DoubleValue = result.DoubleValue.Value;
+                }
+                _db.SaveChanges();
+
+                // If this is an inBloom assignment, then send the doubleValue to inBloom.
+                SetInBloomScore(score.Score.UserId, score.Score.AssignmentId, score.Score.DoubleValue);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Send a Score to inBloom.
+        /// </summary>
+        /// <param name="userId">The user ID.</param>
+        /// <param name="assignmentId">The assignment ID.</param>
+        /// <param name="doubleValue">The score as a decimal value (0.0 - 1.0).</param>
+        private void SetInBloomScore(int userId, int assignmentId, double doubleValue)
+        {
+            var user = _db.Users.Find(userId);
+            if (user == null || string.IsNullOrEmpty(user.SlcUserId))
+            {
+                return;
+            }
+
+            var assignment = _db.Assignments.Find(assignmentId);
+            if (assignment == null || string.IsNullOrEmpty(assignment.inBloomGradebookEntryId))
+            {
+                return;
+            }
+
+            // LTI scores are between 0 and 1.0. SLC scores are between 0 and 100.
+            var assignmentScore = new inBloomLibrary.Models.AssignmentScore
+            {
+                GradebookEntryId = assignment.inBloomGradebookEntryId,
+                NumericGradeEarned = Convert.ToInt32(doubleValue * 100.0),
+                StudentId = user.SlcUserId,
+                TenantId = assignment.inBloomTenantId
+            };
+
+            inBloomApi.SetStudentGradebookEntryScore(assignmentScore);
+        }
+
+        /// <summary>
+        /// Create a new Score based on the Result that was sent.
+        /// </summary>
+        /// <param name="result">The result record that was sent in the request.</param>
+        /// <returns>The Score based on the result.</returns>
+        private static Score CreateScore(Result result)
         {
             int assignmentId;
             int userId;
 
-            var ids = resultRecord.sourcedGUID.sourcedId.Split('-');
+            var ids = result.SourcedGuid.Split('-');
             int.TryParse(ids[0], out assignmentId);
             int.TryParse(ids[1], out userId);
 
@@ -243,29 +143,48 @@ namespace Consumer.Controllers
                 };
         }
 
-        private Score GetScore(ResultRecordType resultRecord)
+        /// <summary>
+        /// Return an existing Score based on the ressult.
+        /// </summary>
+        /// <param name="result">The resultRecord which 
+        /// specifies the assignment.</param>
+        /// <returns>The existing Score or null if the doubleValue
+        /// did not exist.</returns>
+        private ReadScoreModel GetScore(Result result)
         {
             int assignmentId;
             int userId;
 
-            var ids = resultRecord.sourcedGUID.sourcedId.Split('-');
+            var ids = result.SourcedGuid.Split('-');
             int.TryParse(ids[0], out assignmentId);
             int.TryParse(ids[1], out userId);
 
-            return db.Scores.FirstOrDefault(
-                s => s.AssignmentId == assignmentId && s.UserId == userId);
-        }
+            var assignment = _db.Assignments.Find(assignmentId);
+            if (assignment == null)
+            {
+                return new ReadScoreModel { IsValid = false };
+            }
 
-        private decimal GetScoreValue(ResultRecordType resultRecord)
-        {
-            decimal value;
-            decimal.TryParse(resultRecord.result.resultScore.textString, out value);
-            return value;
+            var user = _db.Users.Find(userId);
+            if (user == null)
+            {
+                return new ReadScoreModel { IsValid = false };
+            }
+
+            if (!assignment.Course.EnrolledUsers.Contains(user))
+            {
+                return new ReadScoreModel { IsValid = false };
+            }
+
+            var score = _db.Scores.FirstOrDefault
+                (s => s.AssignmentId == assignmentId && s.UserId == userId);
+
+            return new ReadScoreModel { Score = score, IsValid = true };
         }
 
         protected override void Dispose(bool disposing)
         {
-            db.Dispose();
+            _db.Dispose();
             base.Dispose(disposing);
         }
     }

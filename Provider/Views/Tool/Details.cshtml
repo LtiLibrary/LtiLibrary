@@ -1,0 +1,45 @@
+﻿@model Provider.Models.Tool
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<hgroup class="title">
+    <h1>
+        @ViewBag.Title.
+    </h1>
+    <h2>Tool details.</h2>
+</hgroup>
+
+@Html.Raw(Model.Description)
+
+<h3>Sharing</h3>
+<p>
+    To use this tool in your consumer application, copy and paste this URL:<br />
+    @Html.TextBox("Url", Url.Action("View", "Tool", new { id = Model.ToolId }, Request.Url.Scheme), new { @readonly = "readonly" })
+</p>
+
+<div id="accordian">
+    <h3>Content</h3>
+    <div>
+        @if (string.IsNullOrEmpty(Model.Content)) {
+            <text>(empty)</text>
+        } else {
+            @Html.Raw(Model.Content)
+        }
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ToolId }, new { @class = "button" })
+    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+</p>
+
+@section Scripts {
+    <script>
+        $(function () {
+            // Divide the form into sections using jQuery UI Accordian
+            $("#accordian").accordion();
+        });
+    </script>
+}

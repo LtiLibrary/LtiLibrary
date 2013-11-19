@@ -1,0 +1,47 @@
+﻿@model LtiLibrary.Models.Consumer
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+    <h2>Edit this LTI Tool Consumer.</h2>
+</hgroup>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Consumer</legend>
+
+        @Html.HiddenFor(model => model.ConsumerId)
+
+        <ol>
+            <li>
+                @Html.LabelFor(model => model.Name)
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Key)
+                @Html.EditorFor(model => model.Key)
+                @Html.ValidationMessageFor(model => model.Key)
+            </li>
+            <li>
+                @Html.LabelFor(model => model.Secret)
+                @Html.EditorFor(model => model.Secret)
+                @Html.ValidationMessageFor(model => model.Secret)
+            </li>
+        </ol>
+    </fieldset>
+
+    <div>
+        <input type="submit" value="Save" />
+        @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

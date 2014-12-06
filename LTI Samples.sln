@@ -22,31 +22,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.Owin.Security.Lt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.AspNet.Identity.Owin", "LtiLibrary.AspNet.Identity.Owin\LtiLibrary.AspNet.Identity.Owin.csproj", "{224E9981-ED1A-4879-9C80-AF6A15A00089}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{718E964E-1C8E-473B-823A-0EEAB10F5F9B}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs01
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Consumer\\Consumer.csproj
-		SccProjectName1 = Consumer
-		SccLocalPath1 = Consumer
-		SccProjectUniqueName2 = Provider\\Provider.csproj
-		SccProjectName2 = Provider
-		SccLocalPath2 = Provider
-		SccProjectUniqueName3 = LtiLibrary\\LtiLibrary.csproj
-		SccProjectName3 = LtiLibrary
-		SccLocalPath3 = LtiLibrary
-		SccProjectUniqueName4 = SimpleLti12\\SimpleLti12.csproj
-		SccProjectName4 = SimpleLti12
-		SccLocalPath4 = SimpleLti12
-		SccProjectUniqueName5 = LtiLibrary.Owin.Security.Lti\\LtiLibrary.Owin.Security.Lti.csproj
-		SccProjectName5 = LtiLibrary.Owin.Security.Lti
-		SccLocalPath5 = LtiLibrary.Owin.Security.Lti
-		SccProjectUniqueName6 = LtiLibrary.AspNet.Identity.Owin\\LtiLibrary.AspNet.Identity.Owin.csproj
-		SccProjectName6 = LtiLibrary.AspNet.Identity.Owin
-		SccLocalPath6 = LtiLibrary.AspNet.Identity.Owin
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

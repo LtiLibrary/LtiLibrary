@@ -7,13 +7,19 @@
 
 <h1>@ViewBag.Title</h1>
 
-<p class="message-success">@ViewBag.StatusMessage</p>
+@if (ViewBag.ShowAssign)
+{
+    @Html.ActionLink("Assign", "PlaceContentItem", new { id = Model.ToolId })
+}
+
+<p class="text-info">@ViewBag.StatusMessage</p>
 
 @Html.Action("Context")
 
-@Html.Action("PostScores", new { toolId = Model.ToolId })
+@Html.Action("PostScores", new { id = Model.ToolId })
 
-<h3 style="border-bottom:1px solid">Content</h3>
+<h4>Content</h4>
+<hr />
 
 @Html.Raw(Model.Content)
 

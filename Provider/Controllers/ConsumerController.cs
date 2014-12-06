@@ -1,17 +1,37 @@
-﻿using System;
-using System.Data;
+﻿using System.Web;
+using Microsoft.AspNet.Identity.Owin;
+using Provider.Models;
+using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
-using LtiLibrary.Models;
-using Provider.Models;
 
 namespace Provider.Controllers
 {
     [Authorize]
     public class ConsumerController : Controller
     {
-        private readonly ProviderContext _db = new ProviderContext();
         private const string UniqueKeyErrorMessage = "The Key field must be unique";
+
+        public ConsumerController() {}
+
+        public ConsumerController(ProviderContext providerContext)
+        {
+            ProviderContext = providerContext;
+        }
+
+        private ProviderContext _providerContext;
+        public ProviderContext ProviderContext
+        {
+            get
+            {
+                return _providerContext ?? HttpContext.GetOwinContext().Get<ProviderContext>();
+            }
+            set
+            {
+                _providerContext = value;
+            }
+        }
 
         //
         // GET: /Consumer/
@@ -19,7 +39,7 @@ namespace Provider.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            return View(_db.Consumers.ToList());
+            return View(ProviderContext.Consumers.ToList());
         }
 
         //
@@ -27,7 +47,7 @@ namespace Provider.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Consumer consumer = _db.Consumers.Find(id);
+            Consumer consumer = ProviderContext.Consumers.Find(id);
             if (consumer == null)
             {
                 return HttpNotFound();
@@ -55,7 +75,7 @@ namespace Provider.Controllers
             if (ModelState.IsValid)
             {
                 // Make sure the user did not create a non-unique key
-                var match = _db.Consumers.SingleOrDefault(
+                var match = ProviderContext.Consumers.SingleOrDefault(
                     c => c.Key == consumer.Key);
                 if (match != null)
                 {
@@ -63,8 +83,8 @@ namespace Provider.Controllers
                 }
                 else
                 {
-                    _db.Consumers.Add(consumer);
-                    _db.SaveChanges();
+                    ProviderContext.Consumers.Add(consumer);
+                    ProviderContext.SaveChanges();
                     if (string.IsNullOrEmpty(Request["ReturnURL"]))
                     {
                         return RedirectToAction("Index");
@@ -82,7 +102,7 @@ namespace Provider.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            Consumer consumer = _db.Consumers.Find(id);
+            Consumer consumer = ProviderContext.Consumers.Find(id);
             if (consumer == null)
             {
                 return HttpNotFound();
@@ -100,7 +120,7 @@ namespace Provider.Controllers
             {
                 // Make sure the user did not change the Key to
                 // a non-unique value
-                var match = _db.Consumers.SingleOrDefault(
+                var match = ProviderContext.Consumers.SingleOrDefault(
                     c => c.Key == consumer.Key && c.ConsumerId != consumer.ConsumerId);
                 if (match != null)
                 {
@@ -108,8 +128,8 @@ namespace Provider.Controllers
                 }
                 else
                 {
-                    _db.Entry(consumer).State = EntityState.Modified;
-                    _db.SaveChanges();
+                    ProviderContext.Entry(consumer).State = EntityState.Modified;
+                    ProviderContext.SaveChanges();
                     return RedirectToAction("Index");
                 }
             }
@@ -121,7 +141,7 @@ namespace Provider.Controllers
 
         public ActionResult Delete(int id = 0)
         {
-            Consumer consumer = _db.Consumers.Find(id);
+            Consumer consumer = ProviderContext.Consumers.Find(id);
             if (consumer == null)
             {
                 return HttpNotFound();
@@ -135,16 +155,10 @@ namespace Provider.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Consumer consumer = _db.Consumers.Find(id);
-            _db.Consumers.Remove(consumer);
-            _db.SaveChanges();
+            Consumer consumer = ProviderContext.Consumers.Find(id);
+            ProviderContext.Consumers.Remove(consumer);
+            ProviderContext.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _db.Dispose();
-            base.Dispose(disposing);
         }
     }
 }

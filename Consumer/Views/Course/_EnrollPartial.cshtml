@@ -4,25 +4,19 @@
 @using (Html.BeginForm("Enroll", "Course"))
 {
     @Html.ValidationSummary(true)
-    
+
     @Html.HiddenFor(model => model.CourseId)
     @Html.HiddenFor(model => model.Enrolled)
     @Html.HiddenFor(model => model.UserId)
 
-    <ul>
-        @if (Model.Enrolled)
-        {
-            <li>
-                You are enrolled in this course.<br />
-                <input type="submit" value="Unenroll" />
-            </li>
-        }
-        else
-        {
-            <li>
-                You are not enrolled in this course.<br />
-                <input type="submit" value="Enroll" />
-            </li>
-        }
-    </ul>
+    if (Model.Enrolled)
+    {
+        <text>You are enrolled in this course.<br /></text>
+        <input type="submit" value="Unenroll" />
+    }
+    else
+    {
+        <text>You are not enrolled in this course.<br /></text>
+        <input type="submit" value="Enroll" />
+    }
 }

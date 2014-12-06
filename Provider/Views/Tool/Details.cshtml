@@ -4,42 +4,25 @@
     ViewBag.Title = Model.Name;
 }
 
-<hgroup class="title">
-    <h1>
-        @ViewBag.Title.
-    </h1>
-    <h2>Tool details.</h2>
-</hgroup>
-
+<h2>@ViewBag.Title.</h2>
 @Html.Raw(Model.Description)
 
-<h3>Sharing</h3>
+<h4 style="border-bottom:1px solid">Sharing</h4>
 <p>
     To use this tool in your consumer application, copy and paste this URL:<br />
-    @Html.TextBox("Url", Url.Action("View", "Tool", new { id = Model.ToolId }, Request.Url.Scheme), new { @readonly = "readonly" })
+    @Html.TextBox("Url", Url.Action("View", "Tool", new RouteValueDictionary( new {id = Model.ToolId} ), (Request == null ? "http" : Request.Url == null ? "http" : Request.Url.Scheme)), new { @readonly = "readonly", @class = "form-control" })
 </p>
 
-<div id="accordian">
-    <h3>Content</h3>
-    <div>
-        @if (string.IsNullOrEmpty(Model.Content)) {
-            <text>(empty)</text>
-        } else {
-            @Html.Raw(Model.Content)
-        }
-    </div>
+<h4 style="border-bottom:1px solid">Content</h4>
+<div>
+    @if (string.IsNullOrEmpty(Model.Content)) {
+        <text>(empty)</text>
+    } else {
+        @Html.Raw(Model.Content)
+    }
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.ToolId }, new { @class = "button" })
-    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ToolId }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>
-
-@section Scripts {
-    <script>
-        $(function () {
-            // Divide the form into sections using jQuery UI Accordian
-            $("#accordian").accordion();
-        });
-    </script>
-}

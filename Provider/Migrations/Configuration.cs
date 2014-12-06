@@ -1,14 +1,10 @@
-using LtiLibrary.Models;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Provider.Migrations
 {
-    using System;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Migrations;
-    using System.IO;
-    using System.IO.Compression;
-    using System.Linq;
     using Models;
+    using System.Data.Entity.Migrations;
 
     public sealed class Configuration : DbMigrationsConfiguration<ProviderContext>
     {
@@ -19,52 +15,10 @@ namespace Provider.Migrations
 
         protected override void Seed(ProviderContext context)
         {
-            var autoDetectChangesEnabled = context.Configuration.AutoDetectChangesEnabled;
-            var commandTimeout = (context as IObjectContextAdapter).ObjectContext.CommandTimeout;
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
 
-            // Speed up the bulk seed process
-            context.Configuration.AutoDetectChangesEnabled = false;
-            (context as IObjectContextAdapter).ObjectContext.CommandTimeout = 0;
-
-            // Tried embedding the sql, but the resulting App.dll was huge, which meant
-            // the publishing was kind of slow. Changed to treating the sql as content
-            // and uploading once.
-            var appData = AppDomain.CurrentDomain.GetData("DataDirectory").ToString();
-            if (context.Database.SqlQuery<int>("select count(0) from States").FirstOrDefault() == 0)
-            {
-                using (var archive = ZipFile.OpenRead(Path.Combine(appData, "States.zip")))
-                {
-                    var entry = archive.GetEntry("States.sql");
-                    using (var reader = new StreamReader(entry.Open()))
-                    {
-                        context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
-                    }
-                }
-            }
-            if (context.Database.SqlQuery<int>("select count(0) from Districts").FirstOrDefault() == 0)
-            {
-                using (var archive = ZipFile.OpenRead(Path.Combine(appData, "Districts.zip")))
-                {
-                    var entry = archive.GetEntry("Districts.sql");
-                    using (var reader = new StreamReader(entry.Open()))
-                    {
-                        context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
-                    }
-                }
-            }
-            if (context.Database.SqlQuery<int>("select count(0) from Schools").FirstOrDefault() == 0)
-            {
-                using (var archive = ZipFile.OpenRead(Path.Combine(appData, "Schools.zip")))
-                {
-                    var entry = archive.GetEntry("Schools.sql");
-                    using (var reader = new StreamReader(entry.Open()))
-                    {
-                        context.Database.ExecuteSqlCommand(reader.ReadToEnd(), new object[] { });
-                    }
-                }
-            }
-            context.Configuration.AutoDetectChangesEnabled = autoDetectChangesEnabled;
-            (context as IObjectContextAdapter).ObjectContext.CommandTimeout = commandTimeout;
+            if (!roleManager.RoleExists(UserRoles.AdminRole)) roleManager.Create(new IdentityRole(UserRoles.AdminRole));
+            if (!roleManager.RoleExists(UserRoles.SuperUserRole)) roleManager.Create(new IdentityRole(UserRoles.SuperUserRole));
 
             context.Consumers.AddOrUpdate(new [] {
                 new Consumer { 

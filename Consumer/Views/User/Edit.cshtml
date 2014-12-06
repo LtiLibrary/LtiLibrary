@@ -4,127 +4,77 @@
     ViewBag.Title = Model.UserName;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Edit your profile.</h2>
-</hgroup>
+<h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(model => model.UserId)
-    @Html.HiddenFor(model => model.UserName)
+    <div class="form-horizontal">
+        <h4>Edit your profile.</h4>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UserId)
+        @Html.HiddenFor(model => model.UserName)
 
-    <div id="accordian">
-        <h3>Name and email address</h3>
-        <div>
-            <fieldset>
-                <legend>Name and email address</legend>
-                <ol>
-                <li>
-                    @Html.LabelFor(model => model.FirstName)
-                    @Html.EditorFor(model => model.FirstName)
-                    @Html.ValidationMessageFor(model => model.FirstName)
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.LastName)
-                    @Html.EditorFor(model => model.LastName)
-                    @Html.ValidationMessageFor(model => model.LastName)
-                </li>
-                <li>
-                    @Html.LabelFor(model => model.Email)
-                    @Html.EditorFor(model => model.Email)
-                    @Html.ValidationMessageFor(model => model.Email)
-                </li>
-                </ol>
-            </fieldset>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.FirstName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.LastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.CheckBoxFor(model => model.IsTeacher, new { @class = "checkbox-inline" })
+                @Html.LabelFor(model => model.IsTeacher, "I am a teacher")
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.CheckBoxFor(model => model.IsStudent, new { @class = "checkbox-inline" })
+                @Html.LabelFor(model => model.IsStudent, "I am a student")
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.SendName, new { htmlAttributes = new { @class = "checkbox-inline" } })
+                @Html.LabelFor(model => model.SendName)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @Html.EditorFor(model => model.SendEmail, new { htmlAttributes = new { @class = "checkbox-inline" }})
+                @Html.LabelFor(model => model.SendEmail)
+            </div>
         </div>
 
-        <h3>Roles</h3>
-        <div>
-            <fieldset>
-                <legend>Roles</legend>
-                <ol>
-                    <li>
-                        @Html.CheckBoxFor(model => model.IsTeacher)
-                        @Html.LabelFor(model => model.IsTeacher, "I am a teacher", new { @class = "checkbox" })
-                    </li>
-                    <li>
-                        @Html.CheckBoxFor(model => model.IsStudent)
-                        @Html.LabelFor(model => model.IsStudent, "I am a student", new { @class = "checkbox" })
-                    </li>
-                </ol>
-            </fieldset>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
         </div>
-
-        <h3>Privacy</h3>
-        <div>
-            <fieldset>
-                <legend>Privacy</legend>
-                <ol>
-                    <li>
-                        @Html.EditorFor(model => model.SendName)
-                        @Html.LabelFor(model => model.SendName, new { @class = "checkbox" })
-                    </li>
-                    <li>
-                        @Html.EditorFor(model => model.SendEmail)
-                        @Html.LabelFor(model => model.SendEmail, new { @class = "checkbox" })
-                    </li>
-                </ol>
-            </fieldset>
-        </div>
-    </div>
-
-    <div>
-        <input type="submit" value="Save" />
-        @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
     </div>
 }
 
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/chosen.jquery.js")
-    <script>
-        $(function () {
-            // Divide the form into sections using jQuery UI Accordian
-            $("#accordian").accordion();
-            // Convert the location select elements into fancy combo boxes
-            $("select.chosen").chosen({ allow_single_deselect: true });
-            // If the State selection changes, then clear the district and school,
-            // and then reload district (if state is not empty)
-            var stateId = $("#StateId");
-            var districtId = $("#DistrictId");
-            var schoolId = $("#SchoolId");
-            stateId.change(function () {
-                districtId.val("").html("<option />").trigger("liszt:updated").trigger("change");
-            });
-            districtId.change(function () {
-                schoolId.val("").html("<option />").trigger("liszt:updated").trigger("change");
-                if (stateId.val() != "" && stateId.val() != districtId.data("StateId")) {
-                    $("#DistrictId_chzn > a > span").html("Please wait...");
-                    districtId.data("StateId", stateId.val());
-                    $.getJSON(districtId.data("source") + "?stateId=" + districtId.data("StateId"),
-                        function (result) {
-                            $.each(result, function () {
-                                districtId.append($("<option />").val(this.Id).text(this.Name));
-                            });
-                            districtId.trigger("liszt:updated");
-                        });
-                }
-            });
-            schoolId.change(function () {
-                if (districtId.val() != "" && districtId.val() != schoolId.data("DistrictId")) {
-                    $("#SchoolId_chzn > a > span").html("Please wait...");
-                    schoolId.data("DistrictId", districtId.val());
-                    $.getJSON(schoolId.data("source") + "?districtId=" + schoolId.data("DistrictId"),
-                        function (result) {
-                            $.each(result, function () {
-                                schoolId.append($("<option />").val(this.Id).text(this.Name));
-                            });
-                            schoolId.trigger("liszt:updated");
-                        });
-                }
-            });
-        });
-    </script>
 }

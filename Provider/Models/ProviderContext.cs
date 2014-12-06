@@ -1,22 +1,24 @@
 ﻿using System.Data.Entity;
-using LtiLibrary.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Provider.Lti;
 
 namespace Provider.Models
 {
-    public class ProviderContext : DbContext
+    public class ProviderContext : IdentityDbContext<ApplicationUser>
     {
-        public ProviderContext() : base("DefaultConnection") {}
+        public ProviderContext() : base("DefaultConnection", throwIfV1Schema: false) {}
 
-        public DbSet<District> Districts { get; set; }
+        public static ProviderContext Create()
+        {
+            return new ProviderContext();
+        }
+
         public DbSet<PairedUser> PairedUsers { get; set; }
-        public DbSet<School> Schools { get; set; }
-        public DbSet<State> States { get; set; }
         public DbSet<Tool> Tools { get; set; }
-        public DbSet<User> Users { get; set; }
 
         // From LtiLibrary
         public DbSet<Consumer> Consumers { get; set; }
-        public DbSet<LtiInboundRequest> LtiRequests { get; set; }
+        public DbSet<ProviderRequest> ProviderRequests { get; set; }
         public DbSet<Outcome> Outcomes { get; set; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using Provider.Filters;
 
 namespace Provider.Controllers
 {
+    [XFrameOptionsHeader]
     public class ErrorController : Controller
     {
         public ActionResult BadRequest(string error)

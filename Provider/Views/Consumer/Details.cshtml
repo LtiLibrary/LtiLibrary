@@ -1,32 +1,25 @@
-﻿@model LtiLibrary.Models.Consumer
+﻿@model Provider.Models.Consumer
 
 @{
     ViewBag.Title = Model.Name;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Examine the details of this LTI Tool Consumer.</h2>
-</hgroup>
+<h2>@ViewBag.Title.</h2>
 
-<p>Copy the Key and Secret into the appropriate fields of the Tool Consumer.</p>
+<p>Copy the Key and Secret into the appropriate fields of your learning system.</p>
 
-<fieldset>
-    <legend>Consumer</legend>
-
-        <ol>
-            <li>
-                @Html.LabelFor(model => model.Key)
-                @Html.DisplayFor(model => model.Key)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Secret)
-                @Html.DisplayFor(model => model.Secret)
-            </li>
-        </ol>
-</fieldset>
+<div>
+    <h4>Consumer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>@Html.DisplayNameFor(model => model.Key)</dt>
+        <dd>@Html.DisplayFor(model => model.Key)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Secret)</dt>
+        <dd>@Html.DisplayFor(model => model.Secret)</dd>
+    </dl>
+</div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.ConsumerId }, new { @class = "button" })
-    @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ConsumerId }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

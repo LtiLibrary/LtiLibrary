@@ -1,57 +1,69 @@
 ﻿@model Provider.Models.Tool
 
 @{
-    ViewBag.Title = Model.Name;
+    ViewBag.Title = "Edit Tool";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Edit this tool.</h2>
-</hgroup>
+<h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ToolId)
 
-    <fieldset>
-        <legend>Tool</legend>
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
 
-        @Html.HiddenFor(model => model.ToolId)
-
-        <ol>
-            <li>
-                @Html.LabelFor(model => model.Name)
-                @Html.EditorFor(model => model.Name)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Name)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Description)
-                @Html.TextAreaFor(model => model.Description, new { @class = "tinymce" })
-                @Html.ValidationMessageFor(model => model.Description)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Content)
-                @Html.TextAreaFor(model => model.Content, new { @class = "tinymce" })
-                @Html.ValidationMessageFor(model => model.Content)
-            </li>
-       </ol>
-    </fieldset>
+            </div>
+        </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Content, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Content, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Content)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    
     <div>
-        <input type="submit" value="Save" />
-        @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+        @Html.ActionLink("Back to List", "Index")
     </div>
 }
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/tiny_mce/jquery.tinymce.js")
-    <script>
-        $(function () {
-            $(".tinymce").tinymce({
-                script_url: "../../Scripts/tiny_mce/tiny_mce.js",
-                theme: "simple",
-                content_css: "../../Content/tiny_mce.css"
-            });
+    @Scripts.Render("~/Scripts/tinymce/tinymce.min.js")
+    <script type="text/javascript">
+        tinymce.init({
+            selector: '#Description',
+            menubar: false,
+            statusbar: false
+        });
+        tinymce.init({
+            selector: '#Content',
+            menubar: false,
+            statusbar: false,
+            height: 300
         });
     </script>
 }

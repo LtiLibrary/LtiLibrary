@@ -1,12 +1,12 @@
-﻿@model Consumer.Models.Course
+﻿@model Consumer.Models.CourseViewModel
 
 @{
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = Model.Course.Name;
     ViewBag.ReturnUrl = Url.Action("Index", "Home", null);
     ViewBag.ReturnLabel = "Courses";
 }
 
-@if (Model.Assignments.Count() == 0)
+@if (!Model.Course.Assignments.Any())
 {
     <text>There are no assignments yet.</text>
 }
@@ -14,7 +14,7 @@ else
 {
     <ul data-role="listview" data-filter="true">
 
-    @foreach (var assignment in Model.Assignments)
+    @foreach (var assignment in Model.Course.Assignments)
     {
         @Html.Action("CourseAssignment", new { id = assignment.AssignmentId })
     }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 
 namespace Consumer.Models
 {
@@ -34,87 +32,16 @@ namespace Consumer.Models
     public class Course
     {
         public int CourseId { get; set; }
-        public virtual User Instructor { get; set; }
+        public virtual ApplicationUser Instructor { get; set; }
+        [Required]
         public string Name { get; set; }
-        public string inBloomSectionId { get; set; }
-        public virtual State State { get; set; }
-        public virtual District District { get; set; }
-        public virtual School School { get; set; }
         public virtual ICollection<Assignment> Assignments { get; set; }
-        public virtual ICollection<User> EnrolledUsers { get; set; }
+        public virtual ICollection<ApplicationUser> EnrolledUsers { get; set; }
 
         public Course()
         {
             Assignments = new HashSet<Assignment>();
-            EnrolledUsers = new HashSet<User>();
+            EnrolledUsers = new HashSet<ApplicationUser>();
         }
-
-        public string Title
-        {
-            get
-            {
-                return string.IsNullOrEmpty(inBloomSectionId) ? Name : string.Format("SLC: {0}", Name);
-            }
-        }
-    }
-
-    public class CreateEditCourseModel
-    {
-        public int CourseId { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Display(Name = "State")]
-        public string StateId { get; set; }
-
-        [Display(Name = "District")]
-        public string DistrictId { get; set; }
-
-        [Display(Name = "School")]
-        public string SchoolId { get; set; }
-
-        public SelectList AvailableDistricts { get; set; }
-        public SelectList AvailableSchools { get; set; }
-        public SelectList AvailableStates { get; set; }
-
-        public CreateEditCourseModel() { }
-        public CreateEditCourseModel(Course course)
-        {
-            CourseId = course.CourseId;
-            DistrictId = course.District == null ? null : course.District.DistrictId;
-            Name = course.Name;
-            SchoolId = course.School == null ? null : course.School.SchoolId;
-            StateId = course.State == null ? null : course.State.StateId;
-        }
-
-        public string Title
-        {
-            get
-            {
-                return Name;
-            }
-        }
-    }
-
-    public class CourseEnrollmentModel
-    {
-        public int CourseId { get; set; }
-        public bool Enrolled { get; set; }
-        public int UserId { get; set; }
-    }
-
-    public class CourseGradebookModel
-    {
-        public ICollection<Assignment> Assignments { get; set; }
-        public ICollection<User> EnrolledUsers { get; set; }
-        public Dictionary<Tuple<int, int>, string> Scores { get; set; }
-    }
-
-    public class ImportInBloomSectionModel
-    {
-        public int? CourseId { get; set; }
-        public string Name { get; set; }
-        public string SectionId { get; set; }
     }
 }

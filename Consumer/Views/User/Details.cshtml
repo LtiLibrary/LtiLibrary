@@ -1,34 +1,47 @@
-﻿@model Consumer.Models.User
+﻿@model Consumer.Models.ApplicationUser
 
 @{
     ViewBag.Title = Model.UserName;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Review this profile details.</h2>
-</hgroup>
+<h2>@ViewBag.Title</h2>
 
-<fieldset>
-    <legend>Profile</legend>
-
-    <ol>
-        <li>
-            @Html.LabelFor(model => model.FirstName)
+<div>
+    <h4>Profile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
             @Html.DisplayFor(model => model.FirstName)
-        </li>
-        <li>
-            @Html.LabelFor(model => model.LastName)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+
+        </dt>
+        <dd>
             @Html.DisplayFor(model => model.LastName)
-        </li>
-        <li>
-            @Html.LabelFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
             @Html.DisplayFor(model => model.Email)
-        </li>
-    </ol>
-</fieldset>
+        </dd>
+    </dl>
+</div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId }, new { @class = "button" })
-    @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
 </p>

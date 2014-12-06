@@ -29,9 +29,6 @@ namespace Consumer.Models
         
         public string Name { get; set; }
 
-        public string inBloomGradebookEntryId { get; set; }
-        public string inBloomTenantId { get; set; }
-
         [Display(Name = "URL")]
         public string Url { get; set; }
     }
@@ -89,15 +86,10 @@ namespace Consumer.Models
         [Display(Name = "Custom Parameters")]
         public string CustomParameters { get; set; }
 
-        [Display(Name = "Delete SLC gradebook entry")]
-        public bool DeleteInBloomGradebookEntry { get; set; }
-
         public string Description { get; set; }
 
         [Required]
         public string Name { get; set; }
-
-        public string inBloomGradebookEntryId { get; set; }
 
         [Required]
         [DataType(DataType.Url)]
@@ -113,7 +105,6 @@ namespace Consumer.Models
             CustomParameters = assignment.CustomParameters;
             Description = assignment.Description;
             Name = assignment.Name;
-            inBloomGradebookEntryId = assignment.inBloomGradebookEntryId;
             Url = assignment.Url;
         }
     }
@@ -135,6 +126,7 @@ namespace Consumer.Models
         public string Name { get; set; }
         public string Score { get; set; }
         public string Url { get; set; }
+        public string UserId { get; set; }
     }
 
     public class LaunchModel

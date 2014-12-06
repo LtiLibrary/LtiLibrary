@@ -5,7 +5,7 @@
         public int ScoreId { get; set; }
         public int AssignmentId { get; set; }
         public double DoubleValue { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class ReadScoreModel

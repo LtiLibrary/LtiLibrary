@@ -1,129 +1,87 @@
-﻿@model Consumer.Models.Course
+﻿@model Consumer.Models.CourseViewModel
 
 @{
-    ViewBag.Title = Model.Title;
+    ViewBag.Title = Model.Course.Name;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Course details.</h2>
-</hgroup>
+<h2>@ViewBag.Title</h2>
 
-@if (!string.IsNullOrEmpty(Model.inBloomSectionId))
-{
-    <div>
-        This course was imported from an inBloom course section.
+<div>
+    <h4>Course</h4>
+    <hr />
+
+    <div class="col-md-offset-1">
+        <dl class="dl-horizontal">
+            <dt>Instructor</dt>
+            <dd>@Model.Course.Instructor.FullName</dd>
+            <dt>Enrollment</dt>
+            <dd>
+                @Html.Action("Enroll", new { courseId = Model.Course.CourseId })
+            </dd>
+        </dl>
+        <p>
+            @if (User.IsInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Course.Instructor.Id == ViewBag.UserId)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Course.CourseId })
+                <text> | </text>
+            }
+            @Html.ActionLink("Back to List", "Index")
+        </p>
     </div>
-}
+    <hr />
+</div>
 
-<table>
-    <tr>
-        <td style="vertical-align:top">
-            <h3>Instructor</h3>
-            <ul>
-                <li>
-                    @Model.Instructor.FullName
-                </li>
-            </ul>
-        </td>
-        @if (Model.State != null)
+<div>
+    <h4>Assignments</h4>
+    <hr />
+
+    <div class="col-md-offset-1">
+        @if (!Model.Course.Assignments.Any())
         {
-            <td>
-                <h3>Location</h3>
-                <ul>
-                    <li>State: @Model.State.Name</li>
-                    @if (Model.District != null)
-                    {
-                        <li>District: @Model.District.Name</li>
-                    }
-                    @if (Model.School != null)
-                    {
-                        <li>School: @Model.School.Name</li>
-                    }
-                </ul>
-            </td>
-        }
-        <td>
-            <h3>Enrollment</h3>
-            
-            @Html.Action("Enroll", new { courseId = Model.CourseId })
-        </td>
-    </tr>
-</table>
-<div id="accordian">
-    <h3>Assignments</h3>
-    <div>
-        @if (Model.Assignments.Count() == 0)
-        {
-            <text>There are no assignments yet.</text>
+            <p>There are no assignments yet.</p>
         }
         else
         {
-            <table>
+            <table class="table">
                 <tr>
-                    <td><strong>Assignment</strong></td>
-                    <td><strong>Provider</strong></td>
-                    @if (Model.EnrolledUsers.Count(u => u.UserId == WebSecurity.CurrentUserId) > 0)
+                    <th>Assignment</th>
+                    <th>Provider</th>
+                    @if (Model.Course.EnrolledUsers.Any(u => u.Id == ViewBag.UserId))
                     {
-                        <td><strong>Your Score</strong></td>
+                        <th>Your Score</th>
                     }
-                    <td></td>
+                    else
+                    {
+                        <th></th>
+                    }
+                    <th></th>
                 </tr>
 
-                @foreach (var assignment in Model.Assignments)
+                @foreach (var assignment in Model.Course.Assignments)
                 {
                     @Html.Action("CourseAssignment", new { id = assignment.AssignmentId })
                 }
-
             </table>
         }
-        @if (Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Instructor.UserId == WebSecurity.CurrentUserId)
+        @if (User.IsInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Course.Instructor.Id == ViewBag.UserId)
         {
             <p>
-                @Html.ActionLink("Create Assignment", "Create", "Assignment", new { Model.CourseId }, new { @class = "button" })
+                @Html.ActionLink("Create Assignment", "Create", "Assignment", new { Model.Course.CourseId }, null)
+                @Html.Action("ContentItemTools", new { Model.Course.CourseId })
             </p>
         }
     </div>
-    @if (Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Instructor.UserId == WebSecurity.CurrentUserId)
-    {
-        <h3>Gradebook</h3>
-        <div>
-            @Html.Action("CourseGradebook", new { id = Model.CourseId })
-        </div>
-    }
+    <hr />
 </div>
 
-<p>
-    @if (Roles.IsUserInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Instructor.UserId == WebSecurity.CurrentUserId)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.CourseId }, new { @class = "button" })
-        @Html.ActionLink("Delete", "Delete", new { id = Model.CourseId }, new { @class = "button" })
-    }
-    @Html.ActionLink("Back to Courses", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
-</p>
-
-@section Scripts {
-    @Scripts.Render("~/Scripts/jquery.qtip-1.0.0-rc3.min.js")
-    <script>
-        $(function () {
-            // Divide the form into sections using jQuery UI Accordian
-            $("#accordian").accordion({
-                heightStyle: "content"
-            });
-            // Display title attribute nicely
-            $("a[title],img[title],span[title]").qtip({
-                style: {
-                    border: {
-                        width: 3,
-                        radius: 6
-                    },
-                    padding: 10,
-                    tip: true,
-                    name: "dark"
-                }
-            });
-        });
-    </script>
+@if (User.IsInRole(Consumer.Models.UserRoles.TeacherRole) && Model.Course.Instructor.Id == ViewBag.UserId)
+{
+    <div>
+        <h4>Gradebook</h4>
+        <hr />
+        
+        <div class="col-md-offset-1">
+            @Html.Action("CourseGradebook", new { id = Model.Course.CourseId })
+        </div>
+    </div>
 }
-
-

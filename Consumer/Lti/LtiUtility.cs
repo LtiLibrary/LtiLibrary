@@ -1,133 +1,230 @@
-﻿using System;
+﻿using Consumer.Models;
+using LtiLibrary.Common;
+using LtiLibrary.Extensions;
+using LtiLibrary.Lti1;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using Consumer.Models;
-using Consumer.Utility;
-using LtiLibrary.Common;
-using LtiLibrary.Consumer;
-using WebMatrix.WebData;
+using System.Web.Routing;
 
 namespace Consumer.Lti
 {
     public static class LtiUtility
     {
-        public static LtiOutboundRequestViewModel CreateLtiRequest(Assignment assignment)
+        /// <summary>
+        /// Create a basic launch request for the assignment.
+        /// </summary>
+        /// <param name="request">The browser request.</param>
+        /// <param name="assignment">The assignment to launch.</param>
+        /// <param name="user">The user that is launching the assignment.</param>
+        /// <returns>An LtiRequestViewModel which can be displayed by the View in such
+        /// a way that the browser will invoke the LTI launch.</returns>
+        public static LtiRequestViewModel CreateBasicLaunchRequestViewModel(HttpRequestBase request, Assignment assignment, ApplicationUser user)
         {
-            using (var db = new ConsumerContext())
+            var ltiRequest = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
-                var ltiRequest = new LtiOutboundRequest
-                {
-                    ConsumerKey = assignment.ConsumerKey,
-                    ConsumerSecret = assignment.ConsumerSecret,
-                    ResourceLinkId = assignment.AssignmentId.ToString(CultureInfo.InvariantCulture),
-                    Url = assignment.Url
-                };
+                ConsumerKey = assignment.ConsumerKey,
+                ResourceLinkId = assignment.AssignmentId.ToString(CultureInfo.InvariantCulture),
+                Url = new Uri(assignment.Url)
+            };
 
-                var course = assignment.Course;
-                var user = db.Users.Find(WebSecurity.CurrentUserId);
+            var course = assignment.Course;
 
-                // Tool
-                ltiRequest.ToolConsumerInfoProductFamilyCode = "consumer.azurewebsites.net";
-                ltiRequest.ToolConsumerInfoVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            // Tool
+            ltiRequest.ToolConsumerInfoProductFamilyCode = Assembly.GetExecutingAssembly().GetName().Name;
+            ltiRequest.ToolConsumerInfoVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-                // Context
-                ltiRequest.ContextId = course.CourseId.ToString(CultureInfo.InvariantCulture);
-                ltiRequest.ContextTitle = course.Name;
-                ltiRequest.ContextType = course.EnrolledUsers.Any(u => u.UserId == user.UserId) 
-                    ? LisContextTypes.CourseSection : LisContextTypes.CourseTemplate;
+            // Context
+            ltiRequest.ContextId = course.CourseId.ToString(CultureInfo.InvariantCulture);
+            ltiRequest.ContextTitle = course.Name;
+            ltiRequest.ContextType = course.EnrolledUsers.Any(u => u.Id == user.Id)
+                ? LisContextType.CourseSection
+                : LisContextType.CourseTemplate;
 
-                // Instance
-                ltiRequest.ToolConsumerInstanceGuid = "~/".ToAbsoluteUrl();
-                var titles = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyTitleAttribute>();
-                var assemblyTitleAttributes = titles as AssemblyTitleAttribute[] ?? titles.ToArray();
-                if (assemblyTitleAttributes.Any())
-                {
-                    ltiRequest.ToolConsumerInstanceName = assemblyTitleAttributes.First().Title;
-                }
-                ltiRequest.ResourceLinkTitle = assignment.Name;
-                ltiRequest.ResourceLinkDescription = assignment.Description;
+            // Instance
+            ltiRequest.ToolConsumerInstanceGuid = "~/".ToAbsoluteUrl();
+            var title = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyTitleAttribute>().FirstOrDefault();
+            ltiRequest.ToolConsumerInstanceName = title == null ? null : title.Title;
+            ltiRequest.ResourceLinkTitle = assignment.Name;
+            ltiRequest.ResourceLinkDescription = assignment.Description;
 
-                // User
-                if (user.SendEmail.GetValueOrDefault(true))
-                {
-                    ltiRequest.LisPersonEmailPrimary = user.Email;
-                }
-                if (user.SendName.GetValueOrDefault(true))
-                {
-                    ltiRequest.LisPersonNameFamily = user.LastName;
-                    ltiRequest.LisPersonNameGiven = user.FirstName;
-                }
-                ltiRequest.UserId = user.UserId.ToString(CultureInfo.InvariantCulture);
-                ltiRequest.AddRoles(GetLtiRolesForUser());
-
-                // Outcomes service
-                var request = HttpContext.Current.Request;
-                var urlHelper = new UrlHelper(request.RequestContext);
-                if (course.EnrolledUsers.Any(u => u.UserId == user.UserId))
-                {
-                    var outcomesUrl = urlHelper.HttpRouteUrl("DefaultApi", new {controller = "Outcomes"});
-                    if (!string.IsNullOrEmpty(outcomesUrl))
-                    {
-                        ltiRequest.LisOutcomeServiceUrl =
-                            new Uri(request.Url, outcomesUrl).AbsoluteUri;
-                        ltiRequest.LisResultSourcedId = string.Format("{0}-{1}", assignment.AssignmentId, user.UserId);
-                    }
-                }
-
-                // Tool Consumer Profile service
-                var profileUrl = urlHelper.HttpRouteUrl("DefaultApi", new {controller = "ToolConsumerProfile"});
-                if (!string.IsNullOrEmpty(profileUrl))
-                {
-                    ltiRequest.ToolConsumerProfileUrl = string.Format("{0}?lti_version=LTI-1p2", new Uri(request.Url, profileUrl).AbsoluteUri);
-                }
-
-                // Add the custom parameters. This consumer supports 3 special substitutions.
-                var customParameters = assignment.CustomParameters;
-
-                if (!string.IsNullOrWhiteSpace(customParameters))
-                {
-                    // Friendly version of the username
-                    customParameters = Regex.Replace(customParameters, "\\$User.username",
-                                                     user.UserName ?? string.Empty, RegexOptions.IgnoreCase);
-
-                    // The source of the following data is the NCES Elementary and 
-                    // Secondary School Information System (nces.ed.gov/ccd/elsi/).
-                    var leaNcesId = course.District == null ? null : course.District.DistrictId;
-                    var schoolNcesId = course.School == null ? null : course.School.SchoolId;
-                    var stateId = course.State == null ? null : course.State.StateId;
-
-                    customParameters = Regex.Replace(customParameters, "\\$Context.stateId",
-                                                     stateId ?? string.Empty, RegexOptions.IgnoreCase);
-                    customParameters = Regex.Replace(customParameters, "\\$Context.ncesLeaId",
-                                                     string.IsNullOrWhiteSpace(leaNcesId)
-                                                         ? string.Empty
-                                                         : "nces.ed.gov:" + leaNcesId,
-                                                     RegexOptions.IgnoreCase);
-                    customParameters = Regex.Replace(customParameters, "\\$Context.ncesSchoolId",
-                                                     string.IsNullOrWhiteSpace(schoolNcesId)
-                                                         ? string.Empty
-                                                         : "nces.ed.gov:" + schoolNcesId,
-                                                     RegexOptions.IgnoreCase);
-
-                    ltiRequest.AddCustomParameters(customParameters);
-                }
-
-                return ltiRequest.GetLtiRequestModel();
+            // User
+            if (user.SendEmail.GetValueOrDefault(true))
+            {
+                ltiRequest.LisPersonEmailPrimary = user.Email;
             }
+            if (user.SendName.GetValueOrDefault(true))
+            {
+                ltiRequest.LisPersonNameFamily = user.LastName;
+                ltiRequest.LisPersonNameGiven = user.FirstName;
+            }
+            ltiRequest.UserId = user.Id;
+            ltiRequest.UserName = user.UserName;
+            ltiRequest.SetRoles(GetLtiRolesForUser(user));
+
+            // Outcomes service
+            if (course.EnrolledUsers.Any(u => u.Id == user.Id))
+            {
+                var outcomesUrl = UrlHelper.GenerateUrl("DefaultApi", null, "OutcomesApi",
+                    new RouteValueDictionary { { "httproute", string.Empty } }, RouteTable.Routes,
+                    request.RequestContext, false);
+                Uri outcomesUri;
+                if (Uri.TryCreate(request.Url, outcomesUrl, out outcomesUri))
+                {
+                    ltiRequest.LisOutcomeServiceUrl = outcomesUri.AbsoluteUri;
+                }
+                ltiRequest.LisResultSourcedId =
+                    JsonConvert.SerializeObject(new LisResultSourcedId
+                    {
+                        AssignmentId = assignment.AssignmentId, 
+                        UserId = user.Id
+                    });
+            }
+
+            // Tool Consumer Profile service
+            var profileUrl = UrlHelper.GenerateUrl("DefaultApi", null, "ToolConsumerProfileApi",
+                new RouteValueDictionary { { "httproute", string.Empty } }, RouteTable.Routes,
+                request.RequestContext, false);
+            Uri profileUri;
+            if (Uri.TryCreate(request.Url, profileUrl, out profileUri))
+            {
+                ltiRequest.ToolConsumerProfileUrl = profileUri.AbsoluteUri;
+            }
+
+            // Add the custom parameters. This consumer supports 3 special substitutions.
+            var customParameters = assignment.CustomParameters;
+
+            if (!string.IsNullOrWhiteSpace(customParameters))
+            {
+                ltiRequest.AddCustomParameters(customParameters);
+            }
+
+            return ltiRequest.GetLtiRequestViewModel(assignment.ConsumerSecret);
         }
 
-        private static IList<LtiRoles> GetLtiRolesForUser()
+        public static LtiRequestViewModel CreateContentItemSelectionRequestViewModel(HttpRequestBase request, ContentItemTool contentItemTool, Course course, ApplicationUser user, string returnUrl)
         {
-            var roles = new List<LtiRoles>();
-            if (Roles.IsUserInRole(UserRoles.StudentRole)) roles.Add(LtiRoles.Learner);
-            if (Roles.IsUserInRole(UserRoles.TeacherRole)) roles.Add(LtiRoles.Instructor);
+            var ltiRequest = new LtiRequest(LtiConstants.ContentItemSelectionRequestLtiMessageType)
+            {
+                ConsumerKey = contentItemTool.ConsumerKey,
+                Url = new Uri(contentItemTool.Url)
+            };
+
+            // Tool Consumer
+            ltiRequest.ToolConsumerInfoProductFamilyCode = Assembly.GetExecutingAssembly().GetName().Name;
+            ltiRequest.ToolConsumerInfoVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            // Context
+            ltiRequest.ContextId = course.CourseId.ToString(CultureInfo.InvariantCulture);
+            ltiRequest.ContextTitle = course.Name;
+            ltiRequest.ContextType = course.EnrolledUsers.Any(u => u.Id == user.Id)
+                ? LisContextType.CourseSection
+                : LisContextType.CourseTemplate;
+            ltiRequest.LisCourseSectionSourcedId = course.CourseId.ToString(CultureInfo.InvariantCulture);
+
+            // Instance
+            ltiRequest.ToolConsumerInstanceGuid = "~/".ToAbsoluteUrl();
+            var title = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyTitleAttribute>().FirstOrDefault();
+            ltiRequest.ToolConsumerInstanceName = title == null ? null : title.Title;
+
+            // User
+            if (user.SendEmail.GetValueOrDefault(true))
+            {
+                ltiRequest.LisPersonEmailPrimary = user.Email;
+            }
+            if (user.SendName.GetValueOrDefault(true))
+            {
+                ltiRequest.LisPersonNameFamily = user.LastName;
+                ltiRequest.LisPersonNameGiven = user.FirstName;
+            }
+            ltiRequest.UserId = user.Id;
+            ltiRequest.UserName = user.UserName;
+            ltiRequest.SetRoles(GetLtiRolesForUser(user));
+
+            // Presentation
+            ltiRequest.LaunchPresentationDocumentTarget = DocumentTarget.iframe;
+
+            // Content Item Tool
+            ltiRequest.AcceptMediaTypes = LtiConstants.LaunchMediaType; // Only accept LTI Link
+            ltiRequest.AcceptMultiple = true;
+            ltiRequest.AcceptPresentationDocumentTargets = "iframe";
+            ltiRequest.AcceptUnsigned = false;
+            ltiRequest.ContentItemReturnUrl = returnUrl;
+            //ltiRequest.ContentItemServiceUrl = "about:blank";
+            ltiRequest.Data = JsonConvert.SerializeObject(new ContentItemData
+            {
+                ContentItemToolId = contentItemTool.ContentItemToolId, 
+                CourseId = course.CourseId
+            });
+
+            // Add the custom parameters.
+            var customParameters = contentItemTool.CustomParameters;
+
+            // This tool consumer supports 3 non-spec custom parameters
+            if (!string.IsNullOrWhiteSpace(customParameters))
+            {
+                ltiRequest.AddCustomParameters(customParameters);
+            }
+
+            return ltiRequest.GetLtiRequestViewModel(contentItemTool.ConsumerSecret);
+        }
+
+        private static IList<Role> GetLtiRolesForUser(ApplicationUser user)
+        {
+            var httpContext = new HttpContextWrapper(HttpContext.Current);
+            var roleManager = httpContext.GetOwinContext().Get<ApplicationRoleManager>();
+
+            var roles = new List<Role>();
+            foreach (var identityRole in user.Roles.Select(role => roleManager.FindById(role.RoleId)))
+            {
+                if (identityRole.Name.Equals(UserRoles.StudentRole)) roles.Add(Role.Learner);
+                if (identityRole.Name.Equals(UserRoles.TeacherRole)) roles.Add(Role.Instructor);
+            }
+            
             return roles;
+        }
+
+        /// <summary>
+        /// Get the company name stored in AssemblyInfo.
+        /// </summary>
+        public static string GetCompany()
+        {
+            var company = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyCompanyAttribute>().FirstOrDefault();
+            return company == null ? "Sample" : company.Company;
+        }
+
+        /// <summary>
+        /// Get the product name stored in AssemblyInfo.
+        /// </summary>
+        public static string GetProduct()
+        {
+            var product = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyProductAttribute>().FirstOrDefault();
+            return product == null ? "Sample" : product.Product;
+        }
+
+        /// <summary>
+        /// Get the application title stored in AssemblyInfo.
+        /// </summary>
+        public static string GetTitle()
+        {
+            var title = Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyTitleAttribute>().FirstOrDefault();
+            return title == null ? "Sample" : title.Title;
+        }
+
+        /// <summary>
+        /// Get the application version stored in AssemblyInfo.
+        /// </summary>
+        public static string GetVersion()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            return version == null ? "0" : version.ToString();
         }
     }
 }

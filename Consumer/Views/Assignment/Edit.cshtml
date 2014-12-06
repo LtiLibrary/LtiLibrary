@@ -4,122 +4,80 @@
     ViewBag.Title = Model.Name;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Edit this assignment.</h2>
-</hgroup>
+<h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.AssignmentId)
+    @Html.HiddenFor(model => model.CourseId)
 
-    <div id="accordian">
-        <h3>Basic Settings</h3>
-        <div>
-            <fieldset>
-                <legend>Assignment</legend>
+    <div class="form-horizontal">
+        <h4>Edit Assignment</h4>
+        <hr />
 
-                @Html.HiddenFor(model => model.AssignmentId)
-                @Html.HiddenFor(model => model.CourseId)
+        @Html.ValidationSummary("", new { @class = "text-danger" })
 
-                <ol>
-                    <li>
-                        @Html.LabelFor(model => model.Name)
-                        @Html.EditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
-                    </li>
-                    <li>
-                        @Html.LabelFor(model => model.Description)
-                        @Html.TextAreaFor(model => model.Description, new { @class = "tinymce" })
-                        @Html.ValidationMessageFor(model => model.Description)
-                    </li>
-                    <li>
-                        @Html.LabelFor(model => model.Url)
-                        @Html.EditorFor(model => model.Url)
-                        @Html.ValidationMessageFor(model => model.Url)
-                    </li>
-                </ol>
-            </fieldset>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
         </div>
 
-        <h3>LTI Settings</h3>
-        <div>
-            <fieldset>
-                <legend>LTI Settings</legend>
-
-                <ol>
-                    <li>
-                        @Html.LabelFor(model => model.ConsumerKey)
-                        @Html.EditorFor(model => model.ConsumerKey)
-                        @Html.ValidationMessageFor(model => model.ConsumerKey)
-                    </li>
-                    <li>
-                        @Html.LabelFor(model => model.ConsumerSecret)
-                        @Html.EditorFor(model => model.ConsumerSecret)
-                        @Html.ValidationMessageFor(model => model.ConsumerSecret)
-                    </li>
-                    <li>
-                        @Html.LabelFor(model => model.CustomParameters) 
-                        @Html.TextAreaFor(model => model.CustomParameters, new { rows = 4 })
-                        @Html.ValidationMessageFor(model => model.CustomParameters)
-                    </li>
-                    <li>
-                        You can use these custom substitution parameters to share additional
-                        course context information with the provider.
-
-                        <table>
-                            <tr>
-                                <td><strong>Substitution</strong></td>
-                                <td><strong>Description</strong></td>
-                                <td><strong>Example</strong></td>
-                            </tr>
-                            <tr>
-                                <td>$Context.stateId</td>
-                                <td>The state abbreviation</td>
-                                <td>AL</td>
-                            </tr>
-                            <tr>
-                                <td>$Context.ncesLeaId</td>
-                                <td>The <a href="http://nces.ed.gov" target="_blank">NCES</a> ID for the LEA (e.g. school district)</td>
-                                <td>nces.ed.gov:4101920</td>
-                            </tr>
-                            <tr>
-                                <td>$Context.ncesSchoolId</td>
-                                <td>The <a href="http://nces.ed.gov" target="_blank">NCES</a> ID for the school</td>
-                                <td>nces.ed.gov:410192000554</td>
-                            </tr>
-                            <tr>
-                                <td>$User.username</td>
-                                <td>The username of the user</td>
-                                <td>student</td>
-                            </tr>
-                        </table>
-                    </li>
-                </ol>
-            </fieldset>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
 
-    <div>
-        <input type="submit" value="Save" />
-        @Html.ActionLink("Back to Course", "Details", "Course", new { id = Model.CourseId }, new { @class = "button" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Url, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Url, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConsumerKey, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ConsumerKey, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ConsumerKey, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ConsumerSecret, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.ConsumerSecret, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ConsumerSecret, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomParameters, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.CustomParameters, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CustomParameters, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
     </div>
 }
 
+<div>
+    @Html.ActionLink("Back to Course", "Details", "Course", new { id = Model.CourseId }, null)
+</div>
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/tiny_mce/jquery.tinymce.js")
-    <script>
-        $(function () {
-            // Divide the form into sections using jQuery UI Accordian
-            $("#accordian").accordion({
-                heightStyle: "content"
-            });
-            // Add a simple text editor
-            $(".tinymce").tinymce({
-                script_url: "../../Scripts/tiny_mce/tiny_mce.js",
-                theme: "simple",
-                content_css: "../../Content/tiny_mce.css"
-            });
-        });
-    </script>
 }

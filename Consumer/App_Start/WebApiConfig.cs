@@ -11,6 +11,8 @@ namespace Consumer
 #if DEBUG
             config.Formatters.XmlFormatter.Indent = true;
 #endif
+            // Web API routes
+            config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

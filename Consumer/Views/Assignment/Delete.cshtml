@@ -14,17 +14,9 @@
     <p>
         <strong>Are you sure you want to delete this assignment?</strong>
     </p>
-    
-    if (!string.IsNullOrEmpty(Model.inBloomGradebookEntryId))
-    {
-        @Html.CheckBoxFor(m => m.DeleteInBloomGradebookEntry)
-        <text>
-            @Html.DisplayNameFor(m => m.DeleteInBloomGradebookEntry)
-        </text>
-    }
 
     <p>
         <input type="submit" value="Delete" />
-        @Html.ActionLink("Back to Course", "Details", "Course", new { id = Model.CourseId }, new { @class = "button" })
+        @Html.ActionLink("Back to Course", "Details", "Course", new { id = Model.CourseId })
     </p>
 }

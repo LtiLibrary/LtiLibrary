@@ -1,38 +1,53 @@
-﻿@model Provider.Models.User
+﻿@model Provider.Models.ApplicationUser
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = Model.UserName;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Delete the user.</h2>
-</hgroup>
+<h2>@ViewBag.Title</h2>
 
-<h3>Are you sure you want to delete this user?</h3>
-
-<fieldset>
-    <legend>UserProfile</legend>
-
-    <ol>
-        <li>
-            @Html.LabelFor(model => model.FirstName)
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Profile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
             @Html.DisplayFor(model => model.FirstName)
-        </li>
-        <li>
-            @Html.LabelFor(model => model.LastName)
-            @Html.DisplayFor(model => model.LastName)
-        </li>
-        <li>
-            @Html.LabelFor(model => model.Email)
-            @Html.DisplayFor(model => model.Email)
-        </li>
-    </ol>
-</fieldset>
+        </dd>
 
-@using (Html.BeginForm()) {
-    <p>
-        <input type="submit" value="Delete" />
-        @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
-    </p>
-}
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <p>
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    }
+</div>

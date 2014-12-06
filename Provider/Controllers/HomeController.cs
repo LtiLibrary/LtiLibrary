@@ -1,25 +1,26 @@
 ﻿using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Provider.Models;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Provider.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ProviderContext _db = new ProviderContext();
+        public ProviderContext ProviderContext
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Get<ProviderContext>();
+            }
+        }
 
         //
         // GET: /Home/
-
         public ActionResult Index()
         {
-            return View(_db.Tools.ToList());
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _db.Dispose();
-            base.Dispose(disposing);
+            return View(ProviderContext.Tools.ToList().OrderBy(t => t.Name));
         }
     }
 }

@@ -1,29 +1,10 @@
 ﻿@model Provider.Models.Tool
 
 @{
-    ViewBag.Title = "Unauthorized";
+    ViewBag.Title = Model.Name;
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>You are not authorized to access this tool.</h2>
-</hgroup>
+<h2>@ViewBag.Title.</h2>
+<h4>You are not authorized to access this tool.</h4>
 
-<fieldset>
-    <legend>Tool</legend>
-
-    <ol>
-        <li>
-            @Html.LabelFor(model => model.Name)
-            @Model.Name
-        </li>
-        <li>
-            @Html.LabelFor(model => model.Description)
-            @if (string.IsNullOrEmpty(Model.Description)) {
-                <text>(empty)</text>
-            } else {
-                @Html.Raw(Model.Description)
-            }
-        </li>
-    </ol>
-</fieldset>
+@Html.Raw(Model.Description)

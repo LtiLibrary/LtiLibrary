@@ -1,13 +1,11 @@
-﻿@model IEnumerable<LtiLibrary.Models.Consumer>
+﻿@model IEnumerable<Provider.Models.Consumer>
 
 @{
     ViewBag.Title = "LTI Tool Consumers";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>A list of all the LTI Tool Consumers registered in this provider.</h2>
-</hgroup>
+<h2>@ViewBag.Title.</h2>
+<h3>A list of all the LTI Tool Consumers registered in this provider.</h3>
 
 <p>
     Remember, you are one of several users of this sample provider. 
@@ -20,7 +18,7 @@
     </text>
 } else {
     <text>
-        <table>
+        <table class="table">
             <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
@@ -40,8 +38,8 @@
                     @item.Key
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.ConsumerId }, htmlAttributes: new { @class = "button" })
-                    @Html.ActionLink("Delete", "Delete", new { id=item.ConsumerId }, htmlAttributes: new { @class = "button" })
+                    @Html.ActionLink("Edit", "Edit", new { id=item.ConsumerId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.ConsumerId })
                 </td>
             </tr>
         }
@@ -51,7 +49,7 @@
 }        
 
 <p>
-    @Html.ActionLink("Create New", "Create", routeValues: null, htmlAttributes: new { @class = "button" })
-    @Html.ActionLink("Back to Home", "Index", "Home", routeValues: null, htmlAttributes: new { @class = "button" })
+    @Html.ActionLink("Create New", "Create") |
+    @Html.ActionLink("Back to Home", "Index", "Home")
 </p>
 

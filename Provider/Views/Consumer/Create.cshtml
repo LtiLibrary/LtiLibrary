@@ -1,42 +1,50 @@
-﻿@model LtiLibrary.Models.Consumer
+﻿@model Provider.Models.Consumer
 
 @{
-    ViewBag.Title = "Create LTI Consumer";
+    ViewBag.Title = "Create";
 }
 
-<hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create an LTI Tool Consumer profile.</h2>
-</hgroup>
+<h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm()) {
-    @Html.ValidationSummary(true)
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
 
-    <fieldset>
-        <legend>Consumer</legend>
+    <div class="form-horizontal">
+        <h4>Consumer</h4>
+        <hr />
+        @Html.ValidationSummary(true)
 
-        <ol>
-            <li>
-                @Html.LabelFor(model => model.Name)
-                @Html.EditorFor(model => model.Name)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Name)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Key)
-                @Html.EditorFor(model => model.Key)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Key, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Key, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Key)
-            </li>
-            <li>
-                @Html.LabelFor(model => model.Secret)
-                @Html.EditorFor(model => model.Secret)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Secret, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Secret, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Secret)
-            </li>
-        </ol>
-    </fieldset>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
 
     <div>
-        <input type="submit" value="Create" />
-        @Html.ActionLink("Back to List", "Index", routeValues: null, htmlAttributes: new { @class = "button" })
+        @Html.ActionLink("Back to List", "Index")
     </div>
 }
 

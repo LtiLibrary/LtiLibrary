@@ -17,6 +17,7 @@
     <SccProvider>SAK</SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,87 +36,106 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="HtmlAgilityPack, Version=1.4.8.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\HtmlAgilityPack.1.4.8\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="OAuth.Net.Common">
-      <HintPath>..\lib\OAuth.net\OAuth.Net.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="OAuth.Net.Components">
-      <HintPath>..\lib\OAuth.net\OAuth.Net.Components.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\LisContextTypes.cs" />
-    <Compile Include="Common\LtiConstants.cs" />
-    <Compile Include="Common\LtiRequest.cs" />
-    <Compile Include="Common\LtiRoles.cs" />
-    <Compile Include="Common\PresentationTargets.cs" />
     <Compile Include="Common\UrnAttribute.cs" />
-    <Compile Include="Consumer\Contact.cs" />
-    <Compile Include="Consumer\LocalizedName.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Consumer\LocalizedText.cs" />
-    <Compile Include="Consumer\LtiOutboundRequest.cs" />
-    <Compile Include="Consumer\LtiOutboundRequestViewModel.cs" />
-    <Compile Include="Consumer\ProductFamily.cs" />
-    <Compile Include="Consumer\ProductInfo.cs" />
-    <Compile Include="Consumer\ProductInstance.cs" />
-    <Compile Include="Consumer\ServiceOwner.cs" />
-    <Compile Include="Consumer\ToolConsumerProfile.cs" />
-    <Compile Include="Consumer\RestService.cs" />
-    <Compile Include="Consumer\ServiceProvider.cs" />
-    <Compile Include="Consumer\ToolConsumerProfileControllerBase.cs" />
-    <Compile Include="Consumer\ToolConsumerProfileControllerConfigAttribute.cs" />
-    <Compile Include="Consumer\ToolConsumerProfileFormatter.cs" />
-    <Compile Include="Consumer\Vendor.cs" />
-    <Compile Include="Extensions\OAuthParametersExtensions.cs" />
+    <Compile Include="ContentItems\ContentItemPlacementResponse.cs" />
+    <Compile Include="ContentItems\ContentItemsHelper.cs" />
+    <Compile Include="ContentItems\ContentItemsServiceResponse.cs" />
+    <Compile Include="Extensions\AuthorizationHeaderValueExtensions.cs" />
+    <Compile Include="Extensions\HttpRequestBaseExtensions.cs" />
+    <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
+    <Compile Include="Extensions\HttpResponseExtensions.cs" />
+    <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
     <Compile Include="Extensions\HtmlDocumentExtensions.cs" />
     <Compile Include="Common\LtiException.cs" />
-    <Compile Include="Models\LtiInboundRequest.cs" />
-    <Compile Include="Models\Outcome.cs" />
-    <Compile Include="Provider\LtiInboundRequestHandler.cs" />
-    <Compile Include="Models\Consumer.cs" />
-    <Compile Include="Provider\LtiResult.cs" />
-    <Compile Include="Models\LtiLibraryContext.cs" />
-    <Compile Include="Models\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ContentItems\ContentItem.cs" />
+    <Compile Include="ContentItems\ContentItemPlacement.cs" />
+    <Compile Include="ContentItems\ContentItemType.cs" />
+    <Compile Include="Lti1\DocumentTarget.cs" />
+    <Compile Include="Lti1\IBasicLaunchRequest.cs" />
+    <Compile Include="ContentItems\IContentItem.cs" />
+    <Compile Include="ContentItems\IContentItemSelectionRequest.cs" />
+    <Compile Include="ContentItems\IContentItemSelectionResponse.cs" />
+    <Compile Include="ContentItems\IFileItem.cs" />
+    <Compile Include="Lti1\ILaunchRequest.cs" />
+    <Compile Include="ContentItems\ILtiLink.cs" />
+    <Compile Include="Lti1\ILtiRequest.cs" />
+    <Compile Include="ContentItems\Image.cs" />
+    <Compile Include="Outcomes\ImsxXmlMediaTypeFormatter.cs" />
+    <Compile Include="Outcomes\IOutcomesManagementRequest.cs" />
+    <Compile Include="OAuth\IOAuthRequest.cs" />
+    <Compile Include="Lti1\LisContextType.cs" />
+    <Compile Include="Common\LtiConstants.cs" />
+    <Compile Include="Lti1\LtiRequest.cs" />
+    <Compile Include="Lti1\Role.cs" />
+    <Compile Include="Lti2\Contact.cs" />
+    <Compile Include="Lti2\LocalizedName.cs" />
+    <Compile Include="Lti2\LocalizedText.cs" />
+    <Compile Include="Lti2\ProductFamily.cs" />
+    <Compile Include="Lti2\ProductInfo.cs" />
+    <Compile Include="Lti2\ProductInstance.cs" />
+    <Compile Include="Lti2\RestService.cs" />
+    <Compile Include="Lti2\ServiceOwner.cs" />
+    <Compile Include="Lti2\ServiceProvider.cs" />
+    <Compile Include="Lti2\Vendor.cs" />
+    <Compile Include="OAuth\OAuthConstants.cs" />
+    <Compile Include="OAuth\OAuthRequest.cs" />
+    <Compile Include="OAuth\OAuthUtility.cs" />
+    <Compile Include="Outcomes\LtiOutcomesHelper.cs" />
+    <Compile Include="Outcomes\LisResult.cs" />
+    <Compile Include="Outcomes\LtiOutcomesRequest.cs" />
+    <Compile Include="Outcomes\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
       <DependentUpon>OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Consumer\Result.cs" />
-    <Compile Include="Consumer\OutcomesControllerBase.cs" />
+    <Compile Include="Outcomes\OutcomesApiControllerBase.cs" />
+    <Compile Include="Profiles\ToolConsumerProfile.cs" />
+    <Compile Include="Profiles\ToolConsumerProfileApiControllerBase.cs" />
+    <Compile Include="Profiles\ToolConsumerProfileControllerConfigAttribute.cs" />
+    <Compile Include="Profiles\ToolConsumerProfileFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Provider\LtiOutcomesHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="Models\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
+    <None Include="Outcomes\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="README.txt" />
+    <Content Include="LtiLibrary_readme.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,25 +1,38 @@
 ﻿using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Consumer.Models;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Consumer.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ConsumerContext _db = new ConsumerContext();
+        public HomeController() { }
+
+        public HomeController(ConsumerContext consumerContext)
+        {
+            ConsumerContext = consumerContext;
+        }
+
+        private ConsumerContext _consumerContext;
+        public ConsumerContext ConsumerContext
+        {
+            get
+            {
+                return _consumerContext ?? HttpContext.GetOwinContext().Get<ConsumerContext>();
+            }
+            private set
+            {
+                _consumerContext = value;
+            }
+        }
 
         //
         // GET: /Home/
-
         public ActionResult Index()
         {
-            return View(_db.Courses.ToList().OrderBy(c => c.Title));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _db.Dispose();
-            base.Dispose(disposing);
+            return View(ConsumerContext.Courses.ToList().OrderBy(c => c.Name));
         }
     }
 }

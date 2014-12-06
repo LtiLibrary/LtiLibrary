@@ -1,23 +1,56 @@
-﻿using System.Data;
-using System.Linq;
-using System.Web.Mvc;
-using Consumer.Lti;
+﻿using Consumer.Lti;
 using Consumer.Models;
-using inBloomLibrary;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using System.Data.Entity;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 
 namespace Consumer.Controllers
 {
     [Authorize]
     public class AssignmentController : Controller
     {
-        private readonly ConsumerContext _db = new ConsumerContext();
+        public AssignmentController() {}
+
+        public AssignmentController(ApplicationUserManager userManager, ConsumerContext consumerContext)
+        {
+            UserManager = userManager;
+            ConsumerContext = consumerContext;
+        }
+
+        private ConsumerContext _consumerContext;
+        public ConsumerContext ConsumerContext
+        {
+            get
+            {
+                return _consumerContext ?? HttpContext.GetOwinContext().Get<ConsumerContext>();
+            }
+            private set
+            {
+                _consumerContext = value;
+            }
+        }
+
+        private ApplicationUserManager _userManager;
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         //
         // GET: /Assignment/Details/5
-
         public ActionResult Details(int id = 0)
         {
-            Assignment assignment = _db.Assignments.Find(id);
+            Assignment assignment = ConsumerContext.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
@@ -27,7 +60,6 @@ namespace Consumer.Controllers
 
         //
         // GET: /Assignment/Create
-
         public ActionResult Create(int courseId)
         {
             var model = new CreateEditAssignmentModel
@@ -42,14 +74,13 @@ namespace Consumer.Controllers
         // POST: /Assignment/Create
         //
         // Note that ValidateInput is turned off so that teachers can use HTML in their descriptions
-
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Create(CreateEditAssignmentModel model)
         {
             if (ModelState.IsValid)
             {
-                var course = _db.Courses.Find(model.CourseId);
+                var course = ConsumerContext.Courses.Find(model.CourseId);
                 var assignment = new Assignment
                 {
                     ConsumerKey = model.ConsumerKey,
@@ -61,26 +92,8 @@ namespace Consumer.Controllers
                     Url = model.Url
                 };
 
-                _db.Assignments.Add(assignment);
-                _db.SaveChanges();
-
-                if (!string.IsNullOrEmpty(course.inBloomSectionId))
-                {
-                    var assignmentModel = new inBloomLibrary.Models.Assignment
-                    {
-                        AssignmentId = assignment.AssignmentId,
-                        ConsumerKey = assignment.ConsumerKey,
-                        ConsumerSecret = assignment.ConsumerSecret,
-                        CustomParameters = assignment.CustomParameters,
-                        Description = assignment.Description,
-                        Name = assignment.Name,
-                        Url = assignment.Url
-                    };
-                    assignment.inBloomGradebookEntryId = inBloomApi.CreateGradebookEntry(
-                        course.inBloomSectionId, 
-                        assignmentModel);
-                    _db.SaveChanges();
-                }
+                ConsumerContext.Assignments.Add(assignment);
+                ConsumerContext.SaveChanges();
 
                 return RedirectToAction("Details", "Course", new { id = model.CourseId });
             }
@@ -89,10 +102,9 @@ namespace Consumer.Controllers
 
         //
         // GET: /Assignment/Edit/5
-
         public ActionResult Edit(int id = 0)
         {
-            var assignment = _db.Assignments.Find(id);
+            var assignment = ConsumerContext.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
@@ -103,23 +115,22 @@ namespace Consumer.Controllers
 
         //
         // POST: /Assignment/Edit/5
-
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(CreateEditAssignmentModel model)
         {
             if (ModelState.IsValid)
             {
-                var assignment = _db.Assignments.Find(model.AssignmentId);
+                var assignment = ConsumerContext.Assignments.Find(model.AssignmentId);
                 assignment.ConsumerKey = model.ConsumerKey;
                 assignment.ConsumerSecret = model.ConsumerSecret;
-                assignment.Course = _db.Courses.Find(model.CourseId);
+                assignment.Course = ConsumerContext.Courses.Find(model.CourseId);
                 assignment.CustomParameters = model.CustomParameters;
                 assignment.Description = model.Description;
                 assignment.Name = model.Name;
                 assignment.Url = model.Url;
-                _db.Entry(assignment).State = EntityState.Modified;
-                _db.SaveChanges();
+                ConsumerContext.Entry(assignment).State = EntityState.Modified;
+                ConsumerContext.SaveChanges();
                 return RedirectToAction("Details", "Course", new { id = model.CourseId });
             }
             return View(model);
@@ -127,52 +138,41 @@ namespace Consumer.Controllers
 
         //
         // GET: /Assignment/Delete/5
-
         public ActionResult Delete(int id = 0)
         {
-            var assignment = _db.Assignments.Find(id);
+            var assignment = ConsumerContext.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
             }
-            var model = new DeleteAssignmentModel(assignment);
-            model.DeleteInBloomGradebookEntry = false;
-
-            return View(model);
+            return View(new DeleteAssignmentModel(assignment));
         }
 
         //
         // POST: /Assignment/Delete/5
-
         [HttpPost]
         [ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id, bool deleteInBloomGradebookEntry)
+        public ActionResult DeleteConfirmed(int id)
         {
-            var assignment = _db.Assignments.Find(id);
-            if (deleteInBloomGradebookEntry)
-            {
-                inBloomApi.DeleteGradebookEntry(assignment.inBloomGradebookEntryId);
-            }
-
-            var scores = _db.Scores.Where(s => s.AssignmentId == id);
+            var assignment = ConsumerContext.Assignments.Find(id);
+            var scores = ConsumerContext.Scores.Where(s => s.AssignmentId == id);
             foreach (var score in scores.ToList())
             {
-                _db.Scores.Remove(score);
+                ConsumerContext.Scores.Remove(score);
             }
             var courseId = assignment.Course.CourseId;
-            _db.Assignments.Remove(assignment);
-            _db.SaveChanges();
+            ConsumerContext.Assignments.Remove(assignment);
+            ConsumerContext.SaveChanges();
 
             return RedirectToAction("Details", "Course", new { id = courseId });
         }
 
         //
         // GET: /Assignment/Launch/5
-
         public ActionResult Launch(string returnUrl, int id = 0)
         {
             //return new RedirectResult("../LtiLaunch/2");
-            var assignment = _db.Assignments.Find(id);
+            var assignment = ConsumerContext.Assignments.Find(id);
             if (assignment == null)
             {
                 return HttpNotFound();
@@ -190,17 +190,17 @@ namespace Consumer.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Form a basic LTI launch request for the browser to POST.
+        /// </summary>
+        /// <param name="id">The assignment ID to launch.</param>
+        /// <returns>A form post for the browser to execute.</returns>
         public ActionResult LtiLaunch(int id = 0)
         {
-            Assignment assignment = _db.Assignments.Find(id);
+            var assignment = ConsumerContext.Assignments.Find(id);
+            var user = UserManager.FindById(User.Identity.GetUserId());
             
-            return View(LtiUtility.CreateLtiRequest(assignment));
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            _db.Dispose();
-            base.Dispose(disposing);
+            return View(LtiUtility.CreateBasicLaunchRequestViewModel(Request, assignment, user));
         }
     }
 }

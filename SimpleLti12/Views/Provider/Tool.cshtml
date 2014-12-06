@@ -1,0 +1,52 @@
+﻿@model SimpleLti12.Models.ToolModel
+
+@{
+    ViewBag.Title = "IMS LTI 1.2 Tool";
+}
+
+<p>
+    This is a simple Tool Provider using
+    <a href="http://www.nuget.org/packages/LtiLibrary" target="_blank">LtiLibrary</a>
+    in an ASP.NET MVC page.
+</p>
+
+@ViewBag.Message
+
+@if (Model != null && !string.IsNullOrEmpty(Model.LtiRequest.LisOutcomeServiceUrl))
+{
+    <h2>Outcomes Service</h2>
+    <p>
+        The Tool Consumer that sent this launch request is hosting the LTI 1.x Outcomes Service.
+        Click @Html.ActionLink("here to send a grade back via the LTI Outcomes Service.",
+            "Outcomes",
+            new
+            {
+                Model.LtiRequest.LisOutcomeServiceUrl, 
+                Model.LtiRequest.LisResultSourcedId, 
+                Model.LtiRequest.ConsumerKey, 
+                Model.ConsumerSecret
+            },
+            new { target = "_blank" }
+            )
+    </p>
+}
+
+@if (Model != null && !string.IsNullOrEmpty(Model.LtiRequest.Parameters["custom_tc_profile_url"]))
+{
+    <h2>Tool Consumer Profile</h2>
+    <p>
+        The Tool Consumer that sent this launch can provide a Tool Consumer Profile.
+        Click @Html.ActionLink("here to request the Tool Consumer Profile.", 
+            "GetToolConsumerProfile",
+            new { Url = Model.LtiRequest.Parameters["custom_tc_profile_url"] }, 
+            new { target = "_blank" }
+            )
+    </p>
+}
+
+<h2>Raw POST Parameters</h2>
+@foreach (var key in Request.Form.AllKeys)
+{
+    <div>@key=@Request.Form[key]</div>
+}
+

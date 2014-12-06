@@ -1,0 +1,63 @@
+﻿@model Consumer.Models.ContentItemTool
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Content Item Tool</h4>
+    <hr />
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.Raw(Model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Url)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Url)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ConsumerKey)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConsumerKey)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ConsumerSecret)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConsumerSecret)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomParameters)
+        </dt>
+        <dd>
+            <pre>
+@Html.DisplayFor(model => model.CustomParameters)
+            </pre>
+        </dd>
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ContentItemToolId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

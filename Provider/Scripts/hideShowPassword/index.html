@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>jQuery hideShowPassword Demo</title>
+<style>
+/*
+   * Add this if you want to disable IE10's implementation
+   * of the winking eye in favor of your own.
+   * Alternatively, you could set the 'innerToggle' option to
+   * false for that browser only.
+   */
+
+::-ms-reveal {
+ display:none !important;
+}
+/*
+   * This toggle style shows a winking "eye-con" (nyuk, nyuk).
+   * Open eye means "show," closed eye means "hide."
+   */
+.hideShowPassword-toggle {
+background-image: url(img/wink.svg);
+background-position: 0 center;
+background-repeat: no-repeat;
+cursor: pointer;
+height: 100%;
+overflow: hidden;
+text-indent: -9999em;
+width: 44px;
+}
+.hideShowPassword-toggle-hide {
+background-position: -44px center;
+}
+/* Simple text toggle style */
+.my-toggle-class {
+color: #888;
+cursor: pointer;
+font-size: 0.75em;
+font-weight: bold;
+padding: 0.5em 1em;
+text-transform: uppercase;
+}
+/*
+   * Because our input elements have a z-index so that
+   * their borders will overlap on focus, we'll give ours
+   * a higher one to make sure they're always visible.
+   */
+.hideShowPassword-toggle,  .my-toggle-class {
+z-index: 3;
+}
+/* Some boilerplate styles */
+
+html {
+background-color: #f6f6f6;
+}
+body {
+color: #444;
+font-family: sans-serif;
+line-height: 1.4em;
+margin: 1em auto 2em;
+padding: 0 1em;
+max-width: 30em;
+}
+h1, p, figcaption {
+text-align: center;
+}
+h1 {
+font-size: 1.25em;
+line-height: 1em;
+margin: 1.5em 0 1em;
+padding: 0;
+}
+figure {
+margin: 0 0 1em;
+}
+figcaption {
+color: #999;
+font-size: 0.875em;
+margin-top: 0.5em;
+}
+.btn {
+background-color: #0088cc;
+border-radius: 0.25em;
+color: #fff;
+display: inline-block;
+padding: 0.5em 1em;
+text-decoration: none;
+}
+/*
+   * Styles for the login forms.
+   * None of this is plugin-dependent.
+   */
+
+.login, .login-field {
+border-radius: 0.25em;
+}
+.login {
+background-color: #e6e6e6;
+}
+.login-field {
+background-color: #fff;
+border: 2px solid #ccc;
+border-radius: 0.25em;
+color: inherit;
+display: block;
+font-family: inherit;
+font-size: inherit;
+line-height: inherit;
+margin: 0;
+padding: 0.5em;
+position: relative;
+vertical-align: middle;
+width: 100%;
+-webkit-appearance: none;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+}
+.login-field:focus {
+border-color: #0088cc;
+outline: transparent;
+z-index: 2;
+}
+.login-field-username {
+border-bottom-left-radius: 0;
+border-bottom-right-radius: 0;
+margin-bottom: -2px;
+}
+.login-field-password {
+border-top-left-radius: 0;
+border-top-right-radius: 0;
+margin-top: -2px;
+}
+.login-option {
+padding: 0.25em 0.5em 0.5em;
+}
+.login-option input {
+vertical-align: baseline;
+}
+</style>
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<!-- Including Modernizr to test for touch support. -->
+<script src="vendor/modernizr.custom.js"></script>
+</head>
+<body>
+<div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="http://www.jqueryscript.net/form/Toggle-Password-Visibility-With-jQuery-hideShowPassword.html">Download This Plugin</a></li>
+<li><a href="http://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+<h1 style="margin-top:150px;">hideShowPassword Demo</h1>
+<figure>
+<div class="login">
+<input class="login-field login-field-username" type="text" placeholder="Username" autocapitalize="off" autocomplete="off" autocorrect="off">
+<input class="login-field login-field-password" id="password-1" type="password" placeholder="Password">
+</div>
+<figcaption>Inner toggle styled as icon.</figcaption>
+</figure>
+<figure>
+<div class="login">
+<input class="login-field login-field-username" type="text" placeholder="Username" autocapitalize="off" autocomplete="off" autocorrect="off">
+<input class="login-field login-field-password" id="password-2" type="password" placeholder="Password">
+</div>
+<figcaption>Password visible by default, toggle styled as text and shows on focus.</figcaption>
+</figure>
+<figure>
+<div class="login">
+<input class="login-field login-field-username" type="text" placeholder="Username" autocapitalize="off" autocomplete="off" autocorrect="off">
+<input class="login-field login-field-password" id="password-3" type="password" placeholder="Password" value="example password">
+<div class="login-option">
+<input type="checkbox" id="show-password">
+<label for="show-password">Show password</label>
+</div>
+</div>
+<figcaption>Checkbox toggles password visibility.</figcaption>
+</figure>
+<p><a href="https://github.com/cloudfour/hideShowPassword" class="btn">More info and source</a></p>
+
+<!--
+
+Include Zepto by default or jQuery as a fallback.
+See: http://zeptojs.com/#download
+
+The Zepto build here is custom because we need the
+data module to be included.
+
+See the README for more info on when to use
+Zepto versus jQuery.
+
+--> 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+
+<!-- Include the plugin. Yay! --> 
+<script src="hideShowPassword.min.js"></script> 
+<script>
+
+// Example 1
+$('#password-1').hideShowPassword({
+  // Creates a wrapper and toggle element with minimal styles.
+  innerToggle: true,
+  // Makes the toggle functional in touch browsers without
+  // the element losing focus.
+  touchSupport: Modernizr.touch
+});
+
+// Example 2
+$('#password-2').hideShowPassword({
+  // Make the password visible right away.
+  show: true,
+  // Create the toggle goodness.
+  innerToggle: true,
+  // Give the toggle a custom class so we can style it
+  // separately from the previous example.
+  toggleClass: 'my-toggle-class',
+  // Don't show the toggle until the input triggers
+  // the 'focus' event.
+  hideToggleUntil: 'focus',
+  // Enable touch support for toggle.
+  touchSupport: Modernizr.touch
+});
+
+// Example 3
+$('#show-password').on('change', function () {
+  // When the '#show-password' checkbox changes its value,
+  // set the visibility of the password field to whatever
+  // its 'checked' attribute is.
+  $('#password-3').hideShowPassword($(this).prop('checked'));
+});
+
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

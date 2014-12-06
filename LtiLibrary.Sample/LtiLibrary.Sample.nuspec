@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>LtiLibrary.Sample</id>
+    <version>1.4.0</version>
+    <title>LtiLibrary Sample</title>
+    <authors>andyfmiller.com</authors>
+    <owners>andyfmiller.com</owners>
+    <description>Adds basic MVC and Web Forms samples to an empty ASP.NET Web Application project.</description>
+    <copyright>Copyright 2014</copyright>
+    <dependencies>
+      <dependency id="LtiLibrary" version="1.4" />
+    </dependencies>
+    <tags>IMS LTI</tags>
+    <releaseNotes>
+      - Updated to work with LtiLibrary 1.4.
+    </releaseNotes>
+  </metadata>
+</package>

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Consumer.Models.ContentItemTool>
+
+@{
+    ViewBag.Title = "Content Item Tools";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create Content Item Tool", "Create")
+</p>
+
+@if (!Model.Any())
+{
+    <p>
+        There are no Content Item Tools yet.
+    </p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Url)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Url)
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ContentItemToolId })
+                    @if (item.Owner.Id == ViewBag.UserId)
+                    {
+                        <text> | </text>@Html.ActionLink("Edit", "Edit", new { id = item.ContentItemToolId })
+                        <text> | </text>@Html.ActionLink("Delete", "Delete", new { id = item.ContentItemToolId })
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+}

@@ -1,0 +1,37 @@
+﻿@model List<Provider.Models.Tool>
+
+@{
+    ViewBag.Title = "Library";
+    Layout = "~/Views/Shared/_LayoutSearch.cshtml";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<p class="text-info">@ViewBag.StatusMessage</p>
+
+@if (!Model.Any())
+{
+    <text>
+        No tools have been created yet.
+    </text>
+}
+else
+{
+    <text>
+        <table class="table">
+
+            @foreach (var tool in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(tool.Name, "View", new { id = tool.ToolId }, new { title = tool.Description })
+                    </td>
+                    <td>
+                        @Html.ActionLink("Assign", "PlaceContentItem", new { id = tool.ToolId })
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </text>
+}

@@ -1,0 +1,1 @@
+nuget pack LtiLibrary.csproj -Properties Configuration=Release

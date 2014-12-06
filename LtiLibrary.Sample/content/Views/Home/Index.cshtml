@@ -1,0 +1,12 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<p>
+    This is a simple Tool Consumer using 
+    <a href="http://www.nuget.org/packages/LtiLibrary" target="_blank">LtiLibrary</a>
+    in an ASP.NET MVC page. Click the link below to launch a tool.
+</p>
+
+@Html.ActionLink("Launch", "Launch", "Consumer", new { ReturnUrl = @Request.Url }, null)

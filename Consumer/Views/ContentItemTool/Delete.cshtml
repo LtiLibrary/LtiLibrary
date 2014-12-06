@@ -1,0 +1,22 @@
+﻿@model Consumer.Models.ContentItemTool
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@ViewBag.Title</h2>
+<h4>Delete</h4>
+
+@using (Html.BeginForm())
+{
+     @Html.AntiForgeryToken()
+    
+    <p>
+        <strong>Are you sure you want to delete this Content Item Tool?</strong>
+    </p>
+
+    <p>
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

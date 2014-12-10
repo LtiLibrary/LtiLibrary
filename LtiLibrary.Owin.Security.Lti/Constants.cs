@@ -1,5 +1,4 @@
-﻿
-namespace LtiLibrary.Owin.Security.Lti
+﻿namespace LtiLibrary.Owin.Security.Lti
 {
     internal static class Constants
     {

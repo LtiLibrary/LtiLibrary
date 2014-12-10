@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using LtiLibrary.Common;
-using LtiLibrary.Lti1;
-using LtiLibrary.OAuth;
+using LtiLibrary.Core.Common;
+using LtiLibrary.Core.Lti1;
+using LtiLibrary.Core.OAuth;
 using Microsoft.Owin;
 
 namespace LtiLibrary.Owin.Security.Lti

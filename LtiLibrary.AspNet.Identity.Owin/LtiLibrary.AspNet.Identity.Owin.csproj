@@ -80,13 +80,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LtiLibrary.Core\LtiLibrary.Core.csproj">
+      <Project>{75d41eb6-f34b-4973-86eb-11abfee995b0}</Project>
+      <Name>LtiLibrary.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LtiLibrary.Owin.Security.Lti\LtiLibrary.Owin.Security.Lti.csproj">
       <Project>{51f8ecc9-9a3f-4c05-b5cd-5aca34f93bfb}</Project>
       <Name>LtiLibrary.Owin.Security.Lti</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LtiLibrary\LtiLibrary.csproj">
-      <Project>{75d41eb6-f34b-4973-86eb-11abfee995b0}</Project>
-      <Name>LtiLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

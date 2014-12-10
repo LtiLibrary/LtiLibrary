@@ -1,5 +1,5 @@
 ﻿using System;
-using LtiLibrary.Lti1;
+using LtiLibrary.Core.Lti1;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Provider;
 

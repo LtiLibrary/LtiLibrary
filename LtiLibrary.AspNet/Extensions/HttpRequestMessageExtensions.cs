@@ -1,7 +1,7 @@
-﻿using LtiLibrary.Core.Outcomes;
-using System.Net.Http;
+﻿using System.Net.Http;
+using LtiLibrary.AspNet.Outcomes;
 
-namespace LtiLibrary.Core.Extensions
+namespace LtiLibrary.AspNet.Extensions
 {
     public static class HttpRequestMessageExtensions
     {

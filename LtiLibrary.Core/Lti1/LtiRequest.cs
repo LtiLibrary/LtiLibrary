@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using LtiLibrary.Core.Common;
+﻿using LtiLibrary.Core.Common;
 using LtiLibrary.Core.ContentItems;
 using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Outcomes;
@@ -2200,7 +2199,7 @@ namespace LtiLibrary.Core.Lti1
 
             // The LTI spec says to include the querystring parameters
             // when calculating the signature base string
-            var querystring = Url.ParseQueryString();
+            var querystring = new UrlEncodingParser(Url.Query);
             parameters.Add(querystring);
 
             // Perform all the custom variable substitutions

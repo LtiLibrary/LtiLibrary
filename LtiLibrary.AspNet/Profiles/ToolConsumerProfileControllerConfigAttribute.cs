@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Http.Controllers;
-using LtiLibrary.Core.Profiles;
 
 namespace LtiLibrary.AspNet.Profiles
 {

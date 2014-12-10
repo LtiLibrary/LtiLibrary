@@ -2,10 +2,10 @@
 using System.Globalization;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using LtiLibrary.AspNet.Extensions;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Models;
 using LtiLibrary.Core.Outcomes;
-using LtiLibrary.Core.Extensions;
 
 namespace LtiLibrary.AspNet.Outcomes
 {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using LtiLibrary.Core.Models;
 
-namespace LtiLibrary.Core.Outcomes
+namespace LtiLibrary.AspNet.Outcomes
 {
     public class ImsxXmlMediaTypeFormatter : XmlMediaTypeFormatter
     {

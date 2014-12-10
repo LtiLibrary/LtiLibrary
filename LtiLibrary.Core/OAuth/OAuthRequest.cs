@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Http;
+using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.OAuth
@@ -62,7 +62,7 @@ namespace LtiLibrary.Core.OAuth
         {
             get
             {
-                var customParameters = new NameValueCollection();
+                var customParameters = new UrlEncodingParser("");
                 foreach (var key in Parameters.AllKeys)
                 {
                     if (key.StartsWith("custom_") || key.StartsWith("_ext"))
@@ -75,8 +75,7 @@ namespace LtiLibrary.Core.OAuth
             }
             set
             {
-                var uri = new UriBuilder("http", "localhost") {Query = value};
-                var customParameters = uri.Uri.ParseQueryString();
+                var customParameters = new UrlEncodingParser(value);
                 foreach (var key in customParameters.AllKeys)
                 {
                     if (key.StartsWith("custom_") || key.StartsWith("_ext"))

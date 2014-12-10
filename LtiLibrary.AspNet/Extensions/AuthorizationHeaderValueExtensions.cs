@@ -1,11 +1,12 @@
-﻿using System.Net;
-using LtiLibrary.Core.Common;
-using LtiLibrary.Core.OAuth;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
+using LtiLibrary.Core.Common;
+using LtiLibrary.Core.Extensions;
+using LtiLibrary.Core.OAuth;
 
-namespace LtiLibrary.Core.Extensions
+namespace LtiLibrary.AspNet.Extensions
 {
     public static class AuthorizationHeaderValueExtensions
     {

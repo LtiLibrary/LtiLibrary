@@ -1,11 +1,11 @@
-﻿using LtiLibrary.Core.Common;
-using LtiLibrary.Core.OAuth;
-using LtiLibrary.Core.Extensions;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Security.Cryptography;
+using LtiLibrary.AspNet.Extensions;
+using LtiLibrary.Core.Common;
+using LtiLibrary.Core.OAuth;
 
-namespace LtiLibrary.Core.Outcomes
+namespace LtiLibrary.AspNet.Outcomes
 {
     public class LtiOutcomesRequest : OAuthRequest
     {

@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.Core.Profiles
+namespace LtiLibrary.AspNet.Profiles
 {
     public class ToolConsumerProfileFormatter : JsonMediaTypeFormatter
     {

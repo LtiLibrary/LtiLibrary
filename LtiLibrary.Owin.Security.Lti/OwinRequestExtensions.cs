@@ -119,9 +119,7 @@ namespace LtiLibrary.Owin.Security.Lti
         /// <returns>The <see cref="LtiRequest"/></returns>
         public static async Task<LtiRequest> ParseRequestAsync(this IOwinRequest request)
         {
-            var ltiRequest = new LtiRequest(null);
-            ltiRequest.HttpMethod = request.Method;
-            ltiRequest.Url = request.Uri;
+            var ltiRequest = new LtiRequest(null) {HttpMethod = request.Method, Url = request.Uri};
 
             var form = await request.ReadFormAsync();
             foreach (var pair in form)

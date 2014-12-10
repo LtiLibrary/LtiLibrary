@@ -12,7 +12,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -81,17 +80,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\LTI\LtiLibrary.Owin.Security.Lti\LtiLibrary.Owin.Security.Lti.csproj">
+    <ProjectReference Include="..\LtiLibrary.Owin.Security.Lti\LtiLibrary.Owin.Security.Lti.csproj">
       <Project>{51f8ecc9-9a3f-4c05-b5cd-5aca34f93bfb}</Project>
       <Name>LtiLibrary.Owin.Security.Lti</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\LTI\LtiLibrary\LtiLibrary.csproj">
+    <ProjectReference Include="..\LtiLibrary\LtiLibrary.csproj">
       <Project>{75d41eb6-f34b-4973-86eb-11abfee995b0}</Project>
       <Name>LtiLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>

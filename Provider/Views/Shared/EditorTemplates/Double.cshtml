@@ -1,5 +1,0 @@
-﻿@using System.Globalization
-@model double?
-
-
-@Html.TextBox("", Model.HasValue ? Model.Value.ToString(CultureInfo.InvariantCulture) : "", new { style = "width:50px;text-align:center", @class="form-control" })

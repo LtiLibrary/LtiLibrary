@@ -1,4 +1,5 @@
-﻿using LtiLibrary.Core.Common;
+﻿using System.Net.Http;
+using LtiLibrary.Core.Common;
 using LtiLibrary.Core.ContentItems;
 using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Outcomes;
@@ -10,7 +11,6 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace LtiLibrary.Core.Lti1
 {
@@ -2200,7 +2200,7 @@ namespace LtiLibrary.Core.Lti1
 
             // The LTI spec says to include the querystring parameters
             // when calculating the signature base string
-            var querystring = HttpUtility.ParseQueryString(Url.Query);
+            var querystring = Url.ParseQueryString();
             parameters.Add(querystring);
 
             // Perform all the custom variable substitutions
@@ -2252,20 +2252,6 @@ namespace LtiLibrary.Core.Lti1
                 }
             }
             return roles;
-        }
-
-        public void ParseRequest(HttpRequestBase request)
-        {
-            ParseRequest(request, false);
-        }
-
-        public void ParseRequest(HttpRequestBase request, bool skipValidation)
-        {
-            HttpMethod = request.HttpMethod;
-            Url = request.Url;
-
-            // Launch requests pass parameters as form fields
-            Parameters.Add(skipValidation ? request.Unvalidated.Form : request.Form);
         }
 
         /// <summary>

@@ -8,7 +8,6 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 namespace LtiLibrary.Core.ContentItems
 {
@@ -115,7 +114,7 @@ namespace LtiLibrary.Core.ContentItems
             var authorization = new StringBuilder(OAuthConstants.AuthScheme).Append(" ");
             foreach (var key in parameters.AllKeys)
             {
-                authorization.AppendFormat("{0}=\"{1}\",", key, HttpUtility.UrlEncode(parameters[key]));
+                authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
             webRequest.Headers["Authorization"] = authorization.ToString(0, authorization.Length - 1);
 

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using System.Net;
+using LtiLibrary.Core.Common;
+using LtiLibrary.Core.OAuth;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Web;
-using LtiLibrary.Core.Common;
-using LtiLibrary.Core.OAuth;
 
 namespace LtiLibrary.Core.Extensions
 {
@@ -32,7 +31,7 @@ namespace LtiLibrary.Core.Extensions
                 if (!OAuthConstants.OAuthParameters.Any(p => p.Equals(key)))
                     continue;
 
-                var value = HttpUtility.UrlDecode(keyValue[1].Trim('"'));
+                var value = WebUtility.UrlDecode(keyValue[1].Trim('"'));
                 parameters.AddParameter(key, value);
             }
             return parameters;

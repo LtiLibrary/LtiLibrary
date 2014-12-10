@@ -1,8 +1,8 @@
-﻿using LtiLibrary.Core.Lti1;
-using System.Text;
+﻿using System.Text;
 using System.Web;
+using LtiLibrary.Core.Lti1;
 
-namespace LtiLibrary.Core.Extensions
+namespace LtiLibrary.AspNet.Extensions
 {
     public static class HttpResponseExtensions
     {

@@ -55,7 +55,8 @@ namespace LtiLibrary.AspNet.Identity.Owin
             var identity = await userManager.CreateIdentityAsync(user, context.Options.SignInAsAuthenticationType);
             identity.AddClaim(new Claim(
                 type: context.Options.ClaimType, 
-                value: JsonConvert.SerializeObject(context.LtiRequest, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
+                value: JsonConvert.SerializeObject(context.LtiRequest, Formatting.None, 
+                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
                 valueType: ClaimValueTypes.String,
                 issuer: context.Options.AuthenticationType));
             if (claims != null)

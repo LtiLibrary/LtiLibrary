@@ -19,7 +19,7 @@ namespace LtiLibrary.Core.OAuth
         public static string GenerateSignatureBase(string httpMethod, Uri url, NameValueCollection parameters)
         {
             // RFC 5849 3.4.1.1
-            StringBuilder signatureBase = new StringBuilder();
+            var signatureBase = new StringBuilder();
             signatureBase.Append(httpMethod.ToRfc3986EncodedString().ToUpperInvariant()).Append('&');
 
             // RFC 5849 3.4.1.2
@@ -53,8 +53,10 @@ namespace LtiLibrary.Core.OAuth
             var signatureBase = GenerateSignatureBase(httpMethod, url, parameters);
 
             // Note that in LTI, the TokenSecret (second part of the key) is blank
-            HMACSHA1 hmacsha1 = new HMACSHA1();
-            hmacsha1.Key = Encoding.ASCII.GetBytes(string.Format("{0}&", consumerSecret.ToRfc3986EncodedString()));
+            var hmacsha1 = new HMACSHA1
+            {
+                Key = Encoding.ASCII.GetBytes(string.Format("{0}&", consumerSecret.ToRfc3986EncodedString()))
+            };
 
             var dataBuffer = Encoding.ASCII.GetBytes(signatureBase);
             var hashBytes = hmacsha1.ComputeHash(dataBuffer);

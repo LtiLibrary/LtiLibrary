@@ -7,7 +7,7 @@ namespace LtiLibrary.AspNet.Extensions
     {
         public static string ToPlainText(this HtmlDocument doc)
         {
-            using (StringWriter sw = new StringWriter())
+            using (var sw = new StringWriter())
             {
                 ConvertTo(doc.DocumentNode, sw);
                 sw.Flush();

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Web;
 
 namespace LtiLibrary.Core.Extensions
 {
@@ -11,32 +10,6 @@ namespace LtiLibrary.Core.Extensions
             // The following function was written by Andrew Arnott
             // http://stackoverflow.com/questions/846487/how-to-get-uri-escapedatastring-to-comply-with-rfc-3986
             return EscapeUriDataStringRfc3986(value);
-        }
-
-        /// <summary>
-        /// Converts the provided app-relative path into an absolute Url containing the full host name
-        /// </summary>
-        /// <param name="relativeUrl">App-Relative path</param>
-        /// <returns>Provided relativeUrl parameter as fully qualified Url</returns>
-        /// <example>~/path/to/foo to http://www.web.com/path/to/foo</example>
-        public static string ToAbsoluteUrl(this string relativeUrl)
-        {
-            if (string.IsNullOrEmpty(relativeUrl))
-                return relativeUrl;
-
-            if (HttpContext.Current == null)
-                return relativeUrl;
-
-            if (relativeUrl.StartsWith("/"))
-                relativeUrl = relativeUrl.Insert(0, "~");
-            if (!relativeUrl.StartsWith("~/"))
-                relativeUrl = relativeUrl.Insert(0, "~/");
-
-            var url = HttpContext.Current.Request.Url;
-            var port = url.Port != 80 ? (":" + url.Port) : String.Empty;
-
-            return String.Format("{0}://{1}{2}{3}",
-                   url.Scheme, url.Host, port, VirtualPathUtility.ToAbsolute(relativeUrl));
         }
 
         /// <summary>
@@ -61,7 +34,7 @@ namespace LtiLibrary.Core.Extensions
             // This MAY sometimes exhibit RFC 3986 behavior (according to the documentation).
             // If it does, the escaping we do that follows it will be a no-op since the
             // characters we search for to replace can't possibly exist in the string.
-            StringBuilder escaped = new StringBuilder(Uri.EscapeDataString(value));
+            var escaped = new StringBuilder(Uri.EscapeDataString(value));
 
             // Upgrade the escaping to RFC 3986, if necessary.
             foreach (var s in UriRfc3986CharsToEscape)

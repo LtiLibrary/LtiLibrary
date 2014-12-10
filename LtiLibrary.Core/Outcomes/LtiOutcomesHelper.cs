@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Models;
@@ -251,7 +250,7 @@ namespace LtiLibrary.Core.Outcomes
             var authorization = new StringBuilder(OAuthConstants.AuthScheme).Append(" ");
             foreach (var key in parameters.AllKeys)
             {
-                authorization.AppendFormat("{0}=\"{1}\",", key, HttpUtility.UrlEncode(parameters[key]));
+                authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
             webRequest.Headers["Authorization"] = authorization.ToString(0, authorization.Length - 1);
 

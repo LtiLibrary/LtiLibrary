@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Net;
+using System.Web;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Lti1;
 using LtiLibrary.Core.OAuth;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Net;
-using System.Web;
 
-namespace LtiLibrary.Core.Extensions
+namespace LtiLibrary.AspNet.Extensions
 {
     public static class HttpRequestBaseExtensions
     {
@@ -99,10 +99,7 @@ namespace LtiLibrary.Core.Extensions
 
         public static NameValueCollection UnvalidatedParameters(this HttpRequestBase request)
         {
-            var parameters = new NameValueCollection();
-            parameters.Add(request.Unvalidated.QueryString);
-            parameters.Add(request.Unvalidated.Form);
-            return parameters;
+            return new NameValueCollection {request.Unvalidated.QueryString, request.Unvalidated.Form};
         }
 
         /// <summary>

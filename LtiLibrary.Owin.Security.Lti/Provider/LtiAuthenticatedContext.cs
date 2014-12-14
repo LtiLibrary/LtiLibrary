@@ -16,6 +16,16 @@ namespace LtiLibrary.Owin.Security.Lti.Provider
             LtiRequest = ltiRequest;
         }
 
-        public ILtiRequest LtiRequest { get; set; }
+        /// <summary>
+        /// Get the LTI request
+        /// </summary>
+        public ILtiRequest LtiRequest { get; private set; }
+
+        /// <summary>
+        /// Get or set a parameter telling the LtiAuthenticationHandler to redirect the request. Set Redirect
+        /// to True to redirect the request to the original URL. This is useful if a new identity has been
+        /// signed in that uses cookies. Default is False.
+        /// </summary>
+        public string RedirectUrl { get; set; }
     }
 }

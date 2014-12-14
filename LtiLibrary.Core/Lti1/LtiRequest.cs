@@ -1,5 +1,6 @@
 ﻿using LtiLibrary.Core.Common;
 using LtiLibrary.Core.ContentItems;
+using LtiLibrary.Core.Models;
 using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Outcomes;
 using System;
@@ -886,7 +887,6 @@ namespace LtiLibrary.Core.Lti1
 
         #region IOutcomesManagementRequest Parameters
 
-
         /// <summary>
         /// This field should be no more than 1023 characters long. 
         /// This value should not change from one launch to the next and in general, the TP can expect that 
@@ -943,6 +943,11 @@ namespace LtiLibrary.Core.Lti1
                 Parameters[LtiConstants.LisResultSourcedIdParameter] = value;
             }
         }
+
+        /// <summary>
+        /// The XML payload in an LTI Outcomes request and response
+        /// </summary>
+        public string ImsxPoxEnvelope { get; set; }
 
         #endregion
 

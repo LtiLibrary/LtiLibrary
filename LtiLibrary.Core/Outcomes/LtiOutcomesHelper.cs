@@ -105,6 +105,43 @@ namespace LtiLibrary.Core.Outcomes
             }
         }
 
+        /// <summary>
+        /// Returns True if the stream contains an LTI Outcomes payload.
+        /// </summary>
+        /// <param name="stream">The <see cref="System.IO.Stream"/> to examine.</param>
+        /// <returns></returns>
+        public static bool IsLtiOutcomesRequest(Stream stream)
+        {
+            imsx_POXEnvelopeType imsxEnvelope;
+            try
+            {
+                imsxEnvelope = ImsxRequestSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
+            }
+            finally
+            {
+                if (stream.CanSeek)
+                {
+                    stream.Position = 0;
+                }
+            }
+
+            if (imsxEnvelope != null) return true;
+            
+            try
+            {
+                imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
+            }
+            finally
+            {
+                if (stream.CanSeek)
+                {
+                    stream.Position = 0;
+                }
+            }
+
+            return imsxEnvelope != null;
+        }
+
         private static bool ParseDeleteResultResponse(HttpWebResponse webResponse)
         {
             if (webResponse == null) return false;

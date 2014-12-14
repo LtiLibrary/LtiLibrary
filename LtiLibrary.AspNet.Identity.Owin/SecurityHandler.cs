@@ -67,6 +67,9 @@ namespace LtiLibrary.AspNet.Identity.Owin
                 }
             }
             context.OwinContext.Authentication.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
+            
+            // Redirect to original URL so the new identity takes affect
+            context.RedirectUrl = context.LtiRequest.Url.ToString();
         }
 
         /// <summary>

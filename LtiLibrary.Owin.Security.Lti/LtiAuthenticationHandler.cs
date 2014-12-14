@@ -1,6 +1,7 @@
 ﻿using LtiLibrary.Owin.Security.Lti.Provider;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Infrastructure;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace LtiLibrary.Owin.Security.Lti
@@ -13,51 +14,48 @@ namespace LtiLibrary.Owin.Security.Lti
         /// <summary>
         /// Normally invoked to process incoming authentication messages in 3-legged authentication
         /// schemes. But LTI is a one-legged authentication scheme, so all authentication messages
-        /// are in the original post. This method is not used.
+        /// are in the original post. This method is only used to supply an <see cref="AuthenticationTicket"/>
+        /// for the System.Web.Http.ApiController OWIN pipeline.
         /// </summary>
         /// <returns>Always returns null.</returns>
-        protected override Task<AuthenticationTicket> AuthenticateCoreAsync()
+        protected async override Task<AuthenticationTicket> AuthenticateCoreAsync()
         {
-            return Task.FromResult<AuthenticationTicket>(null);
+            if (await Request.IsAuthenticatedLtiRequestAsync())
+            {
+                var identity = new ClaimsIdentity(Options.AuthenticationType);
+                return new AuthenticationTicket(identity, new AuthenticationProperties());
+            }
+
+            return null;
         }
 
         /// <summary>
         /// Handles LTI authentication requests.
         /// </summary>
-        /// <returns>True if the request was handled, false if the next middleware should be invoked.</returns>
+        /// <returns>True if the request was handled, false if the next middleware in the pipeline
+        /// should be invoked.</returns>
         public override async Task<bool> InvokeAsync()
         {
-            // This is always invoked on each request. If this is an LTI basic launch request, then
-            // tell the middleware to handle a response challenge using LTI authentication.
-            if (await Request.IsAuthenticatedWithLti())
+            if (await Request.IsAuthenticatedLtiRequestAsync())
             {
-                var ltiRequest = await Request.ParseRequestAsync();
+                var ltiRequest = await Request.ParseLtiRequestAsync();
 
-                // Let the application supply the OAuth secret
+                // Let the application validate the parameters
                 var authenticateContext = new LtiAuthenticateContext(Context, ltiRequest);
                 await Options.Provider.Authenticate(authenticateContext);
-                if (string.IsNullOrEmpty(authenticateContext.Secret))
-                {
-                    return false;
-                }
 
-                // Check the signature
-                var signature = ltiRequest.GenerateSignature(authenticateContext.Secret);
-                if (!ltiRequest.Signature.Equals(signature))
-                {
-                    return false;
-                }
-
-                // Let the application sign in the application user
+                // Let the application sign in the application user if required
                 var authenticatedContext = new LtiAuthenticatedContext(Context, Options, ltiRequest);
                 await Options.Provider.Authenticated(authenticatedContext);
-
-                // We're done here, return to the original request
-                Response.Redirect(Request.Uri.ToString());
-                return true;
+                if (!string.IsNullOrEmpty(authenticatedContext.RedirectUrl))
+                {
+                    // Stop processing the current request and redirect to the new URL
+                    Response.Redirect(authenticatedContext.RedirectUrl);
+                    return true;
+                }
             }
 
-            // Let the rest of the pipeline run.
+            // Continue processing the request
             return false;
         }
     }

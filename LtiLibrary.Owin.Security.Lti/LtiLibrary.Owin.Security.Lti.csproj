@@ -46,9 +46,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
+    <Compile Include="AuthorizationHeader.cs" />
+    <Compile Include="LtiAuthenticationDefaults.cs" />
     <Compile Include="OwinRequestExtensions.cs" />
     <Compile Include="LtiAuthenticationExtensions.cs" />
     <Compile Include="LtiAuthenticationHandler.cs" />

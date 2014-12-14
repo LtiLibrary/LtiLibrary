@@ -17,6 +17,5 @@ namespace LtiLibrary.Owin.Security.Lti.Provider
         }
 
         public ILtiRequest LtiRequest { get; private set; }
-        public string Secret { get; set; }
     }
 }

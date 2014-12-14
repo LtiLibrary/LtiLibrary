@@ -4,6 +4,7 @@ namespace LtiLibrary.Core.OAuth
 {
     public static class OAuthConstants
     {
+        public static string AuthorizationHeader = "Authorization";
         public static string AuthScheme = "OAuth";
         public static string BodyHashParameter = "oauth_body_hash";
         public static string CallbackParameter = "oauth_callback";

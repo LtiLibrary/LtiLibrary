@@ -11,11 +11,12 @@ namespace LtiLibrary.Owin.Security.Lti
         /// <summary>
         /// Initializes a new <see cref="LtiAuthenticationOptions"/>
         /// </summary>
-        public LtiAuthenticationOptions() : base(Constants.DefaultAuthenticationType)
+        public LtiAuthenticationOptions()
+            : base(LtiAuthenticationDefaults.AuthenticationType)
         {
             Description.Caption = AuthenticationType;
             AuthenticationMode = AuthenticationMode.Passive;
-            ClaimType = Constants.DefaultClaimType;
+            ClaimType = LtiAuthenticationDefaults.ClaimType;
         }
 
         /// <summary>

@@ -73,6 +73,7 @@ namespace LtiLibrary.AspNet.Outcomes
 
         // POST api/outcomes
 
+        [Authorize]
         [HttpPost]
         public imsx_POXEnvelopeType Post(imsx_POXEnvelopeType request)
         {

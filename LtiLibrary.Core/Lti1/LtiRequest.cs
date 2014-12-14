@@ -1,6 +1,5 @@
 ﻿using LtiLibrary.Core.Common;
 using LtiLibrary.Core.ContentItems;
-using LtiLibrary.Core.Models;
 using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Outcomes;
 using System;

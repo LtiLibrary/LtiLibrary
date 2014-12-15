@@ -25,8 +25,11 @@ namespace LtiLibrary.Core.Outcomes
             // should be imsx_POXEnvelopeResponse in the response.
 
             // Create two serializers: one for requests and one for responses.
-            ImsxRequestSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType));
-            ImsxResponseSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType), null, null, new XmlRootAttribute("imsx_POXEnvelopeResponse"), 
+            ImsxRequestSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType),
+                null, null, new XmlRootAttribute("imsx_POXEnvelopeRequest"),
+                    "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
+            ImsxResponseSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType), 
+                null, null, new XmlRootAttribute("imsx_POXEnvelopeResponse"), 
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
         }
 

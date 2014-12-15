@@ -16,8 +16,10 @@ namespace LtiLibrary.AspNet.Outcomes
         // should be imsx_POXEnvelopeResponse in the response.
 
         // Create two serializers: one for requests and one for responses.
-        private static readonly XmlSerializer ImsxRequestSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType));
-        private static readonly XmlSerializer ImsxResponseSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType), 
+        private static readonly XmlSerializer ImsxRequestSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType),
+            null, null, new XmlRootAttribute("imsx_POXEnvelopeRequest"),
+                    "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
+        private static readonly XmlSerializer ImsxResponseSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType),
             null, null, new XmlRootAttribute("imsx_POXEnvelopeResponse"),
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
 

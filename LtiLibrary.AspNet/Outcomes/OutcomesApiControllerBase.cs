@@ -1,11 +1,10 @@
-﻿using System;
+﻿using LtiLibrary.Core.Common;
+using LtiLibrary.Core.Models;
+using LtiLibrary.Core.Outcomes;
+using System;
 using System.Globalization;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using LtiLibrary.AspNet.Extensions;
-using LtiLibrary.Core.Common;
-using LtiLibrary.Core.Models;
-using LtiLibrary.Core.Outcomes;
 
 namespace LtiLibrary.AspNet.Outcomes
 {
@@ -32,13 +31,6 @@ namespace LtiLibrary.AspNet.Outcomes
         }
 
         /// <summary>
-        /// Return true if the request is authorized.
-        /// </summary>
-        /// <param name="ltiRequest">The LtiOucomesRequest to authorize.</param>
-        /// <returns>True if the request is authorized by the Tool Consumer.</returns>
-        protected abstract bool IsAuthorized(LtiOutcomesRequest ltiRequest);
-
-        /// <summary>
         /// Delete the result (grade, score, outcome) from the consumer.
         /// </summary>
         /// <param name="lisResultSourcedId">The sourcedId of the LisResult to delete.</param>
@@ -58,18 +50,6 @@ namespace LtiLibrary.AspNet.Outcomes
         /// <param name="result">The result to save or update.</param>
         /// <returns>True if the result was saved or updated.</returns>
         protected abstract bool ReplaceResult(LisResult result);
-
-        /// <summary>
-        /// Authenticate and authorize the request.
-        /// </summary>
-        private void Authorize()
-        {
-            var request = ControllerContext.Request.ParseIntoLtiOutcomesRequest();
-            if (!IsAuthorized(request))
-            {
-                throw new LtiException("Not authorized");
-            }
-        }
 
         // POST api/outcomes
 
@@ -95,44 +75,27 @@ namespace LtiLibrary.AspNet.Outcomes
                 }
                 else
                 {
-                    // Authenticate and authorize the request
-                    var isAuthorized = false;
-                    try
+                    // All requests come in the same basic body element
+                    var requestBody = request.imsx_POXBody;
+
+                    // Delete Result
+                    if (requestBody.Item is deleteResultRequest)
                     {
-                        Authorize();
-                        isAuthorized = true;
+                        response = HandleDeleteResultRequest(requestHeader, requestBody);
                     }
-                    catch (LtiException ex)
+                    else if (requestBody.Item is readResultRequest)
+                    {
+                        response = HandleReadResultRequest(requestHeader, requestBody);
+                    }
+                    else if (requestBody.Item is replaceResultRequest)
+                    {
+                        response = HandleReplaceResultRequest(requestHeader, requestBody);
+                    }
+                    else
                     {
                         response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                            ex.Message,
-                            imsx_CodeMajorType.failure);
-                    }
-
-                    if (isAuthorized)
-                    {
-                        // All requests come in the same basic body element
-                        var requestBody = request.imsx_POXBody;
-
-                        // Delete Result
-                        if (requestBody.Item is deleteResultRequest)
-                        {
-                            response = HandleDeleteResultRequest(requestHeader, requestBody);
-                        }
-                        else if (requestBody.Item is readResultRequest)
-                        {
-                            response = HandleReadResultRequest(requestHeader, requestBody);
-                        }
-                        else if (requestBody.Item is replaceResultRequest)
-                        {
-                            response = HandleReplaceResultRequest(requestHeader, requestBody);
-                        }
-                        else
-                        {
-                            response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                                "Request is not supported",
-                                imsx_CodeMajorType.unsupported);
-                        }
+                            "Request is not supported",
+                            imsx_CodeMajorType.unsupported);
                     }
                 }
             }
@@ -149,7 +112,7 @@ namespace LtiLibrary.AspNet.Outcomes
         private static imsx_POXEnvelopeType CreateCustomResponse(string messageRefId, string description, imsx_CodeMajorType codeMajor)
         {
             var response = CreateSuccessResponse(messageRefId, description);
-            var header = (imsx_ResponseHeaderInfoType) response.imsx_POXHeader.Item;
+            var header = (imsx_ResponseHeaderInfoType)response.imsx_POXHeader.Item;
             header.imsx_statusInfo.imsx_codeMajor = codeMajor;
 
             return response;

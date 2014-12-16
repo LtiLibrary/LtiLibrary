@@ -53,11 +53,10 @@ namespace LtiLibrary.AspNet.Outcomes
 
         // POST api/outcomes
 
-        [Authorize]
         [HttpPost]
         public imsx_POXEnvelopeType Post(imsx_POXEnvelopeType request)
         {
-            imsx_POXEnvelopeType response = null;
+            imsx_POXEnvelopeType response;
             if (request == null)
             {
                 response = CreateCustomResponse(string.Empty,
@@ -112,7 +111,7 @@ namespace LtiLibrary.AspNet.Outcomes
         private static imsx_POXEnvelopeType CreateCustomResponse(string messageRefId, string description, imsx_CodeMajorType codeMajor)
         {
             var response = CreateSuccessResponse(messageRefId, description);
-            var header = (imsx_ResponseHeaderInfoType)response.imsx_POXHeader.Item;
+            var header = (imsx_ResponseHeaderInfoType) response.imsx_POXHeader.Item;
             header.imsx_statusInfo.imsx_codeMajor = codeMajor;
 
             return response;
@@ -126,11 +125,12 @@ namespace LtiLibrary.AspNet.Outcomes
         /// <returns>A response envelope.</returns>
         private static imsx_POXEnvelopeType CreateSuccessResponse(string messageRefId, string description)
         {
-            var response = new imsx_POXEnvelopeType();
-            response.imsx_POXHeader = new imsx_POXHeaderType();
-            response.imsx_POXHeader.Item = new imsx_ResponseHeaderInfoType();
+            var response = new imsx_POXEnvelopeType
+            {
+                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_ResponseHeaderInfoType()}
+            };
 
-            var item = response.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
+            var item = (imsx_ResponseHeaderInfoType) response.imsx_POXHeader.Item;
             item.imsx_version = imsx_GWSVersionValueType.V10;
             item.imsx_messageIdentifier = Guid.NewGuid().ToString();
             item.imsx_statusInfo = new imsx_StatusInfoType();
@@ -213,8 +213,7 @@ namespace LtiLibrary.AspNet.Outcomes
                     // It should simply return an "empty" grade.
                     response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
                         string.Format("Score for {0} is null", readRequest.resultRecord.sourcedGUID.sourcedId));
-                    readResponse.result = new ResultType();
-                    readResponse.result.resultScore = new TextType();
+                    readResponse.result = new ResultType {resultScore = new TextType()};
                     var cultureInfo = new CultureInfo("en");
                     readResponse.result.resultScore.language = cultureInfo.Name;
                     readResponse.result.resultScore.textString = string.Empty;
@@ -224,8 +223,7 @@ namespace LtiLibrary.AspNet.Outcomes
                     // The score exists
                     response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
                         string.Format("Score for {0} is read", readRequest.resultRecord.sourcedGUID.sourcedId));
-                    readResponse.result = new ResultType();
-                    readResponse.result.resultScore = new TextType();
+                    readResponse.result = new ResultType {resultScore = new TextType()};
                     var cultureInfo = new CultureInfo("en");
                     readResponse.result.resultScore.language = cultureInfo.Name;
                     readResponse.result.resultScore.textString = result.Score.Value.ToString(cultureInfo);

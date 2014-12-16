@@ -35,20 +35,21 @@ namespace LtiLibrary.Core.Outcomes
 
         public static bool DeleteScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
-            var imsxEnvelope = new imsx_POXEnvelopeType();
-            imsxEnvelope.imsx_POXHeader = new imsx_POXHeaderType();
-            imsxEnvelope.imsx_POXHeader.Item = new imsx_RequestHeaderInfoType();
-            imsxEnvelope.imsx_POXBody = new imsx_POXBodyType();
-            imsxEnvelope.imsx_POXBody.Item = new deleteResultRequest();
+            var imsxEnvelope = new imsx_POXEnvelopeType
+            {
+                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
+                imsx_POXBody = new imsx_POXBodyType {Item = new deleteResultRequest()}
+            };
 
-            var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
+            var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
             imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
             imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
 
-            var imsxBody = imsxEnvelope.imsx_POXBody.Item as deleteResultRequest;
-            imsxBody.resultRecord = new ResultRecordType();
-            imsxBody.resultRecord.sourcedGUID = new SourcedGUIDType();
-            imsxBody.resultRecord.sourcedGUID.sourcedId = lisResultSourcedId;
+            var imsxBody = (deleteResultRequest) imsxEnvelope.imsx_POXBody.Item;
+            imsxBody.resultRecord = new ResultRecordType
+            {
+                sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId}
+            };
 
             try
             {
@@ -68,29 +69,34 @@ namespace LtiLibrary.Core.Outcomes
 
         public static bool PostScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
-            var imsxEnvelope = new imsx_POXEnvelopeType();
-            imsxEnvelope.imsx_POXHeader = new imsx_POXHeaderType();
-            imsxEnvelope.imsx_POXHeader.Item = new imsx_RequestHeaderInfoType();
-            imsxEnvelope.imsx_POXBody = new imsx_POXBodyType();
-            imsxEnvelope.imsx_POXBody.Item = new replaceResultRequest();
+            var imsxEnvelope = new imsx_POXEnvelopeType
+            {
+                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
+                imsx_POXBody = new imsx_POXBodyType {Item = new replaceResultRequest()}
+            };
 
-            var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
+            var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
             imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
             imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
 
-            var imsxBody = imsxEnvelope.imsx_POXBody.Item as replaceResultRequest;
-            imsxBody.resultRecord = new ResultRecordType();
-            imsxBody.resultRecord.sourcedGUID = new SourcedGUIDType();
-            imsxBody.resultRecord.sourcedGUID.sourcedId = lisResultSourcedId;
-            imsxBody.resultRecord.result = new ResultType();
-            imsxBody.resultRecord.result.resultScore = new TextType();
+            var imsxBody = (replaceResultRequest) imsxEnvelope.imsx_POXBody.Item;
+            imsxBody.resultRecord = new ResultRecordType
+            {
+                sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId},
+                result = new ResultType
+                {
+                    resultScore = new TextType
+                    {
+                        language = LtiConstants.ScoreLanguage,
+                        textString = score.HasValue
+                            ? score.Value.ToString(CultureInfo.CreateSpecificCulture(LtiConstants.ScoreLanguage))
+                            : null
+                    }
+                }
+            };
             // The LTI 1.1 specification states in 6.1.1. that the score in replaceResult should
             // always be formatted using “en” formatting
             // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
-            imsxBody.resultRecord.result.resultScore.language = LtiConstants.ScoreLanguage;
-            imsxBody.resultRecord.result.resultScore.textString = score.HasValue
-                ? score.Value.ToString(CultureInfo.CreateSpecificCulture(LtiConstants.ScoreLanguage))
-                : null;
 
             try
             {
@@ -102,7 +108,7 @@ namespace LtiLibrary.Core.Outcomes
                 var webResponse = webRequest.GetResponse() as HttpWebResponse;
                 return ParsePostResultResponse(webResponse);
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -183,20 +189,21 @@ namespace LtiLibrary.Core.Outcomes
 
         public static LisResult ReadScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
-            var imsxEnvelope = new imsx_POXEnvelopeType();
-            imsxEnvelope.imsx_POXHeader = new imsx_POXHeaderType();
-            imsxEnvelope.imsx_POXHeader.Item = new imsx_RequestHeaderInfoType();
-            imsxEnvelope.imsx_POXBody = new imsx_POXBodyType();
-            imsxEnvelope.imsx_POXBody.Item = new readResultRequest();
+            var imsxEnvelope = new imsx_POXEnvelopeType
+            {
+                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
+                imsx_POXBody = new imsx_POXBodyType {Item = new readResultRequest()}
+            };
 
-            var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
+            var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
             imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
             imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
 
-            var imsxBody = imsxEnvelope.imsx_POXBody.Item as readResultRequest;
-            imsxBody.resultRecord = new ResultRecordType();
-            imsxBody.resultRecord.sourcedGUID = new SourcedGUIDType();
-            imsxBody.resultRecord.sourcedGUID.sourcedId = lisResultSourcedId;
+            var imsxBody = (readResultRequest) imsxEnvelope.imsx_POXBody.Item;
+            imsxBody.resultRecord = new ResultRecordType
+            {
+                sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId}
+            };
 
             try
             {

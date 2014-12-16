@@ -53,12 +53,8 @@ namespace LtiLibrary.AspNet.Identity.Owin
 
             // Create the application identity, add the LTI request as a claim, and sign in
             var identity = await userManager.CreateIdentityAsync(user, context.Options.SignInAsAuthenticationType);
-            identity.AddClaim(new Claim(
-                type: context.Options.ClaimType, 
-                value: JsonConvert.SerializeObject(context.LtiRequest, Formatting.None, 
-                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
-                valueType: ClaimValueTypes.String,
-                issuer: context.Options.AuthenticationType));
+            identity.AddClaim(new Claim(context.Options.ClaimType, JsonConvert.SerializeObject(context.LtiRequest, Formatting.None, 
+                    new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }), ClaimValueTypes.String, context.Options.AuthenticationType));
             if (claims != null)
             {
                 foreach (var claim in claims)

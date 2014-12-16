@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 
 namespace LtiLibrary.Core.Common
 {
@@ -114,10 +115,7 @@ namespace LtiLibrary.Core.Common
                 string[] values = GetValues(key);
                 if (values != null)
                 {
-                    foreach (var val in values)
-                    {
-                        query += key + "=" + Uri.EscapeUriString(val) + "&";
-                    }
+                    query = values.Aggregate(query, (current, val) => current + (key + "=" + Uri.EscapeUriString(val) + "&"));
                 }
             }
             query = query.Trim('&');

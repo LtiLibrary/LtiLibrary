@@ -1,4 +1,7 @@
 AuthConfig.cs
+*.nuspec
+*.nupkg
+*.bat
 
 #################
 ## Eclipse
@@ -173,5 +176,3 @@ pip-log.txt
 # Mac crap
 .DS_Store
 
-
-*.bat

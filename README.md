@@ -1,4 +1,5 @@
-### LTI Library
+LTI Library
+===========
 There are four .NET projects in this solution to support IMS LTI Tool Providers and Tool Consumers.
 
 ## LtiLibrary.Core

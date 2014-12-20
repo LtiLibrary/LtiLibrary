@@ -78,7 +78,9 @@
     <Compile Include="SecurityHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LICENSE" />
     <None Include="packages.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LtiLibrary.Core\LtiLibrary.Core.csproj">

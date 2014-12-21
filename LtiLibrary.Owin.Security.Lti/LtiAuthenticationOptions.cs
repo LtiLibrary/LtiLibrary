@@ -1,4 +1,5 @@
 ﻿using LtiLibrary.Owin.Security.Lti.Provider;
+using Microsoft.Owin;
 using Microsoft.Owin.Security;
 
 namespace LtiLibrary.Owin.Security.Lti
@@ -29,6 +30,11 @@ namespace LtiLibrary.Owin.Security.Lti
         /// Gets or sets the <see cref="ILtiAuthenticationProvider"/> used to handle authentication events.
         /// </summary>
         public ILtiAuthenticationProvider Provider { get; set; }
+
+        /// <summary>
+        /// Gets or sets the URL of the action that will handle LTI result challenges (manual requests to login using LTI)
+        /// </summary>
+        public PathString ChallengResultUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the name of another authentication middleware which will be responsible for actually

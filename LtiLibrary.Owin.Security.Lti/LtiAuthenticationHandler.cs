@@ -12,6 +12,37 @@ namespace LtiLibrary.Owin.Security.Lti
     public class LtiAuthenticationHandler : AuthenticationHandler<LtiAuthenticationOptions>
     {
         /// <summary>
+        /// Redirect to an application URL that explains how to login.
+        /// </summary>
+        /// <returns>A task</returns>
+        /// <remarks>
+        /// This method is invoked if the user has manually asked to login with the LTI middleware.
+        /// In an OAuth 2.0-style application, this method would redirect to the remote login
+        /// interface to retrieve a token. But in LTI, the only way into this application is by
+        /// logging into the Tool Consumer and then launching this application.
+        /// </remarks>
+        protected override Task ApplyResponseChallengeAsync()
+        {
+            if (Response.StatusCode != 401)
+            {
+                return base.ApplyResponseChallengeAsync();
+            }
+
+            var challenge = Helper.LookupChallenge(Options.AuthenticationType, Options.AuthenticationMode);
+            if (challenge == null)
+            {
+                return base.ApplyResponseChallengeAsync();
+            }
+
+            if (Options.ChallengResultUrl.HasValue)
+            {
+                Response.Redirect(Options.ChallengResultUrl.Value);
+            }
+
+            return base.ApplyResponseChallengeAsync();
+        }
+
+        /// <summary>
         /// Normally invoked to process incoming authentication messages in 3-legged authentication
         /// schemes. But LTI is a one-legged authentication scheme, so all authentication messages
         /// are in the original post. This method is only used to supply an <see cref="AuthenticationTicket"/>

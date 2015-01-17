@@ -2,7 +2,7 @@
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.Lti1;
 using LtiLibrary.Core.OAuth;
-using LtiLibrary.Core.Outcomes;
+using LtiLibrary.Core.Outcomes.v1;
 using Microsoft.Owin;
 using System.IO;
 using System.Linq;
@@ -62,7 +62,7 @@ namespace LtiLibrary.Owin.Security.Lti
             // LTI Outcome requests and responses are sent as Plain Old XML
             if (request.ContentType.Equals("application/xml"))
             {
-                return LtiOutcomesHelper.IsLtiOutcomesRequest(request.Body);
+                return OutcomesClient.IsLtiOutcomesRequest(request.Body);
             }
 
             // Tool Consumer Profile requests and responses do not need authentication

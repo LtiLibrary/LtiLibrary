@@ -34,9 +34,9 @@ namespace LtiLibrary.Owin.Security.Lti
                 return base.ApplyResponseChallengeAsync();
             }
 
-            if (Options.ChallengResultUrl.HasValue)
+            if (Options.ChallengeResultUrl.HasValue)
             {
-                Response.Redirect(Options.ChallengResultUrl.Value);
+                Response.Redirect(Options.ChallengeResultUrl.Value);
             }
 
             return base.ApplyResponseChallengeAsync();

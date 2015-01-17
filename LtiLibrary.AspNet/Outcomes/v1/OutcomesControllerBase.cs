@@ -5,13 +5,12 @@ using System.Web.Http;
 using System.Web.Http.Controllers;
 using LtiLibrary.Core.Outcomes.v1;
 
-namespace LtiLibrary.AspNet.Outcomes
+namespace LtiLibrary.AspNet.Outcomes.v1
 {
     /// <summary>
     /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
-    [Obsolete("Use LtiLibrary.AspNet.Outcomes.v1.OutcomesControllerBase")]
-    public abstract class OutcomesApiControllerBase : ApiController
+    public abstract class OutcomesControllerBase : ApiController
     {
         protected override void Initialize(HttpControllerContext controllerContext)
         {

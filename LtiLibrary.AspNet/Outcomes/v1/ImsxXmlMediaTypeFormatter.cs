@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using LtiLibrary.Core.Outcomes.v1;
 
-namespace LtiLibrary.AspNet.Outcomes
+namespace LtiLibrary.AspNet.Outcomes.v1
 {
-    [Obsolete("Use LtiLibrary.AspNet.Outcomes.v1.ImsxXmlMediaTypeFormatter")]
     public class ImsxXmlMediaTypeFormatter : XmlMediaTypeFormatter
     {
         // The XSD code generator only creates one imsx_POXEnvelopeType which has the 

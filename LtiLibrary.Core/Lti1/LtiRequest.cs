@@ -1,7 +1,7 @@
 ﻿using LtiLibrary.Core.Common;
 using LtiLibrary.Core.ContentItems;
 using LtiLibrary.Core.OAuth;
-using LtiLibrary.Core.Outcomes;
+using LtiLibrary.Core.Outcomes.v1;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -1247,6 +1247,12 @@ namespace LtiLibrary.Core.Lti1
         [NotMapped]
         public string ContextOrg { get; set; }
 
+        [NotMapped]
+        public string LineItemServiceUrl { get; set; }
+
+        [NotMapped]
+        public string LineItemsServiceUrl { get; set; }
+
         /// <summary>
         /// LIS course offering variable. 
         /// <para>
@@ -2390,6 +2396,9 @@ namespace LtiLibrary.Core.Lti1
             value = Regex.Replace(value, "\\$LineItem.sourcedId", LisLineItemSourcedId ?? string.Empty, RegexOptions.IgnoreCase);
             value = Regex.Replace(value, "\\$LineItem.type", LisLineItemType ?? string.Empty, RegexOptions.IgnoreCase);
             value = Regex.Replace(value, "\\$LineItem.type.displayName", LisLineItemTypeDisplayName ?? string.Empty, RegexOptions.IgnoreCase);
+            // TODO: Are these right?
+            value = Regex.Replace(value, "\\$LineItem.url", LineItemServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
+            value = Regex.Replace(value, "\\$LineItems.url", LineItemsServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
 
             // LIS Result variables
             value = Regex.Replace(value, "\\$Result.createdTimestamp", LisResultCreatedTimestamp ?? string.Empty, RegexOptions.IgnoreCase);

@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace LtiLibrary.Core.Outcomes
+﻿namespace LtiLibrary.Core.Outcomes.v1
 {
-    [Obsolete("Use LtiLibrary.Core.Outcomes.v1.LisResult")]
     public class LisResult
     {
         public bool IsValid { get; set; }

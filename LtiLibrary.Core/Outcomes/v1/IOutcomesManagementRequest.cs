@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace LtiLibrary.Core.Outcomes
+﻿namespace LtiLibrary.Core.Outcomes.v1
 {
     /// <summary>
     /// Represents the Outcomes Management interface introduced in LTI 1.1.
     /// </summary>
-    [Obsolete("Use LtiLibrary.Core.Outcomes.v1.IOutcomesManagementRequest")]
     public interface IOutcomesManagementRequest
     {
         string LisOutcomeServiceUrl { get; set; }

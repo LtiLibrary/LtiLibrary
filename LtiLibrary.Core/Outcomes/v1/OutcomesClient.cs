@@ -9,20 +9,18 @@ using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Extensions;
-using LtiLibrary.Core.Outcomes.v1;
 
-namespace LtiLibrary.Core.Outcomes
+namespace LtiLibrary.Core.Outcomes.v1
 {
     /// <summary>
     /// Helper methods for the Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
-    [Obsolete("Use LtiLibrary.Core.Outcomes.v1.OutcomesClient")]
-    public static class LtiOutcomesHelper
+    public static class OutcomesClient
     {
         private static readonly XmlSerializer ImsxRequestSerializer;
         private static readonly XmlSerializer ImsxResponseSerializer;
 
-        static LtiOutcomesHelper()
+        static OutcomesClient()
         {
             // The XSD code generator only creates one imsx_POXEnvelopeType which has the 
             // imsx_POXEnvelopeRequest root element. The IMS spec says the root element

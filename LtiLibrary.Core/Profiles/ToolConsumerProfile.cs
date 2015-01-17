@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Lti2;
@@ -26,51 +27,27 @@ namespace LtiLibrary.Core.Profiles
     /// @type - Used to set the data type of an object or property value.
     /// </remarks>
     [DataContract]
-    public class ToolConsumerProfile
+    public class ToolConsumerProfile : JsonLdObject
     {
         public ToolConsumerProfile(IEnumerable<string> capabilityOffered, string guid,
             string ltiVersion, ProductInstance productInstance) :
 
-            this(new[]{LtiConstants.ToolConsumerProfileContext}, capabilityOffered, guid, 
+            this(LtiConstants.ToolConsumerProfileContext, capabilityOffered, guid, 
                 ltiVersion, productInstance)
         {
         }
 
-        public ToolConsumerProfile(IEnumerable<string> context, IEnumerable<string> capabilityOffered, string guid, 
+        public ToolConsumerProfile(object ldContext, IEnumerable<string> capabilityOffered, string guid,
             string ltiVersion, ProductInstance productInstance)
+            : base(LtiConstants.ToolConsumerProfileType)
         {
             // These are the required fields in a ToolConsumerProfile
-            Context = context;
-            Type = "ToolConsumerProfile";
+            LdContext = ldContext;
             CapabilityOffered = capabilityOffered;
             Guid = guid;
             LtiVersion = ltiVersion;
             ProductInstance = productInstance;
         }
-
-        /// <summary>
-        /// For most implementations, the value will be the single URI for the standard context associated with 
-        /// the application/vnd.ims.lti.v2.ToolConsumerProfile+json media type. In this case, the value will be
-        /// <para>"http://purl.imsglobal.org/ctx/lti/v2/ToolConsumerProfile"</para>
-        /// </summary>
-        [DataMember(Name = "@context")]
-        public IEnumerable<string> Context { get; set; }
-
-        /// <summary>
-        /// The URI that identifies this ToolConsumerProfile instance.
-        /// </summary>
-        [DataMember(Name = "@id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// A simple name identifying the object's type. The standard context [TCP-Context] defines the following 
-        /// simple names that are applicable:
-        /// <para>ToolConsumerProfile</para>
-        /// <para>Implementations may use a custom JSON-LD context which defines simple names for additional types 
-        /// that are subtypes of ToolConsumerProfile.</para>
-        /// </summary>
-        [DataMember(Name = "@type")]
-        public string Type { get; private set; }
 
         /// <summary>
         /// A capability offered by the Tool Consumer to its integration partners.

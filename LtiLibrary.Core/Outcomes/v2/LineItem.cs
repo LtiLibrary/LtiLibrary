@@ -1,0 +1,70 @@
+﻿using System;
+using LtiLibrary.Core.Common;
+using Newtonsoft.Json;
+
+namespace LtiLibrary.Core.Outcomes.v2
+{
+    /// <summary>
+    /// A line item is equivalent to a column in a gradebook; it is able to hold the results
+    /// associated with a specific activity for a set of users.  The activity is expected to
+    /// be associated with a single LTI context within the tool consumer, so there is a 
+    /// one-to-many relationship between contexts and line items.
+    /// </summary>
+    public class LineItem : JsonLdObject
+    {
+        public LineItem() : base(LtiConstants.LineItemType)
+        {
+        }
+
+        /// <summary>
+        /// Optional Activity that learners engage with to produce the Results recorded in this LineItem.
+        /// </summary>
+        [JsonProperty("assignedActivity", NullValueHandling = NullValueHandling.Ignore)]
+        public Activity AssignedActivity { get; set; }
+
+        /// <summary>
+        /// Optional, human-friendly label for this LineItem suitable for display. 
+        /// For example, this label might be used as the heading of a column in a gradebook.
+        /// </summary>
+        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+        public string Label { get; set; }
+
+        /// <summary>
+        /// The context to which this LineItem belongs.
+        /// </summary>
+        [JsonProperty("lineItemOf", Required = Required.Always)]
+        public Context LineItemOf { get; set; }
+
+        /// <summary>
+        /// Identifies the property that is reported as the resultScore of the Results within this LineItem.
+        /// </summary>
+        [JsonProperty("reportingMethod", Required = Required.Always)]
+        public Uri ReportingMethod { get; set; }
+
+        /// <summary>
+        /// The container holding the Results for this LineItem.
+        /// </summary>
+        /// <remarks>
+        /// Result is filled in if the requested media type is
+        /// application/vnd.ims.lis.v2.lineitemresults+json.
+        /// </remarks>
+        [JsonProperty("result", NullValueHandling = NullValueHandling.Ignore)]
+        public LisResult[] Result { get; set; }
+
+        /// <summary>
+        /// Optional URI for the container holding the Results for this LineItem. 
+        /// </summary>
+        /// <remarks>
+        /// Results is filled in if the requested media type is
+        /// application/vnd.ims.lis.v2.lineitem+json.
+        /// </remarks>
+        [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri Results { get; set; }
+
+        /// <summary>
+        /// Optional constraints on the scores recorded in the Results associated with this LineItem.
+        /// </summary>
+        [JsonProperty("scoreConstraints", NullValueHandling = NullValueHandling.Ignore)]
+        public NumericLimits ScoreContraints { get; set; }
+    }
+}

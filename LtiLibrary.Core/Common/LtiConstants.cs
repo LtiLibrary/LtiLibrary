@@ -86,11 +86,31 @@ namespace LtiLibrary.Core.Common
         // Media types
         public const string ContentItemsMediaType = "application/vnd.ims.lti.v1.contentitemplacement+json";
         public const string LaunchMediaType = "application/vnd.ims.lti.v1.launch+json";
+        public const string LineItemContainerMediaType = "application/vnd.ims.lis.v2.lineitemcontainer+json";
+        public const string LineItemMediaType = "application/vnd.ims.lis.v2.lineitem+json";
+        public const string LineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";
+        public const string LisResultContainerMediaType = "application/vnd.ims.lis.v2.resultcontainer+json";
+        public const string LisResultMediaType = "application/vnd.ims.lis.v2.result+json";
         public const string OutcomeMediaType = "application/vnd.ims.lti.v1.outcome+xml";
         public const string ToolConsumerProfileMediaType = "application/vnd.ims.lti.v2.toolconsumerprofile+json";
 
+        // Object types
+        public const string ActivityType = "Activity";
+        public const string ContainerPageType = "Page";
+        public const string ContextType = "Context";
+        public const string LineItemContainerType = "LineItemContainer";
+        public const string LineItemType = "LineItem";
+        public const string LisResultType = "LISResult";
+        public const string LisResultContainerType = "LisResultContainer";
+        public const string NumericLimitsType = "NumericLimits";
+        public const string ToolConsumerProfileType = "ToolConsumerProfile";
+
         // Contexts
         public const string ContentItemPlacementContext = "http://purl.imsglobal.org/ctx/lti/v1/ContentItemPlacement";
+        public const string LineItemContainerContext = "http://purl.imsglobal.org/ctx/lis/v2/outcomes/LineItemContainer";
+        public const string LineItemContext = "http://purl.imsglobal.org/ctx/lis/v2/LineItem";
+        public const string OutcomesVocabularyContext = "http://purl.imsglobal.org/vocab/lis/v2/outcomes#";
+        public const string ResultContext = "http://purl.imsglobal.org/ctx/lis/v2p1/Result";
         public const string ToolConsumerProfileContext = "http://purl.imsglobal.org/ctx/lti/v2/ToolConsumerProfile";
 
         // Coding

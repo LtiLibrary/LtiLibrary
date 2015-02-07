@@ -75,6 +75,9 @@
     <Compile Include="ContentItems\ILtiLink.cs" />
     <Compile Include="Lti1\ILtiRequest.cs" />
     <Compile Include="ContentItems\Image.cs" />
+    <Compile Include="Outcomes\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
+      <DependentUpon>OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Outcomes\v1\IOutcomesManagementRequest.cs" />
     <Compile Include="Outcomes\v1\LisResult.cs" />
     <Compile Include="Outcomes\v1\OutcomesClient.cs" />
@@ -120,6 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
+    <None Include="Outcomes\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Outcomes\v1\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
       <SubType>Designer</SubType>
     </None>

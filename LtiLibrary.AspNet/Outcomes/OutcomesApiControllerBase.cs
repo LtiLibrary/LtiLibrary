@@ -3,7 +3,7 @@ using System;
 using System.Globalization;
 using System.Web.Http;
 using System.Web.Http.Controllers;
-using LtiLibrary.Core.Outcomes.v1;
+using LtiLibrary.Core.Outcomes;
 
 namespace LtiLibrary.AspNet.Outcomes
 {

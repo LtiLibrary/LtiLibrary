@@ -1,8 +1,9 @@
-﻿namespace LtiLibrary.Core.Outcomes.v1
+﻿using LtiLibrary.Core.Common;
+
+namespace LtiLibrary.Core.Outcomes.v1
 {
-    public class LisResult
+    public class LisResult : BasicResult
     {
-        public bool IsValid { get; set; }
         public double? Score { get; set; }
         public string SourcedId { get; set; }
     }

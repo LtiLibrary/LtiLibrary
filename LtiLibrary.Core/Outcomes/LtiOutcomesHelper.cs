@@ -37,7 +37,7 @@ namespace LtiLibrary.Core.Outcomes
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
         }
 
-        public static bool DeleteScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static BasicResult DeleteScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -65,13 +65,13 @@ namespace LtiLibrary.Core.Outcomes
                 var webResponse = webRequest.GetResponse() as HttpWebResponse;
                 return ParseDeleteResultResponse(webResponse);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return false;
+                return new BasicResult(false, ex.ToString());
             }
         }
 
-        public static bool PostScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
+        public static BasicResult PostScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -112,9 +112,9 @@ namespace LtiLibrary.Core.Outcomes
                 var webResponse = webRequest.GetResponse() as HttpWebResponse;
                 return ParsePostResultResponse(webResponse);
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                return new BasicResult(false, ex.ToString());
             }
         }
 
@@ -155,40 +155,42 @@ namespace LtiLibrary.Core.Outcomes
             return imsxEnvelope != null;
         }
 
-        private static bool ParseDeleteResultResponse(HttpWebResponse webResponse)
+        private static BasicResult ParseDeleteResultResponse(HttpWebResponse webResponse)
         {
-            if (webResponse == null) return false;
+            if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
 
             var stream = webResponse.GetResponseStream();
-            if (stream == null) return false;
+            if (stream == null) return new BasicResult(false, "Invalid stream");
 
             var imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
-            if (imsxEnvelope == null) return false;
+            if (imsxEnvelope == null) return new BasicResult(false, "Invalid imsxEnvelope");
 
             var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-            if (imsxHeader == null) return false;
+            if (imsxHeader == null) return new BasicResult(false, "Invalid imsxHeader");
 
             var imsxStatus = imsxHeader.imsx_statusInfo.imsx_codeMajor;
 
-            return imsxStatus == imsx_CodeMajorType.success;
+            return new BasicResult(imsxStatus == imsx_CodeMajorType.success,
+                imsxHeader.imsx_statusInfo.imsx_description);
         }
 
-        private static bool ParsePostResultResponse(HttpWebResponse webResponse)
+        private static BasicResult ParsePostResultResponse(HttpWebResponse webResponse)
         {
-            if (webResponse == null) return false;
+            if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
 
             var stream = webResponse.GetResponseStream();
-            if (stream == null) return false;
+            if (stream == null) return new BasicResult(false, "Invalid stream");
 
             var imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
-            if (imsxEnvelope == null) return false;
+            if (imsxEnvelope == null) return new BasicResult(false, "Invalid imsxEnvelope");
 
             var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-            if (imsxHeader == null) return false;
+            if (imsxHeader == null) return new BasicResult(false, "Invalid imsxHeader");
 
             var imsxStatus = imsxHeader.imsx_statusInfo.imsx_codeMajor;
 
-            return imsxStatus == imsx_CodeMajorType.success;
+            return new BasicResult(imsxStatus == imsx_CodeMajorType.success,
+                imsxHeader.imsx_statusInfo.imsx_description);
         }
 
         public static LisResult ReadScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
@@ -219,9 +221,9 @@ namespace LtiLibrary.Core.Outcomes
                 var webResponse = webRequest.GetResponse() as HttpWebResponse;
                 return ParseReadResultResponse(webResponse);
             }
-            catch
+            catch (Exception ex)
             {
-                return new LisResult {IsValid = false};
+                return new LisResult {IsValid = false, Message = ex.ToString()};
             }
         }
 
@@ -229,13 +231,13 @@ namespace LtiLibrary.Core.Outcomes
         {
             if (webResponse == null)
             {
-                return new LisResult { IsValid = false };
+                return new LisResult { IsValid = false, Message = "Invalid webResponse" };
             }
 
             var stream = webResponse.GetResponseStream();
             if (stream == null)
             {
-                return new LisResult { IsValid = false };
+                return new LisResult { IsValid = false, Message = "Invalid stream" };
             }
 
             var imsxEnvelope = (imsx_POXEnvelopeType)ImsxResponseSerializer.Deserialize(stream);
@@ -244,7 +246,7 @@ namespace LtiLibrary.Core.Outcomes
 
             if (imsxStatus != imsx_CodeMajorType.success)
             {
-                return new LisResult { IsValid = false };
+                return new LisResult { IsValid = false, Message = imsxHeader.imsx_statusInfo.imsx_description};
             }
 
             var imsxBody = (readResultResponse) imsxEnvelope.imsx_POXBody.Item;

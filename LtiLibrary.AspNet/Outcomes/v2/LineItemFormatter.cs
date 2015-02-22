@@ -11,13 +11,24 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         {
             // Accept LineItem JSON-LD
             SupportedMediaTypes.Add(new MediaTypeHeaderValue(LtiConstants.LineItemMediaType));
+        }
 
-            // Tool Providers do not expect null values
-            SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-#if DEBUG
-            // Makes it a little easier to read responses during debug and test
-            Indent = true;
-#endif
+        /// <summary>
+        /// Return a JsonSerializer that puts @context, @type, and @id before any other
+        /// element in an object.
+        /// </summary>
+        /// <remarks>
+        /// This is used by HttpRequestMessage.CreateResponse, which is used by 
+        /// ToolConsumerProfileControllerBase to return the profile in the request.
+        /// </remarks>
+        public override JsonSerializer CreateJsonSerializer()
+        {
+            return new JsonSerializer
+            {
+                ContractResolver = new JsonLdObjectContractResolver(),
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            };
         }
     }
 }

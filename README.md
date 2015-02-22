@@ -7,5 +7,9 @@ This is the only library you need if you are going to roll your own support for 
 
 This library includes the classes, properties, and methods to support LTI 1.x launch, outcomes, content items and tool consumer profiles for both Tool Consumers and Tool Providers.
 
+Available on NuGet: https://www.nuget.org/packages/LtiLibrary.Core
+
 ## LtiLibrary.AspNet
 This library depends on LtiLibrary.Core and adds useful extensions and helper methods for ASP.NET applications such as an OutcomesApiController which implements the LTI Outcomes API as a WebApi Controller.
+
+Available on NuGet: https://www.nuget.org/packages/LtiLibrary.AspNet

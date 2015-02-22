@@ -1,9 +1,12 @@
 LtiLibrary.AspNet
 =================
 
-ASP.NET library for IMS LTI 1.x.
+ASP.NET library for IMS LTI v1.0, v1.1.1, v1.2; LTI Outcomes Management v1.0
 
 ## Release Notes
+
+1.5.0
+- Updated for Final versions of LTI v1.2 and LTI Outcomes Management v1.0
 
 1.5.0-alpha
 - Split LtiLibrary into LtiLibrary.Core and LtiLibrary.AspNet

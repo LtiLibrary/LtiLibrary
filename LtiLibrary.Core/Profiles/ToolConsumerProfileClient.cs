@@ -48,7 +48,7 @@ namespace LtiLibrary.Core.Profiles
                             profileResponse.HttpResponse = response.ToFormattedResponseString(
                                 profileResponse.ToolConsumerProfile == null
                                 ? null
-                                : profileResponse.ToolConsumerProfile.ToJsonLdString());
+                                : profileResponse.ToolConsumerProfile.ToJsonString());
                         }
 #endif
                     }

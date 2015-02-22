@@ -64,7 +64,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     await OnGetLineItems(context);
 
                     return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.LineItemContainerPage)
+                        ? Request.CreateResponse(context.StatusCode, context.LineItemContainerPage, new LineItemFormatter())
                         : Request.CreateResponse(context.StatusCode);
                 }
                 else
@@ -74,7 +74,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     await OnGetLineItem(context);
 
                     return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.LineItem)
+                        ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter())
                         : Request.CreateResponse(context.StatusCode);
                 }
             }
@@ -93,8 +93,8 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                 await OnPostLineItem(context);
 
-                return context.StatusCode == HttpStatusCode.Created 
-                    ? Request.CreateResponse(context.StatusCode, context.LineItem) 
+                return context.StatusCode == HttpStatusCode.Created
+                    ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter()) 
                     : Request.CreateResponse(context.StatusCode);
             }
             catch (Exception ex)

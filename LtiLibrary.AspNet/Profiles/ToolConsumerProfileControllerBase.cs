@@ -31,7 +31,7 @@ namespace LtiLibrary.AspNet.Profiles
                 await OnGetToolConsumerProfile(context);
                 
                 return context.StatusCode == HttpStatusCode.OK
-                    ? Request.CreateResponse(context.StatusCode, context.ToolConsumerProfile)
+                    ? Request.CreateResponse(context.StatusCode, context.ToolConsumerProfile, new ToolConsumerProfileFormatter())
                     : Request.CreateResponse(context.StatusCode);
             }
             catch (Exception ex)

@@ -4,9 +4,9 @@ using System.Net;
 using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.Core.Outcomes.v2
+namespace LtiLibrary.Core.Extensions
 {
-    public static class OutcomesExtensions
+    public static class JsonLdExtensions
     {
         /// <summary>
         /// Serializes the specified object to a JSON string using a JSON-LD contract resolver.

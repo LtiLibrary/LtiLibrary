@@ -15,20 +15,20 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// The maximum number of extra credit points that a learner may earn.
         /// </summary>
-        [JsonProperty("extraCreditMaximum", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("extraCreditMaximum")]
         public float? ExtraCreditMaximum { get; set; } 
 
         /// <summary>
         /// The maximum number of points that a learner may earn without extra credit.
         /// </summary>
-        [JsonProperty("normalMaximum", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("normalMaximum")]
         public float? NormalMaximum { get; set; }
 
         /// <summary>
         /// The maximum number of points that a learner may earn. This value is given by:
         /// totalMaximum = normalMaximum + extraCreditMaximum
         /// </summary>
-        [JsonProperty("totalMaximum", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("totalMaximum")]
         public float? TotalMaximum { get; set; }
     }
 }

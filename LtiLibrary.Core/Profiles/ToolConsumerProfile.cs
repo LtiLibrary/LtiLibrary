@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Lti2;
+using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Profiles
 {
@@ -26,60 +25,43 @@ namespace LtiLibrary.Core.Profiles
     /// 
     /// @type - Used to set the data type of an object or property value.
     /// </remarks>
-    [DataContract]
     public class ToolConsumerProfile : JsonLdObject
     {
-        public ToolConsumerProfile(IEnumerable<string> capabilityOffered, string guid,
-            string ltiVersion, ProductInstance productInstance) :
-
-            this(LtiConstants.ToolConsumerProfileContext, capabilityOffered, guid, 
-                ltiVersion, productInstance)
+        public ToolConsumerProfile() : base(LtiConstants.ToolConsumerProfileContext)
         {
-        }
-
-        public ToolConsumerProfile(object ldContext, IEnumerable<string> capabilityOffered, string guid,
-            string ltiVersion, ProductInstance productInstance)
-            : base(LtiConstants.ToolConsumerProfileType)
-        {
-            // These are the required fields in a ToolConsumerProfile
-            LdContext = ldContext;
-            CapabilityOffered = capabilityOffered;
-            Guid = guid;
-            LtiVersion = ltiVersion;
-            ProductInstance = productInstance;
         }
 
         /// <summary>
         /// A capability offered by the Tool Consumer to its integration partners.
         /// </summary>
-        [DataMember(Name = "capability_offered")]
-        public IEnumerable<string> CapabilityOffered { get; private set; }
+        [JsonProperty("capability_offered")]
+        public IEnumerable<string> CapabilityOffered { get; set; }
         
         /// <summary>
         /// A globally unique identifier for the service provider. As a best practice, this value should match an 
         /// Internet domain name assigned by ICANN, but any globally unique identifier is acceptable. 
         /// </summary>
-        [DataMember(Name = "guid")]
-        public string Guid { get; private set; }
+        [JsonProperty("guid")]
+        public string Guid { get; set; }
 
         /// <summary>
         /// The identifier for an LTI version that the version supports. A given product (Tool or Tool Consumer) 
         /// may support multiple versions, but only one version is selected for use in the integration contract. 
         /// Should match lti_version launch parameter.
         /// </summary>
-        [DataMember(Name = "lti_version")]
-        public string LtiVersion { get; private set; }
+        [JsonProperty("lti_version")]
+        public string LtiVersion { get; set; }
 
         /// <summary>
         /// An inverse attribute which references the ProductInstance within which this ToolConsumerProfile is defined.
         /// </summary>
-        [DataMember(Name = "product_instance")]
-        public ProductInstance ProductInstance { get; private set; }
+        [JsonProperty("product_instance")]
+        public ProductInstance ProductInstance { get; set; }
 
         /// <summary>
         /// The descriptor for a service offered by the product (Tool or Tool Consumer).
         /// </summary>
-        [DataMember(Name = "service_offered")]
+        [JsonProperty("service_offered")]
         public IEnumerable<RestService> ServiceOffered { get; set; }
     }
 }

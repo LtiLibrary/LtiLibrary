@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Lti2
 {
@@ -6,13 +6,12 @@ namespace LtiLibrary.Core.Lti2
     /// This container defines a block of text. The container includes a default value for the text, plus a 
     /// key that can be used to lookup a locale-specific value from a resource bundle.
     /// </summary>
-    [DataContract]
     public class LocalizedText
     {
         /// <summary>
         /// The key used to lookup the locale-specific value from a resource bundle.
         /// </summary>
-        [DataMember(Name = "key")]
+        [JsonProperty("key")]
         public string Key { get; set; }
 
         /// <summary>
@@ -20,7 +19,7 @@ namespace LtiLibrary.Core.Lti2
         /// (2) the localization capability is not enabled, or (3) a value for the specified key is not found 
         /// in the locale-specific resource bundle.
         /// </summary>
-        [DataMember(Name = "default_value")]
+        [JsonProperty("default_value")]
         public string Value { get; set; }
     }
 }

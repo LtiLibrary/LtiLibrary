@@ -1,53 +1,50 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using LtiLibrary.Core.Common;
+using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Lti2
 {
     /// <summary>
     /// This resource represents the service provider that hosts a product (Tool or Tool Consumer).
     /// </summary>
-    [DataContract]
-    public class ServiceProvider
+    public class ServiceProvider : JsonLdObject
     {
-        public ServiceProvider(string guid, string providerName)
+        public ServiceProvider(string guid, string providerName) : base(null)
         {
             Guid = guid;
             ServiceProviderName = new LocalizedName{Key = "provider_name", Value = providerName};
             Timestamp = DateTime.UtcNow;
         }
 
-        [DataMember(Name = "@id")]
-        public string Id { get; set; }
-
         /// <summary>
         /// A description of the service provider suitable for display to end-users.
         /// </summary>
-        [DataMember(Name = "description")]
+        [JsonProperty("description")]
         public LocalizedText Description { get; set; }
 
         /// <summary>
         /// A globally unique identifier for the service provider. As a best practice, this value should match an 
         /// Internet domain name assigned by ICANN, but any globally unique identifier is acceptable.
         /// </summary>
-        [DataMember(Name = "guid")]
+        [JsonProperty("guid")]
         public string Guid { get; set; }
 
         /// <summary>
         /// The name of the service provider suitable for display to end users.
         /// </summary>
-        [DataMember(Name = "provider_name")]
+        [JsonProperty("provider_name")]
         public LocalizedName ServiceProviderName { get; private set; }
 
         /// <summary>
         /// Contact information for support from a service provider.
         /// </summary>
-        [DataMember(Name = "support")]
+        [JsonProperty("support")]
         public Contact Support { get; set; }
 
         /// <summary>
         /// A timestamp for the Service Provider record. This value is useful for determining which record is most current.
         /// </summary>
-        [DataMember(Name = "timestamp")]
+        [JsonProperty("timestamp")]
         public DateTime Timestamp { get; private set; }
     }
 }

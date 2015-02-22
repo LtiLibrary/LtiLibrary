@@ -16,7 +16,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// Optional indication of which resource is the subject for the members of the container.
         /// </summary>
-        [JsonProperty("membershipSubject", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("membershipSubject")]
         public Context MembershipSubject { get; set; }
     }
 }

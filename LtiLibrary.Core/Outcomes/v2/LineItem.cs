@@ -19,14 +19,14 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// Optional Activity that learners engage with to produce the Results recorded in this LineItem.
         /// </summary>
-        [JsonProperty("assignedActivity", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("assignedActivity")]
         public Activity AssignedActivity { get; set; }
 
         /// <summary>
         /// Optional, human-friendly label for this LineItem suitable for display. 
         /// For example, this label might be used as the heading of a column in a gradebook.
         /// </summary>
-        [JsonProperty("label", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("label")]
         public string Label { get; set; }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// Result is filled in if the requested media type is
         /// application/vnd.ims.lis.v2.lineitemresults+json.
         /// </remarks>
-        [JsonProperty("result", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("result")]
         public LisResult[] Result { get; set; }
 
         /// <summary>
@@ -58,13 +58,13 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// Results is filled in if the requested media type is
         /// application/vnd.ims.lis.v2.lineitem+json.
         /// </remarks>
-        [JsonProperty("results", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("results")]
         public Uri Results { get; set; }
 
         /// <summary>
         /// Optional constraints on the scores recorded in the Results associated with this LineItem.
         /// </summary>
-        [JsonProperty("scoreConstraints", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("scoreConstraints")]
         public NumericLimits ScoreContraints { get; set; }
     }
 }

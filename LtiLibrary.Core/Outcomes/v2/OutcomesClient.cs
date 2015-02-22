@@ -12,21 +12,21 @@ namespace LtiLibrary.Core.Outcomes.v2
 {
     public static class OutcomesClient
     {
-        public static async Task<HttpStatusCode> DeleteLineItem(string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse> DeleteLineItem(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
 
             return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<HttpStatusCode> DeleteLineItemResult(string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse> DeleteLineItemResult(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
 
             return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
         }
 
-        public static async Task<HttpStatusCode> DeleteLisResult(string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse> DeleteLisResult(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
 
@@ -69,19 +69,19 @@ namespace LtiLibrary.Core.Outcomes.v2
             return await PostOutcome(lisResult, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
-        public static async Task<HttpStatusCode> PutLineItem(LineItem lineItem, string serviceUrl, string consumerKey, string consumerSecret)
+        public static async Task<OutcomeResponse> PutLineItem(LineItem lineItem, string serviceUrl, string consumerKey, string consumerSecret)
         {
             return await PutOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<HttpStatusCode> PutLisResult(LisResult lisResult, string serviceUrl, string consumerKey, string consumerSecret)
+        public static async Task<OutcomeResponse> PutLisResult(LisResult lisResult, string serviceUrl, string consumerKey, string consumerSecret)
         {
             return await PutOutcome(lisResult, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
         #region Private Methods
 
-        private static async Task<HttpStatusCode> DeleteOutcome(string serviceUrl, string consumerKey,
+        private static async Task<OutcomeResponse> DeleteOutcome(string serviceUrl, string consumerKey,
             string consumerSecret, string contentType = null)
         {
             try
@@ -97,25 +97,38 @@ namespace LtiLibrary.Core.Outcomes.v2
 
                 return await Task.Factory.StartNew(() =>
                 {
+                    var outcomeResponse = new OutcomeResponse();
+                    HttpWebResponse response = null;
                     try
                     {
-                        var response = (HttpWebResponse)request.GetResponse();
-                        return response.StatusCode;
+                        response = (HttpWebResponse)request.GetResponse();
+                        outcomeResponse.StatusCode = response.StatusCode;
                     }
                     catch (WebException ex)
                     {
-                        var response = (HttpWebResponse)ex.Response;
-                        return response.StatusCode;
+                        response = (HttpWebResponse)ex.Response;
+                        outcomeResponse.StatusCode = response.StatusCode;
                     }
                     catch (Exception)
                     {
-                        return HttpStatusCode.InternalServerError;
+                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
                     }
+                    finally
+                    {
+#if DEBUG
+                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                        if (response != null)
+                        {
+                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
+                        }
+#endif
+                    }
+                    return outcomeResponse;
                 });
             }
             catch (Exception)
             {
-                return HttpStatusCode.InternalServerError;
+                return new OutcomeResponse { StatusCode = HttpStatusCode.InternalServerError };
             }
         }
 
@@ -239,7 +252,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             }
         }
 
-        private static async Task<HttpStatusCode> PutOutcome<T>(T outcome, string serviceUrl, string consumerKey,
+        private static async Task<OutcomeResponse> PutOutcome<T>(T outcome, string serviceUrl, string consumerKey,
             string consumerSecret, string contentType)
         {
             try
@@ -258,25 +271,38 @@ namespace LtiLibrary.Core.Outcomes.v2
 
                 return await Task.Factory.StartNew(() =>
                 {
+                    var outcomeResponse = new OutcomeResponse();
+                    HttpWebResponse response = null;
                     try
                     {
-                        var response = (HttpWebResponse)request.GetResponse();
-                        return response.StatusCode;
+                        response = (HttpWebResponse)request.GetResponse();
+                        outcomeResponse.StatusCode = response.StatusCode;
                     }
                     catch (WebException ex)
                     {
-                        var response = (HttpWebResponse)ex.Response;
-                        return response.StatusCode;
+                        response = (HttpWebResponse)ex.Response;
+                        outcomeResponse.StatusCode = response.StatusCode;
                     }
                     catch (Exception)
                     {
-                        return HttpStatusCode.InternalServerError;
+                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
                     }
+                    finally
+                    {
+#if DEBUG
+                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                        if (response != null)
+                        {
+                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
+                        }
+#endif
+                    }
+                    return outcomeResponse;
                 });
             }
             catch (Exception)
             {
-                return HttpStatusCode.InternalServerError;
+                return new OutcomeResponse { StatusCode = HttpStatusCode.InternalServerError };
             }
         }
 

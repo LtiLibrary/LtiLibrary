@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Lti2
 {
@@ -7,13 +7,12 @@ namespace LtiLibrary.Core.Lti2
     /// a translation for the display name from a resource bundle for a particular locale. The string value 
     /// has a maximum length of 128 characters.
     /// </summary>
-    [DataContract]
     public class LocalizedName
     {
         /// <summary>
         /// The key used to lookup the locale-specific value from a resource bundle.
         /// </summary>
-        [DataMember(Name = "key")]
+        [JsonProperty("key")]
         public string Key { get; set; }
 
         /// <summary>
@@ -21,7 +20,7 @@ namespace LtiLibrary.Core.Lti2
         /// (2) the localization capability is not enabled, or (3) a value for the specified key is not found 
         /// in the locale-specific resource bundle.
         /// </summary>
-        [DataMember(Name = "default_value")]
+        [JsonProperty("default_value")]
         public string Value { get; set; }
     }
 }

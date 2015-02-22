@@ -2,9 +2,8 @@
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
-    public class OutcomeResponse<T> where T: class 
+    public class OutcomeResponse
     {
-        public T Outcome { get; set; }
         public HttpStatusCode StatusCode { get; set; }
 
         /// <summary>
@@ -16,5 +15,10 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// String representation of the HttpWebResponse similar to Fiddler's.
         /// </summary>
         public string HttpResponse { get; set; }
+    }
+
+    public class OutcomeResponse<T> : OutcomeResponse where T : class 
+    {
+        public T Outcome { get; set; }
     }
 }

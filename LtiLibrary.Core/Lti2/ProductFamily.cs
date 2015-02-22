@@ -1,4 +1,4 @@
-﻿using System.Runtime.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Lti2
 {
@@ -29,25 +29,18 @@ namespace LtiLibrary.Core.Lti2
     /// </list>
     /// Notice that the ProductFamily sits at the top of the product hierarchy. Each product family is owned by a Vendor.
     /// </summary>
-    [DataContract]
     public class ProductFamily
     {
-        public ProductFamily(string code, Vendor vendor)
-        {
-            Code = code;
-            Vendor = vendor;
-        }
-
         /// <summary>
         /// Should match tool_consumer_info_product_family_code launch parameter.
         /// </summary>
-        [DataMember(Name = "code")]
-        public string Code { get; private set; }
+        [JsonProperty("code")]
+        public string Code { get; set; }
 
         /// <summary>
         /// The vendor that owns the ProductFamily.
         /// </summary>
-        [DataMember(Name = "vendor")]
-        public Vendor Vendor { get; private set; }
+        [JsonProperty("vendor")]
+        public Vendor Vendor { get; set; }
     }
 }

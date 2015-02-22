@@ -9,8 +9,28 @@ namespace LtiLibrary.Core.Extensions
     public static class JsonLdExtensions
     {
         /// <summary>
+        /// Serializes the specified object to a JSON string using default contract resolver.
+        /// </summary>
+        /// <remarks>
+        /// This should only be used for inbound requests for pretty display. Use ToJsonLdString
+        /// to format outbound requests.
+        /// </remarks>
+        public static string ToJsonString<T>(this T obj)
+        {
+            return JsonConvert.SerializeObject(obj, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+        }
+
+        /// <summary>
         /// Serializes the specified object to a JSON string using a JSON-LD contract resolver.
         /// </summary>
+        /// <remarks>
+        /// This should only be used for outbound requests. Use ToJsonString to format inbound
+        /// requests for pretty display.
+        /// </remarks>
         public static string ToJsonLdString<T>(this T obj)
         {
             return JsonConvert.SerializeObject(obj, Formatting.Indented,

@@ -175,7 +175,7 @@ namespace LtiLibrary.Core.Outcomes.v2
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(
                                 outcomeResponse.Outcome == null 
                                 ? null 
-                                : outcomeResponse.Outcome.ToJsonLdString());
+                                : outcomeResponse.Outcome.ToJsonString());
                         }
 #endif
                     }
@@ -236,7 +236,7 @@ namespace LtiLibrary.Core.Outcomes.v2
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(
                                 outcomeResponse.Outcome == null 
                                 ? null 
-                                : outcomeResponse.Outcome.ToJsonLdString());
+                                : outcomeResponse.Outcome.ToJsonString());
                         }
 #endif
                     }

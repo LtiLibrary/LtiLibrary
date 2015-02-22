@@ -116,8 +116,10 @@
     <Compile Include="Outcomes\v2\OutcomeResponse.cs" />
     <Compile Include="Outcomes\v2\OutcomesClient.cs" />
     <Compile Include="Outcomes\v2\NumericLimits.cs" />
-    <Compile Include="Outcomes\v2\OutcomesExtensions.cs" />
     <Compile Include="Outcomes\v2\ResultStatus.cs" />
+    <Compile Include="Extensions\JsonLdExtensions.cs" />
+    <Compile Include="Profiles\ToolConsumerProfileResponse.cs" />
+    <Compile Include="Profiles\ToolConsumerProfileClient.cs" />
     <Compile Include="Profiles\ToolConsumerProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

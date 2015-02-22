@@ -72,7 +72,8 @@
     <Compile Include="Outcomes\OutcomesApiControllerBase.cs" />
     <Compile Include="Outcomes\v2\LineItemsControllerConfigAttribute.cs" />
     <Compile Include="Outcomes\v2\LineItemFormatter.cs" />
-    <Compile Include="Profiles\ToolConsumerProfileApiControllerBase.cs" />
+    <Compile Include="Profiles\GetToolConsumerProfileContext.cs" />
+    <Compile Include="Profiles\ToolConsumerProfileControllerBase.cs" />
     <Compile Include="Profiles\ToolConsumerProfileControllerConfigAttribute.cs" />
     <Compile Include="Profiles\ToolConsumerProfileFormatter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

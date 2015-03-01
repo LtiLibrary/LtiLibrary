@@ -120,38 +120,5 @@ namespace LtiLibrary.Core.ContentItems
 
             return webRequest;
         }
-
-        /// <summary>
-        /// Send content-item response to Tool Consumer content-item service. This is experimental.
-        /// </summary>
-        /// <param name="url">The content-item service URL (from content-item message).</param>
-        /// <param name="consumerKey">The OAuth consumer key to use to sign the request.</param>
-        /// <param name="consumerSecret">The OAuth consumer secret to use to sign the request.</param>
-        /// <param name="contentItems">The ContentItemPlacementResponse to POST.</param>
-        /// <param name="data">The data received in the original content-item message.</param>
-        /// <returns>Return True if the POST request is successful.</returns>
-        public static bool PostContentItems(
-            string url, string consumerKey, string consumerSecret, 
-            ContentItemPlacementResponse contentItems, string data)
-        {
-            var serviceResponse = new ContentItemsServiceResponse
-            {
-                ContentItems = contentItems,
-                Data = data
-            };
-
-            try
-            {
-                var webRequest = CreateContentItemsRequest(url, consumerKey, consumerSecret, serviceResponse);
-                using (var webResponse = webRequest.GetResponse() as HttpWebResponse)
-                {
-                    return webResponse != null && webResponse.StatusCode == HttpStatusCode.OK;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
     }
 }

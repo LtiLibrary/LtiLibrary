@@ -56,8 +56,7 @@
     <Compile Include="Common\UrlEncodingParser.cs" />
     <Compile Include="Common\UrnAttribute.cs" />
     <Compile Include="ContentItems\ContentItemPlacementResponse.cs" />
-    <Compile Include="ContentItems\ContentItemsHelper.cs" />
-    <Compile Include="ContentItems\ContentItemsServiceResponse.cs" />
+    <Compile Include="ContentItems\ContentItemsClient.cs" />
     <Compile Include="Extensions\HttpWebRequestExtensions.cs" />
     <Compile Include="Extensions\HttpWebResponseExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />

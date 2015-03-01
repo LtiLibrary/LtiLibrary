@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.ContentItems
 {
-    public static class ContentItemsHelper
+    public static class ContentItemsClient
     {
         /// <summary>
         /// Create an LtiRequestViewModel that contains a ContentItemPlacementResponse.

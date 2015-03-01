@@ -50,12 +50,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\BasicResult.cs" />
+    <Compile Include="Common\IJsonLdObject.cs" />
     <Compile Include="Common\JsonLdObject.cs" />
     <Compile Include="Common\JsonLdObjectContractResolver.cs" />
     <Compile Include="Common\UriAttribute.cs" />
     <Compile Include="Common\UrlEncodingParser.cs" />
     <Compile Include="Common\UrnAttribute.cs" />
-    <Compile Include="ContentItems\ContentItemPlacementResponse.cs" />
+    <Compile Include="ContentItems\ContentItemSelectionGraph.cs" />
     <Compile Include="ContentItems\ContentItemsClient.cs" />
     <Compile Include="Extensions\HttpWebRequestExtensions.cs" />
     <Compile Include="Extensions\HttpWebResponseExtensions.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="Common\LtiException.cs" />
     <Compile Include="ContentItems\ContentItem.cs" />
     <Compile Include="ContentItems\ContentItemPlacement.cs" />
-    <Compile Include="ContentItems\ContentItemType.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Lti1\DocumentTarget.cs" />
     <Compile Include="Lti1\IBasicLaunchRequest.cs" />

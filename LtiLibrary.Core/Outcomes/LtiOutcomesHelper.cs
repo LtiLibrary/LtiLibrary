@@ -9,7 +9,6 @@ using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Extensions;
-using LtiLibrary.Core.Outcomes.v1;
 
 namespace LtiLibrary.Core.Outcomes
 {

@@ -113,16 +113,16 @@ namespace LtiLibrary.Core.Outcomes.v2
                     {
                         outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
                     }
+#if DEBUG
                     finally
                     {
-#if DEBUG
                         outcomeResponse.HttpRequest = request.ToFormattedRequestString();
                         if (response != null)
                         {
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
                         }
-#endif
                     }
+#endif
                     return outcomeResponse;
                 });
             }

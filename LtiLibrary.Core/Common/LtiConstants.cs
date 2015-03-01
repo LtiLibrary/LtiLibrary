@@ -85,8 +85,6 @@ namespace LtiLibrary.Core.Common
         public const string UserImageParameter = "user_image";
 
         // Media types
-        public const string ContentItemsMediaType = "application/vnd.ims.lti.v1.contentitemplacement+json";
-        public const string LaunchMediaType = "application/vnd.ims.lti.v1.launch+json";
         public const string LineItemContainerMediaType = "application/vnd.ims.lis.v2.lineitemcontainer+json";
         public const string LineItemMediaType = "application/vnd.ims.lis.v2.lineitem+json";
         public const string LineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";
@@ -99,17 +97,20 @@ namespace LtiLibrary.Core.Common
         // Object types
         public const string ActivityType = "Activity";
         public const string ContainerPageType = "Page";
+        public const string ContentItemType = "ContentItem";
         public const string ContextType = "Context";
+        public const string FileItemType = "FileItem";
         public const string LineItemContainerType = "LineItemContainer";
         public const string LineItemType = "LineItem";
         public const string LisResultType = "LISResult";
         public const string LisResultContainerType = "LisResultContainer";
+        public const string LtiLinkType = "LtiLink";
         public const string NumericLimitsType = "NumericLimits";
         public const string RestService = "RestService";
         public const string ToolConsumerProfileType = "ToolConsumerProfile";
 
         // Contexts
-        public const string ContentItemPlacementContext = "http://purl.imsglobal.org/ctx/lti/v1/ContentItemPlacement";
+        public const string ContentItemContext = "http://purl.imsglobal.org/ctx/lti/v1/ContentItem";
         public const string LineItemContainerContext = "http://purl.imsglobal.org/ctx/lis/v2/outcomes/LineItemContainer";
         public const string LineItemContext = "http://purl.imsglobal.org/ctx/lis/v2/LineItem";
         public const string OutcomesVocabularyContext = "http://purl.imsglobal.org/vocab/lis/v2/outcomes#";

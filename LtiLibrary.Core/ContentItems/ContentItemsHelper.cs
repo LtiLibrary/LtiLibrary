@@ -1,13 +1,7 @@
-﻿using LtiLibrary.Core.Common;
+﻿using System;
+using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Lti1;
-using LtiLibrary.Core.OAuth;
-using LtiLibrary.Core.Extensions;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Specialized;
-using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace LtiLibrary.Core.ContentItems
 {
@@ -60,65 +54,6 @@ namespace LtiLibrary.Core.ContentItems
             };
 
             return ltiRequest.GetLtiRequestViewModel(consumerSecret);
-        }
-
-        /// <summary>
-        /// Create an HttpWebRequest for a content-item service message. This is experimental.
-        /// </summary>
-        /// <param name="url">The content-item service URL.</param>
-        /// <param name="consumerKey">The OAuth consumer key to use to sign the request.</param>
-        /// <param name="consumerSecret">The OAuth consumer secret to use to sign the request.</param>
-        /// <param name="response">The ContentItemsServiceResponse to POST.</param>
-        /// <returns>The HttpWebRequest that will POST the message.</returns>
-        private static HttpWebRequest CreateContentItemsRequest(
-            string url, string consumerKey, string consumerSecret, 
-            ContentItemsServiceResponse response)
-        {
-            var webRequest = (HttpWebRequest)WebRequest.Create(url);
-            webRequest.Method = "POST";
-            webRequest.ContentType = LtiConstants.ContentItemsMediaType;
-
-            var parameters = new NameValueCollection();
-            parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
-            parameters.AddParameter(OAuthConstants.NonceParameter, Guid.NewGuid().ToString());
-            parameters.AddParameter(OAuthConstants.SignatureMethodParameter, OAuthConstants.SignatureMethodHmacSha1);
-            parameters.AddParameter(OAuthConstants.VersionParameter, OAuthConstants.Version10);
-
-            // Calculate the timestamp
-            var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            var timestamp = Convert.ToInt64(ts.TotalSeconds);
-            parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
-
-            // Calculate the body hash
-            using (var sha1 = new SHA1CryptoServiceProvider())
-            {
-                var json = JsonConvert.SerializeObject(response, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-                var content = Encoding.Unicode.GetBytes(json);
-                webRequest.ContentLength = content.Length;
-                using (var stream = webRequest.GetRequestStream())
-                {
-                    stream.Write(content, 0, content.Length);
-                }
-
-                var hash = sha1.ComputeHash(content);
-                var hash64 = Convert.ToBase64String(hash);
-                parameters.AddParameter(OAuthConstants.BodyHashParameter, hash64);
-            }
-
-            // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(webRequest.Method, webRequest.RequestUri, parameters,
-                consumerSecret);
-            parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
-
-            // Build the Authorization header
-            var authorization = new StringBuilder(OAuthConstants.AuthScheme).Append(" ");
-            foreach (var key in parameters.AllKeys)
-            {
-                authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
-            }
-            webRequest.Headers["Authorization"] = authorization.ToString(0, authorization.Length - 1);
-
-            return webRequest;
         }
     }
 }

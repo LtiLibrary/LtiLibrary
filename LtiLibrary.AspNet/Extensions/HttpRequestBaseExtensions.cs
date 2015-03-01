@@ -93,7 +93,7 @@ namespace LtiLibrary.AspNet.Extensions
                    && (
                        messageType.Equals(LtiConstants.BasicLaunchLtiMessageType, StringComparison.OrdinalIgnoreCase)
                        || messageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType, StringComparison.OrdinalIgnoreCase)
-                       || messageType.Equals(LtiConstants.ContentItemSelectionResponseLtiMessageType, StringComparison.OrdinalIgnoreCase)
+                       || messageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType, StringComparison.OrdinalIgnoreCase)
                        );
         }
 
@@ -129,7 +129,7 @@ namespace LtiLibrary.AspNet.Extensions
                     request.RequireAllOf(RequiredContentItemLaunchParameters);
                     break;
                 }
-                case LtiConstants.ContentItemSelectionResponseLtiMessageType:
+                case LtiConstants.ContentItemSelectionLtiMessageType:
                 {
                     request.RequireAllOf(RequiredContentItemResponseParameters);
                     break;

@@ -47,7 +47,7 @@ namespace LtiLibrary.Core.ContentItems
             ContentItemPlacementResponse contentItems, string data,
             string ltiErrorLog, string ltiErrorMsg, string ltiLog, string ltiMsg)
         {
-            var ltiRequest = (IContentItemSelectionResponse)new LtiRequest(LtiConstants.ContentItemSelectionResponseLtiMessageType)
+            var ltiRequest = (IContentItemSelectionResponse)new LtiRequest(LtiConstants.ContentItemSelectionLtiMessageType)
             {
                 Url = new Uri(url),
                 ConsumerKey = consumerKey,

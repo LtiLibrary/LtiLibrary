@@ -27,7 +27,7 @@ namespace LtiLibrary.Core.Common
         public const string LtiVersion = "LTI-1p0";
         public const string BasicLaunchLtiMessageType = "basic-lti-launch-request";
         public const string ContentItemSelectionRequestLtiMessageType = "ContentItemSelectionRequest";
-        public const string ContentItemSelectionResponseLtiMessageType = "ContentItemSelectionResponse";
+        public const string ContentItemSelectionLtiMessageType = "ContentItemSelection";
 
         // Message Parameter Names
         public const string AcceptCopyAdviceParameter = "accept_copy_advice";
@@ -91,6 +91,7 @@ namespace LtiLibrary.Core.Common
         public const string LineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";
         public const string LisResultContainerMediaType = "application/vnd.ims.lis.v2.resultcontainer+json";
         public const string LisResultMediaType = "application/vnd.ims.lis.v2.result+json";
+        public const string LtiLinkMediaType = "application/vnd.ims.lti.v1.ltilink";
         public const string OutcomeMediaType = "application/vnd.ims.lti.v1.outcome+xml";
         public const string ToolConsumerProfileMediaType = "application/vnd.ims.lti.v2.toolconsumerprofile+json";
 

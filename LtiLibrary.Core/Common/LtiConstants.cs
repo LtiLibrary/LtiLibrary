@@ -35,6 +35,7 @@ namespace LtiLibrary.Core.Common
         public const string AcceptMultipleParameter = "accept_multiple";
         public const string AcceptPresentationDocumentTargetsParameter = "accept_presentation_document_targets";
         public const string AcceptUnsignedParameter = "accept_unsigned";
+        public const string AutoCreateParameter = "auto_create";
         public const string ContentItemDataParameter = "data";
         public const string ContentItemPlacementParameter = "content_items";
         public const string ContentItemReturnUrlParameter = "content_item_return_url";

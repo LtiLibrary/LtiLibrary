@@ -7,6 +7,7 @@
         bool? AcceptMultiple { get; set; }
         string AcceptPresentationDocumentTargets { get; set; }
         bool? AcceptUnsigned { get; set; }
+        bool? AutoCreate { get; set; }
         string ContentItemReturnUrl { get; set; }
         string ContentItemServiceUrl { get; set; }
         string Data { get; set; }

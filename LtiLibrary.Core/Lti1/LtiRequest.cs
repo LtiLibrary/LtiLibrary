@@ -1063,6 +1063,30 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
+        /// This indicates whether any content items returned by the TP would be automatically persisted 
+        /// without any option for the user to cancel the operation.  This parameter is optional; when 
+        /// omitted  a value of false should be assumed (i.e. items returned may not be persisted at the TC end).
+        /// </summary>
+        [DataMember(Name = LtiConstants.AutoCreateParameter)]
+        public bool? AutoCreate
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Parameters[LtiConstants.AutoCreateParameter]))
+                {
+                    return null;
+                }
+
+                bool value;
+                return Boolean.TryParse(Parameters[LtiConstants.AutoCreateParameter], out value) && value;
+            }
+            set
+            {
+                Parameters[LtiConstants.AutoCreateParameter] = value.HasValue ? value.ToString().ToLowerInvariant() : null;
+            }
+        }
+
+        /// <summary>
         /// Fully qualified URL where the TP redirects the user back to the TC interface. This URL can be used 
         /// once the TP is finished or if the TP cannot start or has some technical difficulty.
         /// </summary>

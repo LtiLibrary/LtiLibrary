@@ -70,7 +70,7 @@
     <Compile Include="Lti1\IBasicLaunchRequest.cs" />
     <Compile Include="ContentItems\IContentItem.cs" />
     <Compile Include="ContentItems\IContentItemSelectionRequest.cs" />
-    <Compile Include="ContentItems\IContentItemSelectionResponse.cs" />
+    <Compile Include="ContentItems\IContentItemSelection.cs" />
     <Compile Include="ContentItems\IFileItem.cs" />
     <Compile Include="Lti1\ILaunchRequest.cs" />
     <Compile Include="ContentItems\ILtiLink.cs" />

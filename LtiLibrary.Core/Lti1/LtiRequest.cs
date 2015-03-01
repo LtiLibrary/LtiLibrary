@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace LtiLibrary.Core.Lti1
 {
     public class LtiRequest 
-        : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelectionResponse
+        : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
     {
         public LtiRequest() : this(null) {}
         public LtiRequest(string messageType)
@@ -1157,10 +1157,30 @@ namespace LtiLibrary.Core.Lti1
 
         #endregion
 
-        #region IContentItemResponse Parameters
+        #region IContentItemSelection Parameters
 
         /// <summary>
-        /// The value of this parameter should be a JSON array containing details of each of the items selected (see examples below). If no items have been selected this parameter may contain an empty array or be omitted.
+        /// If the original content-item message received included a can_confirm parameter with a value of true, 
+        /// then this parameter may be included in the response to the TC.  Its value should be the endpoint for 
+        /// a ContentItem service request (see below).  Any content item for which a confirmation is required 
+        /// should include an @id element so that it can be identified in the service request received by the TP.
+        /// </summary>
+        [DataMember(Name = LtiConstants.ConfirmUrlParameter)]
+        public string ConfirmUrl
+        {
+            get
+            {
+                return Parameters[LtiConstants.ConfirmUrlParameter];
+            }
+            set
+            {
+                Parameters[LtiConstants.ConfirmUrlParameter] = value;
+            }
+        }
+
+        /// <summary>
+        /// The value of this parameter should be a JSON array containing details of each of the items selected. 
+        /// If no items have been selected this parameter may contain an empty array or be omitted.
         /// </summary>
         [DataMember(Name = LtiConstants.ContentItemPlacementParameter)]
         public string ContentItems

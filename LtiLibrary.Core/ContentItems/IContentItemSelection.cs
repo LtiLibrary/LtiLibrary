@@ -2,8 +2,12 @@
 
 namespace LtiLibrary.Core.ContentItems
 {
-    public interface IContentItemSelectionResponse
+    /// <summary>
+    /// LTI Content-Item Message 1.0 ContentItemSelection interface (3 Feb 2015 draft)
+    /// </summary>
+    public interface IContentItemSelection
     {
+        string ConfirmUrl { get; set; }
         string ContentItems { get; set; }
         string Data { get; set; }
         string LtiErrorLog { get; set; }

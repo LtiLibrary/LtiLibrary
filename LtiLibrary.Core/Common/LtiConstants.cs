@@ -36,6 +36,7 @@ namespace LtiLibrary.Core.Common
         public const string AcceptUnsignedParameter = "accept_unsigned";
         public const string AutoCreateParameter = "auto_create";
         public const string CanConfirmParameter = "can_confirm";
+        public const string ConfirmUrlParameter = "confirm_url";
         public const string ContentItemDataParameter = "data";
         public const string ContentItemPlacementParameter = "content_items";
         public const string ContentItemReturnUrlParameter = "content_item_return_url";

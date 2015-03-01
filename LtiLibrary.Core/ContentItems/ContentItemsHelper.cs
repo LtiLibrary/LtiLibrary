@@ -22,11 +22,11 @@ namespace LtiLibrary.Core.ContentItems
         /// <param name="contentItems">The ContentItemPlacementResponse to send.</param>
         /// <param name="data">The data received in the original content-item message.</param>
         /// <returns>The LtiRequestViewModel which contains a signed version of the response.</returns>
-        public static LtiRequestViewModel CreateContentItemSelectionResponseViewModel(
+        public static LtiRequestViewModel CreateContentItemSelectionViewModel(
             string url, string consumerKey, string consumerSecret,
             ContentItemPlacementResponse contentItems, string data)
         {
-            return CreateContentItemSelectionResponseViewModel(url, consumerKey, consumerSecret, contentItems, data, null, null, null, null);
+            return CreateContentItemSelectionViewModel(url, consumerKey, consumerSecret, contentItems, data, null, null, null, null);
         }
 
         /// <summary>
@@ -42,12 +42,12 @@ namespace LtiLibrary.Core.ContentItems
         /// <param name="ltiLog">Optional plain text message to be logged by the Tool Consumer.</param>
         /// <param name="ltiMsg">Optional plain text message to be displayed by the Tool Consumer.</param>
         /// <returns>The LtiRequestViewModel which contains a signed version of the response.</returns>
-        public static LtiRequestViewModel CreateContentItemSelectionResponseViewModel(
+        public static LtiRequestViewModel CreateContentItemSelectionViewModel(
             string url, string consumerKey, string consumerSecret,
             ContentItemPlacementResponse contentItems, string data,
             string ltiErrorLog, string ltiErrorMsg, string ltiLog, string ltiMsg)
         {
-            var ltiRequest = (IContentItemSelectionResponse)new LtiRequest(LtiConstants.ContentItemSelectionLtiMessageType)
+            var ltiRequest = (IContentItemSelection)new LtiRequest(LtiConstants.ContentItemSelectionLtiMessageType)
             {
                 Url = new Uri(url),
                 ConsumerKey = consumerKey,

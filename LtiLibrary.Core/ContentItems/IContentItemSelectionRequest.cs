@@ -1,7 +1,7 @@
 ﻿namespace LtiLibrary.Core.ContentItems
 {
     /// <summary>
-    /// LTI Content-Item Message 1.0 interface (3 Feb 2015 draft)
+    /// LTI Content-Item Message 1.0 ContentItemSelectionRequest interface (3 Feb 2015 draft)
     /// </summary>
     public interface IContentItemSelectionRequest
     {

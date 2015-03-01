@@ -1087,6 +1087,34 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
+        /// This indicates whether the TC supports the feature for confirming the persistence of content items 
+        /// received.  When a value of true is passed, the TP may include a confirm_url parameter in its return 
+        /// message containing the endpoint to which a confirmation request should be sent (see below).  If the 
+        /// TP does not support this feature or does not wish to receive a confirmation it may just omit the 
+        /// confirm_url parameter from its return message.  This option may be used even when the auto_create 
+        /// parameter is set to true if a TC is willing to offer the additional reassurance that items have been 
+        /// persisted, or to allow a TP to be notified of resource link IDs for any LTI links which have been created.
+        /// </summary>
+        [DataMember(Name = LtiConstants.CanConfirmParameter)]
+        public bool? CanConfirm
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Parameters[LtiConstants.CanConfirmParameter]))
+                {
+                    return null;
+                }
+
+                bool value;
+                return Boolean.TryParse(Parameters[LtiConstants.CanConfirmParameter], out value) && value;
+            }
+            set
+            {
+                Parameters[LtiConstants.CanConfirmParameter] = value.HasValue ? value.ToString().ToLowerInvariant() : null;
+            }
+        }
+
+        /// <summary>
         /// Fully qualified URL where the TP redirects the user back to the TC interface. This URL can be used 
         /// once the TP is finished or if the TP cannot start or has some technical difficulty.
         /// </summary>

@@ -8,6 +8,7 @@
         string AcceptPresentationDocumentTargets { get; set; }
         bool? AcceptUnsigned { get; set; }
         bool? AutoCreate { get; set; }
+        bool? CanConfirm { get; set; }
         string ContentItemReturnUrl { get; set; }
         string ContentItemServiceUrl { get; set; }
         string Data { get; set; }

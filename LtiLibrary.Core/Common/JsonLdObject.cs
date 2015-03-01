@@ -2,7 +2,7 @@
 
 namespace LtiLibrary.Core.Common
 {
-    public class JsonLdObject
+    public class JsonLdObject : IJsonLdObject
     {
         public JsonLdObject(string type)
         {
@@ -14,7 +14,7 @@ namespace LtiLibrary.Core.Common
         /// document to express specific identifiers in a compact manner.
         /// </summary>
         [JsonProperty("@context")]
-        public object LdContext { get; set; }
+        public object Context { get; set; }
 
         /// <summary>
         /// Optional URI to uniquely identify things that are being described in the document with IRIs 

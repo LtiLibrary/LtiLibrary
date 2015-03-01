@@ -30,7 +30,6 @@ namespace LtiLibrary.Core.Common
         public const string ContentItemSelectionLtiMessageType = "ContentItemSelection";
 
         // Message Parameter Names
-        public const string AcceptCopyAdviceParameter = "accept_copy_advice";
         public const string AcceptMediaTypesParameter = "accept_media_types";
         public const string AcceptMultipleParameter = "accept_multiple";
         public const string AcceptPresentationDocumentTargetsParameter = "accept_presentation_document_targets";

@@ -2,7 +2,6 @@
 {
     public interface IContentItemSelectionRequest
     {
-        bool? AcceptCopyAdvice { get; set; }
         string AcceptMediaTypes { get; set; }
         bool? AcceptMultiple { get; set; }
         string AcceptPresentationDocumentTargets { get; set; }

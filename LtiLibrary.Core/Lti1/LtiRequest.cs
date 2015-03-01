@@ -953,31 +953,6 @@ namespace LtiLibrary.Core.Lti1
         #region IContentItemRequest Parameters
 
         /// <summary>
-        /// This indicates whether the TC is able and willing to make a local copy of a content item. The return 
-        /// message may include a expiresAt parameter to indicate that the URL provided will expire and so a copy 
-        /// of the content item should be stored locally before the expiry time passes. Use a value of false (the 
-        /// default) to indicate that the TC has no capacity for storing local copies of content items.
-        /// </summary>
-        [DataMember(Name = LtiConstants.AcceptCopyAdviceParameter)]
-        public bool? AcceptCopyAdvice
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(Parameters[LtiConstants.AcceptCopyAdviceParameter]))
-                {
-                    return null;
-                }
-
-                bool value;
-                return Boolean.TryParse(Parameters[LtiConstants.AcceptCopyAdviceParameter], out value) && value;
-            }
-            set
-            {
-                Parameters[LtiConstants.AcceptCopyAdviceParameter] = value.HasValue ? value.ToString().ToLowerInvariant() : null;
-            }
-        }
-
-        /// <summary>
         /// A comma-separated list of MIME types which can be accepted on the return URL. A MIME type of 
         /// application/vnd.ims.lti.v1.launch+json is used to represent an LTI launch request to a TP. This 
         /// parameter should use the same format as the Accept header in HTTP requests [HTTP, 99]. For example, 

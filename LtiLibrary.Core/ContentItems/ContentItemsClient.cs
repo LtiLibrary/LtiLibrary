@@ -1,7 +1,7 @@
 ﻿using System;
 using LtiLibrary.Core.Common;
+using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.Lti1;
-using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.ContentItems
 {
@@ -45,7 +45,7 @@ namespace LtiLibrary.Core.ContentItems
             {
                 Url = new Uri(url),
                 ConsumerKey = consumerKey,
-                ContentItems = JsonConvert.SerializeObject(contentItems, Formatting.None, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }),
+                ContentItems = contentItems.ToJsonLdString(),
                 Data = data,
                 LtiErrorLog = ltiErrorLog,
                 LtiErrorMsg = ltiErrorMsg,

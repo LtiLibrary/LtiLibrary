@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.Serialization;
 using LtiLibrary.Core.Common;
+using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.ContentItems
 {
@@ -24,26 +23,26 @@ namespace LtiLibrary.Core.ContentItems
         /// choose to use a local copy of the icon rather than linking to the URL provided (which would also allow 
         /// it to resize the image to suits its needs).
         /// </summary>
-        [DataMember(Name = "icon")]
+        [JsonProperty("icon")]
         public Image Icon { get; set; }
 
         /// <summary>
         /// The MIME type of the content-item.
         /// </summary>
-        [Required]
-        [DataMember(Name = "mediaType")]
+        [JsonProperty("mediaType")]
         public string MediaType { get; set; }
 
         /// <summary>
         /// Suggestion for how the item should be placed for user display.
         /// </summary>
+        [JsonProperty("placementAdvice")]
         public ContentItemPlacement PlacementAdvice { get; set; }
 
         /// <summary>
         /// The text to display to represent the content-item. A TP should use any text provided by the TC in the 
         /// request as the initial default, but this may be altered as part of the selection process.
         /// </summary>
-        [DataMember(Name = "text")]
+        [JsonProperty("text")]
         public string Text { get; set; }
 
         /// <summary>
@@ -52,14 +51,14 @@ namespace LtiLibrary.Core.ContentItems
         /// width and/or height element may also be included. When specified the width and height values should be a 
         /// positive integer representing the number of pixels.
         /// </summary>
-        [DataMember(Name = "thumbnail")]
+        [JsonProperty("thumbnail")]
         public Image Thumbnail { get; set; }
 
         /// <summary>
         /// The text to use as the title attribute for the content-item. When not provided, a TC may use the value 
         /// of the text parameter instead.
         /// </summary>
-        [DataMember(Name = "title")]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
         public string Url { get; set; }
@@ -72,7 +71,7 @@ namespace LtiLibrary.Core.ContentItems
         /// indicate a time period within which the copy must be taken using the expiresAt parameter. 
         /// The default value is false.
         /// </summary>
-        [DataMember(Name = "copyAdvice")]
+        [JsonProperty("copyAdvice")]
         public bool? CopyAdvice { get; set; }
 
         /// <summary>
@@ -81,7 +80,7 @@ namespace LtiLibrary.Core.ContentItems
         /// The parameter value should be a date/time in ISO 8601 format (e.g. 2014-03-05T12:34:56Z). This 
         /// parameter is not applicable to content-items of type application/vnd.ims.lti.v1.launch+json.
         /// </summary>
-        [DataMember(Name = "expiresAt")]
+        [JsonProperty("expiresAt")]
         public DateTime? ExpiresAt { get; set; }
 
         #endregion
@@ -93,7 +92,7 @@ namespace LtiLibrary.Core.ContentItems
         /// from the link being created. This parameter only applies to content-items of type 
         /// application/vnd.ims.lti.v1.launch+json.
         /// </summary>
-        [DataMember(Name = "custom")]
+        [JsonProperty("custom")]
         public IDictionary<string, string> Custom { get; set; }
 
         #endregion

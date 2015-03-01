@@ -28,7 +28,7 @@ namespace LtiLibrary.Core.ContentItems
         /// omitted, the TC should use a plain anchor tag; the target parameter (see below) may be used to set where 
         /// the content-item is opened.
         /// </summary>
-        [JsonProperty("presentation_document_target")]
+        [JsonProperty("presentationDocumentTarget")]
         public DocumentTarget? PresentationDocumentTarget { get; set; }
 
         /// <summary>

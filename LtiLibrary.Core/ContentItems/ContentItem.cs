@@ -2,40 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
+using LtiLibrary.Core.Common;
 
 namespace LtiLibrary.Core.ContentItems
 {
-    [DataContract]
-    public class ContentItem : IFileItem, ILtiLink
+    public class ContentItem : JsonLdObject, IFileItem, ILtiLink
     {
-        public ContentItem()
+        public ContentItem() : base(LtiConstants.ContentItemType)
         {
-            Type = ContentItemType.ContentItem;
         }
 
-        public ContentItem(ContentItemType type)
+        public ContentItem(string type) : base(type)
         {
-            Type = type;
         }
-
-        /// <summary>
-        /// A fully qualified URL to use for the item being placed. This parameter is optional for content-items 
-        /// of type application/vnd.ims.lti.v1.launch+json but is required for all other types. When not specified 
-        /// for a content-item of type application/vnd.ims.lti.v1.launch+json the default launch URL used for the 
-        /// same TP should be assumed.
-        /// </summary>
-        [DataMember(Name = "@id")]
-        public string Id { get; set; }
-
-        /// <summary>
-        /// A simple name identifying the object's type. The standard context [TCP-Context] defines the following 
-        /// simple names that are applicable:
-        /// <para>LtiLink, FileItem</para>
-        /// <para>Implementations may use a custom JSON-LD context which defines simple names for additional types 
-        /// that are subtypes of ContentItem.</para>
-        /// </summary>
-        [DataMember(Name = "@type")]
-        public ContentItemType Type { get; private set; }
 
         /// <summary>
         /// An object containing an @id element providing a fully qualified URL for an icon image to be placed 
@@ -54,6 +33,11 @@ namespace LtiLibrary.Core.ContentItems
         [Required]
         [DataMember(Name = "mediaType")]
         public string MediaType { get; set; }
+
+        /// <summary>
+        /// Suggestion for how the item should be placed for user display.
+        /// </summary>
+        public ContentItemPlacement PlacementAdvice { get; set; }
 
         /// <summary>
         /// The text to display to represent the content-item. A TP should use any text provided by the TC in the 
@@ -77,6 +61,8 @@ namespace LtiLibrary.Core.ContentItems
         /// </summary>
         [DataMember(Name = "title")]
         public string Title { get; set; }
+
+        public string Url { get; set; }
 
         #region IFileItem Parameters
 

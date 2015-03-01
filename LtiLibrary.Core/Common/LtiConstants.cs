@@ -39,7 +39,6 @@ namespace LtiLibrary.Core.Common
         public const string ContentItemDataParameter = "data";
         public const string ContentItemPlacementParameter = "content_items";
         public const string ContentItemReturnUrlParameter = "content_item_return_url";
-        public const string ContentItemServiceUrlParameter = "content_item_service_url";
         public const string ContentItemTextParameter = "text";
         public const string ContentItemTitleParameter = "title";
         public const string ContextIdParameter = "context_id";

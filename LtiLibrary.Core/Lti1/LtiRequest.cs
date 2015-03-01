@@ -1107,23 +1107,6 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
-        /// Fully qualified URL of the service that accepts Content-Items. If it is not sent to the TP,
-        /// the TP will return to ContentItemReturnUrl with the Content-Items.
-        /// </summary>
-        [DataMember(Name = LtiConstants.ContentItemServiceUrlParameter)]
-        public string ContentItemServiceUrl
-        {
-            get
-            {
-                return Parameters[LtiConstants.ContentItemServiceUrlParameter];
-            }
-            set
-            {
-                Parameters[LtiConstants.ContentItemServiceUrlParameter] = value;
-            }
-        }
-
-        /// <summary>
         /// An opaque value which should be returned by the TP in its response.
         /// </summary>
         [DataMember(Name = LtiConstants.ContentItemDataParameter)]

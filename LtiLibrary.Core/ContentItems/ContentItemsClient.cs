@@ -18,7 +18,7 @@ namespace LtiLibrary.Core.ContentItems
         /// <returns>The LtiRequestViewModel which contains a signed version of the response.</returns>
         public static LtiRequestViewModel CreateContentItemSelectionViewModel(
             string url, string consumerKey, string consumerSecret,
-            ContentItemPlacementResponse contentItems, string data)
+            ContentItemSelectionGraph contentItems, string data)
         {
             return CreateContentItemSelectionViewModel(url, consumerKey, consumerSecret, contentItems, data, null, null, null, null);
         }
@@ -38,7 +38,7 @@ namespace LtiLibrary.Core.ContentItems
         /// <returns>The LtiRequestViewModel which contains a signed version of the response.</returns>
         public static LtiRequestViewModel CreateContentItemSelectionViewModel(
             string url, string consumerKey, string consumerSecret,
-            ContentItemPlacementResponse contentItems, string data,
+            ContentItemSelectionGraph contentItems, string data,
             string ltiErrorLog, string ltiErrorMsg, string ltiLog, string ltiMsg)
         {
             var ltiRequest = (IContentItemSelection)new LtiRequest(LtiConstants.ContentItemSelectionLtiMessageType)

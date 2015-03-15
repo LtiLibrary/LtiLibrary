@@ -197,13 +197,34 @@ namespace LtiLibrary.Core.OAuth
         }
 
         /// <summary>
-        /// Calculate the OAuth Signature for this request.
+        /// Calculate the OAuth Signature for this request using the parameters in the request.
         /// </summary>
         /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
         /// <returns>The calculated OAuth Signature.</returns>
+        /// <remarks>This is typically used by Tool Providers to verify the incoming request signature.</remarks>
         public string GenerateSignature(string consumerSecret)
         {
-            return OAuthUtility.GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
+            var parameters = new NameValueCollection(Parameters);
+
+            // The LTI spec says to include the querystring parameters
+            // when calculating the signature base string
+            var querystring = new UrlEncodingParser(Url.Query);
+            parameters.Add(querystring);
+
+            return GenerateSignature(Url, parameters, consumerSecret);
+        }
+
+        /// <summary>
+        /// Calculate the OAuth Signature for this request using a specific URL and set of parameters.
+        /// </summary>
+        /// <param name="url">The URL of the request.</param>
+        /// <param name="parameters">The set of parameters to be included in the signature.</param>
+        /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
+        /// <returns>The calculated OAuth Signature.</returns>
+        /// <remarks>This is typically used by Tool Consumers that perform custom parameter substitution prior to signing the request.</remarks>
+        public string GenerateSignature(Uri url, NameValueCollection parameters, string consumerSecret)
+        {
+            return OAuthUtility.GenerateSignature(HttpMethod, url, parameters, consumerSecret);
         }
     }
 }

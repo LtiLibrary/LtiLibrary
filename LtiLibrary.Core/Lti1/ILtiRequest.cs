@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using LtiLibrary.Core.OAuth;
 
 namespace LtiLibrary.Core.Lti1
@@ -38,6 +40,7 @@ namespace LtiLibrary.Core.Lti1
         void AddCustomParameter(string name, string value);
         void AddCustomParameters(string parameters);
         string GenerateSignature(string consumerSecret);
+        string GenerateSignature(Uri url, NameValueCollection parameters, string consumerSecret);
         LtiRequestViewModel GetLtiRequestViewModel(string consumerSecret);
         IList<Role> GetRoles();
         void SetRoles(IList<Role> roles);

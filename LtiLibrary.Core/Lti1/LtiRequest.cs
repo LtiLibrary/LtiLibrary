@@ -30,6 +30,7 @@ namespace LtiLibrary.Core.Lti1
             Version = OAuthConstants.Version10;
 
             // LTI defaults
+            HttpMethod = "POST";
             LaunchPresentationLocale = CultureInfo.CurrentCulture.Name;
             LtiMessageType = messageType;
             LtiVersion = LtiConstants.LtiVersion;
@@ -2237,15 +2238,20 @@ namespace LtiLibrary.Core.Lti1
                 }
             }
 
+            // Perform the custom variable substitutions
+            SubstituteCustomVariables(parameters);
+
             // The LTI spec says to include the querystring parameters
             // when calculating the signature base string
             var querystring = new UrlEncodingParser(Url.Query);
+            SubstituteCustomVariables(querystring);
             parameters.Add(querystring);
 
-            // Perform all the custom variable substitutions
-            SubstituteCustomVariables(parameters);
+            // Rewrite the Url with the updated custom variables
+            var url = new UriBuilder(Url) { Query = querystring.ToString() };
 
-            var signature = OAuthUtility.GenerateSignature("POST", Url, parameters, consumerSecret);
+            // Calculate the signature based on the substituted values
+            var signature = GenerateSignature(url.Uri, parameters, consumerSecret);
 
             // Now remove the querystring parameters so they are not sent twice
             // (once in the action URL and once in the form data)
@@ -2257,7 +2263,7 @@ namespace LtiLibrary.Core.Lti1
             // Finally fill the LtiRequestBase
             return new LtiRequestViewModel
             {
-                Action = Url.ToString(),
+                Action = url.Uri.ToString(),
                 Fields = parameters,
                 Signature = signature
             };

@@ -1,9 +1,12 @@
 ﻿using System;
+using LtiLibrary.AspNet.Lti1;
 using LtiLibrary.Core.Common;
+using LtiLibrary.Core.ContentItems;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.Lti1;
+using LtiRequestViewModel = LtiLibrary.AspNet.Lti1.LtiRequestViewModel;
 
-namespace LtiLibrary.Core.ContentItems
+namespace LtiLibrary.AspNet.ContentItems
 {
     public static class ContentItemsClient
     {
@@ -41,7 +44,7 @@ namespace LtiLibrary.Core.ContentItems
             ContentItemSelectionGraph contentItems, string data,
             string ltiErrorLog, string ltiErrorMsg, string ltiLog, string ltiMsg)
         {
-            var ltiRequest = (IContentItemSelection)new LtiRequest(LtiConstants.ContentItemSelectionLtiMessageType)
+            var ltiRequest = new LtiRequest(LtiConstants.ContentItemSelectionLtiMessageType)
             {
                 Url = new Uri(url),
                 ConsumerKey = consumerKey,
@@ -53,7 +56,7 @@ namespace LtiLibrary.Core.ContentItems
                 LtiMsg = ltiMsg
             };
 
-            return ltiRequest.GetLtiRequestViewModel(consumerSecret);
+            return ltiRequest.GetViewModel(consumerSecret);
         }
     }
 }

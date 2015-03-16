@@ -2225,45 +2225,29 @@ namespace LtiLibrary.Core.Lti1
             }
         }
 
+        [Obsolete("Use LtiLibrary.AspNet.Lti1.LtiRequestExtensions.GetViewModel")]
         public LtiRequestViewModel GetLtiRequestViewModel(string consumerSecret)
         {
+            // Create a copy of the parameters (getters should not change the object and this
+            // getter changes the parameters to eliminate empty/null values and make custom
+            // parameter substitutions)
             var parameters = new NameValueCollection(Parameters);
 
             // Remove empty/null parameters
-            foreach (var key in parameters.AllKeys)
+            foreach (var key in parameters.AllKeys.Where(key => string.IsNullOrWhiteSpace(parameters[key])))
             {
-                if (string.IsNullOrWhiteSpace(parameters[key]))
-                {
-                    parameters.Remove(key);
-                }
+                parameters.Remove(key);
             }
 
             // Perform the custom variable substitutions
             SubstituteCustomVariables(parameters);
 
-            // The LTI spec says to include the querystring parameters
-            // when calculating the signature base string
-            var querystring = new UrlEncodingParser(Url.Query);
-            SubstituteCustomVariables(querystring);
-            parameters.Add(querystring);
-
-            // Rewrite the Url with the updated custom variables
-            var url = new UriBuilder(Url) { Query = querystring.ToString() };
-
             // Calculate the signature based on the substituted values
-            var signature = GenerateSignature(url.Uri, parameters, consumerSecret);
+            var signature = GenerateSignature(parameters, consumerSecret);
 
-            // Now remove the querystring parameters so they are not sent twice
-            // (once in the action URL and once in the form data)
-            foreach (var key in querystring.AllKeys)
-            {
-                parameters.Remove(key);
-            }
-
-            // Finally fill the LtiRequestBase
             return new LtiRequestViewModel
             {
-                Action = url.Uri.ToString(),
+                Action = Url.ToString(),
                 Fields = parameters,
                 Signature = signature
             };
@@ -2452,7 +2436,7 @@ namespace LtiLibrary.Core.Lti1
         /// <summary>
         /// Perform all the custom variable substitutions
         /// </summary>
-        private void SubstituteCustomVariables(NameValueCollection parameters)
+        public void SubstituteCustomVariables(NameValueCollection parameters)
         {
             foreach (var key in parameters.AllKeys)
             {
@@ -2470,6 +2454,7 @@ namespace LtiLibrary.Core.Lti1
         #endregion
     }
 
+    [Obsolete("Use LtiLibrary.AspNet.Lti1.LtiRequestViewModel")]
     public class LtiRequestViewModel
     {
         public string Action { get; set; }

@@ -205,26 +205,36 @@ namespace LtiLibrary.Core.OAuth
         public string GenerateSignature(string consumerSecret)
         {
             var parameters = new NameValueCollection(Parameters);
+            return GenerateSignature(parameters, consumerSecret);
+        }
 
+        /// <summary>
+        /// Calculate the OAuth Signature for this request using custom parameters.
+        /// </summary>
+        /// <param name="parameters">The set of parameters to be included in the signature.</param>
+        /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
+        /// <returns>The calculated OAuth Signature.</returns>
+        /// <remarks>
+        /// This is typically used by Tool Consumers that perform custom parameter substitution prior 
+        /// to signing the request.
+        /// </remarks>
+        public string GenerateSignature(NameValueCollection parameters, string consumerSecret)
+        {
             // The LTI spec says to include the querystring parameters
             // when calculating the signature base string
             var querystring = new UrlEncodingParser(Url.Query);
             parameters.Add(querystring);
 
-            return GenerateSignature(Url, parameters, consumerSecret);
-        }
+            var signature = OAuthUtility.GenerateSignature(HttpMethod, Url, parameters, consumerSecret);
 
-        /// <summary>
-        /// Calculate the OAuth Signature for this request using a specific URL and set of parameters.
-        /// </summary>
-        /// <param name="url">The URL of the request.</param>
-        /// <param name="parameters">The set of parameters to be included in the signature.</param>
-        /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
-        /// <returns>The calculated OAuth Signature.</returns>
-        /// <remarks>This is typically used by Tool Consumers that perform custom parameter substitution prior to signing the request.</remarks>
-        public string GenerateSignature(Uri url, NameValueCollection parameters, string consumerSecret)
-        {
-            return OAuthUtility.GenerateSignature(HttpMethod, url, parameters, consumerSecret);
+            // Now remove the querystring parameters so they are not sent twice
+            // (once in the action URL and once in the form data)
+            foreach (var key in querystring.AllKeys)
+            {
+                parameters.Remove(key);
+            }
+
+            return signature;
         }
     }
 }

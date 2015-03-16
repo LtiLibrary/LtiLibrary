@@ -1,6 +1,4 @@
-﻿using LtiLibrary.Core.Lti1;
-
-namespace LtiLibrary.Core.ContentItems
+﻿namespace LtiLibrary.Core.ContentItems
 {
     /// <summary>
     /// LTI Content-Item Message 1.0 ContentItemSelection interface (3 Feb 2015 draft)
@@ -16,7 +14,5 @@ namespace LtiLibrary.Core.ContentItems
         string LtiMessageType { get; set; }
         string LtiMsg { get; set; }
         string LtiVersion { get; set; }
-
-        LtiRequestViewModel GetLtiRequestViewModel(string consumerSecret);
     }
 }

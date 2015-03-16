@@ -57,7 +57,6 @@
     <Compile Include="Common\UrlEncodingParser.cs" />
     <Compile Include="Common\UrnAttribute.cs" />
     <Compile Include="ContentItems\ContentItemSelectionGraph.cs" />
-    <Compile Include="ContentItems\ContentItemsClient.cs" />
     <Compile Include="Extensions\HttpWebRequestExtensions.cs" />
     <Compile Include="Extensions\HttpWebResponseExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />

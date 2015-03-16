@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Web;
+using LtiLibrary.AspNet.Lti1;
 using LtiLibrary.Core.Lti1;
 
 namespace LtiLibrary.AspNet.Extensions
@@ -15,7 +16,7 @@ namespace LtiLibrary.AspNet.Extensions
         /// <param name="consumerSecret">The OAuth secret to use when signing the request.</param>
         public static void WriteLtiRequest(this HttpResponse response, LtiRequest request, string consumerSecret)
         {
-            var model = request.GetLtiRequestViewModel(consumerSecret);
+            var model = request.GetViewModel(consumerSecret);
             var form = new StringBuilder();
             form.AppendLine("<html>");
             form.AppendLine("<head><title></title></head>");

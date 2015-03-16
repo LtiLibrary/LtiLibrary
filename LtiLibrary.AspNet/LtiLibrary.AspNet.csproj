@@ -54,12 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentItems\ContentItemsClient.cs" />
     <Compile Include="Extensions\AuthorizationHeaderValueExtensions.cs" />
     <Compile Include="Extensions\HtmlDocumentExtensions.cs" />
     <Compile Include="Extensions\HttpRequestBaseExtensions.cs" />
     <Compile Include="Extensions\HttpResponseExtensions.cs" />
+    <Compile Include="Lti1\LtiRequestExtensions.cs" />
     <Compile Include="Extensions\OAuthRequestExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Lti1\LtiRequestViewModel.cs" />
     <Compile Include="Outcomes\v1\ImsxXmlMediaTypeFormatter.cs" />
     <Compile Include="Outcomes\v1\OutcomesControllerBase.cs" />
     <Compile Include="Outcomes\v2\GetLineItemsContext.cs" />

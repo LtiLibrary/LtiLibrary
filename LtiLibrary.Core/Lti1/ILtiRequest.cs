@@ -40,8 +40,7 @@ namespace LtiLibrary.Core.Lti1
         void AddCustomParameter(string name, string value);
         void AddCustomParameters(string parameters);
         string GenerateSignature(string consumerSecret);
-        string GenerateSignature(Uri url, NameValueCollection parameters, string consumerSecret);
-        LtiRequestViewModel GetLtiRequestViewModel(string consumerSecret);
+        string GenerateSignature(NameValueCollection parameters, string consumerSecret);
         IList<Role> GetRoles();
         void SetRoles(IList<Role> roles);
     }

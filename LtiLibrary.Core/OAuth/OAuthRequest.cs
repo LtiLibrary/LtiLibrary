@@ -221,8 +221,9 @@ namespace LtiLibrary.Core.OAuth
         public string GenerateSignature(NameValueCollection parameters, string consumerSecret)
         {
             // The LTI spec says to include the querystring parameters
-            // when calculating the signature base string
-            var querystring = new UrlEncodingParser(Url.Query);
+            // when calculating the signature base string. Unescape the
+            // query so that it is not doubly escaped by UrlEncodingParser.
+            var querystring = new UrlEncodingParser(Uri.UnescapeDataString(Url.Query));
             parameters.Add(querystring);
 
             var signature = OAuthUtility.GenerateSignature(HttpMethod, Url, parameters, consumerSecret);

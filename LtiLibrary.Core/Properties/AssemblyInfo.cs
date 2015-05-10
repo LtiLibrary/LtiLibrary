@@ -5,4 +5,4 @@
 [assembly: AssemblyProduct("LtiLibrary")]
 [assembly: AssemblyCopyright("Copyright © 2015")]
 [assembly: AssemblyVersion("1.5.*")]
-[assembly: AssemblyInformationalVersion("1.5.2")]
+[assembly: AssemblyInformationalVersion("1.5.3")]

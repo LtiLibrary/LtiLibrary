@@ -2193,7 +2193,7 @@ namespace LtiLibrary.Core.Lti1
             // Per the LTI 1.x specs, custom parameter
             // names must be lowercase letters or numbers. Any other
             // character is replaced with an underscore.
-            name = Regex.Replace(name, "[^0-9a-zA-Z]", "_");
+            name = Regex.Replace(name, "[^0-9a-zA-Z]", "_").ToLowerInvariant();
             if (!name.StartsWith("custom_") && !name.StartsWith("ext_"))
             {
                 name = string.Concat("custom_", name);

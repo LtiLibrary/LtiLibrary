@@ -4,6 +4,8 @@ using System.Globalization;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using LtiLibrary.Core.Outcomes.v1;
+using System.Net;
+using System.Net.Http;
 
 namespace LtiLibrary.AspNet.Outcomes.v1
 {
@@ -53,7 +55,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
         // POST api/outcomes
 
         [HttpPost]
-        public imsx_POXEnvelopeType Post(imsx_POXEnvelopeType request)
+        public HttpResponseMessage Post(imsx_POXEnvelopeType request)
         {
             imsx_POXEnvelopeType response;
             if (request == null)
@@ -97,7 +99,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                     }
                 }
             }
-            return response;
+            return Request.CreateResponse(HttpStatusCode.OK, response, new ImsxXmlMediaTypeFormatter());
         }
 
         /// <summary>
@@ -207,7 +209,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                 {
                     // The score could exist, but not found. If the grade has not yet been set via a replaceResult operation
                     // or an existing grade has been deleted via a deleteResult operation, the TC should return a valid
-                    // response with a present but empty textString element.   The TC should not return 0.0 to indicate a
+                    // response with a present but empty textString element. The TC should not return 0.0 to indicate a
                     // non-existent grade and the TC should not return a failure status when a grade does not exist.
                     // It should simply return an "empty" grade.
                     response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,

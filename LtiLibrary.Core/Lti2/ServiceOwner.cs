@@ -26,7 +26,7 @@ namespace LtiLibrary.Core.Lti2
         /// <summary>
         /// Should match tool_consumer_instance_name launch parameter.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("service_owner_name")]
         public LocalizedName Name { get; set; }
 
         /// <summary>

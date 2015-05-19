@@ -304,19 +304,19 @@ namespace LtiLibrary.Core.Lti1
         /// Recommended.
         /// </para>
         /// </summary>
-        [DataMember(Name = LtiConstants.LaunchPresentationHeightParameter)]
+        [DataMember(Name = LtiConstants.LaunchPresentationWidthParameter)]
         public int? LaunchPresentationWidth
         {
             get
             {
                 int value;
-                return int.TryParse(Parameters[LtiConstants.LaunchPresentationHeightParameter], out value)
+                return int.TryParse(Parameters[LtiConstants.LaunchPresentationWidthParameter], out value)
                     ? value
                     : default(int?);
             }
             set
             {
-                Parameters[LtiConstants.LaunchPresentationHeightParameter] = Convert.ToString(value);
+                Parameters[LtiConstants.LaunchPresentationWidthParameter] = Convert.ToString(value);
             }
         }
 

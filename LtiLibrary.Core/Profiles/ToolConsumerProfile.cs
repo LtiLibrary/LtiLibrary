@@ -27,7 +27,7 @@ namespace LtiLibrary.Core.Profiles
     /// </remarks>
     public class ToolConsumerProfile : JsonLdObject
     {
-        public ToolConsumerProfile() : base(LtiConstants.ToolConsumerProfileContext)
+        public ToolConsumerProfile() : base(LtiConstants.ToolConsumerProfileType)
         {
         }
 

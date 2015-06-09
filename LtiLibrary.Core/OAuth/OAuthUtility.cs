@@ -1,9 +1,9 @@
-﻿using LtiLibrary.Core.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Text;
+using LtiLibrary.Core.Extensions;
 
 namespace LtiLibrary.Core.OAuth
 {
@@ -23,7 +23,7 @@ namespace LtiLibrary.Core.OAuth
             signatureBase.Append(httpMethod.ToRfc3986EncodedString().ToUpperInvariant()).Append('&');
 
             // RFC 5849 3.4.1.2
-            var normalizedUrl = string.Format("{0}://{1}", url.Scheme.ToLowerInvariant(), url.Host.ToLowerInvariant());
+            var normalizedUrl = $"{url.Scheme.ToLowerInvariant()}://{url.Host.ToLowerInvariant()}";
             if (!((url.Scheme == "http" && url.Port == 80) || (url.Scheme == "https" && url.Port == 443)))
             {
                 normalizedUrl += ":" + url.Port;
@@ -55,7 +55,7 @@ namespace LtiLibrary.Core.OAuth
             // Note that in LTI, the TokenSecret (second part of the key) is blank
             var hmacsha1 = new HMACSHA1
             {
-                Key = Encoding.ASCII.GetBytes(string.Format("{0}&", consumerSecret.ToRfc3986EncodedString()))
+                Key = Encoding.ASCII.GetBytes($"{consumerSecret.ToRfc3986EncodedString()}&")
             };
 
             var dataBuffer = Encoding.ASCII.GetBytes(signatureBase);

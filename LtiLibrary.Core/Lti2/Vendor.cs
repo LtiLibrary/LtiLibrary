@@ -11,10 +11,6 @@ namespace LtiLibrary.Core.Lti2
     /// </summary>
     public class Vendor : JsonLdObject
     {
-        public Vendor() : base(null)
-        {
-        }
-
         /// <summary>
         /// A unique identifier for the resource.
         /// </summary>

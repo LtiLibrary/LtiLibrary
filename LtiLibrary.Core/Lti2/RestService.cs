@@ -9,8 +9,9 @@ namespace LtiLibrary.Core.Lti2
     /// </summary>
     public class RestService : JsonLdObject
     {
-        public RestService() : base(LtiConstants.RestService)
+        public RestService()
         {
+            Type = LtiConstants.RestService;
         }
 
         /// <summary>

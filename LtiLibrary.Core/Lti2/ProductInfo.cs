@@ -11,7 +11,7 @@ namespace LtiLibrary.Core.Lti2
         /// This is a description of the product suitable for display to end-users.
         /// </summary>
         [JsonProperty("description")]
-        public LocalizedName Description { get; set; }
+        public ProductDescription Description { get; set; }
 
         /// <summary>
         /// An inverse attribute that references the ProductFamily within which this ProductInfo is defined.
@@ -23,7 +23,7 @@ namespace LtiLibrary.Core.Lti2
         /// A name for the product suitable for display to end users.
         /// </summary>
         [JsonProperty("product_name")]
-        public LocalizedName ProductName { get; set; }
+        public ProductName ProductName { get; set; }
 
         /// <summary>
         /// This is the version of the product. Should match tool_consumer_info_version launch parameter.
@@ -36,6 +36,6 @@ namespace LtiLibrary.Core.Lti2
         /// be of interest to developers who wish to integrate with this product via LTI.
         /// </summary>
         [JsonProperty("technical_description")]
-        public LocalizedName TechnicalDescription { get; set; }
+        public ProductTechnicalDescription TechnicalDescription { get; set; }
     }
 }

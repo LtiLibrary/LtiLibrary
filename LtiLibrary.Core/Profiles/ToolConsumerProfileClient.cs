@@ -1,5 +1,5 @@
-﻿using System;
-using System.Net;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
@@ -8,57 +8,28 @@ namespace LtiLibrary.Core.Profiles
 {
     public static class ToolConsumerProfileClient
     {
+        /// <summary>
+        /// Get a ToolConsumerProfile from the service endpoint.
+        /// </summary>
+        /// <param name="serviceUrl">The full URL of the ToolConsumerProfile service.</param>
+        /// <returns>A <see cref="ToolConsumerProfileResponse"/> which includes both the HTTP status code
+        /// and the <see cref="ToolConsumerProfile"/> if the HTTP status is a success code.</returns>
         public static async Task<ToolConsumerProfileResponse> GetToolConsumerProfile(string serviceUrl)
         {
-            try
+            var profileResponse = new ToolConsumerProfileResponse();
+            using (var client = new HttpClient())
             {
-                var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-                request.Method = "GET";
-                request.Accept = LtiConstants.ToolConsumerProfileMediaType;
-                request.AllowAutoRedirect = true;
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
 
-                return await Task.Factory.StartNew(() =>
+                var response = await client.GetAsync(serviceUrl);
+                profileResponse.StatusCode = response.StatusCode;
+                if (response.IsSuccessStatusCode)
                 {
-                    var profileResponse = new ToolConsumerProfileResponse();
-                    HttpWebResponse response = null;
-                    try
-                    {
-                        response = (HttpWebResponse)request.GetResponse();
-                        profileResponse.StatusCode = response.StatusCode;
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            profileResponse.ToolConsumerProfile = response.DeserializeObject<ToolConsumerProfile>();
-                        }
-                    }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        profileResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        profileResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
-                    finally
-                    {
-#if DEBUG
-                        profileResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            profileResponse.HttpResponse = response.ToFormattedResponseString(
-                                profileResponse.ToolConsumerProfile == null
-                                ? null
-                                : profileResponse.ToolConsumerProfile.ToJsonString());
-                        }
-#endif
-                    }
-                    return profileResponse;
-                });
+                    profileResponse.ToolConsumerProfile = await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
+                }
             }
-            catch (Exception)
-            {
-                return new ToolConsumerProfileResponse { StatusCode = HttpStatusCode.InternalServerError };
-            }
+            return profileResponse;
         }
     }
 }

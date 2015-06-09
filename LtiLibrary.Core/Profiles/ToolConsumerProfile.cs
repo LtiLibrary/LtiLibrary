@@ -27,8 +27,10 @@ namespace LtiLibrary.Core.Profiles
     /// </remarks>
     public class ToolConsumerProfile : JsonLdObject
     {
-        public ToolConsumerProfile() : base(LtiConstants.ToolConsumerProfileType)
+        public ToolConsumerProfile()
         {
+            ExternalContextId = LtiConstants.ToolConsumerProfileContextId;
+            Type = LtiConstants.ToolConsumerProfileType;
         }
 
         /// <summary>

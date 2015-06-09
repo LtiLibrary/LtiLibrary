@@ -6,9 +6,9 @@ namespace LtiLibrary.Core.ContentItems
 {
     public class ContentItemSelectionGraph : JsonLdObject
     {
-        public ContentItemSelectionGraph() : base(null)
+        public ContentItemSelectionGraph()
         {
-            Context = LtiConstants.ContentItemContext;
+            ExternalContextId = LtiConstants.ContentItemContextId;
         }
 
         [JsonProperty("@graph")]

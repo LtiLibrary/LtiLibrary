@@ -1,8 +1,4 @@
-﻿using LtiLibrary.Core.Common;
-using LtiLibrary.Core.ContentItems;
-using LtiLibrary.Core.OAuth;
-using LtiLibrary.Core.Outcomes.v1;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,6 +6,10 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using LtiLibrary.Core.Common;
+using LtiLibrary.Core.ContentItems;
+using LtiLibrary.Core.OAuth;
+using LtiLibrary.Core.Outcomes.v1;
 
 namespace LtiLibrary.Core.Lti1
 {
@@ -2340,7 +2340,7 @@ namespace LtiLibrary.Core.Lti1
             value = Regex.Replace(value, "\\$Context.org", ContextOrg ?? string.Empty, RegexOptions.IgnoreCase);
             value = Regex.Replace(value, "\\$Context.label", ContextLabel ?? string.Empty, RegexOptions.IgnoreCase);
             value = Regex.Replace(value, "\\$Context.title", ContextTitle ?? string.Empty, RegexOptions.IgnoreCase);
-            value = Regex.Replace(value, "\\$Context.type", ContextType.ToString() ?? string.Empty, RegexOptions.IgnoreCase);
+            value = Regex.Replace(value, "\\$Context.type", ContextType.ToString(), RegexOptions.IgnoreCase);
 
             // LTI Resource variables
             value = Regex.Replace(value, "\\$ResourceLink.description", ResourceLinkDescription ?? string.Empty, RegexOptions.IgnoreCase);

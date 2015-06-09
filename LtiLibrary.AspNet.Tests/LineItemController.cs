@@ -56,7 +56,7 @@ namespace LtiLibrary.AspNet.Tests
                     var id = new UriBuilder(Request.RequestUri) { Query = "firstPage" };
                     context.LineItemContainerPage = new LineItemContainerPage
                     {
-                        Id = id.ToString(),
+                        Id = id.Uri,
                         LineItemContainer = new LineItemContainer
                         {
                             MembershipSubject = new Context
@@ -79,8 +79,8 @@ namespace LtiLibrary.AspNet.Tests
                     return Task.FromResult<object>(null);
                 }
 
-                context.LineItem.Id = LineItemId;
-                context.LineItem.Results = new Uri(Request.RequestUri.AbsoluteUri + LineItemId + "/results");
+                context.LineItem.Id = new Uri(LineItemId, UriKind.Relative);
+                context.LineItem.Results = new Uri(Request.RequestUri.AbsoluteUri + "/" + LineItemId + "/results");
                 _lineItem = context.LineItem;
                 context.StatusCode = HttpStatusCode.Created;
                 return Task.FromResult<object>(null);

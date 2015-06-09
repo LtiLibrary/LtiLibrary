@@ -2,17 +2,19 @@
 
 namespace LtiLibrary.Core.Lti2
 {
+    // TODO: Conflate LocalizedText and LocalizedName
+
     /// <summary>
     /// This container defines a block of text. The container includes a default value for the text, plus a 
     /// key that can be used to lookup a locale-specific value from a resource bundle.
     /// </summary>
-    public class LocalizedText
+    public abstract class LocalizedText
     {
         /// <summary>
         /// The key used to lookup the locale-specific value from a resource bundle.
         /// </summary>
         [JsonProperty("key")]
-        public string Key { get; set; }
+        public string Key { get; protected set; }
 
         /// <summary>
         /// The default value for the text. This value is used if (1) the key attribute is undefined, 
@@ -20,6 +22,6 @@ namespace LtiLibrary.Core.Lti2
         /// in the locale-specific resource bundle.
         /// </summary>
         [JsonProperty("default_value")]
-        public string Value { get; set; }
+        public string Value { get; protected set; }
     }
 }

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Common
 {
-    [JsonConverter(typeof(JsonLdConverter))]
+    [JsonConverter(typeof(JsonLdObjectConverter))]
     public class JsonLdObject : IJsonLdObject
     {
         public JsonLdObject()

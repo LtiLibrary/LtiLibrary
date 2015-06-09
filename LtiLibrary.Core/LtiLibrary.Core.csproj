@@ -45,18 +45,22 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\BasicResult.cs" />
     <Compile Include="Common\IJsonLdObject.cs" />
+    <Compile Include="Common\JsonLdObjectConverter.cs" />
     <Compile Include="Common\JsonLdObject.cs" />
     <Compile Include="Common\JsonLdObjectContractResolver.cs" />
     <Compile Include="Common\UriAttribute.cs" />
     <Compile Include="Common\UrlEncodingParser.cs" />
     <Compile Include="Common\UrnAttribute.cs" />
     <Compile Include="ContentItems\ContentItemSelectionGraph.cs" />
+    <Compile Include="ContentItems\LtiLink.cs" />
+    <Compile Include="Extensions\HttpContentExtensions.cs" />
     <Compile Include="Extensions\HttpWebRequestExtensions.cs" />
     <Compile Include="Extensions\HttpWebResponseExtensions.cs" />
     <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
@@ -74,6 +78,15 @@
     <Compile Include="ContentItems\ILtiLink.cs" />
     <Compile Include="Lti1\ILtiRequest.cs" />
     <Compile Include="ContentItems\Image.cs" />
+    <Compile Include="Lti2\ProductDescription.cs" />
+    <Compile Include="Lti2\ProductTechnicalDescription.cs" />
+    <Compile Include="Lti2\ServiceProviderName.cs" />
+    <Compile Include="Lti2\ServiceProviderDescription.cs" />
+    <Compile Include="Lti2\ServiceOwnerDescription.cs" />
+    <Compile Include="Lti2\ServiceOwnerName.cs" />
+    <Compile Include="Lti2\VendorDescription.cs" />
+    <Compile Include="Lti2\ProductName.cs" />
+    <Compile Include="Lti2\VendorName.cs" />
     <Compile Include="Outcomes\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
       <DependentUpon>OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd</DependentUpon>
     </Compile>

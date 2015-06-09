@@ -7,8 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
-using LtiLibrary.Core.OAuth;
 using LtiLibrary.Core.Extensions;
+using LtiLibrary.Core.OAuth;
 
 namespace LtiLibrary.Core.Outcomes.v1
 {

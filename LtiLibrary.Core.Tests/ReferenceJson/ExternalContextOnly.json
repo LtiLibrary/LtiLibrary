@@ -1,0 +1,6 @@
+﻿{
+  "@context": "http://localhost/ParentContext",
+  "@id": "http://localhost/test/1",
+  "@type": "Parent",
+  "Name": "MyParent"
+}

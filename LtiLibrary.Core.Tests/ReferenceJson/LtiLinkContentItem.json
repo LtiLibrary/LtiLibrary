@@ -1,0 +1,15 @@
+﻿{
+  "@type" : "LtiLink",
+  "mediaType" : "application/vnd.ims.lti.v1.ltilink",
+  "icon" : {
+    "@id" : "https://www.server.com/path/animage.png",
+    "width" : 50,
+    "height" : 50
+  },
+  "title" : "Week 1 reading",
+  "text" : "Read this section prior to your tutorial.",
+  "custom" : {
+    "chapter" : "12",
+    "section" : "3"
+  }
+}

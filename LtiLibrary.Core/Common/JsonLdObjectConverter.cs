@@ -112,11 +112,14 @@ namespace LtiLibrary.Core.Common
                 else if (JsonLdObjectArrayType.IsAssignableFrom(propertyInfo.PropertyType))
                 {
                     var propertyValue = (IEnumerable<IJsonLdObject>)propertyInfo.GetValue(obj, null);
-                    foreach (var jsonLdObject in propertyValue)
+                    if (propertyValue != null)
                     {
-                        var contextId = GetExternalContextId(jsonLdObject);
-                        if (contextId != null)
-                            externalContextId = contextId;
+                        foreach (var jsonLdObject in propertyValue)
+                        {
+                            var contextId = GetExternalContextId(jsonLdObject);
+                            if (contextId != null)
+                                externalContextId = contextId;
+                        }
                     }
                 }
             }
@@ -155,12 +158,15 @@ namespace LtiLibrary.Core.Common
                 else if (JsonLdObjectArrayType.IsAssignableFrom(propertyInfo.PropertyType))
                 {
                     var propertyValue = (IEnumerable<IJsonLdObject>) propertyInfo.GetValue(obj, null);
-                    foreach (var jsonLdObject in propertyValue)
+                    if (propertyValue != null)
                     {
-                        var propertyTerms = GetTerms(jsonLdObject);
-                        foreach (var key in propertyTerms.Keys)
+                        foreach (var jsonLdObject in propertyValue)
                         {
-                            terms[key] = propertyTerms[key];
+                            var propertyTerms = GetTerms(jsonLdObject);
+                            foreach (var key in propertyTerms.Keys)
+                            {
+                                terms[key] = propertyTerms[key];
+                            }
                         }
                     }
                 }

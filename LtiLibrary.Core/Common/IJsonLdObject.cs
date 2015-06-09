@@ -1,9 +1,13 @@
-﻿namespace LtiLibrary.Core.Common
+﻿using System;
+using System.Collections.Generic;
+
+namespace LtiLibrary.Core.Common
 {
     public interface IJsonLdObject
     {
-        object Context { get; set; }
-        string Id { get; set; }
-        string Type { get; }
+        Uri ExternalContextId { get; set; }
+        IDictionary<string, string> Terms { get; }
+        Uri Id { get; set; }
+        string Type { get; set; }
     }
 }

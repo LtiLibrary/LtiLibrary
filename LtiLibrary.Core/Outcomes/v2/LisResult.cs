@@ -6,8 +6,9 @@ namespace LtiLibrary.Core.Outcomes.v2
 {
     public class LisResult : JsonLdObject
     {
-        public LisResult() : base(LtiConstants.LisResultType)
+        public LisResult()
         {
+            Type = LtiConstants.LisResultType;
         }
 
         /// <summary>

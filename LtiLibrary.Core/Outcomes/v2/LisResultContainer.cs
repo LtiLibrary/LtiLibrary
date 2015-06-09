@@ -9,8 +9,9 @@ namespace LtiLibrary.Core.Outcomes.v2
     /// </summary>
     public class LisResultContainer : JsonLdObject
     {
-        public LisResultContainer() : base(LtiConstants.LisResultContainerType)
+        public LisResultContainer()
         {
+            Type = LtiConstants.LisResultContainerType;
         }
 
         /// <summary>

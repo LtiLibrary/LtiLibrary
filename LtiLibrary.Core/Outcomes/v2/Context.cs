@@ -9,8 +9,9 @@ namespace LtiLibrary.Core.Outcomes.v2
     /// </summary>
     public class Context : JsonLdObject
     {
-        public Context() : base(LtiConstants.ContextType)
+        public Context()
         {
+            Type = LtiConstants.ContextType;
         }
 
         /// <summary>

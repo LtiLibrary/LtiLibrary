@@ -9,8 +9,9 @@ namespace LtiLibrary.Core.Outcomes.v2
     /// </summary>
     public class Activity : JsonLdObject
     {
-        public Activity() : base(LtiConstants.ActivityType)
+        public Activity()
         {
+            Type = LtiConstants.ActivityType;
         }
 
         /// <summary>

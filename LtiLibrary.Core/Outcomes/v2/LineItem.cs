@@ -12,8 +12,9 @@ namespace LtiLibrary.Core.Outcomes.v2
     /// </summary>
     public class LineItem : JsonLdObject
     {
-        public LineItem() : base(LtiConstants.LineItemType)
+        public LineItem()
         {
+            Type = LtiConstants.LineItemType;
         }
 
         /// <summary>
@@ -39,7 +40,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// Identifies the property that is reported as the resultScore of the Results within this LineItem.
         /// </summary>
         [JsonProperty("reportingMethod", Required = Required.Always)]
-        public Uri ReportingMethod { get; set; }
+        public string ReportingMethod { get; set; }
 
         /// <summary>
         /// The container holding the Results for this LineItem.

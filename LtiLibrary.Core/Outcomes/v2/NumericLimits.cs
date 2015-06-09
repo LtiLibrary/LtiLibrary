@@ -8,8 +8,9 @@ namespace LtiLibrary.Core.Outcomes.v2
     /// </summary>
     public class NumericLimits : JsonLdObject
     {
-        public NumericLimits() : base(LtiConstants.NumericLimitsType)
+        public NumericLimits()
         {
+            Type = LtiConstants.NumericLimitsType;
         }
 
         /// <summary>

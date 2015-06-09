@@ -5,8 +5,9 @@ namespace LtiLibrary.Core.Outcomes.v2
 {
     public class LisResultContainerPage : JsonLdObject
     {
-        public LisResultContainerPage() : base(LtiConstants.LineItemContainerType)
+        public LisResultContainerPage()
         {
+            Type = LtiConstants.LisResultContainerType;
         }
 
         /// <summary>

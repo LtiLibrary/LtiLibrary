@@ -10,9 +10,11 @@ namespace LtiLibrary.AspNet.Profiles
         public ToolConsumerProfileFormatter()
         {
             // Accept ToolConsumerProfile JSON-LD
+            SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(new MediaTypeHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
         }
 
+        // TODO: Do I need this anymore?
         /// <summary>
         /// Return a JsonSerializer that puts @context, @type, and @id before any other
         /// element in an object.

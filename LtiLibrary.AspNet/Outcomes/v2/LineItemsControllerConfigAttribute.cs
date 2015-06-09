@@ -3,7 +3,7 @@ using System.Web.Http.Controllers;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class LineItemsControllerConfigAttribute : Attribute, IControllerConfiguration
     {
         public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)

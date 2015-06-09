@@ -27,8 +27,7 @@ namespace LtiLibrary.AspNet.Extensions
             var url = HttpContext.Current.Request.Url;
             var port = url.Port != 80 ? (":" + url.Port) : String.Empty;
 
-            return String.Format("{0}://{1}{2}{3}",
-                   url.Scheme, url.Host, port, VirtualPathUtility.ToAbsolute(relativeUrl));
+            return $"{url.Scheme}://{url.Host}{port}{VirtualPathUtility.ToAbsolute(relativeUrl)}";
         }
    }
 }

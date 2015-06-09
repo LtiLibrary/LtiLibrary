@@ -7,7 +7,7 @@ namespace LtiLibrary.Core.Common
     /// instead of urn:lti:role:ims/lis/Learner. This attribute associates each nickname with the
     /// corresponding URN.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Field)]
     public class UrnAttribute : Attribute
     {
         public UrnAttribute(string urn)

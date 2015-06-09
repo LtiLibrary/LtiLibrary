@@ -7,12 +7,9 @@ namespace LtiLibrary.Core.ContentItems
 {
     public class ContentItem : JsonLdObject, IFileItem, ILtiLink
     {
-        public ContentItem() : base(LtiConstants.ContentItemType)
+        public ContentItem()
         {
-        }
-
-        public ContentItem(string type) : base(type)
-        {
+            Type = LtiConstants.ContentItemType;
         }
 
         /// <summary>
@@ -61,6 +58,7 @@ namespace LtiLibrary.Core.ContentItems
         [JsonProperty("title")]
         public string Title { get; set; }
 
+        [JsonProperty("url")]
         public string Url { get; set; }
 
         #region IFileItem Parameters

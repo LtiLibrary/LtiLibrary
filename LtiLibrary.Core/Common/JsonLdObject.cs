@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Common
 {
+    /// <summary>
+    /// JSON-LD object. Forms @context from ExternalContextId and Terms when serialized.
+    /// </summary>
     [JsonConverter(typeof(JsonLdObjectConverter))]
     public class JsonLdObject : IJsonLdObject
     {
@@ -27,7 +30,8 @@ namespace LtiLibrary.Core.Common
         public IDictionary<string, string> Terms { get; }
 
         /// <summary>
-        /// JSON-LD context created by JsonLdObjectConverter when serialized.
+        /// JSON-LD context created by JsonLdObjectConverter when serialized,
+        /// and by normal JsonConverter when deserialized.
         /// </summary>
         [JsonProperty("@context", Order = -4)]
         public object Context { get; internal set; }

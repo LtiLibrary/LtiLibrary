@@ -184,12 +184,12 @@ namespace LtiLibrary.AspNet.Outcomes.v1
             if (DeleteResult(result.SourcedId))
             {
                 response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
-                    $"Score for {result.SourcedId} is deleted");
+                    string.Format("Score for {0} is deleted", result.SourcedId));
             }
             else
             {
                 response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                    $"Score for {result.SourcedId} not deleted", imsx_CodeMajorType.failure);
+                    string.Format("Score for {0} not deleted", result.SourcedId), imsx_CodeMajorType.failure);
             }
             response.imsx_POXBody.Item = deleteResponse;
             return response;
@@ -212,7 +212,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                     // non-existent grade and the TC should not return a failure status when a grade does not exist.
                     // It should simply return an "empty" grade.
                     response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
-                        $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is null");
+                        string.Format("Score for {0} is null", readRequest.resultRecord.sourcedGUID.sourcedId));
                     readResponse.result = new ResultType {resultScore = new TextType()};
                     var cultureInfo = new CultureInfo("en");
                     readResponse.result.resultScore.language = cultureInfo.Name;
@@ -222,7 +222,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                 {
                     // The score exists
                     response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
-                        $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
+                        string.Format("Score for {0} is read", readRequest.resultRecord.sourcedGUID.sourcedId));
                     readResponse.result = new ResultType {resultScore = new TextType()};
                     var cultureInfo = new CultureInfo("en");
                     readResponse.result.resultScore.language = cultureInfo.Name;
@@ -233,7 +233,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
             {
                 // The score could not exist (invalid assignment or user)
                 response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                    $"Invalid score sourcedId {readRequest.resultRecord.sourcedGUID.sourcedId}",
+                    string.Format("Invalid score sourcedId {0}", readRequest.resultRecord.sourcedGUID.sourcedId),
                     imsx_CodeMajorType.failure);
             }
             response.imsx_POXBody.Item = readResponse;
@@ -255,12 +255,14 @@ namespace LtiLibrary.AspNet.Outcomes.v1
             else if (ReplaceResult(result))
             {
                 response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
-                    $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} is now {replaceRequest.resultRecord.result.resultScore.textString}");
+                    string.Format("Score for {0} is now {1}", 
+                    replaceRequest.resultRecord.sourcedGUID.sourcedId,
+                    replaceRequest.resultRecord.result.resultScore.textString));
             }
             else
             {
                 response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                    $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} not replaced",
+                    string.Format("Score for {0} not replaced", replaceRequest.resultRecord.sourcedGUID.sourcedId),
                     imsx_CodeMajorType.failure);
             }
             response.imsx_POXBody.Item = new replaceResultResponse();

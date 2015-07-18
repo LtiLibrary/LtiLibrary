@@ -54,7 +54,7 @@ namespace LtiLibrary.Core.Tests
 
     public class Parent : JsonLdObject
     {
-        public Parent()
+        public Parent() : base()
         {
             ExternalContextId = new Uri("http://localhost/ParentContext");
             Type = "Parent";

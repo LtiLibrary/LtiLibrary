@@ -312,7 +312,7 @@ namespace LtiLibrary.Core.Outcomes.v2
                 body = new byte[0];
             if (body.Length > 0 && request.ContentLength != body.Length)
             {
-                throw new ArgumentException("body length does not match request.ContentLength", nameof(body));
+                throw new ArgumentException("body length does not match request.ContentLength", "body");
             }
 
             var parameters = new NameValueCollection();

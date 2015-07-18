@@ -9,6 +9,11 @@
         public bool IsValid  { get; set; }
         public string Message { get; set; }
 
+        /// <summary>
+        /// A basic result.
+        /// </summary>
+        /// <param name="isValid">True if the result is valid.</param>
+        /// <param name="message">Message.</param>
         public BasicResult(bool isValid = true, string message = "")
         {
             IsValid = isValid;

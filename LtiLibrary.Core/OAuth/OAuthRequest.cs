@@ -111,7 +111,7 @@ namespace LtiLibrary.Core.OAuth
         /// </summary>
         [NotMapped]
         [JsonIgnore]
-        public NameValueCollection Parameters { get; }
+        public NameValueCollection Parameters { get; private set; }
 
         /// <summary>
         /// OAuth signature

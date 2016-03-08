@@ -1,6 +1,7 @@
 ﻿using System;
 using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
@@ -46,7 +47,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// The URI for the person whose score is recorded in this Result.
         /// </summary>
         [JsonProperty("resultAgent", Required = Required.Always)]
-        public Uri ResultAgent { get; set; }
+        public LisPerson ResultAgent { get; set; }
 
         /// <summary>
         /// The URI for the LineItem within which this Result is contained.
@@ -70,6 +71,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// Optional status of the result for this user and line item.
         /// </summary>
         [JsonProperty("resultStatus")]
+        [JsonConverter(typeof(StringEnumConverter))]
         public ResultStatus? ResultStatus { get; set; }
 
         /// <summary>

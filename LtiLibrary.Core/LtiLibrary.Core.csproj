@@ -123,6 +123,7 @@
     <Compile Include="Outcomes\v2\LineItem.cs" />
     <Compile Include="Outcomes\v2\LineItemContainer.cs" />
     <Compile Include="Outcomes\v2\LineItemContainerPage.cs" />
+    <Compile Include="Outcomes\v2\LisPerson.cs" />
     <Compile Include="Outcomes\v2\LisResult.cs" />
     <Compile Include="Outcomes\v2\LisResultContainer.cs" />
     <Compile Include="Outcomes\v2\LisResultContainerPage.cs" />

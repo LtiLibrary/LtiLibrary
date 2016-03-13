@@ -49,11 +49,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Delete a particular LineItem instance.
         /// </summary>
         [HttpDelete]
-        public async Task<HttpResponseMessage> Delete(string id)
+        public async Task<HttpResponseMessage> Delete(string contextId, string id)
         {
             try
             {
-                var context = new DeleteLineItemContext(id);
+                var context = new DeleteLineItemContext(contextId, id);
                 
                 await OnDeleteLineItem(context);
 
@@ -69,7 +69,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Get a paginated list of LineItem resources from a LineItemContainer, or get a representation of a particular LineItem instance.
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
+        public async Task<HttpResponseMessage> Get(string contextId = null, string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                 {
                     // Get a representation of a particular LineItem instance
 
-                    var context = new GetLineItemContext(id);
+                    var context = new GetLineItemContext(contextId, id);
 
                     await OnGetLineItem(context);
 
@@ -118,11 +118,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Create a new LineItem instance.
         /// </summary>
         [HttpPost]
-        public async Task<HttpResponseMessage> Post(LineItem lineItem)
+        public async Task<HttpResponseMessage> Post(string contextId, LineItem lineItem)
         {
             try
             {
-                var context = new PostLineItemContext(lineItem);
+                var context = new PostLineItemContext(contextId, lineItem);
 
                 await OnPostLineItem(context);
 

@@ -14,6 +14,7 @@ namespace LtiLibrary.Core.Outcomes.v2
     {
         public LineItem()
         {
+            Context = LtiConstants.LineItemContextId;
             Type = LtiConstants.LineItemType;
         }
 

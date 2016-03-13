@@ -8,7 +8,8 @@ using LtiLibrary.Core.Outcomes.v2;
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
     /// <summary>
-    /// Based on A REST API for LineItem Resources in multiple formats, Internal Draft 2.1
+    /// An <see cref="ApiController" /> that implements 
+    /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html
     /// </summary>
     [LineItemsControllerConfig]

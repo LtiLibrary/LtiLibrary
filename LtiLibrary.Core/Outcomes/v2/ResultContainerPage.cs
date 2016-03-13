@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
-    public class LisResultContainerPage : JsonLdObject
+    public class ResultContainerPage : JsonLdObject
     {
-        public LisResultContainerPage()
+        public ResultContainerPage()
         {
             Type = LtiConstants.LisResultContainerType;
         }
@@ -17,9 +17,9 @@ namespace LtiLibrary.Core.Outcomes.v2
         public string NextPage { get; set; }
 
         /// <summary>
-        /// The LisResults within this page.
+        /// The Results within this page.
         /// </summary>
         [JsonProperty("pageOf")]
-        public LisResultContainer LisResultContainer { get; set; }
+        public ResultContainer ResultContainer { get; set; }
     }
 }

@@ -21,9 +21,15 @@ namespace LtiLibrary.Core.Outcomes.v2
         public string ContextId { get; set; }
 
         /// <summary>
-        /// Zero or more LineItems that records results for some learning activity within this context.
+        /// Zero or more LineItems that record results for some learning activity within this context.
         /// </summary>
         [JsonProperty("lineItem")]
-        public ICollection<LineItem> LineItems { get; set; } 
+        public ICollection<LineItem> LineItems { get; set; }
+
+        /// <summary>
+        /// Zero or more LISResults that record results for some learning activity within this context.
+        /// </summary>
+        [JsonProperty("result")]
+        public ICollection<LisResult> Results { get; set; }
     }
 }

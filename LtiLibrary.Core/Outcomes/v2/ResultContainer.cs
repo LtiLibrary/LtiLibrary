@@ -4,12 +4,12 @@ using Newtonsoft.Json;
 namespace LtiLibrary.Core.Outcomes.v2
 {
     /// <summary>
-    /// An LisResultContainer defines the endpoint to which clients POST new LisResult resources 
-    /// and from which they GET the list of LisResults associated with a a given learning context.
+    /// An ResultContainer defines the endpoint to which clients POST new LisResult resources 
+    /// and from which they GET the list of Results associated with a a given learning context.
     /// </summary>
-    public class LisResultContainer : JsonLdObject
+    public class ResultContainer : JsonLdObject
     {
-        public LisResultContainer()
+        public ResultContainer()
         {
             Type = LtiConstants.LisResultContainerType;
         }

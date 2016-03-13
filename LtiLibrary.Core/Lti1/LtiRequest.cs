@@ -1278,9 +1278,27 @@ namespace LtiLibrary.Core.Lti1
         [NotMapped]
         public string ContextOrg { get; set; }
 
+        /// <summary>
+        /// Endpoint for Outcomes-2 LineItem service
+        /// <para>
+        /// Parameter: n/a.
+        /// Custom parameter substitution: $LineItem.url.
+        /// Versions: 1.2.
+        /// Optional.
+        /// </para>
+        /// </summary>
         [NotMapped]
         public string LineItemServiceUrl { get; set; }
 
+        /// <summary>
+        /// Endpoint for Outcomes-2 LineItem collection service
+        /// <para>
+        /// Parameter: n/a.
+        /// Custom parameter substitution: $LineItems.url.
+        /// Versions: 1.2.
+        /// Optional.
+        /// </para>
+        /// </summary>
         [NotMapped]
         public string LineItemsServiceUrl { get; set; }
 
@@ -2147,6 +2165,30 @@ namespace LtiLibrary.Core.Lti1
         public string LisResultStatus { get; set; }
 
         /// <summary>
+        /// Endpoint for Outcomes-2 LISResult service
+        /// <para>
+        /// Parameter: n/a.
+        /// Custom parameter substitution: $Result.url.
+        /// Versions: 1.2.
+        /// Optional.
+        /// </para>
+        /// </summary>
+        [NotMapped]
+        public string ResultServiceUrl { get; set; }
+
+        /// <summary>
+        /// Endpoint for Outcomes-2 LISResult collection service
+        /// <para>
+        /// Parameter: n/a.
+        /// Custom parameter substitution: $Results.url.
+        /// Versions: 1.2.
+        /// Optional.
+        /// </para>
+        /// </summary>
+        [NotMapped]
+        public string ResultsServiceUrl { get; set; }
+
+        /// <summary>
         /// URL for requests for the tool consumer profile.
         /// This URL should be no more than 1023 characters long and should specify the version of LTI by adding an
         /// lti_version querystring parameter to the URL.
@@ -2416,9 +2458,6 @@ namespace LtiLibrary.Core.Lti1
             value = Regex.Replace(value, "\\$LineItem.sourcedId", LisLineItemSourcedId ?? string.Empty, RegexOptions.IgnoreCase);
             value = Regex.Replace(value, "\\$LineItem.type", LisLineItemType ?? string.Empty, RegexOptions.IgnoreCase);
             value = Regex.Replace(value, "\\$LineItem.type.displayName", LisLineItemTypeDisplayName ?? string.Empty, RegexOptions.IgnoreCase);
-            // TODO: Are these right?
-            value = Regex.Replace(value, "\\$LineItem.url", LineItemServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
-            value = Regex.Replace(value, "\\$LineItems.url", LineItemsServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
 
             // LIS Result variables
             value = Regex.Replace(value, "\\$Result.createdTimestamp", LisResultCreatedTimestamp ?? string.Empty, RegexOptions.IgnoreCase);
@@ -2429,6 +2468,12 @@ namespace LtiLibrary.Core.Lti1
 
             // Tool Consumer Profile
             value = Regex.Replace(value, "\\$ToolConsumerProfile.url", ToolConsumerProfileUrl ?? string.Empty, RegexOptions.IgnoreCase);
+
+            // Outcomes-2
+            value = Regex.Replace(value, "\\$LineItem.url", LineItemServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
+            value = Regex.Replace(value, "\\$LineItems.url", LineItemsServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
+            value = Regex.Replace(value, "\\$Result.url", ResultServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
+            value = Regex.Replace(value, "\\$Results.url", ResultsServiceUrl ?? string.Empty, RegexOptions.IgnoreCase);
 
             return value;
         }

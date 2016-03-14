@@ -26,7 +26,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
         }
 
-        public static async Task<OutcomeResponse> DeleteLisResult(string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse> DeleteResult(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
 
@@ -51,7 +51,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             return await GetOutcome<LineItem>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
         }
 
-        public static async Task<OutcomeResponse<ResultContainer>> GetLisResultPage(string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse<ResultContainer>> GetResultPage(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
             return await GetOutcome<ResultContainer>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType);
@@ -63,10 +63,10 @@ namespace LtiLibrary.Core.Outcomes.v2
             return await PostOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<OutcomeResponse<LisResult>> PostLisResult(LisResult lisResult, string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse<LisResult>> PostResult(LisResult result, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await PostOutcome(lisResult, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+            return await PostOutcome(result, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
         public static async Task<OutcomeResponse> PutLineItem(LineItem lineItem, string serviceUrl, string consumerKey, string consumerSecret)
@@ -74,9 +74,9 @@ namespace LtiLibrary.Core.Outcomes.v2
             return await PutOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<OutcomeResponse> PutLisResult(LisResult lisResult, string serviceUrl, string consumerKey, string consumerSecret)
+        public static async Task<OutcomeResponse> PutResult(LisResult result, string serviceUrl, string consumerKey, string consumerSecret)
         {
-            return await PutOutcome(lisResult, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+            return await PutOutcome(result, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
         #region Private Methods

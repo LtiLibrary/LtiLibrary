@@ -96,10 +96,10 @@ namespace LtiLibrary.Core.Common
 
         // Object types
         public const string ActivityType = "Activity";
-        public const string ContainerPageType = "Page";
         public const string ContentItemType = "ContentItem";
         public const string ContextType = "Context";
         public const string FileItemType = "FileItem";
+        public const string LineItemContainerPageType = "Page";
         public const string LineItemContainerType = "LineItemContainer";
         public const string LineItemType = "LineItem";
         public const string LisResultType = "LISResult";

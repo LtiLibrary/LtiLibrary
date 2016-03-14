@@ -39,10 +39,10 @@ namespace LtiLibrary.Core.Outcomes.v2
             return await GetOutcome<LineItem>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<OutcomeResponse<LineItemContainer>> GetLineItemPage(string serviceUrl, string consumerKey,
+        public static async Task<OutcomeResponse<LineItemContainerPage>> GetLineItemPage(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await GetOutcome<LineItemContainer>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemContainerMediaType);
+            return await GetOutcome<LineItemContainerPage>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemContainerMediaType);
         }
 
         public static async Task<OutcomeResponse<LineItem>> GetLineItemResults(string serviceUrl, string consumerKey,

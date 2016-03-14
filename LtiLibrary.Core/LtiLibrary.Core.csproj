@@ -125,6 +125,7 @@
     <Compile Include="Outcomes\v2\LineItemContainerPage.cs" />
     <Compile Include="Outcomes\v2\LisPerson.cs" />
     <Compile Include="Outcomes\v2\LisResult.cs" />
+    <Compile Include="Outcomes\v2\LineItemMembershipSubject.cs" />
     <Compile Include="Outcomes\v2\PostResultContext.cs" />
     <Compile Include="Outcomes\v2\ResultContainer.cs" />
     <Compile Include="Outcomes\v2\ResultContainerPage.cs" />

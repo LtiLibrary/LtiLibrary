@@ -46,13 +46,13 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// The URI for the person whose score is recorded in this Result.
         /// </summary>
-        [JsonProperty("resultAgent", Required = Required.Always)]
+        [JsonProperty("resultAgent")]
         public LisPerson ResultAgent { get; set; }
 
         /// <summary>
         /// The URI for the LineItem within which this Result is contained.
         /// </summary>
-        [JsonProperty("resultOf", Required = Required.Always)]
+        [JsonProperty("resultOf")]
         public Uri ResultOf { get; set; }
 
         /// <summary>

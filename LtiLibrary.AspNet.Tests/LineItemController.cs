@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using LtiLibrary.AspNet.Outcomes.v2;
+using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Outcomes.v2;
 
 namespace LtiLibrary.AspNet.Tests
@@ -53,13 +54,13 @@ namespace LtiLibrary.AspNet.Tests
                 }
                 else
                 {
-                    var id = new UriBuilder(Request.RequestUri) { Query = "firstPage" };
                     context.LineItemContainerPage = new LineItemContainerPage
                     {
-                        Id = id.Uri,
+                        ExternalContextId = LtiConstants.LineItemContainerContextId,
+                        Id = Request.RequestUri,
                         LineItemContainer = new LineItemContainer
                         {
-                            MembershipSubject = new Context
+                            LineItemMembershipSubject = new LineItemMembershipSubject
                             {
                                 ContextId = _lineItem.LineItemOf.ContextId,
                                 LineItems = new[] { _lineItem }

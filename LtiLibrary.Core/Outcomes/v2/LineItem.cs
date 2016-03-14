@@ -34,13 +34,13 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// The context to which this LineItem belongs.
         /// </summary>
-        [JsonProperty("lineItemOf", Required = Required.Always)]
+        [JsonProperty("lineItemOf")]
         public Context LineItemOf { get; set; }
 
         /// <summary>
         /// Identifies the property that is reported as the resultScore of the Results within this LineItem.
         /// </summary>
-        [JsonProperty("reportingMethod", Required = Required.Always)]
+        [JsonProperty("reportingMethod")]
         public string ReportingMethod { get; set; }
 
         /// <summary>

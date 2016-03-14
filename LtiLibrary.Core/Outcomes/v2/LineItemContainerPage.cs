@@ -7,7 +7,7 @@ namespace LtiLibrary.Core.Outcomes.v2
     {
         public LineItemContainerPage()
         {
-            Type = LtiConstants.LisResultContainerType;
+            Type = LtiConstants.LineItemContainerPageType;
         }
 
         /// <summary>

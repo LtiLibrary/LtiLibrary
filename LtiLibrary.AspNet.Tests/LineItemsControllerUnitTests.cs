@@ -27,7 +27,7 @@ namespace LtiLibrary.AspNet.Tests
                 LineItemOf = new Context {  ContextId = LineItemsController.ContextId },
                 ReportingMethod = "res:Result"
             };
-            var result = controller.Post(lineitem);
+            var result = controller.Post(LineItemsController.ContextId, lineitem);
             Assert.Equal(HttpStatusCode.Created, result.Result.StatusCode);
             var lineItem = JsonConvert.DeserializeObject<LineItem>(result.Result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(lineItem);

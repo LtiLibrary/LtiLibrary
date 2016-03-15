@@ -87,7 +87,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                         }
                         page = p.Value;
                     }
-                    var context = new GetLineItemsContext(limit, activityId, page);
+                    var context = new GetLineItemsContext(contextId, limit, activityId, page);
 
                     await OnGetLineItems(context);
 

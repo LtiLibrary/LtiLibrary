@@ -5,18 +5,20 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 {
     public class GetResultsContext
     {
-        public GetResultsContext(int? limit, string lineItemId, int page)
+        public GetResultsContext(string contextId, string lineItemId, int? limit, int page)
         {
+            ContextId = contextId;
             Limit = limit;
             LineItemId = lineItemId;
             Page = page;
             StatusCode = HttpStatusCode.OK;
         }
 
+        public string ContextId { get; set; }
         public string LineItemId { get; set; }
-        public int? Limit { get; private set; }
+        public int? Limit { get; set; }
         public ResultContainerPage ResultContainerPage { get; set; }
-        public int Page { get; private set; }
+        public int Page { get; set; }
         public HttpStatusCode StatusCode { get; set; }
     }
 }

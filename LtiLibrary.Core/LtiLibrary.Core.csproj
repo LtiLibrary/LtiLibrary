@@ -134,6 +134,7 @@
     <Compile Include="Outcomes\v2\OutcomeResponse.cs" />
     <Compile Include="Outcomes\v2\OutcomesClient.cs" />
     <Compile Include="Outcomes\v2\NumericLimits.cs" />
+    <Compile Include="Outcomes\v2\ResultMembershipSubject.cs" />
     <Compile Include="Outcomes\v2\ResultStatus.cs" />
     <Compile Include="Extensions\JsonLdExtensions.cs" />
     <Compile Include="Profiles\ToolConsumerProfileResponse.cs" />

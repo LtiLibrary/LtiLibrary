@@ -49,11 +49,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Delete a particular LisResult instance.
         /// </summary>
         [HttpDelete]
-        public async Task<HttpResponseMessage> Delete(string id)
+        public async Task<HttpResponseMessage> Delete(string contextId, string lineItemId, string id)
         {
             try
             {
-                var context = new DeleteResultContext(id);
+                var context = new DeleteResultContext(contextId, lineItemId, id);
 
                 await OnDeleteResult(context);
 
@@ -70,13 +70,13 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// <param name="id">The LineItem id.</param>
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(string id = null, int? limit = null, string firstPage = null, int? p = null)
+        public async Task<HttpResponseMessage> Get(string contextId = null, string lineItemId = null, string id = null, int? limit = null, string firstPage = null, int? p = null)
         {
             try
             {
                 if (string.IsNullOrEmpty(id))
                 {
-                    // Get a paginated list of LisResult resources from a ResultContainer
+                    // Get a paginated list of results from a ResultContainer
 
                     int page = 1;
                     if (p.HasValue)
@@ -88,7 +88,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                         }
                         page = p.Value;
                     }
-                    var context = new GetResultsContext(limit, id, page);
+                    var context = new GetResultsContext(contextId, lineItemId, limit, page);
 
                     await OnGetResults(context);
 
@@ -100,7 +100,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                 {
                     // Get a representation of a particular LisResult instance
 
-                    var context = new GetResultContext(id);
+                    var context = new GetResultContext(contextId, lineItemId, id);
 
                     await OnGetResult(context);
 
@@ -119,11 +119,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Create a new LisResult instance.
         /// </summary>
         [HttpPost]
-        public async Task<HttpResponseMessage> Post(LisResult result)
+        public async Task<HttpResponseMessage> Post(string contextId, string lineItemId, LisResult result)
         {
             try
             {
-                var context = new PostResultContext(result);
+                var context = new PostResultContext(contextId, lineItemId, result);
 
                 await OnPostResult(context);
 

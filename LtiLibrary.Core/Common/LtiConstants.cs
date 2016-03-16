@@ -89,7 +89,7 @@ namespace LtiLibrary.Core.Common
         public const string LineItemMediaType = "application/vnd.ims.lis.v2.lineitem+json";
         public const string LineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";
         public const string LisResultContainerMediaType = "application/vnd.ims.lis.v2.resultcontainer+json";
-        public const string LisResultMediaType = "application/vnd.ims.lis.v2.result+json";
+        public const string LisResultMediaType = "application/vnd.ims.lis.v2p1.result+json";
         public const string LtiLinkMediaType = "application/vnd.ims.lti.v1.ltilink";
         public const string OutcomeMediaType = "application/vnd.ims.lti.v1.outcome+xml";
         public const string ToolConsumerProfileMediaType = "application/vnd.ims.lti.v2.toolconsumerprofile+json";

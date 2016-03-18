@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Outcomes.v2;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
@@ -19,6 +21,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         {
             OnDeleteLineItem = context => { throw new NotImplementedException(); };
             OnGetLineItem = context => { throw new NotImplementedException(); };
+            OnGetLineItemResults = context => { throw new NotImplementedException(); };
             OnGetLineItems = context => { throw new NotImplementedException(); };
             OnPostLineItem = context => { throw new NotImplementedException(); };
             OnPutLineItem = context => { throw new NotImplementedException(); };
@@ -32,6 +35,10 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Get a representation of a particular LineItem instance from the Tool Consumer application.
         /// </summary>
         public Func<GetLineItemContext, Task> OnGetLineItem { get; set; }
+        /// <summary>
+        /// Get a representation of a particular LineItem instance with all its results in one call from the Tool Consumer application.
+        /// </summary>
+        public Func<GetLineItemContext, Task> OnGetLineItemResults { get; set; }
         /// <summary>
         /// Get a paginated list of LineItem resources from a LineItemContainer in the Tool Consumer application.
         /// </summary>
@@ -101,7 +108,14 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                     var context = new GetLineItemContext(contextId, id);
 
-                    await OnGetLineItem(context);
+                    if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType)))
+                    {
+                        await OnGetLineItemResults(context);
+                    }
+                    else
+                    {
+                        await OnGetLineItem(context);
+                    }
 
                     return context.StatusCode == HttpStatusCode.OK
                         ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter())

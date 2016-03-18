@@ -40,9 +40,28 @@ namespace LtiLibrary.Core.Outcomes.v2
         }
 
         public static async Task<OutcomeResponse<LineItemContainerPage>> GetLineItemPage(string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
         {
-            return await GetOutcome<LineItemContainerPage>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemContainerMediaType);
+            var uri = new UriBuilder(serviceUrl);
+            var query = new StringBuilder(uri.Query);
+            if (limit != null)
+            {
+                query.AppendFormat("&limit={0}", limit.Value);
+            }
+            if (!string.IsNullOrEmpty(activityId))
+            {
+                query.AppendFormat("&activityId={0}", activityId);
+            }
+            if (!string.IsNullOrEmpty(firstPage))
+            {
+                query.AppendFormat("&firstPage={0}", firstPage);
+            }
+            if (p != null)
+            {
+                query.AppendFormat("&p={0}", p.Value);
+            }
+            uri.Query = query.ToString();
+            return await GetOutcome<LineItemContainerPage>(uri.Uri.AbsoluteUri, consumerKey, consumerSecret, LtiConstants.LineItemContainerMediaType);
         }
 
         public static async Task<OutcomeResponse<LineItem>> GetLineItemResults(string serviceUrl, string consumerKey,

@@ -136,7 +136,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         public static async Task<OutcomeResponse> DeleteResult(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
         /// <summary>

@@ -21,10 +21,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         {
             OnDeleteLineItem = context => { throw new NotImplementedException(); };
             OnGetLineItem = context => { throw new NotImplementedException(); };
-            OnGetLineItemResults = context => { throw new NotImplementedException(); };
+            OnGetLineItemWithResults = context => { throw new NotImplementedException(); };
             OnGetLineItems = context => { throw new NotImplementedException(); };
             OnPostLineItem = context => { throw new NotImplementedException(); };
             OnPutLineItem = context => { throw new NotImplementedException(); };
+            OnPutLineItemWithResults = Context => { throw new NotImplementedException(); };
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// <summary>
         /// Get a representation of a particular LineItem instance with all its results in one call from the Tool Consumer application.
         /// </summary>
-        public Func<GetLineItemContext, Task> OnGetLineItemResults { get; set; }
+        public Func<GetLineItemContext, Task> OnGetLineItemWithResults { get; set; }
         /// <summary>
         /// Get a paginated list of LineItem resources from a LineItemContainer in the Tool Consumer application.
         /// </summary>
@@ -51,6 +52,10 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Update a particular LineItem instance in the Tool Consumer Application.
         /// </summary>
         public Func<PutLineItemContext, Task> OnPutLineItem { get; set; }
+        /// <summary>
+        /// Update a particular LineItem instance and the results it contains in the Tool Consumer Application.
+        /// </summary>
+        public Func<PutLineItemContext, Task> OnPutLineItemWithResults { get; set; }
 
         /// <summary>
         /// Delete a particular LineItem instance.
@@ -110,7 +115,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                     if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType)))
                     {
-                        await OnGetLineItemResults(context);
+                        await OnGetLineItemWithResults(context);
                     }
                     else
                     {
@@ -159,6 +164,16 @@ namespace LtiLibrary.AspNet.Outcomes.v2
             try
             {
                 var context = new PutLineItemContext(lineItem);
+
+
+                if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType)))
+                {
+                    await OnPutLineItemWithResults(context);
+                }
+                else
+                {
+                    await OnPutLineItem(context);
+                }
 
                 await OnPutLineItem(context);
 

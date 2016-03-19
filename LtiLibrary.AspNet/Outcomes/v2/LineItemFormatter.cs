@@ -8,8 +8,9 @@ namespace LtiLibrary.AspNet.Outcomes.v2
     {
         public LineItemFormatter()
         {
-            // Accept LineItem JSON-LD
+            // Accept LineItem and LineItemResults JSON-LD
             SupportedMediaTypes.Add(new MediaTypeHeaderValue(LtiConstants.LineItemMediaType));
+            SupportedMediaTypes.Add(new MediaTypeHeaderValue(LtiConstants.LineItemResultsMediaType));
         }
     }
 }

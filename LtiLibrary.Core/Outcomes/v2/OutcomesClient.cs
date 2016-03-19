@@ -10,93 +10,193 @@ using LtiLibrary.Core.OAuth;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
+    /// <summary>
+    /// Helper class for Outcomes-2 clients.
+    /// </summary>
     public static class OutcomesClient
     {
+        #region LineItems
+
+        /// <summary>
+        /// Delete a particular LineItem.
+        /// </summary>
+        /// <param name="serviceUrl">The LineItem REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>No content is returned.</returns>
         public static async Task<OutcomeResponse> DeleteLineItem(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-
             return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<OutcomeResponse> DeleteLineItemResult(string serviceUrl, string consumerKey,
-            string consumerSecret)
-        {
-
-            return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
-        }
-
-        public static async Task<OutcomeResponse> DeleteResult(string serviceUrl, string consumerKey,
-            string consumerSecret)
-        {
-
-            return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret);
-        }
-
+        /// <summary>
+        /// Get a particular LineItem instance without results from the server.
+        /// </summary>
+        /// <param name="serviceUrl">The LineItem REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>If successful, the LineItem specified in the REST endpoint, but without the results property filled in.</returns>
         public static async Task<OutcomeResponse<LineItem>> GetLineItem(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
             return await GetOutcome<LineItem>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
-        public static async Task<OutcomeResponse<LineItemContainerPage>> GetLineItemPage(string serviceUrl, string consumerKey,
-            string consumerSecret, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
-        {
-            var uri = new UriBuilder(serviceUrl);
-            var query = new StringBuilder(uri.Query);
-            if (limit != null)
-            {
-                query.AppendFormat("&limit={0}", limit.Value);
-            }
-            if (!string.IsNullOrEmpty(activityId))
-            {
-                query.AppendFormat("&activityId={0}", activityId);
-            }
-            if (!string.IsNullOrEmpty(firstPage))
-            {
-                query.AppendFormat("&firstPage={0}", firstPage);
-            }
-            if (p != null)
-            {
-                query.AppendFormat("&p={0}", p.Value);
-            }
-            uri.Query = query.ToString();
-            return await GetOutcome<LineItemContainerPage>(uri.Uri.AbsoluteUri, consumerKey, consumerSecret, LtiConstants.LineItemContainerMediaType);
-        }
-
-        public static async Task<OutcomeResponse<LineItem>> GetLineItemResults(string serviceUrl, string consumerKey,
+        /// <summary>
+        /// Get a particular LineItem instance with results from the server.
+        /// </summary>
+        /// <param name="serviceUrl">The LineItem REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>If successful, the LineItem specified in the REST endpoint, including results.</returns>
+        public static async Task<OutcomeResponse<LineItem>> GetLineItemWithResults(string serviceUrl, string consumerKey,
             string consumerSecret)
         {
             return await GetOutcome<LineItem>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
         }
 
-        public static async Task<OutcomeResponse<ResultContainer>> GetResultPage(string serviceUrl, string consumerKey,
-            string consumerSecret)
+        /// <summary>
+        /// Get a paginated list of LineItem resources from the server.
+        /// </summary>
+        /// <param name="serviceUrl">The LineItemContainer REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="limit">The suggested number of lineitems to include in each page.</param>
+        /// <param name="firstPage">True to request the first page of lineitems.</param>
+        /// <param name="p">The page (2 to ?) of lineitems requested.</param>
+        /// <param name="activityId">If specified, the result set will be filtered to only include lineitems that are associated with this activity.</param>
+        /// <returns>If successful, the LineItemContainerPage.</returns>
+        public static async Task<OutcomeResponse<LineItemContainerPage>> GetLineItems(string serviceUrl, string consumerKey,
+            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null)
         {
-            return await GetOutcome<ResultContainer>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType);
+            var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p, activityId);
+            return await GetOutcome<LineItemContainerPage>(servicePageUrl, consumerKey, consumerSecret, LtiConstants.LineItemContainerMediaType);
         }
 
+        /// <summary>
+        /// Create a new LineItem instance within the server.
+        /// </summary>
+        /// <param name="lineItem">The LineItem to create within the server.</param>
+        /// <param name="serviceUrl">The LineItem container REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>If successful, the LineItem with @id and results filled in.</returns>
+        /// <remarks>
+        /// https://www.imsglobal.org/specs/ltiomv2p0/specification-3
+        /// When a line item is created, a result for each user is deemed to be created with a status value of “Initialized”.
+        /// Thus, there is no need to actually create a result with a POST request; the first connection to a result may be a
+        /// PUT or a GET request.When a line item is created, a result for each user is deemed to be created with a status value 
+        /// of “Initialized”.  Thus, there is no need to actually create a result with a POST request; the first connection to a 
+        /// result may be a PUT or a GET request.
+        /// </remarks>
         public static async Task<OutcomeResponse<LineItem>> PostLineItem(LineItem lineItem, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
             return await PostOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
         }
 
+        /// <summary>
+        /// Update a particular LineItem instance, but not the results, within the server.
+        /// </summary>
+        /// <param name="lineItem">The LineItem to be updated within the server.</param>
+        /// <param name="serviceUrl">The LineItem REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>No content is returned.</returns>
+        public static async Task<OutcomeResponse> PutLineItem(LineItem lineItem, string serviceUrl, string consumerKey, string consumerSecret)
+        {
+            return await PutOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
+        }
+
+        /// <summary>
+        /// Update a particular LineItem instance within the server.
+        /// </summary>
+        /// <param name="lineItem">The LineItem to be updated within the server.</param>
+        /// <param name="serviceUrl">The LineItem REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>No content is returned.</returns>
+        public static async Task<OutcomeResponse> PutLineItemWithResults(LineItem lineItem, string serviceUrl, string consumerKey, string consumerSecret)
+        {
+            return await PutOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
+        }
+
+        #endregion
+
+        #region Results
+
+        /// <summary>
+        /// Delete a particular LISResult.
+        /// </summary>
+        /// <param name="serviceUrl">The LISResult REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>No content is returned.</returns>
+        public static async Task<OutcomeResponse> DeleteResult(string serviceUrl, string consumerKey,
+            string consumerSecret)
+        {
+            return await DeleteOutcome(serviceUrl, consumerKey, consumerSecret);
+        }
+
+        /// <summary>
+        /// Get a particular LISResult instance from the server.
+        /// </summary>
+        /// <param name="serviceUrl">The LISResult REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>If successful, the LISResult specified in the REST endpoint.</returns>
+        public static async Task<OutcomeResponse<LisResult>> GetResult(string serviceUrl, string consumerKey,
+            string consumerSecret)
+        {
+            return await GetOutcome<LisResult>(serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+        }
+
+        /// <summary>
+        /// Get a paginated list of LISResult resources from the server.
+        /// </summary>
+        /// <param name="serviceUrl">The ResultContainer REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="limit">The suggested number of results to include in each page.</param>
+        /// <param name="firstPage">True to request the first page of results.</param>
+        /// <param name="p">The page (2 to ?) of results requested.</param>
+        /// <returns>If successful, the ResultContainerPage.</returns>
+        public static async Task<OutcomeResponse<ResultContainerPage>> GetResults(string serviceUrl, string consumerKey,
+            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null)
+        {
+            var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p);
+            return await GetOutcome<ResultContainerPage>(servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType);
+        }
+
+        /// <summary>
+        /// Create a new LISResult instance within the server.
+        /// </summary>
+        /// <param name="result">The LISResult to create within the server.</param>
+        /// <param name="serviceUrl">The LISResult container REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>If successful, the LISResult with @id filled in.</returns>
         public static async Task<OutcomeResponse<LisResult>> PostResult(LisResult result, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
             return await PostOutcome(result, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
-        public static async Task<OutcomeResponse> PutLineItem(LineItem lineItem, string serviceUrl, string consumerKey, string consumerSecret)
-        {
-            return await PutOutcome(lineItem, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
-        }
-
+        /// <summary>
+        /// Update a particular LISResult instance within the server.
+        /// </summary>
+        /// <param name="result">The LISResult to be updated within the server.</param>
+        /// <param name="serviceUrl">The LISResult REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>No content is returned.</returns>
         public static async Task<OutcomeResponse> PutResult(LisResult result, string serviceUrl, string consumerKey, string consumerSecret)
         {
             return await PutOutcome(result, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
+
+        #endregion
 
         #region Private Methods
 
@@ -192,8 +292,8 @@ namespace LtiLibrary.Core.Outcomes.v2
                         if (response != null)
                         {
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(
-                                outcomeResponse.Outcome == null 
-                                ? null 
+                                outcomeResponse.Outcome == null
+                                ? null
                                 : outcomeResponse.Outcome.ToJsonString());
                         }
 #endif
@@ -205,6 +305,30 @@ namespace LtiLibrary.Core.Outcomes.v2
             {
                 return new OutcomeResponse<T> { StatusCode = HttpStatusCode.InternalServerError };
             }
+        }
+
+        private static string GetPagingServiceUrl(string serviceUrl, int? limit, bool? firstPage, int? p, string activityId = null)
+        {
+            var uri = new UriBuilder(serviceUrl);
+            var query = new StringBuilder(uri.Query);
+            if (limit != null)
+            {
+                query.AppendFormat("&limit={0}", limit.Value);
+            }
+            if (firstPage != null)
+            {
+                query.Append("&firstPage");
+            }
+            if (p != null)
+            {
+                query.AppendFormat("&p={0}", p.Value);
+            }
+            if (!string.IsNullOrEmpty(activityId))
+            {
+                query.AppendFormat("&activityId={0}", activityId);
+            }
+            uri.Query = query.ToString();
+            return uri.Uri.AbsoluteUri;
         }
 
         private static async Task<OutcomeResponse<T>> PostOutcome<T>(T outcome, string serviceUrl,
@@ -253,8 +377,8 @@ namespace LtiLibrary.Core.Outcomes.v2
                         if (response != null)
                         {
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(
-                                outcomeResponse.Outcome == null 
-                                ? null 
+                                outcomeResponse.Outcome == null
+                                ? null
                                 : outcomeResponse.Outcome.ToJsonString());
                         }
 #endif

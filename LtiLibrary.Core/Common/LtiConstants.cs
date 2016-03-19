@@ -114,6 +114,7 @@ namespace LtiLibrary.Core.Common
         public static readonly Uri LineItemContainerContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/outcomes/LineItemContainer");
         public static readonly Uri LineItemContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/LineItem");
         public static readonly Uri OutcomesVocabularyContextId = new Uri("http://purl.imsglobal.org/vocab/lis/v2/outcomes#");
+        public static readonly Uri ResultContainerContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/outcomes/ResultContainer");
         public static readonly Uri ResultContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2p1/Result");
         public static readonly Uri ToolConsumerProfileContextId = new Uri("http://purl.imsglobal.org/ctx/lti/v2/ToolConsumerProfile");
 

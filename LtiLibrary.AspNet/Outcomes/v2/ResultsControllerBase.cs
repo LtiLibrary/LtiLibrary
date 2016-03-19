@@ -141,11 +141,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Update a particular LisResult instance.
         /// </summary>
         [HttpPut]
-        public async Task<HttpResponseMessage> Put(LisResult result)
+        public async Task<HttpResponseMessage> Put(string contextId, string lineItemId, string id, LisResult result)
         {
             try
             {
-                var context = new PutResultContext(result);
+                var context = new PutResultContext(contextId, lineItemId, id, result);
 
                 await OnPutResult(context);
 

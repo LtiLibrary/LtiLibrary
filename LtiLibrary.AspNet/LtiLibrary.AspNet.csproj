@@ -82,6 +82,7 @@
     <Compile Include="Outcomes\v2\DeleteLineItemContext.cs" />
     <Compile Include="Outcomes\v2\GetLineItemContext.cs" />
     <Compile Include="Outcomes\v2\PostLineItemContext.cs" />
+    <Compile Include="Outcomes\v2\PostResultContext.cs" />
     <Compile Include="Outcomes\v2\PutLineItemContext.cs" />
     <Compile Include="Outcomes\OutcomesApiControllerBase.cs" />
     <Compile Include="Outcomes\v2\LineItemsControllerConfigAttribute.cs" />

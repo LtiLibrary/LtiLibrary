@@ -149,7 +149,9 @@
     <None Include="Outcomes\v1\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup />

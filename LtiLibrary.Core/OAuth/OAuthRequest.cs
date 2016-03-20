@@ -220,21 +220,7 @@ namespace LtiLibrary.Core.OAuth
         /// </remarks>
         public string GenerateSignature(NameValueCollection parameters, string consumerSecret)
         {
-            // The LTI spec says to include the querystring parameters
-            // when calculating the signature base string. Unescape the
-            // query so that it is not doubly escaped by UrlEncodingParser.
-            var querystring = new UrlEncodingParser(Uri.UnescapeDataString(Url.Query));
-            parameters.Add(querystring);
-
             var signature = OAuthUtility.GenerateSignature(HttpMethod, Url, parameters, consumerSecret);
-
-            // Now remove the querystring parameters so they are not sent twice
-            // (once in the action URL and once in the form data)
-            foreach (var key in querystring.AllKeys)
-            {
-                parameters.Remove(key);
-            }
-
             return signature;
         }
     }

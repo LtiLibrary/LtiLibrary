@@ -4,11 +4,11 @@ using LtiLibrary.Core.Common;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
-    public class LineItemsContainerPageFormatter : JsonMediaTypeFormatter
+    public class LineItemContainerPageFormatter : JsonMediaTypeFormatter
     {
-        public LineItemsContainerPageFormatter()
+        public LineItemContainerPageFormatter()
         {
-            // Accept LineItem JSON-LD
+            // Accept LineItemContainerPage JSON-LD
             SupportedMediaTypes.Clear();
             SupportedMediaTypes.Add(new MediaTypeHeaderValue(LtiConstants.LineItemContainerMediaType));
         }

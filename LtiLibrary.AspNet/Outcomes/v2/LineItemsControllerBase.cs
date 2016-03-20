@@ -104,7 +104,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     await OnGetLineItems(context);
 
                     return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.LineItemContainerPage, new LineItemsContainerPageFormatter())
+                        ? Request.CreateResponse(context.StatusCode, context.LineItemContainerPage, new LineItemContainerPageFormatter())
                         : Request.CreateResponse(context.StatusCode);
                 }
                 else

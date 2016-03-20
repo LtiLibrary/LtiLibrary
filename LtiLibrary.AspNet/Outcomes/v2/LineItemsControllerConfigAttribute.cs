@@ -12,6 +12,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
             // looks for the LineItemMediaType in the request Accept header and responds
             // with the corresponding Content-Type.
             controllerSettings.Formatters.Add(new LineItemFormatter());
+            controllerSettings.Formatters.Add(new LineItemContainerPageFormatter());
         }
     }
 }

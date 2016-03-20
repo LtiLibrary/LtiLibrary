@@ -77,7 +77,7 @@
     <Compile Include="Outcomes\ImsxXmlMediaTypeFormatter.cs" />
     <Compile Include="Outcomes\v2\GetResultContext.cs" />
     <Compile Include="Outcomes\v2\GetResultsContext.cs" />
-    <Compile Include="Outcomes\v2\LineItemsContainerPageFormatter.cs" />
+    <Compile Include="Outcomes\v2\LineItemContainerPageFormatter.cs" />
     <Compile Include="Outcomes\v2\LineItemsControllerBase.cs" />
     <Compile Include="Outcomes\v2\DeleteLineItemContext.cs" />
     <Compile Include="Outcomes\v2\GetLineItemContext.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Outcomes\v2\LineItemsControllerConfigAttribute.cs" />
     <Compile Include="Outcomes\v2\LineItemFormatter.cs" />
     <Compile Include="Outcomes\v2\PutResultContext.cs" />
+    <Compile Include="Outcomes\v2\ResultContainerPageFormatter.cs" />
     <Compile Include="Outcomes\v2\ResultFormatter.cs" />
     <Compile Include="Outcomes\v2\ResultsControllerBase.cs" />
     <Compile Include="Outcomes\v2\ResultsControllerConfigAttribute.cs" />

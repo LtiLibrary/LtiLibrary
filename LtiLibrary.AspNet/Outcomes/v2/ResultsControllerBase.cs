@@ -93,7 +93,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     await OnGetResults(context);
 
                     return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.ResultContainerPage, new ResultFormatter())
+                        ? Request.CreateResponse(context.StatusCode, context.ResultContainerPage, new ResultContainerPageFormatter())
                         : Request.CreateResponse(context.StatusCode);
                 }
                 else

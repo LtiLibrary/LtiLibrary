@@ -65,7 +65,7 @@ namespace LtiLibrary.Core.OAuth
                 var customParameters = new UrlEncodingParser("");
                 foreach (var key in Parameters.AllKeys)
                 {
-                    if (key.StartsWith("custom_") || key.StartsWith("_ext"))
+                    if (key.StartsWith("custom_") || key.StartsWith("ext_"))
                     {
                         customParameters.Add(key, Parameters[key]);
                     }

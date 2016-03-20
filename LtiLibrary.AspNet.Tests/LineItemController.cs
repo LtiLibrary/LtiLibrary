@@ -60,7 +60,7 @@ namespace LtiLibrary.AspNet.Tests
                         Id = Request.RequestUri,
                         LineItemContainer = new LineItemContainer
                         {
-                            LineItemMembershipSubject = new LineItemMembershipSubject
+                            MembershipSubject = new LineItemMembershipSubject
                             {
                                 ContextId = _lineItem.LineItemOf.ContextId,
                                 LineItems = new[] { _lineItem }

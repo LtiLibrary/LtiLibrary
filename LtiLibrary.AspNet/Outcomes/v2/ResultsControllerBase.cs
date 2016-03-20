@@ -128,7 +128,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                 await OnPostResult(context);
 
                 return context.StatusCode == HttpStatusCode.Created
-                    ? Request.CreateResponse(context.StatusCode, context.Result, new LineItemFormatter())
+                    ? Request.CreateResponse(context.StatusCode, context.Result, new ResultFormatter())
                     : Request.CreateResponse(context.StatusCode);
             }
             catch (Exception ex)

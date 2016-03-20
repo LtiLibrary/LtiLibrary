@@ -112,8 +112,13 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     // Get a representation of a particular LineItem instance
 
                     var context = new GetLineItemContext(contextId, id);
+                    var mediaType =
+                        Request.Headers.Accept.Contains(
+                            new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType))
+                            ? LtiConstants.LineItemResultsMediaType
+                            : LtiConstants.LineItemMediaType;
 
-                    if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType)))
+                    if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
                     {
                         await OnGetLineItemWithResults(context);
                     }
@@ -123,7 +128,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     }
 
                     return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter())
+                        ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter(), mediaType)
                         : Request.CreateResponse(context.StatusCode);
                 }
             }
@@ -146,7 +151,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                 await OnPostLineItem(context);
 
                 return context.StatusCode == HttpStatusCode.Created
-                    ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter()) 
+                    ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter(), LtiConstants.LineItemMediaType) 
                     : Request.CreateResponse(context.StatusCode);
             }
             catch (Exception ex)
@@ -165,8 +170,13 @@ namespace LtiLibrary.AspNet.Outcomes.v2
             {
                 var context = new PutLineItemContext(lineItem);
 
+                var mediaType =
+                    Request.Headers.Accept.Contains(
+                        new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType))
+                        ? LtiConstants.LineItemResultsMediaType
+                        : LtiConstants.LineItemMediaType;
 
-                if (Request.Headers.Accept.Contains(new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType)))
+                if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
                 {
                     await OnPutLineItemWithResults(context);
                 }

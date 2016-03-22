@@ -71,7 +71,7 @@ namespace LtiLibrary.Core.Extensions
             var excludedNames = new List<string> { OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter };
             foreach (var key in collection.AllKeys)
             {
-                if (excludedNames != null && excludedNames.Contains(key)) continue;
+                if (excludedNames.Contains(key)) continue;
                 var value = collection[key] ?? string.Empty;
                 list.Add(new KeyValuePair<string, string>(key.ToRfc3986EncodedString(),
                     value.ToRfc3986EncodedString()));

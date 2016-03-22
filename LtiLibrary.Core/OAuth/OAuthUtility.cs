@@ -25,7 +25,7 @@ namespace LtiLibrary.Core.OAuth
             signatureBase.Append(httpMethod.ToRfc3986EncodedString().ToUpperInvariant()).Append('&');
 
             // https://tools.ietf.org/html/rfc5849#section-3.4.1.2
-            // Exclude the query (query parameters in parameters collection)
+            // Exclude the query (query parameters in parameters collection) from the URI
             var normalizedUrl = string.Format("{0}://{1}", url.Scheme.ToLowerInvariant(), url.Host.ToLowerInvariant());
             if (!((url.Scheme == "http" && url.Port == 80) || (url.Scheme == "https" && url.Port == 443)))
             {
@@ -34,12 +34,8 @@ namespace LtiLibrary.Core.OAuth
             normalizedUrl += url.AbsolutePath;
             signatureBase.Append(normalizedUrl.ToRfc3986EncodedString()).Append('&');
 
-            // https://tools.ietf.org/html/rfc5849#section-3.4.1.3
-            // Exclude the OAuth signature or realm in the signature base string
-            var excludedNames = new List<string> {OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter};
-
             // Construct the signature string
-            signatureBase.Append(parameters.ToNormalizedString(excludedNames).ToRfc3986EncodedString());
+            signatureBase.Append(parameters.ToNormalizedString().ToRfc3986EncodedString());
 
             return signatureBase.ToString();
         }

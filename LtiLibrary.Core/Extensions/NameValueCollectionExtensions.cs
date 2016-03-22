@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 using LtiLibrary.Core.Lti1;
+using LtiLibrary.Core.OAuth;
 
 namespace LtiLibrary.Core.Extensions
 {
@@ -61,13 +62,14 @@ namespace LtiLibrary.Core.Extensions
         /// <param name="collection">The list of name/value pairs to normalize.</param>
         /// <param name="excludedNames">List of names that must be excluded from the signature base string.</param>
         /// <returns>A normalized string of parameters.</returns>
-        public static string ToNormalizedString(this NameValueCollection collection, IList<string> excludedNames = null)
+        public static string ToNormalizedString(this NameValueCollection collection)
         {
-            var list = new List<KeyValuePair<string, string>>();
-
             // ReSharper disable once LoopCanBeConvertedToQuery
+
             // https://tools.ietf.org/html/rfc5849#section-3.4.1.3.1
-            // Exclude excluded parameters (e.g. oauth_signature)
+            // Exclude the OAuth signature or realm in the signature base string
+            var list = new List<KeyValuePair<string, string>>();
+            var excludedNames = new List<string> { OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter };
             foreach (var key in collection.AllKeys)
             {
                 if (excludedNames != null && excludedNames.Contains(key)) continue;

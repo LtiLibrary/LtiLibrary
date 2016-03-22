@@ -18,7 +18,7 @@ namespace LtiLibrary.Core.OAuth
         /// <param name="url">The full url that needs to be signed including its non OAuth url parameters</param>
         /// <param name="parameters"></param>
         /// <returns>The signature base</returns>
-        public static string GenerateSignatureBase(string httpMethod, Uri url, NameValueCollection parameters)
+        internal static string GenerateSignatureBase(string httpMethod, Uri url, NameValueCollection parameters)
         {
             // https://tools.ietf.org/html/rfc5849#section-3.4.1.1
             var signatureBase = new StringBuilder();

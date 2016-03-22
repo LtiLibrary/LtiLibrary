@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using LtiLibrary.Core.Common;
@@ -45,7 +43,7 @@ namespace LtiLibrary.Core.OAuth
         /// </summary>
         /// <param name="httpMethod">The http method used</param>
         /// <param name="url">The full url to be signed</param>
-        /// <param name="parameters">The collection of parameters to sign</param>
+        /// <param name="parametersIn">The collection of parameters to sign</param>
         /// <param name="consumerSecret">The OAuth consumer secret used to generate the signature</param>
         /// <returns>A base64 string of the hash value</returns>
         public static string GenerateSignature(string httpMethod, Uri url, NameValueCollection parametersIn, string consumerSecret)

@@ -27,7 +27,7 @@ namespace LtiLibrary.Core.Common
         /// document to express specific identifiers in a compact manner.
         /// </summary>
         [JsonIgnore]
-        public IDictionary<string, string> Terms { get; private set; }
+        public IDictionary<string, string> Terms { get; }
 
         /// <summary>
         /// JSON-LD context created by JsonLdObjectConverter when serialized,

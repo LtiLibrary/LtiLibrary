@@ -60,7 +60,6 @@ namespace LtiLibrary.Core.Extensions
         /// as defined by https://tools.ietf.org/html/rfc5849#section-3.4.1.3.2
         /// </summary>
         /// <param name="collection">The list of name/value pairs to normalize.</param>
-        /// <param name="excludedNames">List of names that must be excluded from the signature base string.</param>
         /// <returns>A normalized string of parameters.</returns>
         public static string ToNormalizedString(this NameValueCollection collection)
         {

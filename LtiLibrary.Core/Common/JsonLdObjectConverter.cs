@@ -66,7 +66,7 @@ namespace LtiLibrary.Core.Common
                 o.AddFirst(new JProperty("@context", externalContextId));
             }
             // If there are only terms, add a JObject with each term as a JProperty
-            else if (externalContextId == null && (terms != null && terms.Count > 0))
+            else if (externalContextId == null && terms != null && terms.Count > 0)
             {
                 var termsObject = new JObject();
                 foreach (var key in terms.Keys)

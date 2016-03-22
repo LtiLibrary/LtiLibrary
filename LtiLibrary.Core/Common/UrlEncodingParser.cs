@@ -115,7 +115,7 @@ namespace LtiLibrary.Core.Common
                 string[] values = GetValues(key);
                 if (values != null)
                 {
-                    query = values.Aggregate(query, (current, val) => current + (key + "=" + Uri.EscapeUriString(val) + "&"));
+                    query = values.Aggregate(query, (current, val) => current + (key + "=") + Uri.EscapeUriString(val) + "&");
                 }
             }
             query = query.Trim('&');

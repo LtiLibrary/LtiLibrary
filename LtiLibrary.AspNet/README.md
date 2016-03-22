@@ -5,6 +5,10 @@ ASP.NET library for IMS LTI v1.0, v1.1.1, v1.2; LTI Outcomes Management v1.0
 
 ## Release Notes
 
+1.6.0
+- New: Fully implemented Outcomes 2.0 (Draft). See samples on GitHub.      
+- Fixed: Invalid signature in Authorization header if endpoint URL contained query parameters.
+
 1.5.0
 - Updated for Final versions of LTI v1.2 and LTI Outcomes Management v1.0
 

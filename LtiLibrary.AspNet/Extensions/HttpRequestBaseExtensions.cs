@@ -54,11 +54,6 @@ namespace LtiLibrary.AspNet.Extensions
             return OAuthUtility.GenerateSignature(request.HttpMethod, request.Url, request.UnvalidatedParameters(), consumerSecret);
         }
 
-        public static string GenerateOAuthSignatureBase(this HttpRequestBase request)
-        {
-            return OAuthUtility.GenerateSignatureBase(request.HttpMethod, request.Url, request.UnvalidatedParameters());
-        }
-
         public static LisContextType? GetLisContextType(this HttpRequestBase request, string key)
         {
             var stringValue = request.GetUnvalidatedString(key);

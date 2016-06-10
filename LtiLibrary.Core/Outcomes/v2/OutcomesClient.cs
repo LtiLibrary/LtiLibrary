@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
@@ -205,45 +207,41 @@ namespace LtiLibrary.Core.Outcomes.v2
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-                request.Method = "DELETE";
+                var request = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
                 if (!string.IsNullOrWhiteSpace(contentType))
                 {
-                    request.ContentType = contentType;
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
                 }
 
                 SignRequest(request, null, consumerKey, consumerSecret);
 
-                return await Task.Factory.StartNew(() =>
+                var outcomeResponse = new OutcomeResponse();
+                HttpResponseMessage response = null;
+                try
                 {
-                    var outcomeResponse = new OutcomeResponse();
-                    HttpWebResponse response = null;
-                    try
-                    {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
+                    response = await request.GetResponseAsync();
+                    outcomeResponse.StatusCode = response.StatusCode;
+                }
+                catch (HttpRequestException)
+                {
+                    outcomeResponse.StatusCode = response.StatusCode;
+                }
+                catch (Exception)
+                {
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
 #if DEBUG
-                    finally
+                finally
+                {
+                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    if (response != null)
                     {
-                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
-                        }
+                        outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
                     }
+                }
 #endif
-                    return outcomeResponse;
-                });
+                return outcomeResponse;
+
             }
             catch (Exception)
             {
@@ -256,50 +254,45 @@ namespace LtiLibrary.Core.Outcomes.v2
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-                request.Method = "GET";
-                request.Accept = contentType;
-                request.AllowAutoRedirect = true;
+                var request = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 
                 SignRequest(request, null, consumerKey, consumerSecret);
-
-                return await Task.Factory.StartNew(() =>
+                
+                var outcomeResponse = new OutcomeResponse<T>();
+                HttpResponseMessage response = null;
+                try
                 {
-                    var outcomeResponse = new OutcomeResponse<T>();
-                    HttpWebResponse response = null;
-                    try
+                    response = await request.GetResponseAsync(allowAutoRedirect: true);
+                    outcomeResponse.StatusCode = response.StatusCode;
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            outcomeResponse.Outcome = response.DeserializeObject<T>();
-                        }
+                        outcomeResponse.Outcome = response.DeserializeObject<T>();
                     }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
-                    finally
-                    {
+                }
+                catch (HttpRequestException)
+                {
+                    outcomeResponse.StatusCode = response.StatusCode;
+                }
+                catch (Exception)
+                {
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                finally
+                {
 #if DEBUG
-                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(
-                                outcomeResponse.Outcome == null
-                                ? null
-                                : outcomeResponse.Outcome.ToJsonString());
-                        }
-#endif
+                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    if (response != null)
+                    {
+                        outcomeResponse.HttpResponse = response.ToFormattedResponseString(
+                            outcomeResponse.Outcome == null
+                            ? null
+                            : outcomeResponse.Outcome.ToJsonString());
                     }
-                    return outcomeResponse;
-                });
+#endif
+                }
+                return outcomeResponse;
+
             }
             catch (Exception)
             {
@@ -336,55 +329,48 @@ namespace LtiLibrary.Core.Outcomes.v2
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-                request.Method = "POST";
-                request.ContentType = contentType;
+                var request = new HttpRequestMessage(HttpMethod.Post, serviceUrl);
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 var body = Encoding.UTF8.GetBytes(outcome.ToJsonLdString());
-                using (var stream = request.GetRequestStream())
-                {
-                    await stream.WriteAsync(body, 0, body.Length);
-                }
+                request.Content = new ByteArrayContent(body);
 
                 SignRequest(request, body, consumerKey, consumerSecret);
 
-                return await Task.Factory.StartNew(() =>
+                var outcomeResponse = new OutcomeResponse<T>();
+                HttpResponseMessage response = null;
+                try
                 {
-                    var outcomeResponse = new OutcomeResponse<T>();
-                    HttpWebResponse response = null;
-                    try
+                    response = await request.GetResponseAsync();
+                    outcomeResponse.StatusCode = response.StatusCode;
+                    if (response.StatusCode == HttpStatusCode.Created)
                     {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
-                        if (response.StatusCode == HttpStatusCode.Created)
-                        {
-                            outcomeResponse.Outcome = response.DeserializeObject<T>();
-                        }
+                        outcomeResponse.Outcome = response.DeserializeObject<T>();
                     }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
-                    finally
-                    {
+                }
+                catch (HttpRequestException)
+                {
+                    outcomeResponse.StatusCode = response.StatusCode;
+                }
+                catch (Exception)
+                {
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                finally
+                {
 #if DEBUG
-                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(
-                                outcomeResponse.Outcome == null
-                                ? null
-                                : outcomeResponse.Outcome.ToJsonString());
-                        }
-#endif
+                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    if (response != null)
+                    {
+                        outcomeResponse.HttpResponse = response.ToFormattedResponseString(
+                            outcomeResponse.Outcome == null
+                            ? null
+                            : outcomeResponse.Outcome.ToJsonString());
                     }
-                    return outcomeResponse;
-                });
+#endif
+                }
+                return outcomeResponse;
+
             }
             catch (Exception)
             {
@@ -400,48 +386,40 @@ namespace LtiLibrary.Core.Outcomes.v2
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(serviceUrl);
-                request.Method = "PUT";
-                request.ContentType = contentType;
+                var request = new HttpRequestMessage(HttpMethod.Put, serviceUrl);
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 var body = Encoding.UTF8.GetBytes(outcome.ToJsonLdString());
-                using (var stream = request.GetRequestStream())
-                {
-                    await stream.WriteAsync(body, 0, body.Length);
-                }
+                request.Content = new ByteArrayContent(body);
 
                 SignRequest(request, body, consumerKey, consumerSecret);
 
-                return await Task.Factory.StartNew(() =>
+                var outcomeResponse = new OutcomeResponse();
+                HttpResponseMessage response = null;
+                try
                 {
-                    var outcomeResponse = new OutcomeResponse();
-                    HttpWebResponse response = null;
-                    try
-                    {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
-                    finally
-                    {
+                    response = await request.GetResponseAsync();
+                    outcomeResponse.StatusCode = response.StatusCode;
+                }
+                catch (HttpRequestException)
+                {
+                    outcomeResponse.StatusCode = response.StatusCode;
+                }
+                catch (Exception)
+                {
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                finally
+                {
 #if DEBUG
-                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
-                        }
-#endif
+                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    if (response != null)
+                    {
+                        outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
                     }
-                    return outcomeResponse;
-                });
+#endif
+                }
+                return outcomeResponse;
             }
             catch (Exception)
             {
@@ -449,11 +427,11 @@ namespace LtiLibrary.Core.Outcomes.v2
             }
         }
 
-        private static void SignRequest(WebRequest request, byte[] body, string consumerKey, string consumerSecret)
+        private static void SignRequest(HttpRequestMessage request, byte[] body, string consumerKey, string consumerSecret)
         {
             if (body == null)
                 body = new byte[0];
-            if (body.Length > 0 && request.ContentLength != body.Length)
+            if (body.Length > 0 && request.Content.Headers.ContentLength != body.Length)
             {
                 throw new ArgumentException("body length does not match request.ContentLength", "body");
             }
@@ -478,7 +456,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             }
 
             // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(request.Method, request.RequestUri, parameters,
+            var signature = OAuthUtility.GenerateSignature(request.Method.Method.ToUpper(), request.RequestUri, parameters,
                 consumerSecret);
             parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
 
@@ -488,7 +466,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            request.Headers["Authorization"] = authorization.ToString(0, authorization.Length - 1);
+            request.Content.Headers.Add("Authorization", authorization.ToString(0, authorization.Length - 1));
         }
 
         #endregion

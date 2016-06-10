@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 
 namespace LtiLibrary.Core.Extensions
@@ -10,15 +11,15 @@ namespace LtiLibrary.Core.Extensions
         /// Create a string representation of the <see cref="HttpWebRequest"/> similar to Fiddler's.
         /// </summary>
         /// <remarks>Created for learning and debugging LTI.</remarks>
-        public static string ToFormattedRequestString(this HttpWebRequest request)
+        public static string ToFormattedRequestString(this HttpRequestMessage request)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1} HTTP/1.1\n", request.Method, request.RequestUri);
-            foreach (var key in request.Headers.AllKeys)
+            foreach (var header in request.Headers)
             {
-                sb.AppendFormat("{0}: {1}\n", key, string.Join(",", request.Headers.GetValues(key) ?? new string[]{}));
+                sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[]{}));
             }
-            if (request.ContentLength > 0)
+            if (request.Content.Headers.ContentLength > 0)
             {
                 sb.AppendLine();
                 using (var stream = request.GetRequestStream())

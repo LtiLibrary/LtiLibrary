@@ -9,6 +9,9 @@ using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace LtiLibrary.Core.Outcomes.v1
 {
@@ -60,7 +63,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse() as HttpWebResponse;
+                var webResponse = webRequest.GetResponse();
                 return ParseDeleteResultResponse(webResponse);
             }
             catch (Exception ex)
@@ -107,7 +110,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse() as HttpWebResponse;
+                var webResponse = webRequest.GetResponse();
                 return ParsePostResultResponse(webResponse);
             }
             catch (Exception ex)
@@ -153,7 +156,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             return imsxEnvelope != null;
         }
 
-        private static BasicResult ParseDeleteResultResponse(HttpWebResponse webResponse)
+        private static BasicResult ParseDeleteResultResponse(HttpResponseMessage webResponse)
         {
             if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
 
@@ -172,7 +175,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                 imsxHeader.imsx_statusInfo.imsx_description);
         }
 
-        private static BasicResult ParsePostResultResponse(HttpWebResponse webResponse)
+        private static BasicResult ParsePostResultResponse(HttpResponseMessage webResponse)
         {
             if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
 
@@ -216,7 +219,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse() as HttpWebResponse;
+                var webResponse = webRequest.GetResponse();
                 return ParseReadResultResponse(webResponse);
             }
             catch (Exception ex)
@@ -225,7 +228,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             }
         }
 
-        private static LisResult ParseReadResultResponse(WebResponse webResponse)
+        private static LisResult ParseReadResultResponse(HttpResponseMessage webResponse)
         {
             if (webResponse == null)
             {
@@ -262,12 +265,10 @@ namespace LtiLibrary.Core.Outcomes.v1
             return new LisResult { Score = null, IsValid = true };
         }
 
-        private static HttpWebRequest CreateLtiOutcomesRequest(imsx_POXEnvelopeType imsxEnvelope, string url, string consumerKey, string consumerSecret)
+        private static HttpRequestMessage CreateLtiOutcomesRequest(imsx_POXEnvelopeType imsxEnvelope, string url, string consumerKey, string consumerSecret)
         {
-            var webRequest = (HttpWebRequest) WebRequest.Create(url);
-            webRequest.Method = "POST";
-            webRequest.ContentType = "application/xml";
-
+            var webRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            
             var parameters = new NameValueCollection();
             parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
             parameters.AddParameter(OAuthConstants.NonceParameter, Guid.NewGuid().ToString());
@@ -285,7 +286,8 @@ namespace LtiLibrary.Core.Outcomes.v1
             {
                 ImsxRequestSerializer.Serialize(ms, imsxEnvelope);
                 ms.Position = 0;
-                ms.CopyTo(webRequest.GetRequestStream());
+                webRequest.Content = new StreamContent(ms);
+                webRequest.Content.Headers.ContentType = HttpContentType.Xml;
 
                 var hash = sha1.ComputeHash(ms.ToArray());
                 var hash64 = Convert.ToBase64String(hash);
@@ -293,7 +295,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             }
 
             // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(webRequest.Method, webRequest.RequestUri, parameters,
+            var signature = OAuthUtility.GenerateSignature(webRequest.Method.Method.ToUpper(), webRequest.RequestUri, parameters,
                 consumerSecret);
             parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
 
@@ -303,7 +305,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            webRequest.Headers["Authorization"] = authorization.ToString(0, authorization.Length - 1);
+            webRequest.Content.Headers.Add("Authorization", authorization.ToString(0, authorization.Length - 1));
 
             return webRequest;
         }

@@ -83,6 +83,7 @@
     <Compile Include="Common\LtiException.cs" />
     <Compile Include="ContentItems\ContentItem.cs" />
     <Compile Include="ContentItems\ContentItemPlacement.cs" />
+    <Compile Include="Extensions\PlatformSpecific.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Lti1\DocumentTarget.cs" />
     <Compile Include="Lti1\IBasicLaunchRequest.cs" />

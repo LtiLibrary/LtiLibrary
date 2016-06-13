@@ -448,7 +448,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
 
             // Calculate the body hash
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = PlatformSpecific.GetSha1Provider())
             {
                 var hash = sha1.ComputeHash(body);
                 var hash64 = Convert.ToBase64String(hash);
@@ -466,7 +466,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            request.Content.Headers.Add("Authorization", authorization.ToString(0, authorization.Length - 1));
+            request.Content.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
         }
 
         #endregion

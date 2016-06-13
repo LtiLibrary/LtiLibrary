@@ -39,7 +39,7 @@ namespace LtiLibrary.Core.Extensions
             // Upgrade the escaping to RFC 3986, if necessary.
             foreach (var s in UriRfc3986CharsToEscape)
             {
-                escaped.Replace(s, Uri.HexEscape(s[0]));
+                escaped.Replace(s, PlatformSpecific.HexEscape(s[0]));
             }
 
             // Return the fully-RFC3986-escaped string.

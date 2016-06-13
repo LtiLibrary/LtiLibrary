@@ -3,15 +3,12 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace LtiLibrary.Core.Outcomes
 {
@@ -95,7 +92,7 @@ namespace LtiLibrary.Core.Outcomes
                     {
                         language = LtiConstants.ScoreLanguage,
                         textString = score.HasValue
-                            ? score.Value.ToString(CultureInfo.CreateSpecificCulture(LtiConstants.ScoreLanguage))
+                            ? score.Value.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
                             : null
                     }
                 }
@@ -269,7 +266,7 @@ namespace LtiLibrary.Core.Outcomes
         private static HttpRequestMessage CreateLtiOutcomesRequest(imsx_POXEnvelopeType imsxEnvelope, string url, string consumerKey, string consumerSecret)
         {
             var webRequest = new HttpRequestMessage(HttpMethod.Post, url);
-            
+
             var parameters = new NameValueCollection();
             parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
             parameters.AddParameter(OAuthConstants.NonceParameter, Guid.NewGuid().ToString());
@@ -283,7 +280,7 @@ namespace LtiLibrary.Core.Outcomes
 
             // Calculate the body hash
             using (var ms = new MemoryStream())
-            using (var sha1 = new SHA1CryptoServiceProvider())
+            using (var sha1 = PlatformSpecific.GetSha1Provider())
             {
                 ImsxRequestSerializer.Serialize(ms, imsxEnvelope);
                 ms.Position = 0;
@@ -306,7 +303,7 @@ namespace LtiLibrary.Core.Outcomes
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            webRequest.Content.Headers.Add("Authorization", authorization.ToString(0, authorization.Length - 1));
+            webRequest.Content.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
 
             return webRequest;
         }

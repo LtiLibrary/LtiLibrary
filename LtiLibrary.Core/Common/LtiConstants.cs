@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using LtiLibrary.Core.Lti1;
+using System.Linq;
 
 namespace LtiLibrary.Core.Common
 {
@@ -11,12 +13,12 @@ namespace LtiLibrary.Core.Common
         // Build a lookup table of role URNs
         static LtiConstants()
         {
-            RoleUrns =  new Dictionary<string, Role>(StringComparer.InvariantCultureIgnoreCase);
+            RoleUrns =  new Dictionary<string, Role>(StringComparer.OrdinalIgnoreCase);
             var type = typeof(Role);
             foreach (Role role in Enum.GetValues(type))
             {
-                var memInfo = type.GetMember(role.ToString());
-                var attributes = memInfo[0].GetCustomAttributes(typeof(UrnAttribute), false);
+                var memInfo = type.GetTypeInfo().GetMember(role.ToString());
+                var attributes = memInfo[0].GetCustomAttributes(typeof(UrnAttribute), false).ToArray();
                 var urn = ((UrnAttribute)attributes[0]).Urn;
                 RoleUrns.Add(urn, role);
             }

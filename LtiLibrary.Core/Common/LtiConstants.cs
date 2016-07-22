@@ -104,7 +104,7 @@ namespace LtiLibrary.Core.Common
         public const string LineItemType = "LineItem";
         public const string LisResultType = "LISResult";
         public const string LisResultContainerType = "LisResultContainer";
-        public const string LtiLinkType = "LtiLink";
+        public const string LtiLinkType = "LtiLinkItem";
         public const string NumericLimitsType = "NumericLimits";
         public const string RestService = "RestService";
         public const string ToolConsumerProfileType = "ToolConsumerProfile";

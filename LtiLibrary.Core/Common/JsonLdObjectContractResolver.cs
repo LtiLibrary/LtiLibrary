@@ -9,6 +9,18 @@ namespace LtiLibrary.Core.Common
     /// </summary>
     public class JsonLdObjectContractResolver : DefaultContractResolver
     {
+        private bool _unsetConverter;
+
+        public JsonLdObjectContractResolver()
+         : this( false )
+        {
+        }
+
+        public JsonLdObjectContractResolver( bool unsetConverter )
+        {
+            _unsetConverter = unsetConverter;
+        }
+
         public override JsonContract ResolveContract(Type type)
         {
             if (typeof(JsonLdObject).IsAssignableFrom(type))
@@ -16,8 +28,11 @@ namespace LtiLibrary.Core.Common
                 var contract = base.ResolveContract(type);
                 
                 // Set the Convert to null to prevent recursive call to JsonLdObjectConverter
-                contract.Converter = null;
-
+                if ( _unsetConverter )
+                {
+                    contract.Converter = null;
+                }
+                
                 return contract;
             }
             return base.ResolveContract(type);

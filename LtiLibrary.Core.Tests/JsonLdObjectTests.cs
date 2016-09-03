@@ -23,7 +23,7 @@ namespace LtiLibrary.Core.Tests
                     }
                 }
             };
-            JsonAssertions.AssertSameObjectJson(parent, "ExternalAndInternalContexts");
+            JsonAssertions.AssertSameJsonLdObject( parent, "ExternalAndInternalContexts");
         }
 
         [Fact]
@@ -34,7 +34,18 @@ namespace LtiLibrary.Core.Tests
                 Id = new Uri("http://localhost/test/1"),
                 Name = "MyParent",
             };
-            JsonAssertions.AssertSameObjectJson(parent, "ExternalContextOnly");
+            JsonAssertions.AssertSameJsonLdObject( parent, "ExternalContextOnly");
+        }
+
+        [Fact]
+        public void ExternalContextOnly_ToJsonLdStringMatchesReferenceJson()
+        {
+           var parent = new Parent
+           {
+              Id = new Uri( "http://localhost/test/1" ),
+              Name = "MyParent",
+           };
+           JsonAssertions.AssertSameJsonLdObject( parent, "ExternalContextOnly" );
         }
 
         [Fact]
@@ -48,7 +59,7 @@ namespace LtiLibrary.Core.Tests
                     Name = "MyGrandChild"
                 }
             };
-            JsonAssertions.AssertSameObjectJson(child, "InternalContextOnly");
+            JsonAssertions.AssertSameJsonLdObject( child, "InternalContextOnly");
         }
     }
 

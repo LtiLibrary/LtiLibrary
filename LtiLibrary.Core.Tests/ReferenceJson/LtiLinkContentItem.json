@@ -1,5 +1,5 @@
 ﻿{
-  "@type" : "LtiLink",
+  "@type" : "LtiLinkItem",
   "mediaType" : "application/vnd.ims.lti.v1.ltilink",
   "icon" : {
     "@id" : "https://www.server.com/path/animage.png",

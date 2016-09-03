@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using LtiLibrary.Core.Common;
+using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.Tests.TestHelpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -20,7 +22,6 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
 
             public static void AssertSameObjectJson(object obj, string eventReferenceFile)
             {
-
                 var eventJsonString = JsonConvert.SerializeObject(obj, SerializerSettings);
                 var eventJObject = JObject.Parse(eventJsonString);
                 var refJsonString = TestUtils.LoadReferenceJsonFile(eventReferenceFile);
@@ -33,6 +34,22 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
 
                 Assert.Null(diff.NewValues);
                 Assert.Null(diff.OldValues);
+            }
+
+            public static void AssertSameJsonLdObject( JsonLdObject obj, string eventReferenceFile )
+            {
+               var eventJsonString = obj.ToJsonLdString();
+               var eventJObject = JObject.Parse( eventJsonString );
+               var refJsonString = TestUtils.LoadReferenceJsonFile( eventReferenceFile );
+               var refJObject = JObject.Parse( refJsonString );
+
+               var diff = ObjectDiffPatch.GenerateDiff( refJObject, eventJObject );
+
+               Trace.WriteLine( diff.NewValues );
+               Trace.WriteLine( diff.OldValues );
+
+               Assert.Null( diff.NewValues );
+               Assert.Null( diff.OldValues );
             }
         }
 }

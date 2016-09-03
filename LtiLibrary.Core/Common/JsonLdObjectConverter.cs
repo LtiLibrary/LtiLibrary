@@ -54,7 +54,7 @@ namespace LtiLibrary.Core.Common
 
             // Use a new contract resolver to parse the object so that this
             // version of WriteJson is not called recursively
-            serializer.ContractResolver = new JsonLdObjectContractResolver();
+            serializer.ContractResolver = new JsonLdObjectContractResolver(true);
             serializer.DateFormatHandling = DateFormatHandling.IsoDateFormat;
             serializer.NullValueHandling = NullValueHandling.Ignore;
             var o = JObject.FromObject(value, serializer);

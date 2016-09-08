@@ -28,8 +28,7 @@ namespace LtiLibrary.AspNet.Extensions
             {
                 LtiConstants.LtiMessageTypeParameter,
                 LtiConstants.LtiVersionParameter,
-                LtiConstants.ResourceLinkIdParameter,
-                LtiConstants.UserIdParameter
+                LtiConstants.ResourceLinkIdParameter
             };
 
         // These LTI Content Item parameters are required
@@ -39,8 +38,7 @@ namespace LtiLibrary.AspNet.Extensions
                 LtiConstants.AcceptPresentationDocumentTargetsParameter,
                 LtiConstants.ContentItemReturnUrlParameter,
                 LtiConstants.LtiMessageTypeParameter,
-                LtiConstants.LtiVersionParameter,
-                LtiConstants.UserIdParameter
+                LtiConstants.LtiVersionParameter
             };
 
         // These LTI Content Item parameters are required

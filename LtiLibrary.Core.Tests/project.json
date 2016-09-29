@@ -1,0 +1,28 @@
+{
+  "title": "LtiLibrary.Core.Tests",
+  "testRunner": "xunit",
+  "dependencies": {
+    "LtiLibrary.Core": "1.6-*",
+    "NodaTime": "2.0.0-alpha20160729",
+    "NodaTime.Serialization.JsonNet": "2.0.0-alpha20160729"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "xunit": "2.2.0-beta2-build3300",
+        "dotnet-test-xunit": "2.2.0-preview2-build1029"
+      },
+      "buildOptions": {
+        "define": [ "NetCore" ],
+        "copyToOutput": {
+          "include": "ReferenceJson/*.json"
+        }
+      }
+    }
+  },
+  "runtimes": {
+    "win10-x64": {}
+  }
+}

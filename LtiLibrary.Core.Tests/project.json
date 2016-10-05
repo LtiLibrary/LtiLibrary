@@ -1,5 +1,17 @@
 {
   "title": "LtiLibrary.Core.Tests",
+  "version": "1.6-*",
+  "authors": [ "andyfmiller.com" ],
+  "description": "Unit tests for LtiLibrary.Core.",
+  "copyright": "Copyright © 2016",
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/andyfmiller/LtiLibrary.git"
+    },
+    "licenseUrl": "https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE",
+    "summary": "Unit tests for LtiLibrary.Core."
+  },
   "testRunner": "xunit",
   "dependencies": {
     "LtiLibrary.Core": "1.6-*",

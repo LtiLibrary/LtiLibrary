@@ -179,3 +179,5 @@ pip-log.txt
 # Mac crap
 .DS_Store
 
+# .NET Core artifacts
+*.lock.json

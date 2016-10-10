@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace LtiLibrary.Core.Extensions
 {
@@ -44,7 +45,7 @@ namespace LtiLibrary.Core.Extensions
         /// <summary>
         /// Deserializes the JSON response to the specified .NET type.
         /// </summary>
-        public static T DeserializeObject<T>(this HttpWebResponse response)
+        public static T DeserializeObject<T>(this HttpResponseMessage response)
         {
             try
             {

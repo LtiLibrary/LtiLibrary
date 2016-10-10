@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Serialization;
+using System.Reflection;
 
 namespace LtiLibrary.Core.Common
 {

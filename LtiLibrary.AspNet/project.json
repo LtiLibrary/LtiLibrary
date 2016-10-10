@@ -1,0 +1,33 @@
+{
+  "title": "LtiLibrary.AspNet",
+  "version": "1.6-*",
+  "authors": [ "andyfmiller.com" ],
+  "description": "ASP.NET library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.",
+  "copyright": "Copyright © 2016",
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/andyfmiller/LtiLibrary.git"
+    },
+    "licenseUrl": "https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE",
+    "summary": "ASP.NET library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0."
+  },
+  "dependencies": {
+    "LtiLibrary.Core": "1.6-*",
+    "HtmlAgilityPack": "1.4.9.5",
+    "Microsoft.AspNet.WebApi.Client": "5.2.3",
+    "Microsoft.AspNet.WebApi.Core": "5.2.3"
+  },
+  "frameworks": {
+    "net45": {
+      "frameworkAssemblies": {
+        "System.Web": "4.0.0.0"
+      }
+    },
+    "net46": {
+      "frameworkAssemblies": {
+        "System.Web": "4.0.0.0"
+      }
+    }
+  }
+}

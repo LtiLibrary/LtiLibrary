@@ -8,9 +8,11 @@ namespace LtiLibrary.Core.Tests.TestHelpers
     {
         public static string LoadReferenceJsonFile(string refJsonName)
         {
+            #if NetCore
+            return File.ReadAllText("ReferenceJson/" + refJsonName + ".json");
+            #else
             var assembly = Assembly.GetExecutingAssembly();
             var resourceName = "LtiLibrary.Core.Tests.ReferenceJson." + refJsonName + ".json";
-
             string content;
 
             using (var stream = assembly.GetManifestResourceStream(resourceName))
@@ -24,6 +26,7 @@ namespace LtiLibrary.Core.Tests.TestHelpers
             }
 
             return content;
+            #endif
         }
     }
 }

@@ -281,7 +281,6 @@ namespace LtiLibrary.Core.Outcomes.v1
             parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
 
             // Calculate the body hash
-            //using (var ms = new MemoryStream())
             var ms = new MemoryStream();
             using (var sha1 = PlatformSpecific.GetSha1Provider())
             {

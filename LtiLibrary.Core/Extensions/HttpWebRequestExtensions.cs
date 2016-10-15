@@ -12,7 +12,7 @@ namespace LtiLibrary.Core.Extensions
         /// Create a string representation of the <see cref="HttpWebRequest"/> similar to Fiddler's.
         /// </summary>
         /// <remarks>Created for learning and debugging LTI.</remarks>
-        public static async Task<string> ToFormattedRequestString(this HttpRequestMessage request)
+        public static async Task<string> ToFormattedRequestStringAsync(this HttpRequestMessage request)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1} HTTP/1.1\n", request.Method, request.RequestUri);

@@ -233,7 +233,7 @@ namespace LtiLibrary.Core.Outcomes.v2
 #if DEBUG
                 finally
                 {
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
@@ -281,7 +281,7 @@ namespace LtiLibrary.Core.Outcomes.v2
                 finally
                 {
 #if DEBUG
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(
@@ -359,7 +359,7 @@ namespace LtiLibrary.Core.Outcomes.v2
                 finally
                 {
 #if DEBUG
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(
@@ -412,7 +412,7 @@ namespace LtiLibrary.Core.Outcomes.v2
                 finally
                 {
 #if DEBUG
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);

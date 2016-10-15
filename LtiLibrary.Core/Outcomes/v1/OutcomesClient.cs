@@ -305,7 +305,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            webRequest.Content.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
+            webRequest.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
 
             return webRequest;
         }

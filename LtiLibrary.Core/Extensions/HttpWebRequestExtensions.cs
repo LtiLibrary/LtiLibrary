@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LtiLibrary.Core.Extensions
 {
@@ -11,7 +12,7 @@ namespace LtiLibrary.Core.Extensions
         /// Create a string representation of the <see cref="HttpWebRequest"/> similar to Fiddler's.
         /// </summary>
         /// <remarks>Created for learning and debugging LTI.</remarks>
-        public static string ToFormattedRequestString(this HttpRequestMessage request)
+        public static async Task<string> ToFormattedRequestString(this HttpRequestMessage request)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1} HTTP/1.1\n", request.Method, request.RequestUri);
@@ -22,7 +23,7 @@ namespace LtiLibrary.Core.Extensions
             if (request.Content.Headers.ContentLength > 0)
             {
                 sb.AppendLine();
-                using (var stream = request.GetRequestStream())
+                using (var stream = await request.Content.ReadAsStreamAsync())
                 {
                     if (stream.CanRead)
                     {

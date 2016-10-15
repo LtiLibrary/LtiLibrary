@@ -45,8 +45,8 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
 
                var diff = ObjectDiffPatch.GenerateDiff( refJObject, eventJObject );
 
-               Debug.WriteLine( diff.NewValues );
-               Debug.WriteLine( diff.OldValues );
+               Trace.WriteLine( diff.NewValues );
+               Trace.WriteLine( diff.OldValues );
 
                Assert.Null( diff.NewValues );
                Assert.Null( diff.OldValues );

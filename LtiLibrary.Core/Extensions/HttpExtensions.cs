@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,14 +18,10 @@ namespace LtiLibrary.Core.Extensions
             }
         }
 
+        [Obsolete("Use GetResponseAsync instead.")]
         public static HttpResponseMessage GetResponse(this HttpRequestMessage message, bool allowAutoRedirect = false)
         {
             return GetResponseAsync(message, allowAutoRedirect).Result;
-        }
-
-        public static Stream GetRequestStream(this HttpRequestMessage message)
-        {
-            return message.Content.ReadAsStreamAsync().Result;
         }
 
         public static Stream GetResponseStream(this HttpResponseMessage message)

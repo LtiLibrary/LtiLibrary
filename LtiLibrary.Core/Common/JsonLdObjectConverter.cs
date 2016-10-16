@@ -64,8 +64,7 @@ namespace LtiLibrary.Core.Common
             // If there is only an external context, add a simple JProperty.
             if (externalContextId != null && (terms == null || terms.Count == 0))
             {
-                JToken context;
-                if (!o.TryGetValue("@context", StringComparison.InvariantCulture, out context))
+                if (!o.HasValues || o.First.Type != JTokenType.Property || !((JProperty) o.First).Name.Equals("@context"))
                 {
                     o.AddFirst(new JProperty("@context", externalContextId));
                 }

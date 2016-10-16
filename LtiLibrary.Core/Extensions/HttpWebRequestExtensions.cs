@@ -20,23 +20,10 @@ namespace LtiLibrary.Core.Extensions
             {
                 sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[]{}));
             }
-            if (request.Content.Headers.ContentLength > 0)
+            if (request.Content != null && request.Content.Headers.ContentLength > 0)
             {
                 sb.AppendLine();
-                using (var stream = await request.Content.ReadAsStreamAsync())
-                {
-                    if (stream.CanRead)
-                    {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            sb.Append(reader.ReadToEnd());
-                        }
-                        if (stream.CanSeek)
-                        {
-                            stream.Position = 0;
-                        }
-                    }
-                }
+                sb.Append(await request.Content.ReadAsStringAsync());
             }
             return sb.ToString();
         }

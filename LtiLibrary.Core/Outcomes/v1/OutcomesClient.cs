@@ -36,7 +36,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
         }
 
-        public static async Task<BasicResult> DeleteScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<BasicResult> DeleteScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -70,7 +70,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             }
         }
 
-        public static async Task<BasicResult> PostScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
+        public static async Task<BasicResult> PostScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -192,7 +192,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                 imsxHeader.imsx_statusInfo.imsx_description);
         }
 
-        public static async Task<LisResult> ReadScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<LisResult> ReadScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {

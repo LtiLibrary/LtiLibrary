@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
@@ -15,6 +16,11 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// String representation of the HttpWebResponse similar to Fiddler's.
         /// </summary>
         public string HttpResponse { get; set; }
+
+        /// <summary>
+        /// Exception in case of failed request.
+        /// </summary>
+        public Exception Exception { get; set; }
     }
 
     public class OutcomeResponse<T> : OutcomeResponse where T : class 

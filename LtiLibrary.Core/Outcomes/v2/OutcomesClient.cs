@@ -217,31 +217,33 @@ namespace LtiLibrary.Core.Outcomes.v2
                 return await Task.Factory.StartNew(() =>
                 {
                     var outcomeResponse = new OutcomeResponse();
-                    HttpWebResponse response = null;
                     try
                     {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
+                        using (var response = (HttpWebResponse)request.GetResponse())
+                        {
+                            outcomeResponse.StatusCode = response.StatusCode;
+#if DEBUG
+                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
+#endif
+                        }
                     }
                     catch (WebException ex)
                     {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
+                        outcomeResponse.StatusCode = ((HttpWebResponse)ex.Response).StatusCode;
+                        outcomeResponse.Exception = ex;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                        outcomeResponse.Exception = ex;
                     }
 #if DEBUG
                     finally
                     {
                         outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
-                        }
                     }
 #endif
+
                     return outcomeResponse;
                 });
             }
@@ -266,38 +268,40 @@ namespace LtiLibrary.Core.Outcomes.v2
                 return await Task.Factory.StartNew(() =>
                 {
                     var outcomeResponse = new OutcomeResponse<T>();
-                    HttpWebResponse response = null;
                     try
                     {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
-                        if (response.StatusCode == HttpStatusCode.OK)
+                        using (var response = (HttpWebResponse)request.GetResponse())
                         {
-                            outcomeResponse.Outcome = response.DeserializeObject<T>();
-                        }
-                    }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
-                    finally
-                    {
+                            outcomeResponse.StatusCode = response.StatusCode;
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                outcomeResponse.Outcome = response.DeserializeObject<T>();
+                            }
 #if DEBUG
-                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(
                                 outcomeResponse.Outcome == null
                                 ? null
                                 : outcomeResponse.Outcome.ToJsonString());
-                        }
 #endif
+                        }
                     }
+                    catch (WebException ex)
+                    {
+                        outcomeResponse.StatusCode = ((HttpWebResponse)ex.Response).StatusCode;
+                        outcomeResponse.Exception = ex;
+                    }
+                    catch (Exception ex)
+                    {
+                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                        outcomeResponse.Exception = ex;
+                    }
+#if DEBUG
+                    finally
+                    {
+                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    }
+#endif
+
                     return outcomeResponse;
                 });
             }
@@ -351,38 +355,39 @@ namespace LtiLibrary.Core.Outcomes.v2
                 return await Task.Factory.StartNew(() =>
                 {
                     var outcomeResponse = new OutcomeResponse<T>();
-                    HttpWebResponse response = null;
                     try
                     {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
-                        if (response.StatusCode == HttpStatusCode.Created)
+                        using (var response = (HttpWebResponse)request.GetResponse())
                         {
-                            outcomeResponse.Outcome = response.DeserializeObject<T>();
-                        }
-                    }
-                    catch (WebException ex)
-                    {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
-                    }
-                    catch (Exception)
-                    {
-                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                    }
-                    finally
-                    {
+                            outcomeResponse.StatusCode = response.StatusCode;
+                            if (response.StatusCode == HttpStatusCode.Created)
+                            {
+                                outcomeResponse.Outcome = response.DeserializeObject<T>();
+                            }
 #if DEBUG
-                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
                             outcomeResponse.HttpResponse = response.ToFormattedResponseString(
                                 outcomeResponse.Outcome == null
                                 ? null
                                 : outcomeResponse.Outcome.ToJsonString());
-                        }
 #endif
+                        }
                     }
+                    catch (WebException ex)
+                    {
+                        outcomeResponse.StatusCode = ((HttpWebResponse)ex.Response).StatusCode;
+                        outcomeResponse.Exception = ex;
+                    }
+                    catch (Exception ex)
+                    {
+                        outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                        outcomeResponse.Exception = ex;
+                    }
+#if DEBUG
+                    finally
+                    {
+                        outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    }
+#endif
                     return outcomeResponse;
                 });
             }
@@ -415,31 +420,32 @@ namespace LtiLibrary.Core.Outcomes.v2
                 return await Task.Factory.StartNew(() =>
                 {
                     var outcomeResponse = new OutcomeResponse();
-                    HttpWebResponse response = null;
                     try
                     {
-                        response = (HttpWebResponse)request.GetResponse();
-                        outcomeResponse.StatusCode = response.StatusCode;
+                        using (var response = (HttpWebResponse)request.GetResponse())
+                        {
+                            outcomeResponse.StatusCode = response.StatusCode;
+#if DEBUG
+                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
+#endif
+                        }
                     }
                     catch (WebException ex)
                     {
-                        response = (HttpWebResponse)ex.Response;
-                        outcomeResponse.StatusCode = response.StatusCode;
+                        outcomeResponse.StatusCode = ((HttpWebResponse)ex.Response).StatusCode;
+                        outcomeResponse.Exception = ex;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                        outcomeResponse.Exception = ex;
                     }
+#if DEBUG
                     finally
                     {
-#if DEBUG
                         outcomeResponse.HttpRequest = request.ToFormattedRequestString();
-                        if (response != null)
-                        {
-                            outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
-                        }
-#endif
                     }
+#endif
                     return outcomeResponse;
                 });
             }

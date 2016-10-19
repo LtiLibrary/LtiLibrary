@@ -60,8 +60,10 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse() as HttpWebResponse;
-                return ParseDeleteResultResponse(webResponse);
+                using (var webResponse = webRequest.GetResponse() as HttpWebResponse)
+                {
+                    return ParseDeleteResultResponse(webResponse);
+                }
             }
             catch (Exception ex)
             {
@@ -107,8 +109,10 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse() as HttpWebResponse;
-                return ParsePostResultResponse(webResponse);
+                using (var webResponse = webRequest.GetResponse() as HttpWebResponse)
+                {
+                    return ParsePostResultResponse(webResponse);
+                }
             }
             catch (Exception ex)
             {
@@ -216,8 +220,10 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse() as HttpWebResponse;
-                return ParseReadResultResponse(webResponse);
+                using (var webResponse = webRequest.GetResponse() as HttpWebResponse)
+                {
+                    return ParseReadResultResponse(webResponse);
+                }
             }
             catch (Exception ex)
             {

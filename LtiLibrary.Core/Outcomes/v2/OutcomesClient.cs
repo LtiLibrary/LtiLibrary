@@ -208,10 +208,6 @@ namespace LtiLibrary.Core.Outcomes.v2
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
-                if (!string.IsNullOrWhiteSpace(contentType))
-                {
-                    request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
-                }
 
                 SignRequest(request, null, consumerKey, consumerSecret);
 
@@ -219,6 +215,11 @@ namespace LtiLibrary.Core.Outcomes.v2
                 HttpResponseMessage response = null;
                 try
                 {
+#if DEBUG
+                    // Capture the request in human readable form for debugging
+                    // and inspection while learning
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
+#endif
                     response = await request.GetResponseAsync();
                     outcomeResponse.StatusCode = response.StatusCode;
                 }
@@ -233,7 +234,8 @@ namespace LtiLibrary.Core.Outcomes.v2
 #if DEBUG
                 finally
                 {
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    // Capture the response in human readable form for debugging
+                    // and inspection while learning
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
@@ -263,6 +265,11 @@ namespace LtiLibrary.Core.Outcomes.v2
                 HttpResponseMessage response = null;
                 try
                 {
+#if DEBUG
+                    // Capture the request in human readable form for debugging
+                    // and inspection while learning
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
+#endif
                     response = await request.GetResponseAsync(allowAutoRedirect: true);
                     outcomeResponse.StatusCode = response.StatusCode;
                     if (response.StatusCode == HttpStatusCode.OK)
@@ -281,7 +288,8 @@ namespace LtiLibrary.Core.Outcomes.v2
                 finally
                 {
 #if DEBUG
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    // Capture the response in human readable form for debugging
+                    // and inspection while learning
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(
@@ -330,10 +338,10 @@ namespace LtiLibrary.Core.Outcomes.v2
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Post, serviceUrl);
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 var body = Encoding.UTF8.GetBytes(outcome.ToJsonLdString());
                 request.Content = new ByteArrayContent(body);
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 SignRequest(request, body, consumerKey, consumerSecret);
 
@@ -341,6 +349,11 @@ namespace LtiLibrary.Core.Outcomes.v2
                 HttpResponseMessage response = null;
                 try
                 {
+#if DEBUG
+                    // Capture the request in human readable form for debugging
+                    // and inspection while learning
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
+#endif
                     response = await request.GetResponseAsync();
                     outcomeResponse.StatusCode = response.StatusCode;
                     if (response.StatusCode == HttpStatusCode.Created)
@@ -359,7 +372,8 @@ namespace LtiLibrary.Core.Outcomes.v2
                 finally
                 {
 #if DEBUG
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    // Capture the response in human readable form for debugging
+                    // and inspection while learning
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(
@@ -387,10 +401,10 @@ namespace LtiLibrary.Core.Outcomes.v2
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Put, serviceUrl);
-                request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 var body = Encoding.UTF8.GetBytes(outcome.ToJsonLdString());
                 request.Content = new ByteArrayContent(body);
+                request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 SignRequest(request, body, consumerKey, consumerSecret);
 
@@ -398,6 +412,11 @@ namespace LtiLibrary.Core.Outcomes.v2
                 HttpResponseMessage response = null;
                 try
                 {
+#if DEBUG
+                    // Capture the request in human readable form for debugging
+                    // and inspection while learning
+                    outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
+#endif
                     response = await request.GetResponseAsync();
                     outcomeResponse.StatusCode = response.StatusCode;
                 }
@@ -412,7 +431,8 @@ namespace LtiLibrary.Core.Outcomes.v2
                 finally
                 {
 #if DEBUG
-                    outcomeResponse.HttpRequest = request.ToFormattedRequestString();
+                    // Capture the response in human readable form for debugging
+                    // and inspection while learning
                     if (response != null)
                     {
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
@@ -466,7 +486,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            request.Content.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
+            request.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
         }
 
         #endregion

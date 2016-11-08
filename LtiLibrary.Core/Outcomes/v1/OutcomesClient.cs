@@ -3,14 +3,12 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Xml.Serialization;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace LtiLibrary.Core.Outcomes.v1
@@ -38,7 +36,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
         }
 
-        public static BasicResult DeleteScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<BasicResult> DeleteScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -63,7 +61,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse();
+                var webResponse = await webRequest.GetResponseAsync();
                 return ParseDeleteResultResponse(webResponse);
             }
             catch (Exception ex)
@@ -72,7 +70,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             }
         }
 
-        public static BasicResult PostScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
+        public static async Task<BasicResult> PostScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -110,7 +108,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse();
+                var webResponse = await webRequest.GetResponseAsync();
                 return ParsePostResultResponse(webResponse);
             }
             catch (Exception ex)
@@ -194,7 +192,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                 imsxHeader.imsx_statusInfo.imsx_description);
         }
 
-        public static LisResult ReadScore(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<LisResult> ReadScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
             {
@@ -219,7 +217,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = webRequest.GetResponse();
+                var webResponse = await webRequest.GetResponseAsync();
                 return ParseReadResultResponse(webResponse);
             }
             catch (Exception ex)
@@ -281,7 +279,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
 
             // Calculate the body hash
-            using (var ms = new MemoryStream())
+            var ms = new MemoryStream();
             using (var sha1 = PlatformSpecific.GetSha1Provider())
             {
                 ImsxRequestSerializer.Serialize(ms, imsxEnvelope);
@@ -305,7 +303,7 @@ namespace LtiLibrary.Core.Outcomes.v1
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            webRequest.Content.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
+            webRequest.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
 
             return webRequest;
         }

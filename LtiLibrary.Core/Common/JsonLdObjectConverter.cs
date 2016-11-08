@@ -64,7 +64,11 @@ namespace LtiLibrary.Core.Common
             // If there is only an external context, add a simple JProperty.
             if (externalContextId != null && (terms == null || terms.Count == 0))
             {
-                o.AddFirst(new JProperty("@context", externalContextId));
+                if (!o.HasValues || o.First.Type != JTokenType.Property || !((JProperty) o.First).Name.Equals("@context"))
+                {
+                    o.AddFirst(new JProperty("@context", externalContextId));
+                }
+                o["@context"] = externalContextId;
             }
             // If there are only terms, add a JObject with each term as a JProperty
             else if (externalContextId == null && terms != null && terms.Count > 0)

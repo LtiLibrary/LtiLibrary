@@ -5,5 +5,5 @@
 [assembly: AssemblyCompany("andyfmiller.com")]
 [assembly: AssemblyProduct("LtiLibrary")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
-[assembly: AssemblyVersion("1.6.*")]
-[assembly: AssemblyInformationalVersion("1.6.0")]
+[assembly: AssemblyVersion("1.7.*")]
+[assembly: AssemblyInformationalVersion("1.7.0")]

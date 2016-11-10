@@ -2470,12 +2470,4 @@ namespace LtiLibrary.Core.Lti1
 
         #endregion
     }
-
-    [Obsolete("Use LtiLibrary.AspNet.Lti1.LtiRequestViewModel")]
-    public class LtiRequestViewModel
-    {
-        public string Action { get; set; }
-        public NameValueCollection Fields { get; set; }
-        public string Signature { get; set; }
-    }
 }

@@ -17,7 +17,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// The unique ID for the activity as used by the tool provider.
         /// </summary>
-        [JsonProperty("activity_id")]
+        [JsonProperty("activityId")]
         public string ActivityId { get; set; }
     }
 }

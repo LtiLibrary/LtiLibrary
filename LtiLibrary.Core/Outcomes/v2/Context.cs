@@ -17,7 +17,7 @@ namespace LtiLibrary.Core.Outcomes.v2
         /// <summary>
         /// A unique string provided by the tool consumer to identify the context (as passed in the context_id launch parameter).
         /// </summary>
-        [JsonProperty("context_id")]
+        [JsonProperty("contextId")]
         public string ContextId { get; set; }
 
         /// <summary>

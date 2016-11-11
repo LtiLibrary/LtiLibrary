@@ -246,8 +246,8 @@ namespace LtiLibrary.Core.Outcomes.v2
                         // Capture the response in human readable form for debugging
                         // and inspection while learning
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
-                    }
 #endif
+                    }
                 }
                 catch (HttpRequestException ex)
                 {

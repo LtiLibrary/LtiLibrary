@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using LtiLibrary.Core.Common;
@@ -208,11 +207,11 @@ namespace LtiLibrary.Core.Outcomes.v2
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
+                // TODO: Why isn't contentType specified here?
 
                 SignRequest(request, null, consumerKey, consumerSecret);
 
                 var outcomeResponse = new OutcomeResponse();
-                HttpResponseMessage response = null;
                 try
                 {
 #if DEBUG
@@ -220,34 +219,36 @@ namespace LtiLibrary.Core.Outcomes.v2
                     // and inspection while learning
                     outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
 #endif
-                    response = await request.GetResponseAsync();
-                    outcomeResponse.StatusCode = response.StatusCode;
-                }
-                catch (HttpRequestException)
-                {
-                    outcomeResponse.StatusCode = response.StatusCode;
-                }
-                catch (Exception)
-                {
-                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                }
-#if DEBUG
-                finally
-                {
-                    // Capture the response in human readable form for debugging
-                    // and inspection while learning
-                    if (response != null)
+                    using (var response = await request.GetResponseAsync())
                     {
+                        outcomeResponse.StatusCode = response.StatusCode;
+#if DEBUG
+                        // Capture the response in human readable form for debugging
+                        // and inspection while learning
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
                     }
-                }
 #endif
+                }
+                catch (HttpRequestException ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
+                }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
                 return outcomeResponse;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new OutcomeResponse { StatusCode = HttpStatusCode.InternalServerError };
+                return new OutcomeResponse
+                {
+                    Exception = ex,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
             }
         }
 
@@ -262,7 +263,6 @@ namespace LtiLibrary.Core.Outcomes.v2
                 SignRequest(request, null, consumerKey, consumerSecret);
                 
                 var outcomeResponse = new OutcomeResponse<T>();
-                HttpResponseMessage response = null;
                 try
                 {
 #if DEBUG
@@ -270,41 +270,41 @@ namespace LtiLibrary.Core.Outcomes.v2
                     // and inspection while learning
                     outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
 #endif
-                    response = await request.GetResponseAsync(allowAutoRedirect: true);
-                    outcomeResponse.StatusCode = response.StatusCode;
-                    if (response.StatusCode == HttpStatusCode.OK)
+                    using (var response = await request.GetResponseAsync(allowAutoRedirect: true))
                     {
-                        outcomeResponse.Outcome = response.DeserializeObject<T>();
-                    }
-                }
-                catch (HttpRequestException)
-                {
-                    outcomeResponse.StatusCode = response.StatusCode;
-                }
-                catch (Exception)
-                {
-                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                }
-                finally
-                {
+                        outcomeResponse.StatusCode = response.StatusCode;
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            outcomeResponse.Outcome = response.DeserializeObject<T>();
+                        }
 #if DEBUG
-                    // Capture the response in human readable form for debugging
-                    // and inspection while learning
-                    if (response != null)
-                    {
+                        // Capture the response in human readable form for debugging
+                        // and inspection while learning
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(
-                            outcomeResponse.Outcome == null
-                            ? null
-                            : outcomeResponse.Outcome.ToJsonString());
-                    }
+                            outcomeResponse.Outcome?.ToJsonString());
 #endif
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
+                }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
                 }
                 return outcomeResponse;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new OutcomeResponse<T> { StatusCode = HttpStatusCode.InternalServerError };
+                return new OutcomeResponse<T>
+                {
+                    Exception = ex,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
             }
         }
 
@@ -346,7 +346,6 @@ namespace LtiLibrary.Core.Outcomes.v2
                 SignRequest(request, body, consumerKey, consumerSecret);
 
                 var outcomeResponse = new OutcomeResponse<T>();
-                HttpResponseMessage response = null;
                 try
                 {
 #if DEBUG
@@ -354,42 +353,39 @@ namespace LtiLibrary.Core.Outcomes.v2
                     // and inspection while learning
                     outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
 #endif
-                    response = await request.GetResponseAsync();
-                    outcomeResponse.StatusCode = response.StatusCode;
-                    if (response.StatusCode == HttpStatusCode.Created)
+                    using (var response = await request.GetResponseAsync())
                     {
-                        outcomeResponse.Outcome = response.DeserializeObject<T>();
-                    }
-                }
-                catch (HttpRequestException)
-                {
-                    outcomeResponse.StatusCode = response.StatusCode;
-                }
-                catch (Exception)
-                {
-                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                }
-                finally
-                {
+                        outcomeResponse.StatusCode = response.StatusCode;
+                        if (response.StatusCode == HttpStatusCode.Created)
+                        {
+                            outcomeResponse.Outcome = response.DeserializeObject<T>();
+                        }
 #if DEBUG
-                    // Capture the response in human readable form for debugging
-                    // and inspection while learning
-                    if (response != null)
-                    {
+                        // Capture the response in human readable form for debugging
+                        // and inspection while learning
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(
-                            outcomeResponse.Outcome == null
-                            ? null
-                            : outcomeResponse.Outcome.ToJsonString());
-                    }
+                            outcomeResponse.Outcome?.ToJsonString());
 #endif
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
+                }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
                 }
                 return outcomeResponse;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new OutcomeResponse<T>
                 {
+                    Exception = ex,
                     StatusCode = HttpStatusCode.InternalServerError
                 };
             }
@@ -409,7 +405,6 @@ namespace LtiLibrary.Core.Outcomes.v2
                 SignRequest(request, body, consumerKey, consumerSecret);
 
                 var outcomeResponse = new OutcomeResponse();
-                HttpResponseMessage response = null;
                 try
                 {
 #if DEBUG
@@ -417,33 +412,35 @@ namespace LtiLibrary.Core.Outcomes.v2
                     // and inspection while learning
                     outcomeResponse.HttpRequest = await request.ToFormattedRequestStringAsync();
 #endif
-                    response = await request.GetResponseAsync();
-                    outcomeResponse.StatusCode = response.StatusCode;
-                }
-                catch (HttpRequestException)
-                {
-                    outcomeResponse.StatusCode = response.StatusCode;
-                }
-                catch (Exception)
-                {
-                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
-                }
-                finally
-                {
-#if DEBUG
-                    // Capture the response in human readable form for debugging
-                    // and inspection while learning
-                    if (response != null)
+                    using (var response = await request.GetResponseAsync())
                     {
+                        outcomeResponse.StatusCode = response.StatusCode;
+#if DEBUG
+                        // Capture the response in human readable form for debugging
+                        // and inspection while learning
                         outcomeResponse.HttpResponse = response.ToFormattedResponseString(null);
-                    }
 #endif
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
+                }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
                 }
                 return outcomeResponse;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return new OutcomeResponse { StatusCode = HttpStatusCode.InternalServerError };
+                return new OutcomeResponse
+                {
+                    Exception = ex,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
             }
         }
 

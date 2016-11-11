@@ -13,7 +13,7 @@ namespace LtiLibrary.AspNet.Tests
         {
             var controller = new LineItemsController();
             ControllerSetup.RegisterContext(controller, "LineItems");
-            var result = controller.Get(LineItemsController.LineItemId);
+            var result = controller.GetAsync(LineItemsController.LineItemId);
             Assert.Equal(HttpStatusCode.NotFound, result.Result.StatusCode);
         }
 
@@ -27,7 +27,7 @@ namespace LtiLibrary.AspNet.Tests
                 LineItemOf = new Context {  ContextId = LineItemsController.ContextId },
                 ReportingMethod = "res:Result"
             };
-            var result = controller.Post(LineItemsController.ContextId, lineitem);
+            var result = controller.PostAsync(LineItemsController.ContextId, lineitem);
             Assert.Equal(HttpStatusCode.Created, result.Result.StatusCode);
             var lineItem = JsonConvert.DeserializeObject<LineItem>(result.Result.Content.ReadAsStringAsync().Result);
             Assert.NotNull(lineItem);
@@ -39,7 +39,7 @@ namespace LtiLibrary.AspNet.Tests
         {
             var controller = new LineItemsController();
             ControllerSetup.RegisterContext(controller, "LineItems");
-            var result = controller.Get();
+            var result = controller.GetAsync();
             Assert.Equal(HttpStatusCode.NotFound, result.Result.StatusCode);
         }
     }

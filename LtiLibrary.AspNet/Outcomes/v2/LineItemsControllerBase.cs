@@ -61,7 +61,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Delete a particular LineItem instance.
         /// </summary>
         [HttpDelete]
-        public async Task<HttpResponseMessage> Delete(string contextId, string id)
+        public async Task<HttpResponseMessage> DeleteAsync(string contextId, string id)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Get a paginated list of LineItem resources from a LineItemContainer, or get a representation of a particular LineItem instance.
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(string contextId = null, string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
+        public async Task<HttpResponseMessage> GetAsync(string contextId = null, string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Create a new LineItem instance.
         /// </summary>
         [HttpPost]
-        public async Task<HttpResponseMessage> Post(string contextId, LineItem lineItem)
+        public async Task<HttpResponseMessage> PostAsync(string contextId, LineItem lineItem)
         {
             try
             {
@@ -164,7 +164,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Update a particular LineItem instance.
         /// </summary>
         [HttpPut]
-        public async Task<HttpResponseMessage> Put(LineItem lineItem)
+        public async Task<HttpResponseMessage> PutAsync(LineItem lineItem)
         {
             try
             {

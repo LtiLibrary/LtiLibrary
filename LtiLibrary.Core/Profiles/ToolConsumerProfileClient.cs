@@ -14,7 +14,7 @@ namespace LtiLibrary.Core.Profiles
         /// <param name="serviceUrl">The full URL of the ToolConsumerProfile service.</param>
         /// <returns>A <see cref="ToolConsumerProfileResponse"/> which includes both the HTTP status code
         /// and the <see cref="ToolConsumerProfile"/> if the HTTP status is a success code.</returns>
-        public static async Task<ToolConsumerProfileResponse> GetToolConsumerProfile(string serviceUrl)
+        public static async Task<ToolConsumerProfileResponse> GetToolConsumerProfileAsync(string serviceUrl)
         {
             var profileResponse = new ToolConsumerProfileResponse();
             using (var client = new HttpClient())

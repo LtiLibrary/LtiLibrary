@@ -32,6 +32,19 @@ namespace LtiLibrary.Core.Outcomes.v2
         }
 
         /// <summary>
+        /// Delete a particular LineItem with results.
+        /// </summary>
+        /// <param name="serviceUrl">The LineItem REST endpoint.</param>
+        /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <returns>No content is returned.</returns>
+        public static async Task<OutcomeResponse> DeleteLineItemResultsAsync(string serviceUrl, string consumerKey,
+            string consumerSecret)
+        {
+            return await DeleteOutcomeAsync(serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
+        }
+
+        /// <summary>
         /// Get a particular LineItem instance without results from the server.
         /// </summary>
         /// <param name="serviceUrl">The LineItem REST endpoint.</param>
@@ -207,6 +220,14 @@ namespace LtiLibrary.Core.Outcomes.v2
             try
             {
                 var request = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
+                // Content-Type header is not required. If not specified, all representations of
+                // the resource will be deleted.
+                // See https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html#DELETE
+                if (!string.IsNullOrWhiteSpace(contentType))
+                {
+                    request.Content = new StringContent(string.Empty);
+                    request.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+                }
 
                 SignRequest(request, null, consumerKey, consumerSecret);
 

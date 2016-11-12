@@ -93,9 +93,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     resultScore = new TextType
                     {
                         language = LtiConstants.ScoreLanguage,
-                        textString = score.HasValue
-                            ? score.Value.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
-                            : null
+                        textString = score?.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
                     }
                 }
             };
@@ -256,7 +254,7 @@ namespace LtiLibrary.Core.Outcomes.v1
 
             var imsxBody = (readResultResponse) imsxEnvelope.imsx_POXBody.Item;
 
-            if (imsxBody == null || imsxBody.result == null)
+            if (imsxBody?.result == null)
             {
                 return new LisResult { Score = null, IsValid = true };
             }

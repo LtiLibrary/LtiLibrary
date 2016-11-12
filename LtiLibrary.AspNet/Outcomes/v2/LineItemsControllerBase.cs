@@ -25,7 +25,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
             OnGetLineItems = context => { throw new NotImplementedException(); };
             OnPostLineItem = context => { throw new NotImplementedException(); };
             OnPutLineItem = context => { throw new NotImplementedException(); };
-            OnPutLineItemWithResults = Context => { throw new NotImplementedException(); };
+            OnPutLineItemWithResults = context => { throw new NotImplementedException(); };
         }
 
         /// <summary>

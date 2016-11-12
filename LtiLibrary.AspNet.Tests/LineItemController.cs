@@ -18,7 +18,7 @@ namespace LtiLibrary.AspNet.Tests
         {
             OnDeleteLineItem = context =>
             {
-                if (string.IsNullOrEmpty(context.Id) || _lineItem == null || !_lineItem.Id.Equals(context.Id))
+                if (string.IsNullOrEmpty(context.Id) || _lineItem == null || !_lineItem.Id.ToString().Equals(context.Id))
                 {
                     context.StatusCode = HttpStatusCode.NotFound;
                 }
@@ -32,7 +32,7 @@ namespace LtiLibrary.AspNet.Tests
 
             OnGetLineItem = context =>
             {
-                if (string.IsNullOrEmpty(context.Id) || _lineItem == null || !_lineItem.Id.Equals(context.Id))
+                if (string.IsNullOrEmpty(context.Id) || _lineItem == null || !_lineItem.Id.ToString().Equals(context.Id))
                 {
                     context.StatusCode = HttpStatusCode.NotFound;
                 }

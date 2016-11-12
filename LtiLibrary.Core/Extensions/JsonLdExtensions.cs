@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
 using System.Net.Http;

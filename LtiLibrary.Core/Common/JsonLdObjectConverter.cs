@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+#if NetCore
+using System.Reflection;
+#endif
 
 namespace LtiLibrary.Core.Common
 {
@@ -18,15 +20,9 @@ namespace LtiLibrary.Core.Common
         private static readonly Type JsonLdObjectType = typeof(IJsonLdObject);
         private static readonly Type JsonLdObjectArrayType = typeof (IEnumerable<IJsonLdObject>);
 
-        public override bool CanRead
-        {
-            get { return false; }
-        }
+        public override bool CanRead => false;
 
-        public override bool CanWrite
-        {
-            get { return true; }
-        }
+        public override bool CanWrite => true;
 
         /// <summary>
         /// Writes the JSON representation of the object.
@@ -146,7 +142,7 @@ namespace LtiLibrary.Core.Common
         private static IDictionary<string, string> GetTerms(IJsonLdObject obj)
         {
             var terms = new Dictionary<string, string>();
-            if (obj == null || obj.Terms == null) return terms;
+            if (obj?.Terms == null) return terms;
 
             foreach (var key in obj.Terms.Keys)
             {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using LtiLibrary.Core.Outcomes.v2;
 using Newtonsoft.Json;
 using Xunit;

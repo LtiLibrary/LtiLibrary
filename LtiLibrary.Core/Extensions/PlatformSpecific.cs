@@ -62,17 +62,4 @@ namespace System
     }
 }
 
-namespace System.ComponentModel
-{
-    /// <summary>
-    /// Empty attribute for backward compatability. TODO: Seems like since RC3 this class will be included into official nuget package.
-    /// </summary>
-    public class DesignerCategoryAttribute : Attribute
-    {
-        public DesignerCategoryAttribute(string name)
-        {
-        }
-    }
-}
-
 #endif

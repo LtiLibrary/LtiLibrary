@@ -82,6 +82,7 @@
     <Compile Include="ContentItems\ILtiLink.cs" />
     <Compile Include="Lti1\ILtiRequest.cs" />
     <Compile Include="ContentItems\Image.cs" />
+    <Compile Include="Lti1\Inspector.cs" />
     <Compile Include="Lti2\ProductDescription.cs" />
     <Compile Include="Lti2\ProductTechnicalDescription.cs" />
     <Compile Include="Lti2\ServiceProviderName.cs" />

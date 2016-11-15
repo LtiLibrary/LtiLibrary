@@ -13,7 +13,9 @@
     /// </summary>
     public static class PlatformSpecific
     {
+#if NetCore
         private static readonly char[] HexUpperChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+#endif
 
         /// <summary>
         /// Converts a specified character into its hexadecimal equivalent.
@@ -59,19 +61,6 @@ namespace System
     /// </summary>
     public class SerializableAttribute : Attribute
     {
-    }
-}
-
-namespace System.ComponentModel
-{
-    /// <summary>
-    /// Empty attribute for backward compatability. TODO: Seems like since RC3 this class will be included into official nuget package.
-    /// </summary>
-    public class DesignerCategoryAttribute : Attribute
-    {
-        public DesignerCategoryAttribute(string name)
-        {
-        }
     }
 }
 

@@ -49,7 +49,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Delete a particular LisResult instance.
         /// </summary>
         [HttpDelete]
-        public async Task<HttpResponseMessage> Delete(string contextId, string lineItemId, string id)
+        public async Task<HttpResponseMessage> DeleteAsync(string contextId, string lineItemId, string id)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// <param name="id">The LineItem id.</param>
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> Get(string contextId = null, string lineItemId = null, string id = null, int? limit = null, string firstPage = null, int? p = null)
+        public async Task<HttpResponseMessage> GetAsync(string contextId = null, string lineItemId = null, string id = null, int? limit = null, string firstPage = null, int? p = null)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Create a new LisResult instance.
         /// </summary>
         [HttpPost]
-        public async Task<HttpResponseMessage> Post(string contextId, string lineItemId, LisResult result)
+        public async Task<HttpResponseMessage> PostAsync(string contextId, string lineItemId, LisResult result)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Update a particular LisResult instance.
         /// </summary>
         [HttpPut]
-        public async Task<HttpResponseMessage> Put(string contextId, string lineItemId, string id, LisResult result)
+        public async Task<HttpResponseMessage> PutAsync(string contextId, string lineItemId, string id, LisResult result)
         {
             try
             {

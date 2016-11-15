@@ -44,23 +44,9 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=4.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -105,9 +91,6 @@
     <Compile Include="Lti2\VendorDescription.cs" />
     <Compile Include="Lti2\ProductName.cs" />
     <Compile Include="Lti2\VendorName.cs" />
-    <Compile Include="Outcomes\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
-      <DependentUpon>OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Outcomes\v1\IOutcomesManagementRequest.cs" />
     <Compile Include="Outcomes\v1\LisResult.cs" />
     <Compile Include="Outcomes\v1\OutcomesClient.cs" />
@@ -116,7 +99,6 @@
     </Compile>
     <Compile Include="Outcomes\v2\Activity.cs" />
     <Compile Include="Outcomes\v2\Context.cs" />
-    <Compile Include="Outcomes\IOutcomesManagementRequest.cs" />
     <Compile Include="OAuth\IOAuthRequest.cs" />
     <Compile Include="Lti1\LisContextType.cs" />
     <Compile Include="Common\LtiConstants.cs" />
@@ -143,8 +125,6 @@
     <Compile Include="Outcomes\v2\LineItemMembershipSubject.cs" />
     <Compile Include="Outcomes\v2\ResultContainer.cs" />
     <Compile Include="Outcomes\v2\ResultContainerPage.cs" />
-    <Compile Include="Outcomes\LtiOutcomesHelper.cs" />
-    <Compile Include="Outcomes\LisResult.cs" />
     <Compile Include="Outcomes\v2\OutcomeResponse.cs" />
     <Compile Include="Outcomes\v2\OutcomesClient.cs" />
     <Compile Include="Outcomes\v2\NumericLimits.cs" />
@@ -158,9 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE" />
-    <None Include="Outcomes\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Outcomes\v1\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
       <SubType>Designer</SubType>
     </None>

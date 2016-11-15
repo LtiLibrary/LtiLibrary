@@ -1,10 +1,16 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
     public class OutcomeResponse
     {
         public HttpStatusCode StatusCode { get; set; }
+
+        /// <summary>
+        /// Exception is case of failed request.
+        /// </summary>
+        public Exception Exception { get; set; }
 
         /// <summary>
         /// String representation of the HttpWebRequest similar to Fiddler's.

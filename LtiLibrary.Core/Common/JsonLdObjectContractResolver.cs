@@ -1,6 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json.Serialization;
+#if NetCore
 using System.Reflection;
+#endif
 
 namespace LtiLibrary.Core.Common
 {
@@ -10,7 +12,7 @@ namespace LtiLibrary.Core.Common
     /// </summary>
     public class JsonLdObjectContractResolver : DefaultContractResolver
     {
-        private bool _unsetConverter;
+        private readonly bool _unsetConverter;
 
         public JsonLdObjectContractResolver()
          : this( false )

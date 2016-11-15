@@ -14,7 +14,7 @@
   },
   "testRunner": "xunit",
   "dependencies": {
-    "LtiLibrary.Core": "1.6-*",
+    "LtiLibrary.Core": "2.0-*",
     "NodaTime": "2.0.0-alpha20160729",
     "NodaTime.Serialization.JsonNet": "2.0.0-alpha20160729"
   },

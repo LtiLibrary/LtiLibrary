@@ -32,16 +32,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+#if NetCore
+using System.Reflection;
+#endif
 
 namespace LtiLibrary.Core.Tests.SimpleHelpers
 {    
     public class ObjectDiffPatch
     {
-        private const string PREFIX_ARRAY_SIZE = "@@ Count";
-        private const string PREFIX_REMOVED_FIELDS = "@@ Removed";
+        private const string PrefixArraySize = "@@ Count";
+        private const string PrefixRemovedFields = "@@ Removed";
 
         /// <summary>
         /// Compares two objects and generates the differences between them.
@@ -97,7 +99,7 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
             var sourceJson = source != null ? JObject.FromObject (source, GetJsonSerializer ()) : null;
             var resultJson = Patch (sourceJson, diffJson);
 
-            return resultJson != null ? resultJson.ToObject<T> () : null;
+            return resultJson?.ToObject<T> ();
         }
 
         private static ObjectDiffPatchResult Diff (JObject source, JObject target)
@@ -146,14 +148,14 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
             }
 
             if (removedOld.Count > 0)
-                AddOldValuesToken (result, removedOld, PREFIX_REMOVED_FIELDS);
+                AddOldValuesToken (result, removedOld, PrefixRemovedFields);
             if (removedNew.Count > 0)
-                AddNewValuesToken (result, removedNew, PREFIX_REMOVED_FIELDS);
+                AddNewValuesToken (result, removedNew, PrefixRemovedFields);
 
             return result;
         }
 
-        private static ObjectDiffPatchResult DiffField (string fieldName, JToken source, JToken target, ObjectDiffPatchResult result = null)
+        private static void DiffField (string fieldName, JToken source, JToken target, ObjectDiffPatchResult result = null)
         {
             if (result == null)
                 result = new ObjectDiffPatchResult ();
@@ -161,12 +163,12 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
             {
                 if (target != null)
                 {
-                    AddToken (result, fieldName, source, target);
+                    AddToken (result, fieldName, null, target);
                 }
             }
             else if (target == null)
             {
-                AddToken (result, fieldName, source, target);
+                AddToken (result, fieldName, source, null);
             }
             else if (source.Type == JTokenType.Object)
             {
@@ -211,29 +213,24 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
                     if (!arrayDiff.AreEqual)
                     {
                         if (aS.Count != aT.Count)
-                            AddToken (arrayDiff, PREFIX_ARRAY_SIZE, aS.Count, aT.Count);
+                            AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
                         AddToken (result, fieldName, arrayDiff);
                     }
                 }
             }
             else
             {
-                if (!JObject.DeepEquals (source, target))
+                if (!JToken.DeepEquals (source, target))
                 {
                     AddToken (result, fieldName, source, target);
                 }
             }
-            return result;
         }
                 
         private static JsonSerializer GetJsonSerializer ()
         {
             // ensure the serializer will not ignore null values
-            JsonSerializerSettings settings = null;
-            if (JsonConvert.DefaultSettings != null)
-                settings = JsonConvert.DefaultSettings ();
-            else
-                settings = new JsonSerializerSettings ();
+            var settings = JsonConvert.DefaultSettings != null ? JsonConvert.DefaultSettings () : new JsonSerializerSettings ();
             settings.NullValueHandling = NullValueHandling.Include;
             settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
@@ -248,7 +245,6 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
 
         private static JToken Patch (JToken sourceJson, JToken diffJson)
         {
-            JToken token;
             // deal with null values
             if (sourceJson == null || diffJson == null)
             {
@@ -262,24 +258,25 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
             else
             {
                 JObject diffObj = (JObject)diffJson;
+                JToken token;
                 if (sourceJson.Type == JTokenType.Array)
                 {                    
                     int sz = 0;
-                    bool foundArraySize = diffObj.TryGetValue(PREFIX_ARRAY_SIZE, out token);
+                    bool foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
                     if (foundArraySize)
                     {
-                        diffObj.Remove (PREFIX_ARRAY_SIZE);
+                        diffObj.Remove (PrefixArraySize);
                         sz = token.Value<int> ();                        
                     }
                     var array = sourceJson as JArray;
                     // resize array
-                    if (foundArraySize && array.Count != sz)
+                    if (array != null && (foundArraySize && array.Count != sz))
                     {
                         JArray snapshot = array.DeepClone () as JArray;
                         array.Clear ();
                         for (int i = 0; i < sz; i++)
                         {
-                            array.Add (i < snapshot.Count ? snapshot[i] : null);
+                            array.Add (snapshot != null && i < snapshot.Count ? snapshot[i] : null);
                         }
                     }
                     // patch it
@@ -288,7 +285,7 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
                         int ix;
                         if (Int32.TryParse (f.Key, out ix))
                         {
-                            array[ix] = Patch (array[ix], f.Value);
+                            if (array != null) array[ix] = Patch (array[ix], f.Value);
                         }
                     }
                 }
@@ -296,11 +293,13 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
                 {
                     var sourceObj = sourceJson as JObject ?? new JObject();
                     // remove fields
-                    if (diffObj.TryGetValue (PREFIX_REMOVED_FIELDS, out token))
+                    if (diffObj.TryGetValue (PrefixRemovedFields, out token))
                     {
-                        diffObj.Remove (PREFIX_REMOVED_FIELDS);
-                        foreach (var f in token as JArray)
-                            sourceObj.Remove (f.ToString ());
+                        diffObj.Remove (PrefixRemovedFields);
+                        var jArray = token as JArray;
+                        if (jArray != null)
+                            foreach (var f in jArray)
+                                sourceObj.Remove (f.ToString ());
                     }
 
                     // patch it
@@ -345,30 +344,21 @@ namespace LtiLibrary.Core.Tests.SimpleHelpers
     /// </summary>
     public class ObjectDiffPatchResult
     {
-        private JObject _oldValues = null;
+        private JObject _oldValues;
 
-        private JObject _newValues = null;
-
-        private Type _type;
+        private JObject _newValues;
 
         /// <summary>
         /// If the compared objects are equal.
         /// </summary>
         /// <value>true if the obects are equal; otherwise, false.</value>
-        public bool AreEqual
-        {
-            get { return _oldValues == null && _newValues == null; }
-        }
+        public bool AreEqual => _oldValues == null && _newValues == null;
 
         /// <summary>
         /// The type of the compared objects.
         /// </summary>
         /// <value>The type of the compared objects.</value>
-        public Type Type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
+        public Type Type { get; set; }
 
         /// <summary>
         /// The values modified in the original object.

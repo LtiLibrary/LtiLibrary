@@ -22,7 +22,7 @@ namespace LtiLibrary.AspNet.Profiles
 
         [HttpGet]
 // ReSharper disable InconsistentNaming
-        public async Task<HttpResponseMessage> Get(string lti_version = "LTI-1p0")
+        public async Task<HttpResponseMessage> GetAsync(string lti_version = "LTI-1p0")
 // ReSharper restore InconsistentNaming
         {
             try

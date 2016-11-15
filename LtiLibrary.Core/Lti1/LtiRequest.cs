@@ -2267,34 +2267,6 @@ namespace LtiLibrary.Core.Lti1
             }
         }
 
-        [Obsolete("Use LtiLibrary.AspNet.Lti1.LtiRequestExtensions.GetViewModel")]
-        public LtiRequestViewModel GetLtiRequestViewModel(string consumerSecret)
-        {
-            // Create a copy of the parameters (getters should not change the object and this
-            // getter changes the parameters to eliminate empty/null values and make custom
-            // parameter substitutions)
-            var parameters = new NameValueCollection(Parameters);
-
-            // Remove empty/null parameters
-            foreach (var key in parameters.AllKeys.Where(key => string.IsNullOrWhiteSpace(parameters[key])))
-            {
-                parameters.Remove(key);
-            }
-
-            // Perform the custom variable substitutions
-            SubstituteCustomVariables(parameters);
-
-            // Calculate the signature based on the substituted values
-            var signature = GenerateSignature(parameters, consumerSecret);
-
-            return new LtiRequestViewModel
-            {
-                Action = Url.ToString(),
-                Fields = parameters,
-                Signature = signature
-            };
-        }
-
         /// <summary>
         /// Get the roles in the LtiRequest as an IList of LtiRoles.
         /// </summary>
@@ -2497,13 +2469,5 @@ namespace LtiLibrary.Core.Lti1
         }
 
         #endregion
-    }
-
-    [Obsolete("Use LtiLibrary.AspNet.Lti1.LtiRequestViewModel")]
-    public class LtiRequestViewModel
-    {
-        public string Action { get; set; }
-        public NameValueCollection Fields { get; set; }
-        public string Signature { get; set; }
     }
 }

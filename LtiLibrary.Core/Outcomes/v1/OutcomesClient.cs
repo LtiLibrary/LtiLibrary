@@ -61,8 +61,10 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = await webRequest.GetResponseAsync();
-                return ParseDeleteResultResponse(webResponse);
+                using (var webResponse = await webRequest.GetResponseAsync())
+                {
+                    return ParseDeleteResultResponse(webResponse);
+                }
             }
             catch (Exception ex)
             {
@@ -91,9 +93,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                     resultScore = new TextType
                     {
                         language = LtiConstants.ScoreLanguage,
-                        textString = score.HasValue
-                            ? score.Value.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
-                            : null
+                        textString = score?.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
                     }
                 }
             };
@@ -108,8 +108,10 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = await webRequest.GetResponseAsync();
-                return ParsePostResultResponse(webResponse);
+                using (var webResponse = await webRequest.GetResponseAsync())
+                {
+                    return ParsePostResultResponse(webResponse);
+                }
             }
             catch (Exception ex)
             {
@@ -217,8 +219,10 @@ namespace LtiLibrary.Core.Outcomes.v1
                     serviceUrl,
                     consumerKey,
                     consumerSecret);
-                var webResponse = await webRequest.GetResponseAsync();
-                return ParseReadResultResponse(webResponse);
+                using (var webResponse = await webRequest.GetResponseAsync())
+                {
+                    return ParseReadResultResponse(webResponse);
+                }
             }
             catch (Exception ex)
             {
@@ -250,7 +254,7 @@ namespace LtiLibrary.Core.Outcomes.v1
 
             var imsxBody = (readResultResponse) imsxEnvelope.imsx_POXBody.Item;
 
-            if (imsxBody == null || imsxBody.result == null)
+            if (imsxBody?.result == null)
             {
                 return new LisResult { Score = null, IsValid = true };
             }

@@ -12,25 +12,9 @@ namespace LtiLibrary.AspNet.Outcomes.v1
     /// <summary>
     /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
+    [OutcomesControllerConfigurationAttribute]
     public abstract class OutcomesControllerBase : ApiController
     {
-        protected override void Initialize(HttpControllerContext controllerContext)
-        {
-            base.Initialize(controllerContext);
-
-            // The XSD code generator only creates one imsx_POXEnvelopeType which has the 
-            // imsx_POXEnvelopeRequest root element. The IMS spec says the root element
-            // should be imsx_POXEnvelopeResponse in the response.
-
-            // Remove the default XmlFormatter that does not know how to override the root element
-            var xmlFormatter = controllerContext.Configuration.Formatters.XmlFormatter;
-            controllerContext.Configuration.Formatters.Remove(xmlFormatter);
-
-            // Replace the default XmlFormatter with one that overrides the response root element
-            var imsxXmlFormatter = new ImsxXmlMediaTypeFormatter();
-            controllerContext.Configuration.Formatters.Add(imsxXmlFormatter);
-        }
-
         /// <summary>
         /// Delete the result (grade, score, outcome) from the consumer.
         /// </summary>
@@ -265,6 +249,24 @@ namespace LtiLibrary.AspNet.Outcomes.v1
             }
             response.imsx_POXBody.Item = new replaceResultResponse();
             return response;
+        }
+    }
+
+    public class OutcomesControllerConfigurationAttribute : Attribute, IControllerConfiguration
+    {
+        public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
+        {
+            // The XSD code generator only creates one imsx_POXEnvelopeType which has the 
+            // imsx_POXEnvelopeRequest root element. The IMS spec says the root element
+            // should be imsx_POXEnvelopeResponse in the response.
+
+            // Remove the default XmlFormatter that does not know how to override the root element
+            var xmlFormatter = controllerSettings.Formatters.XmlFormatter;
+            controllerSettings.Formatters.Remove(xmlFormatter);
+
+            // Replace the default XmlFormatter with one that overrides the response root element
+            var imsxXmlFormatter = new ImsxXmlMediaTypeFormatter();
+            controllerSettings.Formatters.Add(imsxXmlFormatter);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using LtiLibrary.Core.Common;
@@ -16,6 +17,46 @@ namespace LtiLibrary.Core.Lti1
     public class LtiRequest 
         : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
     {
+        #region Static Member Data
+
+        // These OAuth parameters are required
+        private static readonly string[] RequiredOauthParameters =
+            {
+                OAuthConstants.ConsumerKeyParameter,
+                OAuthConstants.NonceParameter,
+                OAuthConstants.SignatureParameter,
+                OAuthConstants.SignatureMethodParameter,
+                OAuthConstants.TimestampParameter,
+                OAuthConstants.VersionParameter
+            };
+
+        // These LTI launch parameters are required
+        private static readonly string[] RequiredBasicLaunchParameters =
+            {
+                LtiConstants.LtiMessageTypeParameter,
+                LtiConstants.LtiVersionParameter,
+                LtiConstants.ResourceLinkIdParameter
+            };
+
+        // These LTI Content Item parameters are required
+        private static readonly string[] RequiredContentItemLaunchParameters =
+            {
+                LtiConstants.AcceptMediaTypesParameter,
+                LtiConstants.AcceptPresentationDocumentTargetsParameter,
+                LtiConstants.ContentItemReturnUrlParameter,
+                LtiConstants.LtiMessageTypeParameter,
+                LtiConstants.LtiVersionParameter
+            };
+
+        // These LTI Content Item parameters are required
+        private static readonly string[] RequiredContentItemResponseParameters =
+            {
+                LtiConstants.ContentItemPlacementParameter
+            };
+        #endregion
+
+        #region Constructors
+
         public LtiRequest() : this(null) {}
         public LtiRequest(string messageType)
         {
@@ -35,6 +76,8 @@ namespace LtiLibrary.Core.Lti1
             LtiMessageType = messageType;
             LtiVersion = LtiConstants.LtiVersion;
         }
+
+        #endregion
 
         #region ILtiRequest Parameters
 
@@ -2268,6 +2311,59 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
+        /// Remove empty parameters, substitute custom variables, and add the signature.
+        /// </summary>
+        public void SubstituteVariablesAndCalculateSignature(string consumerSecret)
+        {
+            // Remove empty/null parameters
+            foreach (var key in Parameters.AllKeys.Where(key => string.IsNullOrWhiteSpace(Parameters[key])))
+            {
+                Parameters.Remove(key);
+            }
+
+            // Perform the custom variable substitutions
+            SubstituteCustomVariables(Parameters);
+
+            // Calculate the signature based on the substituted values
+            Signature = GenerateSignature(Parameters, consumerSecret);
+        }
+
+        /// <summary>
+        /// Scan the LtiRequest and verify that all required parameters are in place.
+        /// Throws an <see cref="LtiLibrary.Core.Common.LtiException"/> if not.
+        /// </summary>
+        public void CheckForRequiredLtiParameters()
+        {
+            if (!IsAuthenticatedWithLti())
+            {
+                throw new LtiException("Invalid LTI request.");
+            }
+
+            // Make sure the request contains all the required parameters
+            RequireAllOf(RequiredOauthParameters);
+            switch (LtiMessageType)
+            {
+                case LtiConstants.BasicLaunchLtiMessageType:
+                    {
+                        RequireAllOf(RequiredBasicLaunchParameters);
+                        break;
+                    }
+                case LtiConstants.ContentItemSelectionRequestLtiMessageType:
+                    {
+                        RequireAllOf(RequiredContentItemLaunchParameters);
+                        break;
+                    }
+                case LtiConstants.ContentItemSelectionLtiMessageType:
+                    {
+                        RequireAllOf(RequiredContentItemResponseParameters);
+                        break;
+                    }
+                default:
+                    throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}");
+            }
+        }
+
+        /// <summary>
         /// Get the roles in the LtiRequest as an IList of LtiRoles.
         /// </summary>
         /// <returns></returns>
@@ -2295,6 +2391,29 @@ namespace LtiLibrary.Core.Lti1
                 }
             }
             return roles;
+        }
+
+        /// <summary>
+        /// Get a value indicating whether the current request is authenticated
+        /// using LTI.
+        /// </summary>
+        private bool IsAuthenticatedWithLti()
+        {
+            return HttpMethod.Equals(WebRequestMethods.Http.Post)
+                   && (
+                       LtiMessageType.Equals(LtiConstants.BasicLaunchLtiMessageType, StringComparison.OrdinalIgnoreCase)
+                       || LtiMessageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType, StringComparison.OrdinalIgnoreCase)
+                       || LtiMessageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType, StringComparison.OrdinalIgnoreCase)
+                       );
+        }
+        private void RequireAllOf(IEnumerable<string> parameters)
+        {
+            var missing = parameters.Where(parameter => string.IsNullOrEmpty(Parameters[parameter])).ToList();
+
+            if (missing.Count > 0)
+            {
+                throw new LtiException("Missing parameters: " + string.Join(", ", missing.ToArray()));
+            }
         }
 
         /// <summary>

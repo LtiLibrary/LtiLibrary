@@ -16,7 +16,9 @@
   "dependencies": {
     "LtiLibrary.Core": "2.0-*",
     "NodaTime": "2.0.0-alpha20160729",
-    "NodaTime.Serialization.JsonNet": "2.0.0-alpha20160729"
+    "NodaTime.Serialization.JsonNet": "2.0.0-alpha20160729",
+    "System.Net.Http": "4.1.0",
+    "System.Net.Http.Formatting.Extension": "5.2.3"
   },
   "frameworks": {
     "netcoreapp1.0": {

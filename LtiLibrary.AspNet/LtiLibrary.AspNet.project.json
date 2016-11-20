@@ -10,8 +10,6 @@
     "Microsoft.AspNet.WebApi.Client": "5.2.3",
     "Microsoft.AspNet.WebApi.WebHost": "5.2.3",
     "Microsoft.Bcl.Build": "1.0.21",
-    "Newtonsoft.Json": "8.0.3",
-    "System.Net.Http": "4.1.0",
-    "System.Net.Http.Formatting.Extension": "5.2.3"
+    "Newtonsoft.Json": "8.0.3"
   }
 }

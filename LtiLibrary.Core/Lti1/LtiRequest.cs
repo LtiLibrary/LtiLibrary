@@ -2329,14 +2329,13 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
-        /// Scan the LtiRequest and verify that all required parameters are in place.
-        /// Throws an <see cref="LtiLibrary.Core.Common.LtiException"/> if not.
+        /// Throws an <see cref="LtiException"/> if the LtiRequest does not have required parameters.
         /// </summary>
         public void CheckForRequiredLtiParameters()
         {
-            if (!IsAuthenticatedWithLti())
+            if (!HttpMethod.Equals(WebRequestMethods.Http.Post))
             {
-                throw new LtiException("Invalid LTI request.");
+                throw new LtiException($"Invalid HTTP Method {HttpMethod}.");
             }
 
             // Make sure the request contains all the required parameters
@@ -2359,7 +2358,19 @@ namespace LtiLibrary.Core.Lti1
                         break;
                     }
                 default:
-                    throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}");
+                    throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}.");
+            }
+
+            // If the request is configured to support Outcomes 2.0, make sure user_id is specified.
+            if (!string.IsNullOrWhiteSpace(LineItemServiceUrl)
+                && !string.IsNullOrWhiteSpace(LineItemsServiceUrl)
+                && !string.IsNullOrWhiteSpace(ResultServiceUrl)
+                && !string.IsNullOrWhiteSpace(ResultsServiceUrl))
+            {
+                if (string.IsNullOrWhiteSpace(UserId))
+                {
+                    throw new LtiException($"Missing parameter(s): {LtiConstants.UserIdParameter}. Required by Outcomes 2.0.");
+                }
             }
         }
 
@@ -2394,25 +2405,16 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
-        /// Get a value indicating whether the current request is authenticated
-        /// using LTI.
+        /// Throw an <see cref="LtiException"/> if this LtiRequest does not have a value specified for all of the parameters.
         /// </summary>
-        private bool IsAuthenticatedWithLti()
-        {
-            return HttpMethod.Equals(WebRequestMethods.Http.Post)
-                   && (
-                       LtiMessageType.Equals(LtiConstants.BasicLaunchLtiMessageType, StringComparison.OrdinalIgnoreCase)
-                       || LtiMessageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType, StringComparison.OrdinalIgnoreCase)
-                       || LtiMessageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType, StringComparison.OrdinalIgnoreCase)
-                       );
-        }
+        /// <param name="parameters"></param>
         private void RequireAllOf(IEnumerable<string> parameters)
         {
             var missing = parameters.Where(parameter => string.IsNullOrEmpty(Parameters[parameter])).ToList();
 
             if (missing.Count > 0)
             {
-                throw new LtiException("Missing parameters: " + string.Join(", ", missing.ToArray()));
+                throw new LtiException("Missing parameter(s): " + string.Join(", ", missing.ToArray()) + ".");
             }
         }
 

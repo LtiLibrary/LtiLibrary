@@ -2361,6 +2361,15 @@ namespace LtiLibrary.Core.Lti1
                     throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}.");
             }
 
+            // If the request is configured to support Outcomes 1.0, make sure lis_result_sourcedid is specified.
+            if (!string.IsNullOrWhiteSpace(LisOutcomeServiceUrl))
+            {
+                if (string.IsNullOrWhiteSpace(LisResultSourcedId))
+                {
+                    throw new LtiException($"Missing parameter(s): {LtiConstants.LisResultSourcedIdParameter}. Required by Outcomes 1.0.");
+                }
+            }
+
             // If the request is configured to support Outcomes 2.0, make sure user_id is specified.
             if (!string.IsNullOrWhiteSpace(LineItemServiceUrl)
                 && !string.IsNullOrWhiteSpace(LineItemsServiceUrl)

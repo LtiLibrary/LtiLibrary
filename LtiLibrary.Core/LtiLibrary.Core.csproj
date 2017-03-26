@@ -1,163 +1,37 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{75D41EB6-F34B-4973-86EB-11ABFEE995B0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LtiLibrary.Core</RootNamespace>
+    <Description>.NET library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.</Description>
+    <Copyright>Copyright 2016</Copyright>
+    <AssemblyTitle>LtiLibrary.Core</AssemblyTitle>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
+    <Authors>andyfmiller.com</Authors>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>LtiLibrary.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <PackageId>LtiLibrary.Core</PackageId>
+    <PackageTags>IMS;LTI;.NET;NetCore</PackageTags>
+    <PackageReleaseNotes>2.0.0-beta
+- See https://github.com/andyfmiller/LtiLibrary/pull/37</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NetCore</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NetCore</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Common\BasicResult.cs" />
-    <Compile Include="Common\IJsonLdObject.cs" />
-    <Compile Include="Common\JsonLdObjectConverter.cs" />
-    <Compile Include="Common\JsonLdObject.cs" />
-    <Compile Include="Common\JsonLdObjectContractResolver.cs" />
-    <Compile Include="Common\UriAttribute.cs" />
-    <Compile Include="Common\UrlEncodingParser.cs" />
-    <Compile Include="Common\UrnAttribute.cs" />
-    <Compile Include="ContentItems\ContentItemSelectionGraph.cs" />
-    <Compile Include="ContentItems\LtiLink.cs" />
-    <Compile Include="Extensions\HttpContentExtensions.cs" />
-    <Compile Include="Extensions\HttpContentType.cs" />
-    <Compile Include="Extensions\HttpExtensions.cs" />
-    <Compile Include="Extensions\HttpWebRequestExtensions.cs" />
-    <Compile Include="Extensions\HttpWebResponseExtensions.cs" />
-    <Compile Include="Extensions\NameValueCollectionExtensions.cs" />
-    <Compile Include="Common\LtiException.cs" />
-    <Compile Include="ContentItems\ContentItem.cs" />
-    <Compile Include="ContentItems\ContentItemPlacement.cs" />
-    <Compile Include="Extensions\PlatformSpecific.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Lti1\DocumentTarget.cs" />
-    <Compile Include="Lti1\IBasicLaunchRequest.cs" />
-    <Compile Include="ContentItems\IContentItem.cs" />
-    <Compile Include="ContentItems\IContentItemSelectionRequest.cs" />
-    <Compile Include="ContentItems\IContentItemSelection.cs" />
-    <Compile Include="ContentItems\IFileItem.cs" />
-    <Compile Include="Lti1\ILaunchRequest.cs" />
-    <Compile Include="ContentItems\ILtiLink.cs" />
-    <Compile Include="Lti1\ILtiRequest.cs" />
-    <Compile Include="ContentItems\Image.cs" />
-    <Compile Include="Lti2\ProductDescription.cs" />
-    <Compile Include="Lti2\ProductTechnicalDescription.cs" />
-    <Compile Include="Lti2\ServiceProviderName.cs" />
-    <Compile Include="Lti2\ServiceProviderDescription.cs" />
-    <Compile Include="Lti2\ServiceOwnerDescription.cs" />
-    <Compile Include="Lti2\ServiceOwnerName.cs" />
-    <Compile Include="Lti2\VendorDescription.cs" />
-    <Compile Include="Lti2\ProductName.cs" />
-    <Compile Include="Lti2\VendorName.cs" />
-    <Compile Include="Outcomes\v1\IOutcomesManagementRequest.cs" />
-    <Compile Include="Outcomes\v1\LisResult.cs" />
-    <Compile Include="Outcomes\v1\OutcomesClient.cs" />
-    <Compile Include="Outcomes\v1\omsv1p0_ltiv1p1profile_syncxsd_v1p0.cs">
-      <DependentUpon>OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Outcomes\v2\Activity.cs" />
-    <Compile Include="Outcomes\v2\Context.cs" />
-    <Compile Include="OAuth\IOAuthRequest.cs" />
-    <Compile Include="Lti1\LisContextType.cs" />
-    <Compile Include="Common\LtiConstants.cs" />
-    <Compile Include="Lti1\LtiRequest.cs" />
-    <Compile Include="Lti1\Role.cs" />
-    <Compile Include="Lti2\Contact.cs" />
-    <Compile Include="Lti2\LocalizedName.cs" />
-    <Compile Include="Lti2\LocalizedText.cs" />
-    <Compile Include="Lti2\ProductFamily.cs" />
-    <Compile Include="Lti2\ProductInfo.cs" />
-    <Compile Include="Lti2\ProductInstance.cs" />
-    <Compile Include="Lti2\RestService.cs" />
-    <Compile Include="Lti2\ServiceOwner.cs" />
-    <Compile Include="Lti2\ServiceProvider.cs" />
-    <Compile Include="Lti2\Vendor.cs" />
-    <Compile Include="OAuth\OAuthConstants.cs" />
-    <Compile Include="OAuth\OAuthRequest.cs" />
-    <Compile Include="OAuth\OAuthUtility.cs" />
-    <Compile Include="Outcomes\v2\LineItem.cs" />
-    <Compile Include="Outcomes\v2\LineItemContainer.cs" />
-    <Compile Include="Outcomes\v2\LineItemContainerPage.cs" />
-    <Compile Include="Outcomes\v2\LisPerson.cs" />
-    <Compile Include="Outcomes\v2\LisResult.cs" />
-    <Compile Include="Outcomes\v2\LineItemMembershipSubject.cs" />
-    <Compile Include="Outcomes\v2\ResultContainer.cs" />
-    <Compile Include="Outcomes\v2\ResultContainerPage.cs" />
-    <Compile Include="Outcomes\v2\OutcomeResponse.cs" />
-    <Compile Include="Outcomes\v2\OutcomesClient.cs" />
-    <Compile Include="Outcomes\v2\NumericLimits.cs" />
-    <Compile Include="Outcomes\v2\ResultMembershipSubject.cs" />
-    <Compile Include="Outcomes\v2\ResultStatus.cs" />
-    <Compile Include="Extensions\JsonLdExtensions.cs" />
-    <Compile Include="Profiles\ToolConsumerProfileResponse.cs" />
-    <Compile Include="Profiles\ToolConsumerProfileClient.cs" />
-    <Compile Include="Profiles\ToolConsumerProfile.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="LICENSE" />
-    <None Include="Outcomes\v1\OMSv1p0_LTIv1p1Profile_SyncXSD_v1p0.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config" />
-    <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

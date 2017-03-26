@@ -10,9 +10,13 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>LtiLibrary.Core</AssemblyName>
     <PackageId>LtiLibrary.Core</PackageId>
-    <PackageTags>IMS;LTI;.NET;NetCore</PackageTags>
-    <PackageReleaseNotes>2.0.0-beta
-- See https://github.com/andyfmiller/LtiLibrary/pull/37</PackageReleaseNotes>
+    <PackageTags>IMS;LTI;.NET;.NET Core</PackageTags>
+    <PackageReleaseNotes>
+      <![CDATA[
+2.0.0-beta
+- Updated to .NET Core 1.1
+      ]]>
+    </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>

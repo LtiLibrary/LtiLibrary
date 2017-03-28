@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using System.Web;
+using Microsoft.AspNetCore.Http;
 using LtiLibrary.AspNet.Lti1;
 using LtiLibrary.Core.Lti1;
 
@@ -36,7 +36,7 @@ namespace LtiLibrary.AspNet.Extensions
             form.AppendLine("</html>");
 
             response.ContentType = "text/html";
-            response.Write(form.ToString());
+            response.WriteAsync(form.ToString());
         }
     }
 }

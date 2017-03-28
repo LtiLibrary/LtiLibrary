@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Net;
-using System.Web;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Lti1;
 using LtiLibrary.Core.OAuth;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace LtiLibrary.AspNet.Extensions
 {
@@ -47,52 +47,53 @@ namespace LtiLibrary.AspNet.Extensions
                 LtiConstants.ContentItemPlacementParameter
             };
 
-        public static string GenerateOAuthSignature(this HttpRequestBase request, string consumerSecret)
+        public static string GenerateOAuthSignature(this HttpRequest request, string consumerSecret)
         {
-            return OAuthUtility.GenerateSignature(request.HttpMethod, request.Url, request.UnvalidatedParameters(), consumerSecret);
+            var url = new Uri(request.GetDisplayUrl());
+            var parameters = new NameValueCollection();
+            foreach (var formKey in request.Form.Keys)
+            {
+                parameters.Set(formKey, request.Form[formKey]);
+            }
+            return OAuthUtility.GenerateSignature(request.Method, url, parameters, consumerSecret);
         }
 
-        public static LisContextType? GetLisContextType(this HttpRequestBase request, string key)
+        public static LisContextType? GetLisContextType(this HttpRequest request, string key)
         {
-            var stringValue = request.GetUnvalidatedString(key);
+            var stringValue = request.Form[key];
             LisContextType contextTypeEnum;
             return Enum.TryParse(stringValue, out contextTypeEnum)
                        ? contextTypeEnum
                        : default(LisContextType?);
         }
 
-        public static DocumentTarget? GetPresentationTarget(this HttpRequestBase request, string key)
+        public static DocumentTarget? GetPresentationTarget(this HttpRequest request, string key)
         {
-            var stringValue = request.GetUnvalidatedString(key);
+            var stringValue = request.Form[key];
             DocumentTarget presentationTargetEnum;
             return Enum.TryParse(stringValue, out presentationTargetEnum)
                        ? presentationTargetEnum
                        : default(DocumentTarget?);
         }
 
-        private static string GetUnvalidatedString(this HttpRequestBase request, string key)
-        {
-            return request.Unvalidated[key];
-        }
+        //private static string GetUnvalidatedString(this HttpRequest request, string key)
+        //{
+        //    return request.Unvalidated[key];
+        //}
 
         /// <summary>
         /// Get a value indicating whether the current request is authenticated
         /// using LTI.
         /// </summary>
-        public static bool IsAuthenticatedWithLti(this HttpRequestBase request)
+        public static bool IsAuthenticatedWithLti(this HttpRequest request)
         {
-            var messageType = request[LtiConstants.LtiMessageTypeParameter] ?? string.Empty;
-            return request.HttpMethod.Equals(WebRequestMethods.Http.Post)
+            var messageType = request.Form[LtiConstants.LtiMessageTypeParameter][0] ?? string.Empty;
+            return request.Method.Equals("POST")
                    && (
                        messageType.Equals(LtiConstants.BasicLaunchLtiMessageType, StringComparison.OrdinalIgnoreCase)
                        || messageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType, StringComparison.OrdinalIgnoreCase)
                        || messageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType, StringComparison.OrdinalIgnoreCase)
                        );
-        }
-
-        public static NameValueCollection UnvalidatedParameters(this HttpRequestBase request)
-        {
-            return new NameValueCollection {request.Unvalidated.QueryString, request.Unvalidated.Form};
         }
 
         /// <summary>
@@ -101,7 +102,7 @@ namespace LtiLibrary.AspNet.Extensions
         /// <param name="request">The HttpRequest to parse.</param>
         /// <returns>An LtiInboundRequest filled in with the OAuth and LTI parameters
         /// sent by the consumer.</returns>
-        public static void CheckForRequiredLtiParameters(this HttpRequestBase request)
+        public static void CheckForRequiredLtiParameters(this HttpRequest request)
         {
             if (!request.IsAuthenticatedWithLti())
             {
@@ -110,7 +111,7 @@ namespace LtiLibrary.AspNet.Extensions
 
             // Make sure the request contains all the required parameters
             request.RequireAllOf(RequiredOauthParameters);
-            switch (request[LtiConstants.LtiMessageTypeParameter])
+            switch (request.Form[LtiConstants.LtiMessageTypeParameter])
             {
                 case LtiConstants.BasicLaunchLtiMessageType:
                 {
@@ -130,9 +131,9 @@ namespace LtiLibrary.AspNet.Extensions
             }
         }
 
-        public static void RequireAllOf(this HttpRequestBase request, IEnumerable<string> parameters)
+        public static void RequireAllOf(this HttpRequest request, IEnumerable<string> parameters)
         {
-            var missing = parameters.Where(parameter => string.IsNullOrEmpty(request[parameter])).ToList();
+            var missing = parameters.Where(parameter => string.IsNullOrEmpty(request.Form[parameter])).ToList();
 
             if (missing.Count > 0)
             {

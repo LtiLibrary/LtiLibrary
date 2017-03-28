@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using LtiLibrary.Core.Outcomes.v2;
+using LtiLibrary.Core.Common;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
     /// <summary>
-    /// An <see cref="ApiController" /> that implements 
+    /// An <see cref="Controller" /> that implements 
     /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LISResult/service.html
     /// </summary>
-    [ResultsControllerConfig]
-    public abstract class ResultsControllerBase : ApiController
+    [Consumes(LtiConstants.LisResultContainerMediaType)]
+    public abstract class ResultsControllerBase : Controller
     {
         protected ResultsControllerBase()
         {
@@ -49,7 +49,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Delete a particular LisResult instance.
         /// </summary>
         [HttpDelete]
-        public async Task<HttpResponseMessage> DeleteAsync(string contextId, string lineItemId, string id)
+        public async Task<IActionResult> DeleteAsync(string contextId, string lineItemId, string id)
         {
             try
             {
@@ -57,11 +57,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                 await OnDeleteResult(context);
 
-                return Request.CreateResponse(context.StatusCode);
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -70,7 +70,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// <param name="id">The LineItem id.</param>
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAsync(string contextId = null, string lineItemId = null, string id = null, int? limit = null, string firstPage = null, int? p = null)
+        public async Task<IActionResult> GetAsync(string contextId = null, string lineItemId = null, string id = null, int? limit = null, string firstPage = null, int? p = null)
         {
             try
             {
@@ -83,8 +83,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     {
                         if (firstPage != null && p.Value != 1)
                         {
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest,
-                                new ArgumentException("Request cannot specify both firstPage and a page number > 1"));
+                            return BadRequest("Request cannot specify both firstPage and a page number > 1");
                         }
                         page = p.Value;
                     }
@@ -92,9 +91,17 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                     await OnGetResults(context);
 
-                    return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.ResultContainerPage, new ResultContainerPageFormatter())
-                        : Request.CreateResponse(context.StatusCode);
+                    if (context.StatusCode == StatusCodes.Status200OK)
+                    {
+                        return new ResultContainerPageResult(context.ResultContainerPage)
+                        {
+                            StatusCode = context.StatusCode
+                        };
+                    }
+                    else
+                    {
+                        return StatusCode(context.StatusCode);
+                    }
                 }
                 else
                 {
@@ -104,14 +111,22 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                     await OnGetResult(context);
 
-                    return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.Result, new ResultFormatter())
-                        : Request.CreateResponse(context.StatusCode);
+                    if (context.StatusCode == StatusCodes.Status200OK)
+                    {
+                        return new ResultResult(context.Result)
+                        {
+                            StatusCode = context.StatusCode
+                        };
+                    }
+                    else
+                    {
+                        return StatusCode(context.StatusCode);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -119,7 +134,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Create a new LisResult instance.
         /// </summary>
         [HttpPost]
-        public async Task<HttpResponseMessage> PostAsync(string contextId, string lineItemId, LisResult result)
+        public async Task<IActionResult> PostAsync(string contextId, string lineItemId, LisResult result)
         {
             try
             {
@@ -127,13 +142,21 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                 await OnPostResult(context);
 
-                return context.StatusCode == HttpStatusCode.Created
-                    ? Request.CreateResponse(context.StatusCode, context.Result, new ResultFormatter())
-                    : Request.CreateResponse(context.StatusCode);
+                if (context.StatusCode == StatusCodes.Status201Created)
+                {
+                    return new ResultResult(context.Result)
+                    {
+                        StatusCode = context.StatusCode
+                    };
+                }
+                else
+                {
+                    return StatusCode(context.StatusCode);
+                }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -141,7 +164,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Update a particular LisResult instance.
         /// </summary>
         [HttpPut]
-        public async Task<HttpResponseMessage> PutAsync(string contextId, string lineItemId, string id, LisResult result)
+        public async Task<IActionResult> PutAsync(string contextId, string lineItemId, string id, LisResult result)
         {
             try
             {
@@ -149,11 +172,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                 await OnPutResult(context);
 
-                return Request.CreateResponse(context.StatusCode);
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

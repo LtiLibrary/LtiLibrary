@@ -1,15 +1,16 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Formatting;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Outcomes.v1;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace LtiLibrary.AspNet.Outcomes.v1
 {
-    public class ImsxXmlMediaTypeFormatter : XmlMediaTypeFormatter
+    public class ImsxXmlMediaTypeFormatter : IInputFormatter, IOutputFormatter
     {
         // The XSD code generator only creates one imsx_POXEnvelopeType which has the 
         // imsx_POXEnvelopeRequest root element. The IMS spec says the root element
@@ -23,30 +24,57 @@ namespace LtiLibrary.AspNet.Outcomes.v1
             null, null, new XmlRootAttribute("imsx_POXEnvelopeResponse"),
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
 
-        public override Task<object> ReadFromStreamAsync(Type type, Stream readStream, HttpContent content, IFormatterLogger formatterLogger)
+        public bool CanWriteResult(OutputFormatterCanWriteContext context)
         {
-            try
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            return context.ContentType.ToString() == "application/xml";
+        }
+
+        public async Task WriteAsync(OutputFormatterWriteContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            var response = context.HttpContext.Response;
+            response.ContentType = "application/xml";
+
+            using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
-                SetSerializer<imsx_POXEnvelopeType>(ImsxRequestSerializer);
-                return base.ReadFromStreamAsync(type, readStream, content, formatterLogger);
-            }
-            catch (Exception)
-            {
-                return base.ReadFromStreamAsync(type, readStream, content, formatterLogger);
+                ImsxResponseSerializer.Serialize(writer, context.Object);
+                await writer.FlushAsync();
             }
         }
 
-        public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
+        public Task<InputFormatterResult> ReadAsync(InputFormatterContext context)
         {
-            try
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            var request = context.HttpContext.Request;
+            if (request.ContentLength == 0)
             {
-                SetSerializer<imsx_POXEnvelopeType>(ImsxResponseSerializer);
-                return base.WriteToStreamAsync(type, value, writeStream, content, transportContext);
+                if (context.ModelType.GetTypeInfo().IsValueType)
+                {
+                    return InputFormatterResult.SuccessAsync((Activator.CreateInstance(context.ModelType)));
+                }
+                else
+                {
+                    return InputFormatterResult.SuccessAsync(null);
+                }
             }
-            catch (Exception)
+
+            var encoding = Encoding.UTF8;
+
+            using (var reader = new StreamReader(context.HttpContext.Request.Body))
             {
-                return base.WriteToStreamAsync(type, value, writeStream, content, transportContext);
+                var model = ImsxRequestSerializer.Deserialize(reader);
+                return InputFormatterResult.SuccessAsync(model);
             }
+        }
+
+        public bool CanRead(InputFormatterContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+
+            var contentType = context.HttpContext.Request.ContentType;
+            return contentType == null || contentType == "application/xml";
         }
     }
 }

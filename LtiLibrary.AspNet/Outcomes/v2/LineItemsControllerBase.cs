@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Outcomes.v2;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
     /// <summary>
-    /// An <see cref="ApiController" /> that implements 
+    /// An <see cref="Controller" /> that implements 
     /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html
     /// </summary>
-    [LineItemsControllerConfig]
-    public abstract class LineItemsControllerBase : ApiController
+    [Consumes(LtiConstants.LineItemMediaType, new []{ LtiConstants.LineItemResultsMediaType , LtiConstants.LineItemContainerMediaType })]
+    public abstract class LineItemsControllerBase : Controller
     {
         protected LineItemsControllerBase()
         {
@@ -61,7 +61,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Delete a particular LineItem instance.
         /// </summary>
         [HttpDelete]
-        public async Task<HttpResponseMessage> DeleteAsync(string contextId, string id)
+        public async Task<IActionResult> DeleteAsync(string contextId, string id)
         {
             try
             {
@@ -69,11 +69,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                 
                 await OnDeleteLineItem(context);
 
-                return Request.CreateResponse(context.StatusCode);
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -81,7 +81,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Get a paginated list of LineItem resources from a LineItemContainer, or get a representation of a particular LineItem instance.
         /// </summary>
         [HttpGet]
-        public async Task<HttpResponseMessage> GetAsync(string contextId = null, string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
+        public async Task<IActionResult> GetAsync(string contextId = null, string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
         {
             try
             {
@@ -94,8 +94,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                     {
                         if (firstPage != null && p.Value != 1)
                         {
-                            return Request.CreateErrorResponse(HttpStatusCode.BadRequest,
-                                new ArgumentException("Request cannot specify both firstPage and a page number > 1"));
+                            return BadRequest("Request cannot specify both firstPage and a page number > 1");
                         }
                         page = p.Value;
                     }
@@ -103,9 +102,17 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                     await OnGetLineItems(context);
 
-                    return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.LineItemContainerPage, new LineItemContainerPageFormatter())
-                        : Request.CreateResponse(context.StatusCode);
+                    if (context.StatusCode == StatusCodes.Status200OK)
+                    {
+                        return new LineItemContainerPageResult(context.LineItemContainerPage)
+                        {
+                            StatusCode = context.StatusCode
+                        };
+                    }
+                    else
+                    {
+                        return StatusCode(context.StatusCode);
+                    }
                 }
                 else
                 {
@@ -113,8 +120,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                     var context = new GetLineItemContext(contextId, id);
                     var mediaType =
-                        Request.Headers.Accept.Contains(
-                            new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType))
+                        Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
                             ? LtiConstants.LineItemResultsMediaType
                             : LtiConstants.LineItemMediaType;
 
@@ -127,14 +133,26 @@ namespace LtiLibrary.AspNet.Outcomes.v2
                         await OnGetLineItem(context);
                     }
 
-                    return context.StatusCode == HttpStatusCode.OK
-                        ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter(), mediaType)
-                        : Request.CreateResponse(context.StatusCode);
+                    if (context.StatusCode == StatusCodes.Status200OK)
+                    {
+                        if (mediaType == LtiConstants.LineItemResultsMediaType)
+                        {
+                            return new LineItemResultsResult(context.LineItem);
+                        }
+                        else
+                        {
+                            return new LineItemResult(context.LineItem);
+                        }
+                    }
+                    else
+                    {
+                        return StatusCode(context.StatusCode);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -142,7 +160,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Create a new LineItem instance.
         /// </summary>
         [HttpPost]
-        public async Task<HttpResponseMessage> PostAsync(string contextId, LineItem lineItem)
+        public async Task<IActionResult> PostAsync(string contextId, LineItem lineItem)
         {
             try
             {
@@ -150,13 +168,18 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                 await OnPostLineItem(context);
 
-                return context.StatusCode == HttpStatusCode.Created
-                    ? Request.CreateResponse(context.StatusCode, context.LineItem, new LineItemFormatter(), LtiConstants.LineItemMediaType) 
-                    : Request.CreateResponse(context.StatusCode);
+                if (context.StatusCode == StatusCodes.Status201Created)
+                {
+                    return new LineItemResult(context.LineItem);
+                }
+                else
+                {
+                    return StatusCode(context.StatusCode);
+                }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -164,15 +187,14 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         /// Update a particular LineItem instance.
         /// </summary>
         [HttpPut]
-        public async Task<HttpResponseMessage> PutAsync(LineItem lineItem)
+        public async Task<IActionResult> PutAsync(LineItem lineItem)
         {
             try
             {
                 var context = new PutLineItemContext(lineItem);
 
                 var mediaType =
-                    Request.Headers.Accept.Contains(
-                        new MediaTypeWithQualityHeaderValue(LtiConstants.LineItemResultsMediaType))
+                    Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
                         ? LtiConstants.LineItemResultsMediaType
                         : LtiConstants.LineItemMediaType;
 
@@ -187,11 +209,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
 
                 await OnPutLineItem(context);
 
-                return Request.CreateResponse(context.StatusCode);
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

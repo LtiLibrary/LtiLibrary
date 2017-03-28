@@ -1,5 +1,5 @@
-﻿using System.Net;
-using LtiLibrary.Core.Outcomes.v2;
+﻿using LtiLibrary.Core.Outcomes.v2;
+using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
@@ -11,7 +11,7 @@ namespace LtiLibrary.AspNet.Outcomes.v2
             Limit = limit;
             LineItemId = lineItemId;
             Page = page;
-            StatusCode = HttpStatusCode.OK;
+            StatusCode = StatusCodes.Status200OK;
         }
 
         public string ContextId { get; set; }
@@ -19,6 +19,6 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         public int? Limit { get; set; }
         public ResultContainerPage ResultContainerPage { get; set; }
         public int Page { get; set; }
-        public HttpStatusCode StatusCode { get; set; }
+        public int StatusCode { get; set; }
     }
 }

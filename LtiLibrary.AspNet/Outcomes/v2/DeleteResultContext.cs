@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace LtiLibrary.AspNet.Outcomes.v2
+﻿namespace LtiLibrary.AspNet.Outcomes.v2
 {
     public class DeleteResultContext
     {
@@ -9,12 +7,12 @@ namespace LtiLibrary.AspNet.Outcomes.v2
             ContextId = contextId;
             Id = id;
             LineItemId = lineItemId;
-            StatusCode = HttpStatusCode.OK;
+            StatusCode = Microsoft.AspNetCore.Http.StatusCodes.Status200OK;
         }
 
         public string ContextId { get; set; }
         public string Id { get; set; }
         public string LineItemId { get; set; }
-        public HttpStatusCode StatusCode { get; set; }
+        public int StatusCode { get; set; }
     }
 }

@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
 using LtiLibrary.Core.Common;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LtiLibrary.AspNet.Profiles
 {
     /// <summary>
     /// Implements the LTI Tool Consumer Profile API.
     /// </summary>
-    [ToolConsumerProfileControllerConfig]
-    public abstract class ToolConsumerProfileControllerBase : ApiController
+    [Consumes(LtiConstants.ToolConsumerProfileMediaType)]
+    public abstract class ToolConsumerProfileControllerBase : Controller
     {
         protected ToolConsumerProfileControllerBase()
         {
@@ -22,7 +21,7 @@ namespace LtiLibrary.AspNet.Profiles
 
         [HttpGet]
 // ReSharper disable InconsistentNaming
-        public async Task<HttpResponseMessage> GetAsync(string lti_version = "LTI-1p0")
+        public async Task<IActionResult> GetAsync(string lti_version = "LTI-1p0")
 // ReSharper restore InconsistentNaming
         {
             try
@@ -30,14 +29,19 @@ namespace LtiLibrary.AspNet.Profiles
                 var context = new GetToolConsumerProfileContext(lti_version);
 
                 await OnGetToolConsumerProfile(context);
-                
-                return context.StatusCode == HttpStatusCode.OK
-                    ? Request.CreateResponse(context.StatusCode, context.ToolConsumerProfile, LtiConstants.ToolConsumerProfileMediaType)
-                    : Request.CreateResponse(context.StatusCode);
+
+                if (context.StatusCode == StatusCodes.Status200OK)
+                {
+                    return new ToolConsumerProfileResult(context.ToolConsumerProfile);
+                }
+                else
+                {
+                    return StatusCode(context.StatusCode);
+                }
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

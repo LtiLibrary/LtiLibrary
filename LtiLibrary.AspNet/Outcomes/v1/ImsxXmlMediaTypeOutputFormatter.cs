@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace LtiLibrary.AspNet.Outcomes.v1
 {
+    /// <summary>
+    /// AspNetCore.Mvc output formatter returns an imsx_POXEnvelopeType with an imsx_POXEnvelopeResponse.
+    /// </summary>
     public class ImsxXmlMediaTypeOutputFormatter : IOutputFormatter
     {
         // The XSD code generator only creates one imsx_POXEnvelopeType which has the 

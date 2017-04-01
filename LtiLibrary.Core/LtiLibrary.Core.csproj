@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>.NET library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.</Description>
-    <Copyright>Copyright 2016</Copyright>
+    <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.Core</AssemblyTitle>
     <VersionPrefix>2.0.0</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
@@ -24,12 +24,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Outcomes\v1\Imsx_POXRequestEnvelopeType.cs" />
-    <Compile Remove="Outcomes\v1\Imsx_POXResponseEnvelopeType.cs" />
-    <Compile Remove="Outcomes\v1\Imsx_POXTypes.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
@@ -42,9 +36,5 @@
     <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
   </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NetCore</DefineConstants>
-  </PropertyGroup>
 
 </Project>

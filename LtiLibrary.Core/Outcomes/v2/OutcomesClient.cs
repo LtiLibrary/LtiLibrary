@@ -8,6 +8,7 @@ using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Cryptography;
 
 namespace LtiLibrary.Core.Outcomes.v2
 {
@@ -485,7 +486,7 @@ namespace LtiLibrary.Core.Outcomes.v2
             parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
 
             // Calculate the body hash
-            using (var sha1 = PlatformSpecific.GetSha1Provider())
+            using (var sha1 = SHA1.Create())
             {
                 var hash = sha1.ComputeHash(body);
                 var hash64 = Convert.ToBase64String(hash);

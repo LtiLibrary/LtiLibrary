@@ -9,6 +9,7 @@ using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace LtiLibrary.Core.Outcomes.v1
@@ -286,7 +287,7 @@ namespace LtiLibrary.Core.Outcomes.v1
 
             // Calculate the body hash
             var ms = new MemoryStream();
-            using (var sha1 = PlatformSpecific.GetSha1Provider())
+            using (var sha1 = SHA1.Create())
             {
                 ImsxRequestSerializer.Serialize(ms, imsxEnvelope);
                 ms.Position = 0;

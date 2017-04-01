@@ -30,8 +30,6 @@
     <Compile Remove="Outcomes\v2\ResultContainerPageFormatter.cs" />
     <Compile Remove="Outcomes\v2\ResultFormatter.cs" />
     <Compile Remove="Outcomes\v2\ResultsControllerConfigAttribute.cs" />
-    <Compile Remove="Profiles\ToolConsumerProfileControllerConfigAttribute.cs" />
-    <Compile Remove="Profiles\ToolConsumerProfileFormatter.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,6 +10,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
     /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
     [Consumes("application/xml")]
+    [Produces("application/xml")]
     public abstract class OutcomesControllerBase : Controller
     {
         /// <summary>
@@ -36,7 +37,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
         // POST api/outcomes
 
         [HttpPost]
-        public IActionResult Post(imsx_POXEnvelopeType request)
+        public ImsxXmlMediaTypeResult Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
         {
             imsx_POXEnvelopeType response;
             if (request == null)
@@ -80,7 +81,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                     }
                 }
             }
-            return new ImsxXmlResult(response);
+            return new ImsxXmlMediaTypeResult(response);
         }
 
         /// <summary>

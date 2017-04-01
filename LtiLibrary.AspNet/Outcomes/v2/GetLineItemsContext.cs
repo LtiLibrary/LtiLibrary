@@ -1,5 +1,4 @@
-﻿using System.Net;
-using LtiLibrary.Core.Outcomes.v2;
+﻿using LtiLibrary.Core.Outcomes.v2;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNet.Outcomes.v2

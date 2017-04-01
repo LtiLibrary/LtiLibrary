@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using LtiLibrary.AspNet.Lti1;
 using LtiLibrary.Core.Lti1;
@@ -14,7 +15,7 @@ namespace LtiLibrary.AspNet.Extensions
         /// <param name="response">The HttpResponse to write the launch request to.</param>
         /// <param name="request">The LtiConsumerRequest to write.</param>
         /// <param name="consumerSecret">The OAuth secret to use when signing the request.</param>
-        public static void WriteLtiRequest(this HttpResponse response, LtiRequest request, string consumerSecret)
+        public static async Task WriteLtiRequest(this HttpResponse response, LtiRequest request, string consumerSecret)
         {
             var model = request.GetViewModel(consumerSecret);
             var form = new StringBuilder();
@@ -36,7 +37,7 @@ namespace LtiLibrary.AspNet.Extensions
             form.AppendLine("</html>");
 
             response.ContentType = "text/html";
-            response.WriteAsync(form.ToString());
+            await response.WriteAsync(form.ToString());
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json.Serialization;
-#if NetCore
 using System.Reflection;
-#endif
 
 namespace LtiLibrary.Core.Common
 {
@@ -26,7 +24,7 @@ namespace LtiLibrary.Core.Common
 
         public override JsonContract ResolveContract(Type type)
         {
-            if (typeof(JsonLdObject).IsAssignableFrom(type))
+            if (typeof(JsonLdObject).GetTypeInfo().IsAssignableFrom(type))
             {
                 var contract = base.ResolveContract(type);
                 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.ComponentModel.DataAnnotations.Schema;
 using LtiLibrary.Core.Common;
 using Newtonsoft.Json;
 
@@ -109,14 +108,12 @@ namespace LtiLibrary.Core.OAuth
         /// <summary>
         /// All the OAuth parameters in the request
         /// </summary>
-        [NotMapped]
         [JsonIgnore]
         public NameValueCollection Parameters { get; }
 
         /// <summary>
         /// OAuth signature
         /// </summary>
-        [NotMapped]
         public string Signature
         {
             get
@@ -162,7 +159,6 @@ namespace LtiLibrary.Core.OAuth
         /// <summary>
         /// Convenience property to get and set the OAuth Timestamp using DateTime
         /// </summary>
-        [NotMapped]
         public DateTime TimestampAsDateTime
         {
             get
@@ -178,7 +174,6 @@ namespace LtiLibrary.Core.OAuth
         /// <summary>
         /// The resource URL.
         /// </summary>
-        [NotMapped]
         public Uri Url { get; set; }
 
         /// <summary>
@@ -204,24 +199,7 @@ namespace LtiLibrary.Core.OAuth
         /// <remarks>This is typically used by Tool Providers to verify the incoming request signature.</remarks>
         public string GenerateSignature(string consumerSecret)
         {
-            var parameters = new NameValueCollection(Parameters);
-            return GenerateSignature(parameters, consumerSecret);
-        }
-
-        /// <summary>
-        /// Calculate the OAuth Signature for this request using custom parameters.
-        /// </summary>
-        /// <param name="parameters">The set of parameters to be included in the signature.</param>
-        /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
-        /// <returns>The calculated OAuth Signature.</returns>
-        /// <remarks>
-        /// This is typically used by Tool Consumers that perform custom parameter substitution prior 
-        /// to signing the request.
-        /// </remarks>
-        public string GenerateSignature(NameValueCollection parameters, string consumerSecret)
-        {
-            var signature = OAuthUtility.GenerateSignature(HttpMethod, Url, parameters, consumerSecret);
-            return signature;
+            return OAuthUtility.GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
         }
     }
 }

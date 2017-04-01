@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 
@@ -8,7 +7,7 @@ namespace LtiLibrary.Core.Extensions
     public static class HttpWebResponseExtensions
     {
         /// <summary>
-        /// Create a string representation of the <see cref="HttpWebResponse"/> similar to Fiddler's.
+        /// Create a string representation of the <see cref="HttpResponseMessage"/> similar to Fiddler's.
         /// </summary>
         /// <remarks>Created for learning and debugging LTI.</remarks>
         public static string ToFormattedResponseString(this HttpResponseMessage response, string body)

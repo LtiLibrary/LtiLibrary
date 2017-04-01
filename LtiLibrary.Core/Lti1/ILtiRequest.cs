@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 using LtiLibrary.Core.OAuth;
 
 namespace LtiLibrary.Core.Lti1
@@ -38,9 +37,8 @@ namespace LtiLibrary.Core.Lti1
 
         void AddCustomParameter(string name, string value);
         void AddCustomParameters(string parameters);
-        string GenerateSignature(string consumerSecret);
-        string GenerateSignature(NameValueCollection parameters, string consumerSecret);
         IList<Role> GetRoles();
         void SetRoles(IList<Role> roles);
+        string SubstituteCustomVariablesAndGenerateSignature(string consumerSecret);
     }
 }

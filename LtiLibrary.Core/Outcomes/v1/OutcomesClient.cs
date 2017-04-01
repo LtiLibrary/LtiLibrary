@@ -126,10 +126,10 @@ namespace LtiLibrary.Core.Outcomes.v1
         /// <returns></returns>
         public static bool IsLtiOutcomesRequest(Stream stream)
         {
-            imsx_POXEnvelopeType imsxEnvelope;
+            imsx_POXEnvelopeType imsxRequestEnvelope;
             try
             {
-                imsxEnvelope = ImsxRequestSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
+                imsxRequestEnvelope = ImsxRequestSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
             }
             finally
             {
@@ -139,11 +139,13 @@ namespace LtiLibrary.Core.Outcomes.v1
                 }
             }
 
-            if (imsxEnvelope != null) return true;
+            if (imsxRequestEnvelope != null) return true;
+
+            imsx_POXEnvelopeType imsxResponseEnvelope;
             
             try
             {
-                imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
+                imsxResponseEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
             }
             finally
             {
@@ -153,7 +155,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                 }
             }
 
-            return imsxEnvelope != null;
+            return imsxResponseEnvelope != null;
         }
 
         private static BasicResult ParseDeleteResultResponse(HttpResponseMessage webResponse)

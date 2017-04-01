@@ -1,5 +1,4 @@
-﻿using System.Net;
-using LtiLibrary.Core.Profiles;
+﻿using LtiLibrary.Core.Profiles;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNet.Profiles

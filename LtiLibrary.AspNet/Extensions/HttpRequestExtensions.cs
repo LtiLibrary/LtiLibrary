@@ -6,11 +6,10 @@ using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Lti1;
 using LtiLibrary.Core.OAuth;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 
 namespace LtiLibrary.AspNet.Extensions
 {
-    public static class HttpRequestBaseExtensions
+    public static class HttpRequestExtensions
     {
         // These OAuth parameters are required
         private static readonly string[] RequiredOauthParameters =
@@ -49,7 +48,7 @@ namespace LtiLibrary.AspNet.Extensions
 
         public static string GenerateOAuthSignature(this HttpRequest request, string consumerSecret)
         {
-            var url = new Uri(request.GetDisplayUrl());
+            var url = request.GetUri();
             var parameters = new NameValueCollection();
             foreach (var formKey in request.Form.Keys)
             {
@@ -114,20 +113,20 @@ namespace LtiLibrary.AspNet.Extensions
             switch (request.Form[LtiConstants.LtiMessageTypeParameter])
             {
                 case LtiConstants.BasicLaunchLtiMessageType:
-                {
-                    request.RequireAllOf(RequiredBasicLaunchParameters);
-                    break;
-                }
+                    {
+                        request.RequireAllOf(RequiredBasicLaunchParameters);
+                        break;
+                    }
                 case LtiConstants.ContentItemSelectionRequestLtiMessageType:
-                {
-                    request.RequireAllOf(RequiredContentItemLaunchParameters);
-                    break;
-                }
+                    {
+                        request.RequireAllOf(RequiredContentItemLaunchParameters);
+                        break;
+                    }
                 case LtiConstants.ContentItemSelectionLtiMessageType:
-                {
-                    request.RequireAllOf(RequiredContentItemResponseParameters);
-                    break;
-                }
+                    {
+                        request.RequireAllOf(RequiredContentItemResponseParameters);
+                        break;
+                    }
             }
         }
 
@@ -139,6 +138,26 @@ namespace LtiLibrary.AspNet.Extensions
             {
                 throw new LtiException("Missing parameters: " + string.Join(", ", missing.ToArray()));
             }
+        }
+
+        public static Uri GetUri(this HttpRequest request)
+        {
+            var hostComponents = request.Host.ToUriComponent().Split(':');
+
+            var builder = new UriBuilder
+            {
+                Scheme = request.Scheme,
+                Host = hostComponents[0],
+                Path = request.Path,
+                Query = request.QueryString.ToUriComponent()
+            };
+
+            if (hostComponents.Length == 2)
+            {
+                builder.Port = Convert.ToInt32(hostComponents[1]);
+            }
+
+            return builder.Uri;
         }
     }
 }

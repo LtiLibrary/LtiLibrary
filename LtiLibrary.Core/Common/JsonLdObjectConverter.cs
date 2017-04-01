@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-#if NetCore
 using System.Reflection;
-#endif
 
 namespace LtiLibrary.Core.Common
 {
@@ -35,7 +33,7 @@ namespace LtiLibrary.Core.Common
             // Collect the external contexts. Note that the last one wins.
             // See http://www.w3.org/TR/json-ld/#advanced-context-usage
             Uri externalContextId = null;
-            if (JsonLdObjectType.IsInstanceOfType(value))
+            if (JsonLdObjectType.GetTypeInfo().IsInstanceOfType(value))
             {
                 var obj = (IJsonLdObject) value;
                 externalContextId = GetExternalContextId(obj);
@@ -43,7 +41,7 @@ namespace LtiLibrary.Core.Common
 
             // Collect the local terms
             IDictionary<string, string> terms = null;
-            if (JsonLdObjectType.IsInstanceOfType(value))
+            if (JsonLdObjectType.GetTypeInfo().IsInstanceOfType(value))
             {
                 var obj = (IJsonLdObject) value;
                 terms = GetTerms(obj);
@@ -106,18 +104,18 @@ namespace LtiLibrary.Core.Common
             var externalContextId = obj.ExternalContextId;
 
             // Walk the object to find embedded JsonLdObjects
-            foreach (var propertyInfo in obj.GetType().GetProperties())
+            foreach (var propertyInfo in obj.GetType().GetTypeInfo().GetProperties())
             {
                 if (!propertyInfo.CanRead) continue;
 
-                if (JsonLdObjectType.IsAssignableFrom(propertyInfo.PropertyType))
+                if (JsonLdObjectType.GetTypeInfo().IsAssignableFrom(propertyInfo.PropertyType))
                 {
                     var propertyValue = (IJsonLdObject)propertyInfo.GetValue(obj, null);
                     var contextId = GetExternalContextId(propertyValue);
                     if (contextId != null)
                         externalContextId = contextId;
                 }
-                else if (JsonLdObjectArrayType.IsAssignableFrom(propertyInfo.PropertyType))
+                else if (JsonLdObjectArrayType.GetTypeInfo().IsAssignableFrom(propertyInfo.PropertyType))
                 {
                     var propertyValue = (IEnumerable<IJsonLdObject>)propertyInfo.GetValue(obj, null);
                     if (propertyValue != null)
@@ -150,11 +148,11 @@ namespace LtiLibrary.Core.Common
             }
 
             // Walk the object to find embedded JsonLdObjects
-            foreach (var propertyInfo in obj.GetType().GetProperties())
+            foreach (var propertyInfo in obj.GetType().GetTypeInfo().GetProperties())
             {
                 if (!propertyInfo.CanRead) continue;
 
-                if (JsonLdObjectType.IsAssignableFrom(propertyInfo.PropertyType))
+                if (JsonLdObjectType.GetTypeInfo().IsAssignableFrom(propertyInfo.PropertyType))
                 {
                     var propertyValue = (IJsonLdObject) propertyInfo.GetValue(obj, null);
                     var propertyTerms = GetTerms(propertyValue);
@@ -163,7 +161,7 @@ namespace LtiLibrary.Core.Common
                         terms[key] = propertyTerms[key];
                     }
                 }
-                else if (JsonLdObjectArrayType.IsAssignableFrom(propertyInfo.PropertyType))
+                else if (JsonLdObjectArrayType.GetTypeInfo().IsAssignableFrom(propertyInfo.PropertyType))
                 {
                     var propertyValue = (IEnumerable<IJsonLdObject>) propertyInfo.GetValue(obj, null);
                     if (propertyValue != null)

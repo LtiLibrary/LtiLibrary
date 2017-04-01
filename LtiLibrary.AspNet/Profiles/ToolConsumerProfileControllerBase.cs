@@ -10,6 +10,7 @@ namespace LtiLibrary.AspNet.Profiles
     /// Implements the LTI Tool Consumer Profile API.
     /// </summary>
     [Consumes(LtiConstants.ToolConsumerProfileMediaType)]
+    [Produces(LtiConstants.ToolConsumerProfileMediaType)]
     public abstract class ToolConsumerProfileControllerBase : Controller
     {
         protected ToolConsumerProfileControllerBase()
@@ -32,12 +33,10 @@ namespace LtiLibrary.AspNet.Profiles
 
                 if (context.StatusCode == StatusCodes.Status200OK)
                 {
+                    // Set the Content-Type of the ObjectResult
                     return new ToolConsumerProfileResult(context.ToolConsumerProfile);
                 }
-                else
-                {
-                    return StatusCode(context.StatusCode);
-                }
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {

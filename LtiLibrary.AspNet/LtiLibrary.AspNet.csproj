@@ -7,7 +7,7 @@
     <VersionPrefix>2.0.0</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
     <Authors>andyfmiller.com</Authors>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
     <AssemblyName>LtiLibrary.AspNet</AssemblyName>
     <PackageId>LtiLibrary.AspNet</PackageId>
     <PackageTags>IMS;LTI;ASP.NET; ASP.NET Core</PackageTags>
@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <Compile Remove="Extensions\StringExtensions.cs" />
+    <Compile Remove="Outcomes\v1\ImsxXmlMediaTypeFormatter.cs" />
     <Compile Remove="Outcomes\v2\LineItemContainerPageFormatter.cs" />
     <Compile Remove="Outcomes\v2\LineItemFormatter.cs" />
     <Compile Remove="Outcomes\v2\LineItemsControllerConfigAttribute.cs" />

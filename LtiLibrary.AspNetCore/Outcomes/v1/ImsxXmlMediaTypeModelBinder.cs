@@ -41,6 +41,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 }
             }
 
+            // To avoid warning that there are no await call in this async method
             await Task.Yield();
         }
     }

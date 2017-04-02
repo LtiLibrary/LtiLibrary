@@ -13,7 +13,8 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LISResult/service.html
     /// </summary>
     [Route("courses/{contextId}/lineitems/{lineItemId}/results/{id?}", Name = "ResultsApi")]
-    [Consumes(LtiConstants.LisResultContainerMediaType)]
+    [Consumes(LtiConstants.LisResultMediaType, LtiConstants.LisResultContainerMediaType)]
+    [Produces(LtiConstants.LisResultMediaType, LtiConstants.LisResultContainerMediaType)]
     public abstract class ResultsControllerBase : Controller
     {
         protected ResultsControllerBase()
@@ -135,7 +136,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Create a new LisResult instance.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> PostAsync(string contextId, string lineItemId, LisResult result)
+        public async Task<IActionResult> PostAsync(string contextId, string lineItemId, [ModelBinder(BinderType = typeof(LisResultModelBinder))] LisResult result)
         {
             try
             {
@@ -165,7 +166,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Update a particular LisResult instance.
         /// </summary>
         [HttpPut]
-        public async Task<IActionResult> PutAsync(string contextId, string lineItemId, string id, LisResult result)
+        public async Task<IActionResult> PutAsync(string contextId, string lineItemId, string id, [ModelBinder(BinderType = typeof(LisResultModelBinder))] LisResult result)
         {
             try
             {

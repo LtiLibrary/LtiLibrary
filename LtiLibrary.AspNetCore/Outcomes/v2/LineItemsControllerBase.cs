@@ -159,7 +159,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// </summary>
         //[HttpPost("courses/{contextId}/lineitems/{id?}")]
         [HttpPost]
-        public async Task<IActionResult> PostAsync(string contextId, [ModelBinder(BinderType = typeof(OutcomesModelBinder))] LineItem lineItem)
+        public async Task<IActionResult> PostAsync(string contextId, [ModelBinder(BinderType = typeof(LineItemModelBinder))] LineItem lineItem)
         {
             try
             {
@@ -169,12 +169,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 if (context.StatusCode == StatusCodes.Status201Created)
                 {
-                    return new LineItemResult(context.LineItem);
+                    return new LineItemResult(context.LineItem, StatusCodes.Status201Created);
                 }
-                else
-                {
-                    return StatusCode(context.StatusCode);
-                }
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {
@@ -186,7 +183,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Update a particular LineItem instance.
         /// </summary>
         [HttpPut]
-        public async Task<IActionResult> PutAsync(LineItem lineItem)
+        public async Task<IActionResult> PutAsync([ModelBinder(BinderType = typeof(LineItemModelBinder))] LineItem lineItem)
         {
             try
             {

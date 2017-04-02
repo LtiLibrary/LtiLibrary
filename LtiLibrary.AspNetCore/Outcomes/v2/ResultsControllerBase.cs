@@ -12,6 +12,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LISResult/service.html
     /// </summary>
+    [Route("courses/{contextId}/lineitems/{lineItemId}/results/{id?}", Name = "ResultsApi")]
     [Consumes(LtiConstants.LisResultContainerMediaType)]
     public abstract class ResultsControllerBase : Controller
     {

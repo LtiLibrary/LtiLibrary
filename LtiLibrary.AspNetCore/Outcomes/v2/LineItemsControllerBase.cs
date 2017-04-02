@@ -13,7 +13,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html
     /// </summary>
+    [Route("courses/{contextId}/lineitems/{id?}", Name = "LineItemsApi")]
     [Consumes(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]
+    [Produces(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]
     public abstract class LineItemsControllerBase : Controller
     {
         protected LineItemsControllerBase()
@@ -108,10 +110,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                             StatusCode = context.StatusCode
                         };
                     }
-                    else
-                    {
-                        return StatusCode(context.StatusCode);
-                    }
+                    return StatusCode(context.StatusCode);
                 }
                 else
                 {
@@ -158,8 +157,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// <summary>
         /// Create a new LineItem instance.
         /// </summary>
+        //[HttpPost("courses/{contextId}/lineitems/{id?}")]
         [HttpPost]
-        public async Task<IActionResult> PostAsync(string contextId, LineItem lineItem)
+        public async Task<IActionResult> PostAsync(string contextId, [ModelBinder(BinderType = typeof(OutcomesModelBinder))] LineItem lineItem)
         {
             try
             {

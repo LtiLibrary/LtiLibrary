@@ -1,0 +1,85 @@
+{
+  "title": "LtiLibrary.Core",
+  "version": "2.0.0-beta",
+  "authors": [ "andyfmiller.com" ],
+  "description": ".NET library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.",
+  "copyright": "Copyright 2016",
+  "packOptions": {
+    "licenseUrl": "https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE",
+    "projectUrl": "https://github.com/andyfmiller/LtiLibrary",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/andyfmiller/LtiLibrary.git"
+    },
+    "tags": [ "IMS", "LTI", ".NET", "NetCore" ],
+    "summary": "IMS LTI .NET Library",
+    "releaseNotes": "2.0.0-beta\n- See https://github.com/andyfmiller/LtiLibrary/pull/37"
+  },
+  "dependencies": {
+    "Newtonsoft.Json": "8.0.3"
+  },
+  "frameworks": {
+    "net45": {
+      "frameworkAssemblies": {
+        "System.ComponentModel.DataAnnotations": "4.0.0.0",
+        "System.Net": "4.0.0.0",
+        "System.Net.Http": "4.0.0.0",
+        "System.Runtime.Serialization": "4.0.0.0",
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Serialization": "4.0.0.0"
+      },
+      "dependencies": {
+        "Microsoft.Net.Http": "2.2.29"
+      }
+    },
+    "net46": {
+      "frameworkAssemblies": {
+        "System.ComponentModel.DataAnnotations": "4.0.0.0",
+        "System.Net": "4.0.0.0",
+        "System.Net.Http": "4.0.0.0",
+        "System.Runtime.Serialization": "4.0.0.0",
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Serialization": "4.0.0.0"
+      },
+      "dependencies": {
+        "Microsoft.Net.Http": "2.2.29"
+      }
+    },
+    "netstandard1.5": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Collections.Specialized": "4.0.1",
+        "System.ComponentModel.Annotations": "4.1.0",
+        "System.ComponentModel.Primitives": "4.1.0",
+        "System.Diagnostics.Debug": "4.0.11",
+        "System.Dynamic.Runtime": "4.0.11",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "System.Runtime.Serialization.Primitives": "4.1.1",
+        "System.Security.Cryptography.Algorithms": "4.2.0",
+        "System.Xml.XmlSerializer": "4.0.11"
+      },
+      "buildOptions": {
+        "define": [ "NetCore" ]
+      }
+    },
+    "netcoreapp1.0": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "System.Collections.Specialized": "4.0.1",
+        "System.ComponentModel.Annotations": "4.1.0",
+        "System.ComponentModel.Primitives": "4.1.0",
+        "System.Diagnostics.Debug": "4.0.11",
+        "System.Dynamic.Runtime": "4.0.11",
+        "System.Reflection.TypeExtensions": "4.1.0",
+        "System.Runtime.Serialization.Primitives": "4.1.1",
+        "System.Security.Cryptography.Algorithms": "4.2.0",
+        "System.Xml.XmlSerializer": "4.0.11"
+      },
+      "buildOptions": {
+        "define": [ "NetCore" ]
+      }
+    }
+  }
+}

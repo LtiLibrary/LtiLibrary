@@ -9,7 +9,6 @@ using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Extensions;
 using LtiLibrary.Core.OAuth;
 using System.Net.Http;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace LtiLibrary.Core.Outcomes.v1
@@ -127,10 +126,10 @@ namespace LtiLibrary.Core.Outcomes.v1
         /// <returns></returns>
         public static bool IsLtiOutcomesRequest(Stream stream)
         {
-            imsx_POXEnvelopeType imsxRequestEnvelope;
+            imsx_POXEnvelopeType imsxEnvelope;
             try
             {
-                imsxRequestEnvelope = ImsxRequestSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
+                imsxEnvelope = ImsxRequestSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
             }
             finally
             {
@@ -140,13 +139,11 @@ namespace LtiLibrary.Core.Outcomes.v1
                 }
             }
 
-            if (imsxRequestEnvelope != null) return true;
-
-            imsx_POXEnvelopeType imsxResponseEnvelope;
+            if (imsxEnvelope != null) return true;
             
             try
             {
-                imsxResponseEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
+                imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
             }
             finally
             {
@@ -156,7 +153,7 @@ namespace LtiLibrary.Core.Outcomes.v1
                 }
             }
 
-            return imsxResponseEnvelope != null;
+            return imsxEnvelope != null;
         }
 
         private static BasicResult ParseDeleteResultResponse(HttpResponseMessage webResponse)
@@ -287,7 +284,7 @@ namespace LtiLibrary.Core.Outcomes.v1
 
             // Calculate the body hash
             var ms = new MemoryStream();
-            using (var sha1 = SHA1.Create())
+            using (var sha1 = PlatformSpecific.GetSha1Provider())
             {
                 ImsxRequestSerializer.Serialize(ms, imsxEnvelope);
                 ms.Position = 0;

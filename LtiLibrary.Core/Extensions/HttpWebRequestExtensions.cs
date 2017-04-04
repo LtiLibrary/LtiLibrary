@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace LtiLibrary.Core.Extensions
     public static class HttpWebRequestExtensions
     {
         /// <summary>
-        /// Create a string representation of the <see cref="HttpRequestMessage"/> similar to Fiddler's.
+        /// Create a string representation of the <see cref="HttpWebRequest"/> similar to Fiddler's.
         /// </summary>
         /// <remarks>Created for learning and debugging LTI.</remarks>
         public static async Task<string> ToFormattedRequestStringAsync(this HttpRequestMessage request)

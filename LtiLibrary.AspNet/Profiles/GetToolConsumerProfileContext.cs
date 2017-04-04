@@ -1,5 +1,5 @@
-﻿using LtiLibrary.Core.Profiles;
-using Microsoft.AspNetCore.Http;
+﻿using System.Net;
+using LtiLibrary.Core.Profiles;
 
 namespace LtiLibrary.AspNet.Profiles
 {
@@ -8,11 +8,11 @@ namespace LtiLibrary.AspNet.Profiles
         public GetToolConsumerProfileContext(string ltiVersion)
         {
             LtiVersion = ltiVersion;
-            StatusCode = StatusCodes.Status200OK;
+            StatusCode = HttpStatusCode.OK;
         }
 
         public string LtiVersion { get; private set; }
-        public int StatusCode { get; set; }
+        public HttpStatusCode StatusCode { get; set; }
         public ToolConsumerProfile ToolConsumerProfile { get; set; }
     }
 }

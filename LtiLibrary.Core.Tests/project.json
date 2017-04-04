@@ -1,0 +1,40 @@
+{
+  "title": "LtiLibrary.Core.Tests",
+  "version": "1.6-*",
+  "authors": [ "andyfmiller.com" ],
+  "description": "Unit tests for LtiLibrary.Core.",
+  "copyright": "Copyright © 2016",
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/andyfmiller/LtiLibrary.git"
+    },
+    "licenseUrl": "https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE",
+    "summary": "Unit tests for LtiLibrary.Core."
+  },
+  "testRunner": "xunit",
+  "dependencies": {
+    "LtiLibrary.Core": "2.0-*",
+    "NodaTime": "2.0.0-alpha20160729",
+    "NodaTime.Serialization.JsonNet": "2.0.0-alpha20160729"
+  },
+  "frameworks": {
+    "netcoreapp1.0": {
+      "imports": "dnxcore50",
+      "dependencies": {
+        "NETStandard.Library": "1.6.0",
+        "xunit": "2.2.0-beta2-build3300",
+        "dotnet-test-xunit": "2.2.0-preview2-build1029"
+      },
+      "buildOptions": {
+        "define": [ "NetCore" ],
+        "copyToOutput": {
+          "include": "ReferenceJson/*.json"
+        }
+      }
+    }
+  },
+  "runtimes": {
+    "win10-x64": {}
+  }
+}

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Globalization;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Controllers;
 using LtiLibrary.Core.Common;
 using LtiLibrary.Core.Outcomes.v1;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LtiLibrary.AspNet.Outcomes.v1
 {
     /// <summary>
     /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
-    [Consumes("application/xml")]
-    [Produces("application/xml")]
-    public abstract class OutcomesControllerBase : Controller
+    [OutcomesControllerConfigurationAttribute]
+    public abstract class OutcomesControllerBase : ApiController
     {
         /// <summary>
         /// Delete the result (grade, score, outcome) from the consumer.
@@ -37,7 +39,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
         // POST api/outcomes
 
         [HttpPost]
-        public ImsxXmlMediaTypeResult Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
+        public HttpResponseMessage Post(imsx_POXEnvelopeType request)
         {
             imsx_POXEnvelopeType response;
             if (request == null)
@@ -81,7 +83,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                     }
                 }
             }
-            return new ImsxXmlMediaTypeResult(response);
+            return Request.CreateResponse(HttpStatusCode.OK, response, new ImsxXmlMediaTypeFormatter());
         }
 
         /// <summary>
@@ -143,7 +145,7 @@ namespace LtiLibrary.AspNet.Outcomes.v1
                 // always be formatted using “en” formatting
                 // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
                 const NumberStyles style = NumberStyles.Number | NumberStyles.AllowDecimalPoint;
-                var culture = new CultureInfo(LtiConstants.ScoreLanguage);
+                var culture = CultureInfo.CreateSpecificCulture(LtiConstants.ScoreLanguage);
                 double value;
                 if (double.TryParse(resultRecord.result.resultScore.textString, style, culture, out value))
                 {
@@ -247,6 +249,24 @@ namespace LtiLibrary.AspNet.Outcomes.v1
             }
             response.imsx_POXBody.Item = new replaceResultResponse();
             return response;
+        }
+    }
+
+    public class OutcomesControllerConfigurationAttribute : Attribute, IControllerConfiguration
+    {
+        public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
+        {
+            // The XSD code generator only creates one imsx_POXEnvelopeType which has the 
+            // imsx_POXEnvelopeRequest root element. The IMS spec says the root element
+            // should be imsx_POXEnvelopeResponse in the response.
+
+            // Remove the default XmlFormatter that does not know how to override the root element
+            var xmlFormatter = controllerSettings.Formatters.XmlFormatter;
+            controllerSettings.Formatters.Remove(xmlFormatter);
+
+            // Replace the default XmlFormatter with one that overrides the response root element
+            var imsxXmlFormatter = new ImsxXmlMediaTypeFormatter();
+            controllerSettings.Formatters.Add(imsxXmlFormatter);
         }
     }
 }

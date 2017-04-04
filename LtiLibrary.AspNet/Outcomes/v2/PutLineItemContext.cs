@@ -1,5 +1,5 @@
-﻿using LtiLibrary.Core.Outcomes.v2;
-using Microsoft.AspNetCore.Http;
+﻿using System.Net;
+using LtiLibrary.Core.Outcomes.v2;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
@@ -8,10 +8,10 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         public PutLineItemContext(LineItem lineItem)
         {
             LineItem = lineItem;
-            StatusCode = StatusCodes.Status200OK;
+            StatusCode = HttpStatusCode.OK;
         }
 
         public LineItem LineItem { get; private set; }
-        public int StatusCode { get; set; }
+        public HttpStatusCode StatusCode { get; set; }
     }
 }

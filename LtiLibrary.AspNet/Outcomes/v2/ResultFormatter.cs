@@ -1,13 +1,12 @@
-﻿using System.Buffers;
-using Microsoft.Net.Http.Headers;
+﻿using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using LtiLibrary.Core.Common;
-using Newtonsoft.Json;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
-    public class ResultFormatter : Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter
+    public class ResultFormatter : JsonMediaTypeFormatter
     {
-        public ResultFormatter(JsonSerializerSettings settings, ArrayPool<char> charPool) : base(settings, charPool)
+        public ResultFormatter()
         {
             // Accept LineItem JSON-LD
             SupportedMediaTypes.Clear();

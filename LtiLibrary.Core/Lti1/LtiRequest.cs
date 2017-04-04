@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -140,6 +141,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         [DataMember(Name = LtiConstants.ContextTypeParameter)]
         public LisContextType? ContextType
         {
@@ -1273,6 +1275,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string ContextOrg { get; set; }
 
         /// <summary>
@@ -1284,6 +1287,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LineItemServiceUrl { get; set; }
 
         /// <summary>
@@ -1295,6 +1299,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LineItemsServiceUrl { get; set; }
 
         /// <summary>
@@ -1305,6 +1310,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingAcademicSession { get; set; }
 
         /// <summary>
@@ -1315,6 +1321,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingCourseNumber { get; set; }
 
         /// <summary>
@@ -1325,6 +1332,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingCredits { get; set; }
 
         /// <summary>
@@ -1335,6 +1343,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingLabel { get; set; }
 
         /// <summary>
@@ -1345,6 +1354,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingLongDescription { get; set; }
 
         /// <summary>
@@ -1355,6 +1365,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingShortDescription { get; set; }
 
         /// <summary>
@@ -1365,6 +1376,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseOfferingTitle { get; set; }
 
         /// <summary>
@@ -1375,6 +1387,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionCourseNumber { get; set; }
 
         /// <summary>
@@ -1385,6 +1398,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionCredits { get; set; }
 
         /// <summary>
@@ -1395,6 +1409,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionDataSource { get; set; }
 
         /// <summary>
@@ -1405,6 +1420,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionDept { get; set; }
 
         /// <summary>
@@ -1415,6 +1431,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionEnrollControlAccept { get; set; }
 
         /// <summary>
@@ -1425,6 +1442,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionEnrollControlAllowed { get; set; }
 
         /// <summary>
@@ -1435,6 +1453,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionLabel { get; set; }
 
         /// <summary>
@@ -1445,6 +1464,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionLongDescription { get; set; }
 
         /// <summary>
@@ -1455,6 +1475,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionMaxNumberOfStudents { get; set; }
 
         /// <summary>
@@ -1465,6 +1486,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionNumberOfStudents { get; set; }
 
         /// <summary>
@@ -1475,6 +1497,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionShortDescription { get; set; }
 
         /// <summary>
@@ -1485,6 +1508,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionSourceSectionId { get; set; }
 
         /// <summary>
@@ -1495,6 +1519,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionTimeFrameBegin { get; set; }
 
         /// <summary>
@@ -1505,6 +1530,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionTimeFrameEnd { get; set; }
 
         /// <summary>
@@ -1515,6 +1541,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseSectionTitle { get; set; }
 
         /// <summary>
@@ -1525,6 +1552,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateCourseNumber { get; set; }
 
         /// <summary>
@@ -1535,6 +1563,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateCredits { get; set; }
 
         /// <summary>
@@ -1545,6 +1574,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateLabel { get; set; }
 
         /// <summary>
@@ -1555,6 +1585,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateLongDescription { get; set; }
 
         /// <summary>
@@ -1565,6 +1596,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateShortDescription { get; set; }
 
         /// <summary>
@@ -1575,6 +1607,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateSourcedId { get; set; }
 
         /// <summary>
@@ -1585,6 +1618,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisCourseTemplateTitle { get; set; }
 
         /// <summary>
@@ -1595,6 +1629,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupEmail { get; set; }
 
         /// <summary>
@@ -1605,6 +1640,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupEnrollControlAccept { get; set; }
 
         /// <summary>
@@ -1615,6 +1651,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupEnrollControlAllowed { get; set; }
 
         /// <summary>
@@ -1625,6 +1662,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupGrouptypeLevel { get; set; }
 
         /// <summary>
@@ -1635,6 +1673,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupGrouptypeScheme { get; set; }
 
         /// <summary>
@@ -1645,6 +1684,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupGrouptypeTypevalue { get; set; }
 
         /// <summary>
@@ -1655,6 +1695,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupLongDescription { get; set; }
 
         /// <summary>
@@ -1665,6 +1706,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupParentId { get; set; }
 
         /// <summary>
@@ -1675,6 +1717,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupShortDescription { get; set; }
 
         /// <summary>
@@ -1685,6 +1728,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupSourcedId { get; set; }
 
         /// <summary>
@@ -1695,6 +1739,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupTimeFrameBegin { get; set; }
 
         /// <summary>
@@ -1705,6 +1750,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupTimeFrameEnd { get; set; }
 
         /// <summary>
@@ -1715,6 +1761,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisGroupUrl { get; set; }
 
         /// <summary>
@@ -1725,6 +1772,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisLineItemDataSource { get; set; }
 
         /// <summary>
@@ -1735,6 +1783,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisLineItemResultValueList { get; set; }
 
         /// <summary>
@@ -1745,6 +1794,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisLineItemResultValueMax { get; set; }
 
         /// <summary>
@@ -1755,6 +1805,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisLineItemSourcedId { get; set; }
 
         /// <summary>
@@ -1765,6 +1816,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisLineItemType { get; set; }
 
         /// <summary>
@@ -1775,6 +1827,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisLineItemTypeDisplayName { get; set; }
 
         /// <summary>
@@ -1785,6 +1838,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipCollectionSourcedId { get; set; }
 
         /// <summary>
@@ -1795,6 +1849,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipCreatedTimestamp { get; set; }
 
         /// <summary>
@@ -1805,6 +1860,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipDataSource { get; set; }
 
         /// <summary>
@@ -1815,6 +1871,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipPersonSourcedId { get; set; }
 
         /// <summary>
@@ -1825,6 +1882,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipRole { get; set; }
 
         /// <summary>
@@ -1835,6 +1893,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipSourcedId { get; set; }
 
         /// <summary>
@@ -1845,6 +1904,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisMembershipStatus { get; set; }
 
         /// <summary>
@@ -1855,6 +1915,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressCountry { get; set; }
 
         /// <summary>
@@ -1865,6 +1926,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressLocality { get; set; }
 
         /// <summary>
@@ -1875,6 +1937,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressPostCode { get; set; }
 
         /// <summary>
@@ -1885,6 +1948,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressStatePr { get; set; }
 
         /// <summary>
@@ -1895,6 +1959,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressStreet1 { get; set; }
 
         /// <summary>
@@ -1905,6 +1970,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressStreet2 { get; set; }
 
         /// <summary>
@@ -1915,6 +1981,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressStreet3 { get; set; }
 
         /// <summary>
@@ -1925,6 +1992,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressStreet4 { get; set; }
 
         /// <summary>
@@ -1935,6 +2003,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonAddressTimezone { get; set; }
 
         /// <summary>
@@ -1945,6 +2014,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonEmailPersonal { get; set; }
 
         /// <summary>
@@ -1955,6 +2025,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonNameMiddle { get; set; }
 
         /// <summary>
@@ -1965,6 +2036,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonNamePrefix { get; set; }
 
         /// <summary>
@@ -1975,6 +2047,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonNameSuffix { get; set; }
 
         /// <summary>
@@ -1985,6 +2058,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonPhoneHome { get; set; }
 
         /// <summary>
@@ -1995,6 +2069,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonPhoneMobile { get; set; }
 
         /// <summary>
@@ -2005,6 +2080,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonPhonePrimary { get; set; }
 
         /// <summary>
@@ -2015,6 +2091,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonPhoneWork { get; set; }
 
         /// <summary>
@@ -2025,6 +2102,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonSms { get; set; }
 
         /// <summary>
@@ -2035,6 +2113,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.0, 1.1, 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisPersonWebAddress { get; set; }
 
         /// <summary>
@@ -2046,6 +2125,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisResultCreatedTimestamp { get; set; }
 
         /// <summary>
@@ -2057,6 +2137,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisResultDataSource { get; set; }
 
         /// <summary>
@@ -2068,6 +2149,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisResultResultScore { get; set; }
 
         /// <summary>
@@ -2079,6 +2161,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string LisResultStatus { get; set; }
 
         /// <summary>
@@ -2090,6 +2173,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string ResultServiceUrl { get; set; }
 
         /// <summary>
@@ -2101,6 +2185,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string ResultsServiceUrl { get; set; }
 
         /// <summary>
@@ -2114,6 +2199,7 @@ namespace LtiLibrary.Core.Lti1
         /// Optional.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string ToolConsumerProfileUrl { get; set; }
 
         /// <summary>
@@ -2125,6 +2211,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string UserName { get; set; }
 
         /// <summary>
@@ -2136,6 +2223,7 @@ namespace LtiLibrary.Core.Lti1
         /// Versions: 1.2.
         /// </para>
         /// </summary>
+        [NotMapped]
         public string UserOrg { get; set; }
 
         #endregion
@@ -2362,7 +2450,10 @@ namespace LtiLibrary.Core.Lti1
             return value;
         }
 
-        private void SubstituteCustomVariables(NameValueCollection parameters)
+        /// <summary>
+        /// Perform all the custom variable substitutions
+        /// </summary>
+        public void SubstituteCustomVariables(NameValueCollection parameters)
         {
             foreach (var key in parameters.AllKeys)
             {
@@ -2372,32 +2463,9 @@ namespace LtiLibrary.Core.Lti1
                     // names must be lowercase letters or numbers. Any other
                     // character is replaced with an underscore.
                     var value = SubstituteCustomVariable(parameters[key]);
-                    Parameters[key] = value;
+                    parameters[key] = value;
                 }
             }
-        }
-
-        private void SubstituteCustomVariables()
-        {
-            // Create a copy of the parameters (getters should not change the object and this
-            // getter changes the parameters to eliminate empty/null values and make custom
-            // parameter substitutions)
-            var parameters = new NameValueCollection(Parameters);
-
-            // Remove empty/null parameters
-            foreach (var key in parameters.AllKeys.Where(key => string.IsNullOrWhiteSpace(parameters[key])))
-            {
-                parameters.Remove(key);
-            }
-
-            // Perform the custom variable substitutions
-            SubstituteCustomVariables(parameters);
-        }
-
-        public string SubstituteCustomVariablesAndGenerateSignature(string secret)
-        {
-            SubstituteCustomVariables();
-            return GenerateSignature(secret);
         }
 
         #endregion

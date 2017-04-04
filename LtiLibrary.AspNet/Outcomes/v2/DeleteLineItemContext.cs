@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Net;
 
 namespace LtiLibrary.AspNet.Outcomes.v2
 {
@@ -8,11 +8,11 @@ namespace LtiLibrary.AspNet.Outcomes.v2
         {
             ContextId = contextId;
             Id = id;
-            StatusCode = StatusCodes.Status200OK;
+            StatusCode = HttpStatusCode.OK;
         }
 
         public string ContextId { get; set; }
         public string Id { get; private set; }
-        public int StatusCode { get; set; }
+        public HttpStatusCode StatusCode { get; set; }
     }
 }

@@ -37,6 +37,14 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
         }
 
+        /// <summary>
+        /// Send an Outcomes 1.0 DeleteScore request.
+        /// </summary>
+        /// <param name="serviceUrl">The URL to send the request to.</param>
+        /// <param name="consumerKey">The OAuth key to sign the request.</param>
+        /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
+        /// <param name="lisResultSourcedId">The LisResult to be deleted.</param>
+        /// <returns>A <see cref="BasicResult"/> with the success of the request.</returns>
         public static async Task<BasicResult> DeleteScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
@@ -73,6 +81,15 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             }
         }
 
+        /// <summary>
+        /// Send an Outcomes 1.0 PostScore request.
+        /// </summary>
+        /// <param name="serviceUrl">The URL to send the request to.</param>
+        /// <param name="consumerKey">The OAuth key to sign the request.</param>
+        /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
+        /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
+        /// <param name="score">The score.</param>
+        /// <returns>A <see cref="BasicResult"/> with the success of the request.</returns>
         public static async Task<BasicResult> PostScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
@@ -121,10 +138,10 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         }
 
         /// <summary>
-        /// Returns True if the stream contains an LTI Outcomes payload.
+        /// Returns True if the stream contains an LTI Outcomes 1.0 payload.
         /// </summary>
-        /// <param name="stream">The <see cref="System.IO.Stream"/> to examine.</param>
-        /// <returns></returns>
+        /// <param name="stream">The <see cref="Stream"/> to examine.</param>
+        /// <returns>True if the stream contains an LTI Outcomes 1.0 payload.</returns>
         public static bool IsLtiOutcomesRequest(Stream stream)
         {
             imsx_POXEnvelopeType imsxRequestEnvelope;
@@ -159,6 +176,11 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             return imsxResponseEnvelope != null;
         }
 
+        /// <summary>
+        /// Examine the <see cref="HttpResponseMessage"/> to see if the request succeeded or failed.
+        /// </summary>
+        /// <param name="webResponse">The <see cref="HttpResponseMessage"/> to parse.</param>
+        /// <returns>A <see cref="BasicResult"/> with the result.</returns>
         private static BasicResult ParseDeleteResultResponse(HttpResponseMessage webResponse)
         {
             if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
@@ -178,6 +200,11 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                 imsxHeader.imsx_statusInfo.imsx_description);
         }
 
+        /// <summary>
+        /// Examine the <see cref="HttpResponseMessage"/> to see if the request succeeded or failed.
+        /// </summary>
+        /// <param name="webResponse">The <see cref="HttpResponseMessage"/> to parse.</param>
+        /// <returns>A <see cref="BasicResult"/> with the result.</returns>
         private static BasicResult ParsePostResultResponse(HttpResponseMessage webResponse)
         {
             if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
@@ -197,6 +224,14 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                 imsxHeader.imsx_statusInfo.imsx_description);
         }
 
+        /// <summary>
+        /// Send an Outcomes 1.0 ReadScore request and return the LisResult.
+        /// </summary>
+        /// <param name="serviceUrl">The URL to send the request to.</param>
+        /// <param name="consumerKey">The OAuth key to sign the request.</param>
+        /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
+        /// <param name="lisResultSourcedId">The LisResult to read.</param>
+        /// <returns>The LisResult.</returns>
         public static async Task<LisResult> ReadScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             var imsxEnvelope = new imsx_POXEnvelopeType
@@ -233,6 +268,11 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             }
         }
 
+        /// <summary>
+        /// Examine the <see cref="HttpResponseMessage"/> and return the <see cref="LisResult"/>.
+        /// </summary>
+        /// <param name="webResponse">The <see cref="HttpResponseMessage"/> to parse.</param>
+        /// <returns>The <see cref="LisResult"/> with the result.</returns>
         private static LisResult ParseReadResultResponse(HttpResponseMessage webResponse)
         {
             if (webResponse == null)
@@ -270,6 +310,15 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             return new LisResult { Score = null, IsValid = true };
         }
 
+        /// <summary>
+        /// Create an <see cref="HttpRequestMessage"/> with a signed OAuth Authorization header, and
+        /// the imsxEnvelope in the body of the request.
+        /// </summary>
+        /// <param name="imsxEnvelope">The <see cref="imsx_POXEnvelopeType"/> to send.</param>
+        /// <param name="url">The URL the request will be sent to.</param>
+        /// <param name="consumerKey">The OAuth key to sign the request.</param>
+        /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
+        /// <returns></returns>
         private static HttpRequestMessage CreateLtiOutcomesRequest(imsx_POXEnvelopeType imsxEnvelope, string url, string consumerKey, string consumerSecret)
         {
             var webRequest = new HttpRequestMessage(HttpMethod.Post, url);

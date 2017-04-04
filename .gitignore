@@ -181,3 +181,5 @@ pip-log.txt
 
 # .NET Core artifacts
 *.lock.json
+/LtiLibrary.Core.Tests/LtiLibrary.Core.Tests.nuget.props
+/LtiLibrary.AspNet/LtiLibrary.AspNet.nuget.targets

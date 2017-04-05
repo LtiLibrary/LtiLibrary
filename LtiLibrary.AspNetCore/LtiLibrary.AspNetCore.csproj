@@ -14,7 +14,7 @@
     <PackageReleaseNotes>
       <![CDATA[
 2.0.0-beta
-- Updated to .NET Core 1.1
+- New library for ASP.NET Core
       ]]>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
@@ -22,15 +22,6 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Outcomes\v2\LineItemContainerPageFormatter.cs" />
-    <Compile Remove="Outcomes\v2\LineItemFormatter.cs" />
-    <Compile Remove="Outcomes\v2\LineItemsControllerConfigAttribute.cs" />
-    <Compile Remove="Outcomes\v2\ResultContainerPageFormatter.cs" />
-    <Compile Remove="Outcomes\v2\ResultFormatter.cs" />
-    <Compile Remove="Outcomes\v2\ResultsControllerConfigAttribute.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />

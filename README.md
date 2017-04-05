@@ -1,6 +1,6 @@
 LTI Library
 ===========
-There are two .NET projects in this solution to support IMS LTI Tool Providers and Tool Consumers.
+There are two .NET Core projects in this solution to support IMS LTI Tool Providers and Tool Consumers.
 
 ## LtiLibrary.Core
 This is the only library you need if you are going to roll your own support for ASP.NET and authentication.

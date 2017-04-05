@@ -1,0 +1,17 @@
+﻿{
+  "@context": [
+    "http://localhost/ParentContext",
+    { "Child": "ChildTerms" }
+  ],
+  "@id": "http://localhost/test/1",
+  "@type": "Parent",
+  "Child": {
+    "@type": "Child",
+    "Name": "MyChild",
+    "GrandChild": {
+      "@type": "Child",
+      "Name": "MyGrandChild"
+    }
+  },
+  "Name": "MyParent"
+}

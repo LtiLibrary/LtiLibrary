@@ -35,8 +35,8 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         public async void ReplaceResult()
         {
             // TODO: Authentication!
-            var readResult = await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
-            Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
+            var replaceResult = await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            Assert.True(replaceResult.StatusCode == HttpStatusCode.OK, $"{replaceResult.StatusCode} == {HttpStatusCode.OK}");
         }
 
         [Fact]

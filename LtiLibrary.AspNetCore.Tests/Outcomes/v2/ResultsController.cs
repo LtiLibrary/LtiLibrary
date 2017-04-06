@@ -17,13 +17,13 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             {
                 var resultUri = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, context.Id }));
 
-                if (LineItemsController.Result == null || !LineItemsController.Result.Id.Equals(resultUri))
+                if (OutcomesDataFixture.Result == null || !OutcomesDataFixture.Result.Id.Equals(resultUri))
                 {
                     context.StatusCode = StatusCodes.Status404NotFound;
                 }
                 else
                 {
-                    LineItemsController.Result = null;
+                    OutcomesDataFixture.Result = null;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
                 return Task.FromResult<object>(null);
@@ -38,11 +38,11 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
                 var resultUri = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, context.Id }));
 
-                if (LineItemsController.LineItem == null || !LineItemsController.LineItem.Id.Equals(lineItemUri))
+                if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
                     context.StatusCode = StatusCodes.Status404NotFound;
                 }
-                else if (LineItemsController.Result == null || !LineItemsController.Result.Id.Equals(resultUri))
+                else if (OutcomesDataFixture.Result == null || !OutcomesDataFixture.Result.Id.Equals(resultUri))
                 {
                     context.Result = new LisResult
                     {
@@ -55,7 +55,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                 }
                 else
                 {
-                    context.Result = LineItemsController.Result;
+                    context.Result = OutcomesDataFixture.Result;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
                 return Task.FromResult<object>(null);
@@ -64,7 +64,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             OnGetResults = context =>
             {
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
-                if (LineItemsController.LineItem == null || !LineItemsController.LineItem.Id.Equals(lineItemUri))
+                if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
                     context.StatusCode = StatusCodes.Status404NotFound;
                 }
@@ -78,7 +78,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                         {
                             MembershipSubject = new ResultMembershipSubject
                             {
-                                Results = LineItemsController.Result == null ? new LisResult[] { } : new[] { LineItemsController.Result }
+                                Results = OutcomesDataFixture.Result == null ? new LisResult[] { } : new[] { OutcomesDataFixture.Result }
                             }
                         }
                     };
@@ -90,15 +90,15 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             OnPostResult = context =>
             {
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
-                if (LineItemsController.LineItem == null || !LineItemsController.LineItem.Id.Equals(lineItemUri))
+                if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
                     context.StatusCode = StatusCodes.Status400BadRequest;
                 }
                 else
                 {
-                    LineItemsController.Result = context.Result;
-                    LineItemsController.Result.Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, id = LineItemsController.ResultId }));
-                    context.Result = LineItemsController.Result;
+                    OutcomesDataFixture.Result = context.Result;
+                    OutcomesDataFixture.Result.Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, id = OutcomesDataFixture.ResultId }));
+                    context.Result = OutcomesDataFixture.Result;
                     context.StatusCode = StatusCodes.Status201Created;
                 }
                 return Task.FromResult<object>(null);
@@ -112,17 +112,17 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                 // PUT or a GET request.
 
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
-                if (LineItemsController.LineItem == null || !LineItemsController.LineItem.Id.Equals(lineItemUri))
+                if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
                     context.StatusCode = StatusCodes.Status404NotFound;
                 }
                 else
                 {
                     // If this is the first connection, the PUT is equivalent to a POST
-                    LineItemsController.Result = context.Result;
+                    OutcomesDataFixture.Result = context.Result;
                     if (context.Result.Id == null)
                     {
-                        LineItemsController.Result.Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, id = LineItemsController.ResultId }));
+                        OutcomesDataFixture.Result.Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, id = OutcomesDataFixture.ResultId }));
                     }
                     context.StatusCode = StatusCodes.Status200OK;
                 }

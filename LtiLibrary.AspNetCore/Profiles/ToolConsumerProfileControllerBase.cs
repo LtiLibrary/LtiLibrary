@@ -9,7 +9,7 @@ namespace LtiLibrary.AspNetCore.Profiles
     /// <summary>
     /// Implements the LTI Tool Consumer Profile API.
     /// </summary>
-    [Route("profiles/toolconsumerprofile", Name = "ToolConsumerProfileApi")]
+    [Route("ims/toolconsumerprofile", Name = "ToolConsumerProfileApi")]
     [Consumes(LtiConstants.ToolConsumerProfileMediaType)]
     [Produces(LtiConstants.ToolConsumerProfileMediaType)]
     public abstract class ToolConsumerProfileControllerBase : Controller

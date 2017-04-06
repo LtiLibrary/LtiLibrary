@@ -34,7 +34,7 @@ namespace LtiLibrary.NetCore.Common
         /// and by normal JsonConverter when deserialized.
         /// </summary>
         [JsonProperty("@context", Order = -4)]
-        public object Context { get; internal set; }
+        public object Context { get; set; }
 
         /// <summary>
         /// Optional URI to uniquely identify things that are being described in the document with IRIs 

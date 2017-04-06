@@ -324,8 +324,14 @@ namespace LtiLibrary.NetCore.Outcomes.v2
 
         private static string GetPagingServiceUrl(string serviceUrl, int? limit, bool? firstPage, int? p, string activityId = null)
         {
-            var uri = new UriBuilder(serviceUrl);
-            var query = new StringBuilder(uri.Query);
+            string urlPath = serviceUrl;
+            string urlQuery = "?";
+            if (serviceUrl.Contains("?"))
+            {
+                urlPath = serviceUrl.Substring(0, serviceUrl.IndexOf("?"));
+                urlQuery = serviceUrl.Substring(serviceUrl.IndexOf("?"));
+            }
+            var query = new StringBuilder(urlQuery);
             if (limit != null)
             {
                 query.AppendFormat("&limit={0}", limit.Value);
@@ -342,8 +348,8 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             {
                 query.AppendFormat("&activityId={0}", activityId);
             }
-            uri.Query = query.ToString();
-            return uri.Uri.AbsoluteUri;
+
+            return $"{urlPath}{query}";
         }
 
         private static async Task<ClientResponse<T>> PostOutcomeAsync<T>(HttpClient client, string serviceUrl,

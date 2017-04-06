@@ -21,7 +21,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         {
             if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
 
-            if (bindingContext.HttpContext?.Request == null || !bindingContext.HttpContext.Request.ContentType.Equals("application/xml"))
+            if (bindingContext.HttpContext?.Request == null || !bindingContext.HttpContext.Request.ContentType.Contains("application/xml"))
             {
                 bindingContext.Result = ModelBindingResult.Failed();
             }

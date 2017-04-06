@@ -35,7 +35,7 @@ namespace LtiLibrary.AspNetCore.Tests.Profiles
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
 
-            using (var response = await _client.GetAsync("profiles/toolconsumerprofile"))
+            using (var response = await _client.GetAsync("ims/toolconsumerprofile"))
             {
                 response.EnsureSuccessStatusCode();
                 Assert.Equal(LtiConstants.ToolConsumerProfileMediaType, response.Content.Headers.ContentType.MediaType);
@@ -48,11 +48,10 @@ namespace LtiLibrary.AspNetCore.Tests.Profiles
         [Fact]
         public async void ReturnAToolConsumerProfile_FromGetToolConsumerProfileAsync()
         {
-            var uri = new Uri(_client.BaseAddress, "profiles/toolconsumerprofile");
-            var toolConsumerProfileResponse = await ToolConsumerProfileClient.GetToolConsumerProfileAsync(_client, uri.AbsoluteUri);
-            Assert.Equal(HttpStatusCode.OK, toolConsumerProfileResponse.StatusCode);
-            Assert.Equal(LtiConstants.ToolConsumerProfileMediaType, toolConsumerProfileResponse.ContentType);
-            JsonAssertions.AssertSameObjectJson(toolConsumerProfileResponse.ToolConsumerProfile, "ToolConsumerProfile");
+            var uri = new Uri(_client.BaseAddress, "ims/toolconsumerprofile");
+            var clientResponse = await ToolConsumerProfileClient.GetToolConsumerProfileAsync(_client, uri.AbsoluteUri);
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            JsonAssertions.AssertSameObjectJson(clientResponse.Response, "ToolConsumerProfile");
         }
 
         public void Dispose()

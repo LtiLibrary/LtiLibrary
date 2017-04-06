@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using LtiLibrary.AspNetCore.Outcomes.v1;
+﻿using LtiLibrary.AspNetCore.Outcomes.v1;
 using LtiLibrary.NetCore.Outcomes.v1;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
@@ -35,7 +32,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         {
             if (_lisResult == null || !lisResultSourcedId.Equals(_lisResult.SourcedId))
             {
-                return new LisResult { IsValid = false };
+                return null;
             }
             return _lisResult;
         }
@@ -51,7 +48,6 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             {
                 _lisResult = new LisResult();
             }
-            _lisResult.IsValid = true;
             _lisResult.Score = result.Score;
             _lisResult.SourcedId = result.SourcedId;
             return true;

@@ -11,25 +11,27 @@ namespace LtiLibrary.NetCore.Profiles
         /// <summary>
         /// Get a ToolConsumerProfile from the service endpoint.
         /// </summary>
+        /// <param name="client">The HttpClient to use for the request.</param>
         /// <param name="serviceUrl">The full URL of the ToolConsumerProfile service.</param>
         /// <returns>A <see cref="ToolConsumerProfileResponse"/> which includes both the HTTP status code
         /// and the <see cref="ToolConsumerProfile"/> if the HTTP status is a success code.</returns>
-        public static async Task<ToolConsumerProfileResponse> GetToolConsumerProfileAsync(string serviceUrl)
+        public static async Task<ToolConsumerProfileResponse> GetToolConsumerProfileAsync(HttpClient client, string serviceUrl)
         {
             var profileResponse = new ToolConsumerProfileResponse();
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
 
-                var response = await client.GetAsync(serviceUrl);
+            using (var response = await client.GetAsync(serviceUrl))
+            {
                 profileResponse.StatusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode)
                 {
-                    profileResponse.ToolConsumerProfile = await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
+                    profileResponse.ToolConsumerProfile =
+                        await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
+                    profileResponse.ContentType = response.Content.Headers.ContentType.MediaType;
                 }
+                return profileResponse;
             }
-            return profileResponse;
         }
     }
 }

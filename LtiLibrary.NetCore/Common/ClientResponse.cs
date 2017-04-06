@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Common
 {
-    public class OutcomeResponse
+    public class ClientResponse
     {
         public HttpStatusCode StatusCode { get; set; }
 
@@ -11,7 +11,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// Exception is case of failed request.
         /// </summary>
         public Exception Exception { get; set; }
-
+#if DEBUG
         /// <summary>
         /// String representation of the HttpWebRequest similar to Fiddler's.
         /// </summary>
@@ -21,10 +21,11 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// String representation of the HttpWebResponse similar to Fiddler's.
         /// </summary>
         public string HttpResponse { get; set; }
+#endif
     }
 
-    public class OutcomeResponse<T> : OutcomeResponse where T : class 
+    public class ClientResponse<T> : ClientResponse where T : class 
     {
-        public T Outcome { get; set; }
+        public T Response { get; set; }
     }
 }

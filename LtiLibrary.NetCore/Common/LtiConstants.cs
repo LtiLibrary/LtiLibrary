@@ -87,6 +87,7 @@ namespace LtiLibrary.NetCore.Common
         public const string UserImageParameter = "user_image";
 
         // Media types
+        public const string ImsxOutcomeMediaType = "application/xml";
         public const string LineItemContainerMediaType = "application/vnd.ims.lis.v2.lineitemcontainer+json";
         public const string LineItemMediaType = "application/vnd.ims.lis.v2.lineitem+json";
         public const string LineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";

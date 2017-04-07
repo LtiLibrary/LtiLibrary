@@ -4,7 +4,7 @@
     <Description>.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.NetCore</AssemblyTitle>
-    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionPrefix>2.0.1</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
     <Authors>andyfmiller.com</Authors>
     <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
@@ -15,6 +15,8 @@
       <![CDATA[
 2.0.0-beta
 - Updated to .NET Core 1.1
+2.0.1-beta
+- Changed interface of v1.OutcomesClient, v2.OutcomesClient, and ToolConsumerProfileClient to take an HttpClient. This facilitated using Microsoft.AspNetCore.TestHost for integration testing.
       ]]>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>

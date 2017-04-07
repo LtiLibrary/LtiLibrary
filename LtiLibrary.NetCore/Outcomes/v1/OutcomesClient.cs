@@ -9,8 +9,10 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.OAuth;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using HttpRequestMessage = System.Net.Http.HttpRequestMessage;
 
 namespace LtiLibrary.NetCore.Outcomes.v1
 {
@@ -38,290 +40,288 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         }
 
         /// <summary>
-        /// Send an Outcomes 1.0 DeleteScore request.
+        /// Send an Outcomes 1.0 DeleteResult request.
         /// </summary>
+        /// <param name="client">The HttpClient that will be used to process the request.</param>
         /// <param name="serviceUrl">The URL to send the request to.</param>
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
-        /// <param name="lisResultSourcedId">The LisResult to be deleted.</param>
-        /// <returns>A <see cref="BasicResult"/> with the success of the request.</returns>
-        public static async Task<BasicResult> DeleteScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        /// <param name="sourcedId">The LisResultSourcedId to be deleted.</param>
+        /// <returns>A <see cref="ClientResponse"/> with the result of the request.</returns>
+        public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string sourcedId)
         {
-            var imsxEnvelope = new imsx_POXEnvelopeType
-            {
-                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
-                imsx_POXBody = new imsx_POXBodyType {Item = new deleteResultRequest()}
-            };
-
-            var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
-            imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
-            imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
-
-            var imsxBody = (deleteResultRequest) imsxEnvelope.imsx_POXBody.Item;
-            imsxBody.resultRecord = new ResultRecordType
-            {
-                sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId}
-            };
-
             try
             {
-                var webRequest = CreateLtiOutcomesRequest(
-                    imsxEnvelope,
-                    serviceUrl,
-                    consumerKey,
-                    consumerSecret);
-                using (var webResponse = await webRequest.GetResponseAsync())
+                var imsxEnvelope = new imsx_POXEnvelopeType
                 {
-                    return ParseDeleteResultResponse(webResponse);
-                }
-            }
-            catch (Exception ex)
-            {
-                return new BasicResult(false, ex.ToString());
-            }
-        }
+                    imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
+                    imsx_POXBody = new imsx_POXBodyType {Item = new deleteResultRequest()}
+                };
 
-        /// <summary>
-        /// Send an Outcomes 1.0 PostScore request.
-        /// </summary>
-        /// <param name="serviceUrl">The URL to send the request to.</param>
-        /// <param name="consumerKey">The OAuth key to sign the request.</param>
-        /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
-        /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
-        /// <param name="score">The score.</param>
-        /// <returns>A <see cref="BasicResult"/> with the success of the request.</returns>
-        public static async Task<BasicResult> PostScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
-        {
-            var imsxEnvelope = new imsx_POXEnvelopeType
-            {
-                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
-                imsx_POXBody = new imsx_POXBodyType {Item = new replaceResultRequest()}
-            };
+                var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
+                imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
+                imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
 
-            var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
-            imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
-            imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
-
-            var imsxBody = (replaceResultRequest) imsxEnvelope.imsx_POXBody.Item;
-            imsxBody.resultRecord = new ResultRecordType
-            {
-                sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId},
-                result = new ResultType
+                var imsxBody = (deleteResultRequest) imsxEnvelope.imsx_POXBody.Item;
+                imsxBody.resultRecord = new ResultRecordType
                 {
-                    resultScore = new TextType
+                    sourcedGUID = new SourcedGUIDType {sourcedId = sourcedId}
+                };
+
+                var outcomeResponse = new ClientResponse();
+                try
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
+                    var xml = new StringBuilder();
+                    using (var writer = new StringWriter(xml))
                     {
-                        language = LtiConstants.ScoreLanguage,
-                        textString = score?.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
+                        ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
+                        await writer.FlushAsync();
+                    }
+                    var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+                    {
+                        outcomeResponse.StatusCode = response.StatusCode;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var imsxResponseEnvelope = (imsx_POXEnvelopeType)ImsxResponseSerializer.Deserialize(await response.Content.ReadAsStreamAsync());
+                            var imsxResponseHeader = (imsx_ResponseHeaderInfoType)imsxResponseEnvelope.imsx_POXHeader.Item;
+                            var imsxResponseStatus = imsxResponseHeader.imsx_statusInfo.imsx_codeMajor;
+
+                            outcomeResponse.StatusCode = imsxResponseStatus == imsx_CodeMajorType.success
+                                ? HttpStatusCode.OK
+                                : HttpStatusCode.BadRequest;
+                        }
+#if DEBUG
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+#endif
                     }
                 }
-            };
-            // The LTI 1.1 specification states in 6.1.1. that the score in replaceResult should
-            // always be formatted using “en” formatting
-            // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
-
-            try
-            {
-                var webRequest = CreateLtiOutcomesRequest(
-                    imsxEnvelope,
-                    serviceUrl,
-                    consumerKey,
-                    consumerSecret);
-                using (var webResponse = await webRequest.GetResponseAsync())
+                catch (HttpRequestException ex)
                 {
-                    return ParsePostResultResponse(webResponse);
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
                 }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                return outcomeResponse;
             }
             catch (Exception ex)
             {
-                return new BasicResult(false, ex.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Returns True if the stream contains an LTI Outcomes 1.0 payload.
-        /// </summary>
-        /// <param name="stream">The <see cref="Stream"/> to examine.</param>
-        /// <returns>True if the stream contains an LTI Outcomes 1.0 payload.</returns>
-        public static bool IsLtiOutcomesRequest(Stream stream)
-        {
-            imsx_POXEnvelopeType imsxRequestEnvelope;
-            try
-            {
-                imsxRequestEnvelope = ImsxRequestSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
-            }
-            finally
-            {
-                if (stream.CanSeek)
+                return new ClientResponse
                 {
-                    stream.Position = 0;
-                }
+                    Exception = ex,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
             }
-
-            if (imsxRequestEnvelope != null) return true;
-
-            imsx_POXEnvelopeType imsxResponseEnvelope;
-            
-            try
-            {
-                imsxResponseEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
-            }
-            finally
-            {
-                if (stream.CanSeek)
-                {
-                    stream.Position = 0;
-                }
-            }
-
-            return imsxResponseEnvelope != null;
-        }
-
-        /// <summary>
-        /// Examine the <see cref="HttpResponseMessage"/> to see if the request succeeded or failed.
-        /// </summary>
-        /// <param name="webResponse">The <see cref="HttpResponseMessage"/> to parse.</param>
-        /// <returns>A <see cref="BasicResult"/> with the result.</returns>
-        private static BasicResult ParseDeleteResultResponse(HttpResponseMessage webResponse)
-        {
-            if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
-
-            var stream = webResponse.GetResponseStream();
-            if (stream == null) return new BasicResult(false, "Invalid stream");
-
-            var imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
-            if (imsxEnvelope == null) return new BasicResult(false, "Invalid imsxEnvelope");
-
-            var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-            if (imsxHeader == null) return new BasicResult(false, "Invalid imsxHeader");
-
-            var imsxStatus = imsxHeader.imsx_statusInfo.imsx_codeMajor;
-
-            return new BasicResult(imsxStatus == imsx_CodeMajorType.success,
-                imsxHeader.imsx_statusInfo.imsx_description);
-        }
-
-        /// <summary>
-        /// Examine the <see cref="HttpResponseMessage"/> to see if the request succeeded or failed.
-        /// </summary>
-        /// <param name="webResponse">The <see cref="HttpResponseMessage"/> to parse.</param>
-        /// <returns>A <see cref="BasicResult"/> with the result.</returns>
-        private static BasicResult ParsePostResultResponse(HttpResponseMessage webResponse)
-        {
-            if (webResponse == null) return new BasicResult(false, "Invalid webResponse");
-
-            var stream = webResponse.GetResponseStream();
-            if (stream == null) return new BasicResult(false, "Invalid stream");
-
-            var imsxEnvelope = ImsxResponseSerializer.Deserialize(stream) as imsx_POXEnvelopeType;
-            if (imsxEnvelope == null) return new BasicResult(false, "Invalid imsxEnvelope");
-
-            var imsxHeader = imsxEnvelope.imsx_POXHeader.Item as imsx_ResponseHeaderInfoType;
-            if (imsxHeader == null) return new BasicResult(false, "Invalid imsxHeader");
-
-            var imsxStatus = imsxHeader.imsx_statusInfo.imsx_codeMajor;
-
-            return new BasicResult(imsxStatus == imsx_CodeMajorType.success,
-                imsxHeader.imsx_statusInfo.imsx_description);
         }
 
         /// <summary>
         /// Send an Outcomes 1.0 ReadScore request and return the LisResult.
         /// </summary>
+        /// <param name="client">The HttpClient that will be used to process the request.</param>
         /// <param name="serviceUrl">The URL to send the request to.</param>
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to read.</param>
         /// <returns>The LisResult.</returns>
-        public static async Task<LisResult> ReadScoreAsync(string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<ClientResponse<LisResult>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
-            var imsxEnvelope = new imsx_POXEnvelopeType
-            {
-                imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
-                imsx_POXBody = new imsx_POXBodyType {Item = new readResultRequest()}
-            };
-
-            var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
-            imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
-            imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
-
-            var imsxBody = (readResultRequest) imsxEnvelope.imsx_POXBody.Item;
-            imsxBody.resultRecord = new ResultRecordType
-            {
-                sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId}
-            };
-
             try
             {
-                var webRequest = CreateLtiOutcomesRequest(
-                    imsxEnvelope,
-                    serviceUrl,
-                    consumerKey,
-                    consumerSecret);
-                using (var webResponse = await webRequest.GetResponseAsync())
+                var imsxEnvelope = new imsx_POXEnvelopeType
                 {
-                    return ParseReadResultResponse(webResponse);
+                    imsx_POXHeader = new imsx_POXHeaderType { Item = new imsx_RequestHeaderInfoType() },
+                    imsx_POXBody = new imsx_POXBodyType { Item = new readResultRequest() }
+                };
+
+                var imsxHeader = (imsx_RequestHeaderInfoType)imsxEnvelope.imsx_POXHeader.Item;
+                imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
+                imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
+
+                var imsxBody = (readResultRequest)imsxEnvelope.imsx_POXBody.Item;
+                imsxBody.resultRecord = new ResultRecordType
+                {
+                    sourcedGUID = new SourcedGUIDType { sourcedId = lisResultSourcedId }
+                };
+
+                var outcomeResponse = new ClientResponse<LisResult>();
+                try
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
+                    var xml = new StringBuilder();
+                    using (var writer = new StringWriter(xml))
+                    {
+                        ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
+                        await writer.FlushAsync();
+                    }
+                    var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+                    {
+                        outcomeResponse.StatusCode = response.StatusCode;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var imsxResponseEnvelope = (imsx_POXEnvelopeType)ImsxResponseSerializer.Deserialize(await response.Content.ReadAsStreamAsync());
+                            var imsxResponseHeader = (imsx_ResponseHeaderInfoType)imsxResponseEnvelope.imsx_POXHeader.Item;
+                            var imsxResponseStatus = imsxResponseHeader.imsx_statusInfo.imsx_codeMajor;
+
+                            if (imsxResponseStatus == imsx_CodeMajorType.success)
+                            {
+                                var imsxResponseBody = (readResultResponse)imsxResponseEnvelope.imsx_POXBody.Item;
+                                if (imsxResponseBody?.result == null)
+                                {
+                                    outcomeResponse.Response = new LisResult { Score = null };
+                                }
+                                else
+                                {
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, out double result) 
+                                        ? new LisResult { Score = result, SourcedId = lisResultSourcedId } 
+                                        : new LisResult { Score = null, SourcedId = lisResultSourcedId };
+                                }
+                            }
+                            else
+                            {
+                                outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                            }
+                        }
+    #if DEBUG
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+    #endif
+                    }
                 }
+                catch (HttpRequestException ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
+                }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                return outcomeResponse;
             }
             catch (Exception ex)
             {
-                return new LisResult {IsValid = false, Message = ex.ToString()};
+                return new ClientResponse<LisResult>
+                {
+                    Exception = ex,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
             }
         }
 
         /// <summary>
-        /// Examine the <see cref="HttpResponseMessage"/> and return the <see cref="LisResult"/>.
+        /// Send an Outcomes 1.0 ReplaceResult request.
         /// </summary>
-        /// <param name="webResponse">The <see cref="HttpResponseMessage"/> to parse.</param>
-        /// <returns>The <see cref="LisResult"/> with the result.</returns>
-        private static LisResult ParseReadResultResponse(HttpResponseMessage webResponse)
-        {
-            if (webResponse == null)
-            {
-                return new LisResult { IsValid = false, Message = "Invalid webResponse" };
-            }
-
-            var stream = webResponse.GetResponseStream();
-            if (stream == null)
-            {
-                return new LisResult { IsValid = false, Message = "Invalid stream" };
-            }
-
-            var imsxEnvelope = (imsx_POXEnvelopeType)ImsxResponseSerializer.Deserialize(stream);
-            var imsxHeader = (imsx_ResponseHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
-            var imsxStatus = imsxHeader.imsx_statusInfo.imsx_codeMajor;
-
-            if (imsxStatus != imsx_CodeMajorType.success)
-            {
-                return new LisResult { IsValid = false, Message = imsxHeader.imsx_statusInfo.imsx_description};
-            }
-
-            var imsxBody = (readResultResponse) imsxEnvelope.imsx_POXBody.Item;
-
-            if (imsxBody?.result == null)
-            {
-                return new LisResult { Score = null, IsValid = true };
-            }
-
-            double result;
-            if (double.TryParse(imsxBody.result.resultScore.textString, out result))
-            {
-                return new LisResult { Score = result, IsValid = true };
-            }
-            return new LisResult { Score = null, IsValid = true };
-        }
-
-        /// <summary>
-        /// Create an <see cref="HttpRequestMessage"/> with a signed OAuth Authorization header, and
-        /// the imsxEnvelope in the body of the request.
-        /// </summary>
-        /// <param name="imsxEnvelope">The <see cref="imsx_POXEnvelopeType"/> to send.</param>
-        /// <param name="url">The URL the request will be sent to.</param>
+        /// <param name="client">The HttpClient that will be used to process the request.</param>
+        /// <param name="serviceUrl">The URL to send the request to.</param>
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
-        /// <returns></returns>
-        private static HttpRequestMessage CreateLtiOutcomesRequest(imsx_POXEnvelopeType imsxEnvelope, string url, string consumerKey, string consumerSecret)
+        /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
+        /// <param name="score">The score.</param>
+        /// <returns>A <see cref="ClientResponse"/> with the success of the request.</returns>
+        public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
-            var webRequest = new HttpRequestMessage(HttpMethod.Post, url);
+            try
+            {
+                var imsxEnvelope = new imsx_POXEnvelopeType
+                {
+                    imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
+                    imsx_POXBody = new imsx_POXBodyType {Item = new replaceResultRequest()}
+                };
+
+                var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
+                imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
+                imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
+
+                var imsxBody = (replaceResultRequest) imsxEnvelope.imsx_POXBody.Item;
+                imsxBody.resultRecord = new ResultRecordType
+                {
+                    sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId},
+                    result = new ResultType
+                    {
+                        resultScore = new TextType
+                        {
+                            language = LtiConstants.ScoreLanguage,
+                            textString = score?.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
+                        }
+                    }
+                };
+                // The LTI 1.1 specification states in 6.1.1. that the score in replaceResult should
+                // always be formatted using “en” formatting
+                // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
+
+                var outcomeResponse = new ClientResponse();
+                try
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
+                    var xml = new StringBuilder();
+                    using (var writer = new StringWriter(xml))
+                    {
+                        ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
+                        await writer.FlushAsync();
+                    }
+                    var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+                    {
+                        outcomeResponse.StatusCode = response.StatusCode;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var imsxResponseEnvelope = (imsx_POXEnvelopeType)ImsxResponseSerializer.Deserialize(await response.Content.ReadAsStreamAsync());
+                            var imsxResponseHeader = (imsx_ResponseHeaderInfoType)imsxResponseEnvelope.imsx_POXHeader.Item;
+                            var imsxResponseStatus = imsxResponseHeader.imsx_statusInfo.imsx_codeMajor;
+
+                            outcomeResponse.StatusCode = imsxResponseStatus == imsx_CodeMajorType.success
+                                ? HttpStatusCode.OK
+                                : HttpStatusCode.BadRequest;
+                        }
+#if DEBUG
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+#endif
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
+                }
+                catch (Exception ex)
+                {
+                    outcomeResponse.Exception = ex;
+                    outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                }
+                return outcomeResponse;
+            }
+            catch (Exception ex)
+            {
+                return new ClientResponse
+                {
+                    Exception = ex,
+                    StatusCode = HttpStatusCode.InternalServerError
+                };
+            }
+        }
+
+        #region Private Methods
+
+        private static void SignRequest(HttpRequestMessage request, byte[] body, string consumerKey, string consumerSecret)
+        {
+            if (body == null)
+                body = new byte[0];
+            if (body.Length > 0 && request.Content.Headers.ContentLength != body.Length)
+            {
+                throw new ArgumentException("body length does not match request.ContentLength", nameof(body));
+            }
 
             var parameters = new NameValueCollection();
             parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
@@ -335,21 +335,15 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
 
             // Calculate the body hash
-            var ms = new MemoryStream();
             using (var sha1 = SHA1.Create())
             {
-                ImsxRequestSerializer.Serialize(ms, imsxEnvelope);
-                ms.Position = 0;
-                webRequest.Content = new StreamContent(ms);
-                webRequest.Content.Headers.ContentType = HttpContentType.Xml;
-
-                var hash = sha1.ComputeHash(ms.ToArray());
+                var hash = sha1.ComputeHash(body);
                 var hash64 = Convert.ToBase64String(hash);
                 parameters.AddParameter(OAuthConstants.BodyHashParameter, hash64);
             }
 
             // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(webRequest.Method.Method.ToUpper(), webRequest.RequestUri, parameters,
+            var signature = OAuthUtility.GenerateSignature(request.Method.Method.ToUpper(), request.RequestUri, parameters,
                 consumerSecret);
             parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
 
@@ -359,9 +353,10 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            webRequest.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
-
-            return webRequest;
+            request.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
         }
+
+        #endregion
+
     }
 }

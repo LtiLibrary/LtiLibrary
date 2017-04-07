@@ -1,33 +1,53 @@
 ﻿using System;
-using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using Enumerable = System.Linq.Enumerable;
 
 namespace LtiLibrary.NetCore.Extensions
 {
+#if DEBUG
     internal static class HttpExtensions
     {
-        public static async Task<HttpResponseMessage> GetResponseAsync(this HttpRequestMessage message, bool allowAutoRedirect = false)
+        /// <summary>
+        /// Create a string representation of the request similar to Fiddler's.
+        /// </summary>
+        /// <remarks>Created for learning and debugging LTI.</remarks>
+        public static async Task<string> ToFormattedRequestStringAsync(this HttpRequestMessage message, HttpContent content = null)
         {
-            using (var handler = new HttpClientHandler() { AllowAutoRedirect = allowAutoRedirect })
+            var sb = new StringBuilder();
+            sb.AppendFormat("{0} {1} HTTP/{2}\n", message.Method, message.RequestUri, message.Version);
+            foreach (var header in Enumerable.ToList(message.Headers))
             {
-                using (var client = new HttpClient(handler))
-                {
-                    return await client.SendAsync(message);
-                }
+                sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
             }
+            if (content != null && content.Headers.ContentLength > 0)
+            {
+                sb.AppendLine();
+                sb.Append(await content.ReadAsStringAsync());
+            }
+            return sb.ToString();
         }
 
-        [Obsolete("Use GetResponseAsync instead.")]
-        public static HttpResponseMessage GetResponse(this HttpRequestMessage message, bool allowAutoRedirect = false)
+        /// <summary>
+        /// Create a string representation of the <see cref="HttpResponseMessage"/> similar to Fiddler's.
+        /// </summary>
+        /// <remarks>Created for learning and debugging LTI.</remarks>
+        public static async Task<string> ToFormattedResponseStringAsync(this HttpResponseMessage response)
         {
-            return GetResponseAsync(message, allowAutoRedirect).Result;
+            var sb = new StringBuilder();
+            sb.AppendFormat("HTTP/{0} {1} {2}\n", response.Version, Convert.ToInt32(response.StatusCode), response.StatusCode);
+            foreach (var header in response.Headers)
+            {
+                sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
+            }
+            if (response.Content != null && response.Content.Headers.ContentLength > 0)
+            {
+                sb.AppendLine();
+                sb.Append(await response.Content.ReadAsStringAsync());
+            }
+            return sb.ToString();
         }
-
-        public static Stream GetResponseStream(this HttpResponseMessage message)
-        {
-            return message.Content.ReadAsStreamAsync().Result;
-        }
-        
     }
+#endif
 }

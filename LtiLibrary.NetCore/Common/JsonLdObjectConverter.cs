@@ -19,8 +19,12 @@ namespace LtiLibrary.NetCore.Common
         private static readonly Type JsonLdObjectArrayType = typeof (IEnumerable<IJsonLdObject>);
 
         public override bool CanRead => false;
-
         public override bool CanWrite => true;
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Writes the JSON representation of the object.
@@ -40,7 +44,7 @@ namespace LtiLibrary.NetCore.Common
             }
 
             // Collect the local terms
-            IDictionary<string, string> terms = null;
+            IDictionary<string, object> terms = null;
             if (JsonLdObjectType.GetTypeInfo().IsInstanceOfType(value))
             {
                 var obj = (IJsonLdObject) value;
@@ -72,6 +76,7 @@ namespace LtiLibrary.NetCore.Common
                 {
                     termsObject.Add(new JProperty(key, terms[key]));
                 }
+                o.Remove("@context");
                 o.AddFirst(new JProperty("@context", termsObject));
             }
             // If there is both an external context and internal contexts (terms),
@@ -83,6 +88,7 @@ namespace LtiLibrary.NetCore.Common
                 {
                     termsObject.Add(new JProperty(key, terms[key]));
                 }
+                o.Remove("@context");
                 o.AddFirst(new JProperty("@context", new JArray
                 {
                     externalContextId,
@@ -137,14 +143,29 @@ namespace LtiLibrary.NetCore.Common
         /// </summary>
         /// <param name="obj">The JsonLdObject.</param>
         /// <returns>The list of terms.</returns>
-        private static IDictionary<string, string> GetTerms(IJsonLdObject obj)
+        private static IDictionary<string, object> GetTerms(IJsonLdObject obj)
         {
-            var terms = new Dictionary<string, string>();
+            var terms = new Dictionary<string, object>();
             if (obj?.Terms == null) return terms;
 
             foreach (var key in obj.Terms.Keys)
             {
                 terms[key] = obj.Terms[key];
+            }
+
+            // Check for terms already in the @context
+            var context = obj.Context as JArray;
+            if (context != null && context.Count > 1)
+            {
+                for (int index = 1; index < context.Count; index++)
+                {
+                    var contextObject = context[index] as JObject;
+                    var term = contextObject?.First as JProperty;
+                    if (term != null)
+                    {
+                        terms[term.Name] = term.Value;
+                    }
+                }
             }
 
             // Walk the object to find embedded JsonLdObjects
@@ -178,11 +199,6 @@ namespace LtiLibrary.NetCore.Common
                 }
             }
             return terms;
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException("Unnecessary because CanRead is false.");
         }
 
         public override bool CanConvert(Type objectType)

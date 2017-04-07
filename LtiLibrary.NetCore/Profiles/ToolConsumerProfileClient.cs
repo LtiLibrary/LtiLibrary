@@ -11,23 +11,27 @@ namespace LtiLibrary.NetCore.Profiles
         /// <summary>
         /// Get a ToolConsumerProfile from the service endpoint.
         /// </summary>
+        /// <param name="client">The HttpClient to use for the request.</param>
         /// <param name="serviceUrl">The full URL of the ToolConsumerProfile service.</param>
-        /// <returns>A <see cref="ToolConsumerProfileResponse"/> which includes both the HTTP status code
-        /// and the <see cref="ToolConsumerProfile"/> if the HTTP status is a success code.</returns>
-        public static async Task<ToolConsumerProfileResponse> GetToolConsumerProfileAsync(string serviceUrl)
+        /// <returns>A <see cref="ClientResponse"/> with the <see cref="ToolConsumerProfile"/> successful.</returns>
+        public static async Task<ClientResponse<ToolConsumerProfile>> GetToolConsumerProfileAsync(HttpClient client, string serviceUrl)
         {
-            var profileResponse = new ToolConsumerProfileResponse();
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
 
-                var response = await client.GetAsync(serviceUrl);
+            var profileResponse = new ClientResponse<ToolConsumerProfile>();
+            using (var response = await client.GetAsync(serviceUrl))
+            {
                 profileResponse.StatusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode)
                 {
-                    profileResponse.ToolConsumerProfile = await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
+                    profileResponse.Response =
+                        await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
                 }
+#if DEBUG
+                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
+                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+#endif
             }
             return profileResponse;
         }

@@ -9,6 +9,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// <summary>
     /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
+    [Route("ims/outcomes", Name = "OutcomesApi")]
     [Consumes("application/xml")]
     [Produces("application/xml")]
     public abstract class OutcomesControllerBase : Controller
@@ -184,7 +185,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             var readResponse = new readResultResponse();
 
             var result = ReadResult(readRequest.resultRecord.sourcedGUID.sourcedId);
-            if (result.IsValid)
+            if (result != null)
             {
                 if (!result.Score.HasValue)
                 {

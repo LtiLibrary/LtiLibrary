@@ -1,0 +1,12 @@
+﻿{
+  "@type" : "ContentItem",
+  "url" : "http://developers.imsglobal.org/images/imscertifiedsm.png",
+  "mediaType" : "image/png",
+  "title" : "IMS logo for certified products",
+  "placementAdvice" : {
+    "displayWidth" : 147,
+    "displayHeight" : 184,
+    "presentationDocumentTarget" : "embed",
+    "windowTarget" : "_blank"
+  }
+}

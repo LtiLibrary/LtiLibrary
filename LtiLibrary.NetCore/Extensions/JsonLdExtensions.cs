@@ -3,6 +3,7 @@ using System.IO;
 using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace LtiLibrary.NetCore.Extensions
 {
@@ -44,11 +45,11 @@ namespace LtiLibrary.NetCore.Extensions
         /// <summary>
         /// Deserializes the JSON response to the specified .NET type.
         /// </summary>
-        public static T DeserializeObject<T>(this HttpResponseMessage response)
+        public static async Task<T> DeserializeJsonObjectAsync<T>(this HttpResponseMessage response)
         {
             try
             {
-                using (var stream = response.GetResponseStream())
+                using (var stream = await response.Content.ReadAsStreamAsync())
                 {
                     if (stream == null)
                     {
@@ -57,7 +58,7 @@ namespace LtiLibrary.NetCore.Extensions
 
                     using (var reader = new StreamReader(stream))
                     {
-                        var body = reader.ReadToEnd();
+                        var body = await reader.ReadToEndAsync();
                         return JsonConvert.DeserializeObject<T>(body);
                     }
                 }

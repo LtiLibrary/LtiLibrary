@@ -12,7 +12,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using HttpRequestMessage = System.Net.Http.HttpRequestMessage;
 
 namespace LtiLibrary.NetCore.Outcomes.v1
 {
@@ -47,7 +46,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="sourcedId">The LisResultSourcedId to be deleted.</param>
-        /// <returns>A <see cref="ClientResponse"/> with the result of the request.</returns>
+        /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string sourcedId)
         {
             try
@@ -80,6 +79,8 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
+                        httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -129,7 +130,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to read.</param>
-        /// <returns>The LisResult.</returns>
+        /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse<LisResult>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             try
@@ -189,7 +190,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                             }
                             else
                             {
-                                outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                                outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
                             }
                         }
     #if DEBUG
@@ -229,7 +230,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
         /// <param name="score">The score.</param>
-        /// <returns>A <see cref="ClientResponse"/> with the success of the request.</returns>
+        /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
             try

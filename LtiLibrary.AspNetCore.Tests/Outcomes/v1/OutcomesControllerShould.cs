@@ -59,6 +59,29 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             Assert.True(readResult.Response == null, "readResult.Response == null");
         }
 
+        [Fact]
+        public async void NotReplaceResult_IfUsingDifferentSecrets()
+        {
+            var replaceResult = await OutcomesClient.ReplaceResultAsync(_client, Url, Key, "nosecret", Id, Value);
+            Assert.True(replaceResult.StatusCode == HttpStatusCode.BadRequest, $"{replaceResult.StatusCode} == {HttpStatusCode.BadRequest}");
+        }
+
+        [Fact]
+        public async void NotReadResult_IfUsingDifferentSecrets()
+        {
+            await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            var readResult = await OutcomesClient.ReadResultAsync(_client, Url, Key, "nosecret", Id);
+            Assert.True(readResult.StatusCode == HttpStatusCode.BadRequest, $"{readResult.StatusCode} == {HttpStatusCode.BadRequest}");
+        }
+
+        [Fact]
+        public async void NotDeleteResult_IfUsingDifferentSecrets()
+        {
+            await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            var deleteResult = await OutcomesClient.DeleteResultAsync(_client, Url, Key, "nosecret", Id);
+            Assert.True(deleteResult.StatusCode == HttpStatusCode.BadRequest, $"{deleteResult.StatusCode} == {HttpStatusCode.BadRequest}");
+        }
+
         public void Dispose()
         {
             _client?.Dispose();

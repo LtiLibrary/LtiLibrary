@@ -1,16 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti1;
-using LtiLibrary.NetCore.Outcomes.v2;
-using LtiLibrary.NetCore.Profiles;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.Kestrel.Filter;
 
 namespace LtiLibrary.AspNetCore.Tests.Lti1
 {

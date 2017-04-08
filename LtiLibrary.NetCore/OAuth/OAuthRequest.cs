@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Security.Cryptography;
-using System.Text;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using Newtonsoft.Json;

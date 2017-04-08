@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using LtiLibrary.AspNetCore.Tests.TestHelpers;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Tests.SimpleHelpers;

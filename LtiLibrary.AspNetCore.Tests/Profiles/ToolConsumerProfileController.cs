@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Profiles;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti2;
 using LtiLibrary.NetCore.Profiles;
-using Microsoft.AspNetCore.Mvc;
 using NodaTime;
 
 namespace LtiLibrary.AspNetCore.Tests.Profiles

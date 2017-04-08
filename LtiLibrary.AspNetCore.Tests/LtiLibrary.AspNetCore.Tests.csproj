@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ProviderController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="ReferenceJson\EmbeddedHtmlContentItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

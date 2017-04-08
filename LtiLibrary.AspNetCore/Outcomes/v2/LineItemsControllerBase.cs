@@ -20,13 +20,13 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     {
         protected LineItemsControllerBase()
         {
-            OnDeleteLineItem = context => { throw new NotImplementedException(); };
-            OnGetLineItem = context => { throw new NotImplementedException(); };
-            OnGetLineItemWithResults = context => { throw new NotImplementedException(); };
-            OnGetLineItems = context => { throw new NotImplementedException(); };
-            OnPostLineItem = context => { throw new NotImplementedException(); };
-            OnPutLineItem = context => { throw new NotImplementedException(); };
-            OnPutLineItemWithResults = context => { throw new NotImplementedException(); };
+            OnDeleteLineItem = context => throw new NotImplementedException();
+            OnGetLineItem = context => throw new NotImplementedException();
+            OnGetLineItemWithResults = context => throw new NotImplementedException();
+            OnGetLineItems = context => throw new NotImplementedException();
+            OnPostLineItem = context => throw new NotImplementedException();
+            OnPutLineItem = context => throw new NotImplementedException();
+            OnPutLineItemWithResults = context => throw new NotImplementedException();
         }
 
         /// <summary>

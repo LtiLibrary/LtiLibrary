@@ -17,7 +17,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         public string ContextId { get; set; }
         public string LineItemId { get; set; }
         public string Id { get; set; }
-        public LisResult Result { get; private set; }
+        public LisResult Result { get; }
         public int StatusCode { get; set; }
     }
 }

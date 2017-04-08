@@ -19,11 +19,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     {
         protected ResultsControllerBase()
         {
-            OnDeleteResult = context => { throw new NotImplementedException(); };
-            OnGetResult = context => { throw new NotImplementedException(); };
-            OnGetResults = context => { throw new NotImplementedException(); };
-            OnPostResult = context => { throw new NotImplementedException(); };
-            OnPutResult = context => { throw new NotImplementedException(); };
+            OnDeleteResult = context => throw new NotImplementedException();
+            OnGetResult = context => throw new NotImplementedException();
+            OnGetResults = context => throw new NotImplementedException();
+            OnPostResult = context => throw new NotImplementedException();
+            OnPutResult = context => throw new NotImplementedException();
         }
 
         /// <summary>

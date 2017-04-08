@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
-using LtiLibrary.NetCore.Tests.SimpleHelpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NodaTime;

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Runtime.InteropServices;
-using LtiLibrary.NetCore.Outcomes.v2;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.PlatformAbstractions;
-using Xunit;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 {
@@ -15,10 +11,6 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
     {
         private readonly TestServer _server;
         private readonly HttpClient _client;
-
-        private const string Url = "ims/results";
-        private const string Key = "12345";
-        private const string Secret = "secret";
 
         public ResultsControllerShould()
         {

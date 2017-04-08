@@ -16,7 +16,7 @@ namespace LtiLibrary.AspNetCore.Profiles
     {
         protected ToolConsumerProfileControllerBase()
         {
-            OnGetToolConsumerProfile = context => { throw new NotImplementedException(); };
+            OnGetToolConsumerProfile = context => throw new NotImplementedException();
         }
 
         public Func<GetToolConsumerProfileContext, Task> OnGetToolConsumerProfile { get; set; }

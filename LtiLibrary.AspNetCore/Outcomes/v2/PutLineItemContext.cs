@@ -11,7 +11,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             StatusCode = StatusCodes.Status200OK;
         }
 
-        public LineItem LineItem { get; private set; }
+        public LineItem LineItem { get; }
         public int StatusCode { get; set; }
     }
 }

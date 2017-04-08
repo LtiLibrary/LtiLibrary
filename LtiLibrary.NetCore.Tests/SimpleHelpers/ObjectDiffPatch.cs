@@ -363,8 +363,8 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
         /// </summary>
         public JObject OldValues
         {
-            get { return _oldValues; }
-            set { _oldValues = value; }
+            get => _oldValues;
+            set => _oldValues = value;
         }
 
         /// <summary>
@@ -372,8 +372,8 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
         /// </summary>
         public JObject NewValues
         {
-            get { return _newValues; }
-            set { _newValues = value; }
+            get => _newValues;
+            set => _newValues = value;
         }
     }
 

@@ -328,8 +328,8 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             string urlQuery = "?";
             if (serviceUrl.Contains("?"))
             {
-                urlPath = serviceUrl.Substring(0, serviceUrl.IndexOf("?"));
-                urlQuery = serviceUrl.Substring(serviceUrl.IndexOf("?"));
+                urlPath = serviceUrl.Substring(0, serviceUrl.IndexOf("?", StringComparison.Ordinal));
+                urlQuery = serviceUrl.Substring(serviceUrl.IndexOf("?", StringComparison.Ordinal));
             }
             var query = new StringBuilder(urlQuery);
             if (limit != null)

@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using LtiLibrary.AspNetCore.Lti1;
-using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lti1;
 using LtiLibrary.NetCore.OAuth;
-using LtiLibrary.NetCore.Profiles;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -37,6 +31,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
         [Fact]
         public async void LaunchATool_WithValidCredentials()
         {
+            // ReSharper disable once UseObjectOrCollectionInitializer
             var ltiRequest = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
                 ConsumerKey = "12345",

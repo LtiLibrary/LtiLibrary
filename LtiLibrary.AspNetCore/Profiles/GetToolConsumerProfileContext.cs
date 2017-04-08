@@ -11,7 +11,7 @@ namespace LtiLibrary.AspNetCore.Profiles
             StatusCode = StatusCodes.Status200OK;
         }
 
-        public string LtiVersion { get; private set; }
+        public string LtiVersion { get; }
         public int StatusCode { get; set; }
         public ToolConsumerProfile ToolConsumerProfile { get; set; }
     }

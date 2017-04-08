@@ -45,6 +45,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
             var readResult = await OutcomesClient.ReadResultAsync(_client, Url, Key, Secret, Id);
             Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             Assert.True(readResult.Response.Score == Value, $"{readResult.Response.Score} == {Value}");
             Assert.True(readResult.Response.SourcedId == Id, $"{readResult.Response.SourcedId} == {Id}");
         }

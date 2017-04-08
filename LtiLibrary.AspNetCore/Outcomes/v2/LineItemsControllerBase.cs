@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Outcomes.v2;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html
     /// </summary>
+    [AddBodyHashHeader]
     [Route("ims/courses/{contextId}/lineitems/{id?}", Name = "LineItemsApi")]
     [Consumes(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]
     [Produces(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]

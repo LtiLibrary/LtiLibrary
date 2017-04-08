@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Outcomes.v1;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +11,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// <summary>
     /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
     /// </summary>
+    [AddBodyHashHeader]
     [Route("ims/outcomes", Name = "OutcomesApi")]
     [Consumes("application/xml")]
     [Produces("application/xml")]
@@ -19,26 +22,26 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         /// </summary>
         /// <param name="lisResultSourcedId">The sourcedId of the LisResult to delete.</param>
         /// <returns>True if the result was deleted.</returns>
-        protected abstract bool DeleteResult(string lisResultSourcedId);
+        protected abstract Task<bool> DeleteResult(string lisResultSourcedId);
 
         /// <summary>
         /// Read the result (grade, score, outcome) from the consumer.
         /// </summary>
         /// <param name="lisResultSourcedId">The sourcedId of the LisResult to read.</param>
         /// <returns>The LisResult read. IsValid is true if the result is valid.</returns>
-        protected abstract LisResult ReadResult(string lisResultSourcedId);
+        protected abstract Task<LisResult> ReadResult(string lisResultSourcedId);
 
         /// <summary>
         /// Save or update the result (grade, score, outcome) in the consumer.
         /// </summary>
         /// <param name="result">The result to save or update.</param>
         /// <returns>True if the result was saved or updated.</returns>
-        protected abstract bool ReplaceResult(LisResult result);
+        protected abstract Task<bool> ReplaceResult(LisResult result);
 
         // POST api/outcomes
 
         [HttpPost]
-        public ImsxXmlMediaTypeResult Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
+        public async Task<ImsxXmlMediaTypeResult> Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
         {
             imsx_POXEnvelopeType response;
             if (request == null)
@@ -64,15 +67,15 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     // Delete Result
                     if (requestBody.Item is deleteResultRequest)
                     {
-                        response = HandleDeleteResultRequest(requestHeader, requestBody);
+                        response = await HandleDeleteResultRequest(requestHeader, requestBody);
                     }
                     else if (requestBody.Item is readResultRequest)
                     {
-                        response = HandleReadResultRequest(requestHeader, requestBody);
+                        response = await HandleReadResultRequest(requestHeader, requestBody);
                     }
                     else if (requestBody.Item is replaceResultRequest)
                     {
-                        response = HandleReplaceResultRequest(requestHeader, requestBody);
+                        response = await HandleReplaceResultRequest(requestHeader, requestBody);
                     }
                     else
                     {
@@ -157,14 +160,14 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             return result;
         }
 
-        private imsx_POXEnvelopeType HandleDeleteResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
+        private async Task<imsx_POXEnvelopeType> HandleDeleteResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
             imsx_POXEnvelopeType response;
             var deleteRequest = requestBody.Item as deleteResultRequest ?? new deleteResultRequest();
             var deleteResponse = new deleteResultResponse();
 
             var result = GetResult(deleteRequest.resultRecord);
-            if (DeleteResult(result.SourcedId))
+            if (await DeleteResult(result.SourcedId))
             {
                 response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
                     $"Score for {result.SourcedId} is deleted");
@@ -178,13 +181,13 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             return response;
         }
 
-        private imsx_POXEnvelopeType HandleReadResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
+        private async Task<imsx_POXEnvelopeType> HandleReadResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
             imsx_POXEnvelopeType response;
             var readRequest = requestBody.Item as readResultRequest ?? new readResultRequest();
             var readResponse = new readResultResponse();
 
-            var result = ReadResult(readRequest.resultRecord.sourcedGUID.sourcedId);
+            var result = await ReadResult(readRequest.resultRecord.sourcedGUID.sourcedId);
             if (result != null)
             {
                 if (!result.Score.HasValue)
@@ -223,7 +226,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             return response;
         }
 
-        private imsx_POXEnvelopeType HandleReplaceResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
+        private async Task<imsx_POXEnvelopeType> HandleReplaceResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
             imsx_POXEnvelopeType response;
             var replaceRequest = requestBody.Item as replaceResultRequest ?? new replaceResultRequest();
@@ -235,7 +238,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     "Invalid result",
                     imsx_CodeMajorType.failure);
             }
-            else if (ReplaceResult(result))
+            else if (await ReplaceResult(result))
             {
                 response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
                     $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} is now {replaceRequest.resultRecord.result.resultScore.textString}");

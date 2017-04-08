@@ -22,14 +22,14 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
         /// <remarks>
         /// This is the basic function of a Tool Provider.
         /// </remarks>
-        public ActionResult Tool()
+        public async Task<ActionResult> Tool()
         {
             try
             {
                 // Make sure this is an LtiRequest
                 try
                 {
-                    Request.CheckForRequiredLtiParameters();
+                    Request.CheckForRequiredLtiFormParameters();
                 }
                 catch (Exception ex)
                 {
@@ -37,15 +37,14 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
                 }
 
                 // Parse and validate the request
-                var ltiRequest = new LtiRequest(null);
-                ltiRequest.ParseRequest(Request);
+                var ltiRequest = await Request.ParseLtiRequestAsync();
 
                 if (!ltiRequest.ConsumerKey.Equals("12345"))
                 {
                     return BadRequest("Invalid Consumer Key");
                 }
 
-                var oauthSignature = Request.GenerateOAuthSignature("secret");
+                var oauthSignature = ltiRequest.GenerateSignature("secret");
                 if (!oauthSignature.Equals(ltiRequest.Signature))
                 {
                     return BadRequest("Invalid Signature");

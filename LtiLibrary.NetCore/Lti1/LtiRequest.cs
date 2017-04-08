@@ -942,11 +942,6 @@ namespace LtiLibrary.NetCore.Lti1
             }
         }
 
-        /// <summary>
-        /// The XML payload in an LTI Outcomes request and response
-        /// </summary>
-        public string ImsxPoxEnvelope { get; set; }
-
         #endregion
 
         #region IContentItemRequest Parameters

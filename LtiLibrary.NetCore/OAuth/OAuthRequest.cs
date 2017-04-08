@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Security.Cryptography;
+using System.Text;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Extensions;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.OAuth
@@ -13,8 +16,11 @@ namespace LtiLibrary.NetCore.OAuth
         }
 
         /// <summary>
-        /// The OAuth body hash.
+        /// The OAuth body hash from the Authorization header.
         /// </summary>
+        /// <remarks>
+        /// This hash is calculated by the sender.
+        /// </remarks>
         public string BodyHash
         {
             get
@@ -26,6 +32,14 @@ namespace LtiLibrary.NetCore.OAuth
                 Parameters[OAuthConstants.BodyHashParameter] = value;
             }
         }
+
+        /// <summary>
+        /// The OAuth body hash calculated by LtiLibrary.AspNetCore.Common.AddBodyHashHeaderAttribute.
+        /// </summary>
+        /// <remarks>
+        /// This hash is calculated by the receiver.
+        /// </remarks>
+        public string BodyHashReceived { get; set; }
 
         public string CallBack
         {
@@ -196,10 +210,24 @@ namespace LtiLibrary.NetCore.OAuth
         /// </summary>
         /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
         /// <returns>The calculated OAuth Signature.</returns>
-        /// <remarks>This is typically used by Tool Providers to verify the incoming request signature.</remarks>
+        /// <remarks>This method works whether the parameters are based on form fields or OAuth Authorization header.</remarks>
         public string GenerateSignature(string consumerSecret)
         {
-            return OAuthUtility.GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
+            // If there is no BodyHashReceived, calculate signature based on form parameters
+            if (string.IsNullOrEmpty(BodyHashReceived))
+            {
+                return OAuthUtility.GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
+            }
+
+            // Otherwise calculate the signature using the body hash instead of form parameters
+            var parameters = new NameValueCollection();
+            parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, ConsumerKey);
+            parameters.AddParameter(OAuthConstants.NonceParameter, Nonce);
+            parameters.AddParameter(OAuthConstants.SignatureMethodParameter, OAuthConstants.SignatureMethodHmacSha1);
+            parameters.AddParameter(OAuthConstants.VersionParameter, OAuthConstants.Version10);
+            parameters.AddParameter(OAuthConstants.TimestampParameter, Timestamp);
+            parameters.AddParameter(OAuthConstants.BodyHashParameter, BodyHashReceived);
+            return OAuthUtility.GenerateSignature(HttpMethod, Url, parameters, consumerSecret);
         }
     }
 }

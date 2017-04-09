@@ -1,8 +1,8 @@
 ﻿namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class DeleteResultContext
+    public class DeleteResultDto
     {
-        public DeleteResultContext(string contextId, string lineItemId, string id)
+        public DeleteResultDto(string contextId, string lineItemId, string id)
         {
             ContextId = contextId;
             Id = id;

@@ -34,31 +34,31 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// <summary>
         /// Delete a particular LineItem instance in the Tool Consumer application.
         /// </summary>
-        public Func<DeleteLineItemContext, Task> OnDeleteLineItem { get; set; }
+        public Func<DeleteLineItemDto, Task> OnDeleteLineItem { get; set; }
         /// <summary>
         /// Get a representation of a particular LineItem instance from the Tool Consumer application.
         /// </summary>
-        public Func<GetLineItemContext, Task> OnGetLineItem { get; set; }
+        public Func<GetLineItemDto, Task> OnGetLineItem { get; set; }
         /// <summary>
         /// Get a representation of a particular LineItem instance with all its results in one call from the Tool Consumer application.
         /// </summary>
-        public Func<GetLineItemContext, Task> OnGetLineItemWithResults { get; set; }
+        public Func<GetLineItemDto, Task> OnGetLineItemWithResults { get; set; }
         /// <summary>
         /// Get a paginated list of LineItem resources from a LineItemContainer in the Tool Consumer application.
         /// </summary>
-        public Func<GetLineItemsContext, Task> OnGetLineItems { get; set; }
+        public Func<GetLineItemsDto, Task> OnGetLineItems { get; set; }
         /// <summary>
         /// Create a new LineItem instance within the Tool Consumer Application.
         /// </summary>
-        public Func<PostLineItemContext, Task> OnPostLineItem { get; set; }
+        public Func<PostLineItemDto, Task> OnPostLineItem { get; set; }
         /// <summary>
         /// Update a particular LineItem instance in the Tool Consumer Application.
         /// </summary>
-        public Func<PutLineItemContext, Task> OnPutLineItem { get; set; }
+        public Func<PutLineItemDto, Task> OnPutLineItem { get; set; }
         /// <summary>
         /// Update a particular LineItem instance and the results it contains in the Tool Consumer Application.
         /// </summary>
-        public Func<PutLineItemContext, Task> OnPutLineItemWithResults { get; set; }
+        public Func<PutLineItemDto, Task> OnPutLineItemWithResults { get; set; }
 
         /// <summary>
         /// Delete a particular LineItem instance.
@@ -68,11 +68,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
-                var context = new DeleteLineItemContext(contextId, id);
+                var dto = new DeleteLineItemDto(contextId, id);
 
-                await OnDeleteLineItem(context);
+                await OnDeleteLineItem(dto);
                 
-                return StatusCode(context.StatusCode);
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {
@@ -88,11 +88,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
+                // Get a paginated list of LineItem resources from a LineItemContainer
+
                 if (string.IsNullOrEmpty(id))
                 {
-                    // Get a paginated list of LineItem resources from a LineItemContainer
-
-                    int page = 1;
+                    var page = 1;
                     if (p.HasValue)
                     {
                         if (firstPage != null && p.Value != 1)
@@ -101,48 +101,46 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                         }
                         page = p.Value;
                     }
-                    var context = new GetLineItemsContext(contextId, limit, activityId, page);
+                    var lineItemsDto = new GetLineItemsDto(contextId, limit, activityId, page);
 
-                    await OnGetLineItems(context);
+                    await OnGetLineItems(lineItemsDto);
 
-                    if (context.StatusCode == StatusCodes.Status200OK)
+                    if (lineItemsDto.StatusCode == StatusCodes.Status200OK)
                     {
-                        return new LineItemContainerPageResult(context.LineItemContainerPage)
+                        return new LineItemContainerPageResult(lineItemsDto.LineItemContainerPage)
                         {
-                            StatusCode = context.StatusCode
+                            StatusCode = lineItemsDto.StatusCode
                         };
                     }
-                    return StatusCode(context.StatusCode);
+                    return StatusCode(lineItemsDto.StatusCode);
+                }
+
+                // Get a representation of a particular LineItem instance
+
+                var lineItemDto = new GetLineItemDto(contextId, id);
+                var mediaType =
+                    Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
+                        ? LtiConstants.LineItemResultsMediaType
+                        : LtiConstants.LineItemMediaType;
+
+                if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
+                {
+                    await OnGetLineItemWithResults(lineItemDto);
                 }
                 else
                 {
-                    // Get a representation of a particular LineItem instance
-
-                    var context = new GetLineItemContext(contextId, id);
-                    var mediaType =
-                        Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
-                            ? LtiConstants.LineItemResultsMediaType
-                            : LtiConstants.LineItemMediaType;
-
-                    if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
-                    {
-                        await OnGetLineItemWithResults(context);
-                    }
-                    else
-                    {
-                        await OnGetLineItem(context);
-                    }
-
-                    if (context.StatusCode == StatusCodes.Status200OK)
-                    {
-                        if (mediaType == LtiConstants.LineItemResultsMediaType)
-                        {
-                            return new LineItemResultsResult(context.LineItem);
-                        }
-                        return new LineItemResult(context.LineItem);
-                    }
-                    return StatusCode(context.StatusCode);
+                    await OnGetLineItem(lineItemDto);
                 }
+
+                if (lineItemDto.StatusCode == StatusCodes.Status200OK)
+                {
+                    if (mediaType == LtiConstants.LineItemResultsMediaType)
+                    {
+                        return new LineItemResultsResult(lineItemDto.LineItem);
+                    }
+                    return new LineItemResult(lineItemDto.LineItem);
+                }
+                return StatusCode(lineItemDto.StatusCode);
             }
             catch (Exception ex)
             {
@@ -159,15 +157,15 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
-                var context = new PostLineItemContext(contextId, lineItem);
+                var dto = new PostLineItemDto(contextId, lineItem);
 
-                await OnPostLineItem(context);
+                await OnPostLineItem(dto);
 
-                if (context.StatusCode == StatusCodes.Status201Created)
+                if (dto.StatusCode == StatusCodes.Status201Created)
                 {
-                    return new LineItemResult(context.LineItem, StatusCodes.Status201Created);
+                    return new LineItemResult(dto.LineItem, StatusCodes.Status201Created);
                 }
-                return StatusCode(context.StatusCode);
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {
@@ -183,7 +181,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
-                var context = new PutLineItemContext(lineItem);
+                var dto = new PutLineItemDto(lineItem);
 
                 var mediaType =
                     Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
@@ -192,14 +190,14 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
                 {
-                    await OnPutLineItemWithResults(context);
+                    await OnPutLineItemWithResults(dto);
                 }
                 else
                 {
-                    await OnPutLineItem(context);
+                    await OnPutLineItem(dto);
                 }
 
-                return StatusCode(context.StatusCode);
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {

@@ -12,46 +12,46 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
     {
         public ResultsController()
         {
-            OnDeleteResult = async context =>
+            OnDeleteResult = async dto =>
             {
                 if (!Request.IsAuthenticatedWithLti())
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
                 var ltiRequest = await Request.ParseLtiRequestAsync();
                 var signature = ltiRequest.GenerateSignature("secret");
                 if (!ltiRequest.Signature.Equals(signature))
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
 
-                var resultUri = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, context.Id }));
+                var resultUri = new Uri(Url.Link("ResultsApi", new { dto.ContextId, dto.LineItemId, dto.Id }));
 
                 if (OutcomesDataFixture.Result == null || !OutcomesDataFixture.Result.Id.Equals(resultUri))
                 {
-                    context.StatusCode = StatusCodes.Status404NotFound;
+                    dto.StatusCode = StatusCodes.Status404NotFound;
                 }
                 else
                 {
                     OutcomesDataFixture.Result = null;
-                    context.StatusCode = StatusCodes.Status200OK;
+                    dto.StatusCode = StatusCodes.Status200OK;
                 }
             };
 
-            OnGetResult = async context =>
+            OnGetResult = async dto =>
             {
                 if (!Request.IsAuthenticatedWithLti())
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
                 var ltiRequest = await Request.ParseLtiRequestAsync();
                 var signature = ltiRequest.GenerateSignature("secret");
                 if (!ltiRequest.Signature.Equals(signature))
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
 
@@ -59,57 +59,57 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                 // When a line item is created, a result for each user is deemed to be created with a status value of “Initialized”.  
                 // Thus, there is no need to actually create a result with a POST request; the first connection to a result may be a PUT or a GET request.
 
-                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
-                var resultUri = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, context.Id }));
+                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { dto.ContextId, id = dto.LineItemId }));
+                var resultUri = new Uri(Url.Link("ResultsApi", new { dto.ContextId, dto.LineItemId, dto.Id }));
 
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
-                    context.StatusCode = StatusCodes.Status404NotFound;
+                    dto.StatusCode = StatusCodes.Status404NotFound;
                 }
                 else if (OutcomesDataFixture.Result == null || !OutcomesDataFixture.Result.Id.Equals(resultUri))
                 {
-                    context.Result = new LisResult
+                    dto.Result = new LisResult
                     {
                         ExternalContextId = LtiConstants.ResultContextId,
                         Id = resultUri,
                         ResultOf = lineItemUri,
                         ResultStatus = ResultStatus.Initialized
                     };
-                    context.StatusCode = StatusCodes.Status200OK;
+                    dto.StatusCode = StatusCodes.Status200OK;
                 }
                 else
                 {
-                    context.Result = OutcomesDataFixture.Result;
-                    context.StatusCode = StatusCodes.Status200OK;
+                    dto.Result = OutcomesDataFixture.Result;
+                    dto.StatusCode = StatusCodes.Status200OK;
                 }
             };
 
-            OnGetResults = async context =>
+            OnGetResults = async dto =>
             {
                 if (!Request.IsAuthenticatedWithLti())
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
                 var ltiRequest = await Request.ParseLtiRequestAsync();
                 var signature = ltiRequest.GenerateSignature("secret");
                 if (!ltiRequest.Signature.Equals(signature))
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
 
-                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
+                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { dto.ContextId, id = dto.LineItemId }));
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
-                    context.StatusCode = StatusCodes.Status404NotFound;
+                    dto.StatusCode = StatusCodes.Status404NotFound;
                 }
                 else
                 {
-                    context.ResultContainerPage = new ResultContainerPage
+                    dto.ResultContainerPage = new ResultContainerPage
                     {
                         ExternalContextId = LtiConstants.ResultContainerContextId,
-                        Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId })),
+                        Id = new Uri(Url.Link("ResultsApi", new { dto.ContextId, dto.LineItemId })),
                         ResultContainer = new ResultContainer
                         {
                             MembershipSubject = new ResultMembershipSubject
@@ -118,51 +118,51 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                             }
                         }
                     };
-                    context.StatusCode = StatusCodes.Status200OK;
+                    dto.StatusCode = StatusCodes.Status200OK;
                 }
             };
 
-            OnPostResult = async context =>
+            OnPostResult = async dto =>
             {
                 if (!Request.IsAuthenticatedWithLti())
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
                 var ltiRequest = await Request.ParseLtiRequestAsync();
                 var signature = ltiRequest.GenerateSignature("secret");
                 if (!ltiRequest.Signature.Equals(signature))
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
 
-                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
+                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { dto.ContextId, id = dto.LineItemId }));
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
-                    context.StatusCode = StatusCodes.Status400BadRequest;
+                    dto.StatusCode = StatusCodes.Status400BadRequest;
                 }
                 else
                 {
-                    OutcomesDataFixture.Result = context.Result;
-                    OutcomesDataFixture.Result.Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, id = OutcomesDataFixture.ResultId }));
-                    context.Result = OutcomesDataFixture.Result;
-                    context.StatusCode = StatusCodes.Status201Created;
+                    OutcomesDataFixture.Result = dto.Result;
+                    OutcomesDataFixture.Result.Id = new Uri(Url.Link("ResultsApi", new { dto.ContextId, dto.LineItemId, id = OutcomesDataFixture.ResultId }));
+                    dto.Result = OutcomesDataFixture.Result;
+                    dto.StatusCode = StatusCodes.Status201Created;
                 }
             };
 
-            OnPutResult = async context =>
+            OnPutResult = async dto =>
             {
                 if (!Request.IsAuthenticatedWithLti())
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
                 var ltiRequest = await Request.ParseLtiRequestAsync();
                 var signature = ltiRequest.GenerateSignature("secret");
                 if (!ltiRequest.Signature.Equals(signature))
                 {
-                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    dto.StatusCode = StatusCodes.Status401Unauthorized;
                     return;
                 }
 
@@ -171,20 +171,20 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                 // Thus, there is no need to actually create a result with a POST request; the first connection to a result may be a 
                 // PUT or a GET request.
 
-                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
+                var lineItemUri = new Uri(Url.Link("LineItemsApi", new { dto.ContextId, id = dto.LineItemId }));
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
-                    context.StatusCode = StatusCodes.Status404NotFound;
+                    dto.StatusCode = StatusCodes.Status404NotFound;
                 }
                 else
                 {
                     // If this is the first connection, the PUT is equivalent to a POST
-                    OutcomesDataFixture.Result = context.Result;
-                    if (context.Result.Id == null)
+                    OutcomesDataFixture.Result = dto.Result;
+                    if (dto.Result.Id == null)
                     {
-                        OutcomesDataFixture.Result.Id = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, id = OutcomesDataFixture.ResultId }));
+                        OutcomesDataFixture.Result.Id = new Uri(Url.Link("ResultsApi", new { dto.ContextId, dto.LineItemId, id = OutcomesDataFixture.ResultId }));
                     }
-                    context.StatusCode = StatusCodes.Status200OK;
+                    dto.StatusCode = StatusCodes.Status200OK;
                 }
             };
         }

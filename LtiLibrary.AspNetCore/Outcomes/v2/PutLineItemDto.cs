@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class PutLineItemContext
+    public class PutLineItemDto
     {
-        public PutLineItemContext(LineItem lineItem)
+        public PutLineItemDto(LineItem lineItem)
         {
             LineItem = lineItem;
             StatusCode = StatusCodes.Status200OK;

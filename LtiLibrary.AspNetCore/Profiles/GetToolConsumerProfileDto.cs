@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Profiles
 {
-    public class GetToolConsumerProfileContext
+    public class GetToolConsumerProfileDto
     {
-        public GetToolConsumerProfileContext(string ltiVersion)
+        public GetToolConsumerProfileDto(string ltiVersion)
         {
             LtiVersion = ltiVersion;
             StatusCode = StatusCodes.Status200OK;

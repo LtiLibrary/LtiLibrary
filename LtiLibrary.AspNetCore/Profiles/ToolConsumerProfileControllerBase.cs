@@ -16,10 +16,10 @@ namespace LtiLibrary.AspNetCore.Profiles
     {
         protected ToolConsumerProfileControllerBase()
         {
-            OnGetToolConsumerProfile = context => throw new NotImplementedException();
+            OnGetToolConsumerProfile = dto => throw new NotImplementedException();
         }
 
-        public Func<GetToolConsumerProfileContext, Task> OnGetToolConsumerProfile { get; set; }
+        public Func<GetToolConsumerProfileDto, Task> OnGetToolConsumerProfile { get; set; }
 
         [HttpGet]
 // ReSharper disable InconsistentNaming
@@ -28,16 +28,16 @@ namespace LtiLibrary.AspNetCore.Profiles
         {
             try
             {
-                var context = new GetToolConsumerProfileContext(lti_version);
+                var dto = new GetToolConsumerProfileDto(lti_version);
 
-                await OnGetToolConsumerProfile(context);
+                await OnGetToolConsumerProfile(dto);
 
-                if (context.StatusCode == StatusCodes.Status200OK)
+                if (dto.StatusCode == StatusCodes.Status200OK)
                 {
                     // Set the Content-Type of the ObjectResult
-                    return new ToolConsumerProfileResult(context.ToolConsumerProfile);
+                    return new ToolConsumerProfileResult(dto.ToolConsumerProfile);
                 }
-                return StatusCode(context.StatusCode);
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {

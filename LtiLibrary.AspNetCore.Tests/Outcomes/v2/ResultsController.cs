@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Outcomes.v2;
@@ -11,8 +12,21 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
     {
         public ResultsController()
         {
-            OnDeleteResult = context =>
+            OnDeleteResult = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 var resultUri = new Uri(Url.Link("ResultsApi", new { context.ContextId, context.LineItemId, context.Id }));
 
                 if (OutcomesDataFixture.Result == null || !OutcomesDataFixture.Result.Id.Equals(resultUri))
@@ -24,11 +38,23 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     OutcomesDataFixture.Result = null;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnGetResult = context =>
+            OnGetResult = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 // https://www.imsglobal.org/specs/ltiomv2p0/specification-3
                 // When a line item is created, a result for each user is deemed to be created with a status value of “Initialized”.  
                 // Thus, there is no need to actually create a result with a POST request; the first connection to a result may be a PUT or a GET request.
@@ -56,11 +82,23 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     context.Result = OutcomesDataFixture.Result;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnGetResults = context =>
+            OnGetResults = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
@@ -82,11 +120,23 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     };
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnPostResult = context =>
+            OnPostResult = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = context.LineItemId }));
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
                 {
@@ -99,11 +149,23 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     context.Result = OutcomesDataFixture.Result;
                     context.StatusCode = StatusCodes.Status201Created;
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnPutResult = context =>
+            OnPutResult = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 // https://www.imsglobal.org/specs/ltiomv2p0/specification-3
                 // When a line item is created, a result for each user is deemed to be created with a status value of “Initialized”.  
                 // Thus, there is no need to actually create a result with a POST request; the first connection to a result may be a 
@@ -124,7 +186,6 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     }
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
         }
     }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Outcomes.v2;
@@ -11,8 +13,21 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
     {
         public LineItemsController()
         {
-            OnDeleteLineItem = context =>
+            OnDeleteLineItem = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { OutcomesDataFixture.ContextId, context.Id }));
 
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
@@ -25,11 +40,23 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     OutcomesDataFixture.Result = null;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnGetLineItem = context =>
+            OnGetLineItem = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 var lineItemUri = new Uri(Url.Link("LineItemsApi", new { OutcomesDataFixture.ContextId, context.Id }));
 
                 if (OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(lineItemUri))
@@ -41,21 +68,46 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     context.LineItem = OutcomesDataFixture.LineItem;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnGetLineItemWithResults = context =>
+            OnGetLineItemWithResults = async context =>
             {
-                OnGetLineItem(context);
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
+                await OnGetLineItem(context);
+
                 if (context.LineItem != null && OutcomesDataFixture.Result != null)
                 {
                     context.LineItem.Result = OutcomesDataFixture.Result == null ? new LisResult[] { } : new[] { OutcomesDataFixture.Result };
                 }
-                return Task.FromResult<object>(null);
             };
 
-            OnGetLineItems = context =>
+            OnGetLineItems = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 context.LineItemContainerPage = new LineItemContainerPage
                 {
                     ExternalContextId = LtiConstants.LineItemContainerContextId,
@@ -77,28 +129,52 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     context.LineItemContainerPage.LineItemContainer.MembershipSubject.LineItems = new[] { OutcomesDataFixture.LineItem };
                 }
                 context.StatusCode = StatusCodes.Status200OK;
-                return Task.FromResult<object>(null);
             };
 
             // Create a LineItem
-            OnPostLineItem = context =>
+            OnPostLineItem = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 if (OutcomesDataFixture.LineItem != null)
                 {
                     context.StatusCode = StatusCodes.Status400BadRequest;
-                    return Task.FromResult<object>(null);
+                    return;
                 }
 
                 context.LineItem.Id = new Uri(Url.Link("LineItemsApi", new { context.ContextId, id = OutcomesDataFixture.LineItemId }));
                 context.LineItem.Results = new Uri(Url.Link("ResultsApi", new { context.ContextId, OutcomesDataFixture.LineItemId }));
                 OutcomesDataFixture.LineItem = context.LineItem;
                 context.StatusCode = StatusCodes.Status201Created;
-                return Task.FromResult<object>(null);
             };
 
             // Update LineItem (but not results)
-            OnPutLineItem = context =>
+            OnPutLineItem = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 if (context.LineItem == null || OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(context.LineItem.Id))
                 {
                     context.StatusCode = StatusCodes.Status404NotFound;
@@ -109,12 +185,24 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     OutcomesDataFixture.LineItem = context.LineItem;
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
 
             // Update LineItem and Result
-            OnPutLineItemWithResults = context =>
+            OnPutLineItemWithResults = async context =>
             {
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+                var signature = ltiRequest.GenerateSignature("secret");
+                if (!ltiRequest.Signature.Equals(signature))
+                {
+                    context.StatusCode = StatusCodes.Status401Unauthorized;
+                    return;
+                }
+
                 if (context.LineItem == null || OutcomesDataFixture.LineItem == null || !OutcomesDataFixture.LineItem.Id.Equals(context.LineItem.Id))
                 {
                     context.StatusCode = StatusCodes.Status404NotFound;
@@ -128,7 +216,6 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                     }
                     context.StatusCode = StatusCodes.Status200OK;
                 }
-                return Task.FromResult<object>(null);
             };
         }
     }

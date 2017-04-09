@@ -47,7 +47,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
             var clientResponse = await OutcomesClient.GetLineItemsAsync(_client, url, Key, Secret, limit: 10);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.NotFound, $"{clientResponse.StatusCode} == {HttpStatusCode.NotFound}");
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"{clientResponse.StatusCode} == {HttpStatusCode.NotFound}");
         }
 
         [Fact]
@@ -77,6 +77,101 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
             Assert.True(clientResponse.Response.Id.AbsoluteUri == url, $"clientResponse.Response.Id == {url}");
             Assert.True(clientResponse.Response.LineItemOf.ContextId == OutcomesDataFixture.ContextId, $"clientResponse.Response.LineItemOf.ContextId == {OutcomesDataFixture.ContextId}");
+        }
+
+        [Fact]
+        public async void PostLineItem_WhenSecretIsCorrect()
+        {
+            _fixture.InitializeData();
+            var lineitem = new LineItem { LineItemOf = new Context { ContextId = OutcomesDataFixture.ContextId } };
+
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
+            var clientResponse = await OutcomesClient.PostLineItemAsync(_client, url, Key, Secret, lineitem);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.Created, $"clientResponse.StatusCode == {HttpStatusCode.Created}");
+        }
+
+        [Fact]
+        public async void NotPostLineItem_WhenSecretIsIncorrect()
+        {
+            _fixture.InitializeData();
+            var lineitem = new LineItem { LineItemOf = new Context { ContextId = OutcomesDataFixture.ContextId } };
+
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
+            var clientResponse = await OutcomesClient.PostLineItemAsync(_client, url, Key, "nosecret", lineitem);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.Unauthorized, $"clientResponse.StatusCode == {HttpStatusCode.Unauthorized}");
+        }
+
+        [Fact]
+        public async void NotPutLineItem_WhenLineItemDoesNotExist()
+        {
+            _fixture.InitializeData();
+            var lineitem = new LineItem { LineItemOf = new Context { ContextId = OutcomesDataFixture.ContextId } };
+
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
+            var clientResponse = await OutcomesClient.PutLineItemAsync(_client, url, Key, Secret, lineitem);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.NotFound, $"clientResponse.StatusCode == {HttpStatusCode.NotFound}");
+        }
+
+        [Fact]
+        public async void PutLineItem_WhenSecretIsCorrect()
+        {
+            _fixture.InitializeData();
+            var lineitem = new LineItem { LineItemOf = new Context { ContextId = OutcomesDataFixture.ContextId } };
+
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
+            var postResponse = await OutcomesClient.PostLineItemAsync(_client, url, Key, Secret, lineitem);
+            lineitem = postResponse.Response;
+
+            lineitem.Label = "Updated";
+            var clientResponse = await OutcomesClient.PutLineItemAsync(_client, lineitem.Id.AbsoluteUri, Key, Secret, lineitem);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
+
+            var readResponse = await OutcomesClient.GetLineItemAsync(_client, lineitem.Id.AbsoluteUri, Key, Secret);
+            Assert.True(readResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
+            Assert.True(readResponse.Response.Label == "Updated", "LineItem.Label == \"Updated\"");
+        }
+
+        [Fact]
+        public async void NotPutLineItem_WhenSecretIsNotCorrect()
+        {
+            _fixture.InitializeData();
+            var lineitem = new LineItem { LineItemOf = new Context { ContextId = OutcomesDataFixture.ContextId } };
+
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/lineitem-1";
+            var clientResponse = await OutcomesClient.PutLineItemAsync(_client, url, Key, "nosecret", lineitem);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.Unauthorized, $"{clientResponse.StatusCode} == {HttpStatusCode.Unauthorized}");
+        }
+
+        [Fact]
+        public async void NotDeleteLineItem_WhenLineItemDoesNotExist()
+        {
+            _fixture.InitializeData();
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/nolineitem";
+            var clientResponse = await OutcomesClient.DeleteLineItemAsync(_client, url, Key, Secret);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.NotFound, $"{clientResponse.StatusCode} == {HttpStatusCode.NotFound}");
+        }
+
+        [Fact]
+        public async void NotDeleteLineItem_WhenSecretIsNotCorrect()
+        {
+            _fixture.InitializeData();
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/nolineitem";
+            var clientResponse = await OutcomesClient.DeleteLineItemAsync(_client, url, Key, "nosecret");
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.Unauthorized, $"{clientResponse.StatusCode} == {HttpStatusCode.Unauthorized}");
+        }
+
+        [Fact]
+        public async void DeleteLineItem_WhenLineItemExists()
+        {
+            _fixture.InitializeData();
+            var lineitem = new LineItem { LineItemOf = new Context { ContextId = OutcomesDataFixture.ContextId } };
+
+            var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
+            var postResponse = await OutcomesClient.PostLineItemAsync(_client, url, Key, Secret, lineitem);
+            lineitem = postResponse.Response;
+
+            var clientResponse = await OutcomesClient.DeleteLineItemAsync(_client, lineitem.Id.AbsoluteUri, Key, Secret);
+            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
         }
 
         public void Dispose()

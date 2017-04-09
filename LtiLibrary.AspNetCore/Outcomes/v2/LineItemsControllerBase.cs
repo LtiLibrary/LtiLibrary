@@ -69,9 +69,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             try
             {
                 var context = new DeleteLineItemContext(contextId, id);
-                
-                await OnDeleteLineItem(context);
 
+                await OnDeleteLineItem(context);
+                
                 return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
@@ -139,15 +139,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                         {
                             return new LineItemResultsResult(context.LineItem);
                         }
-                        else
-                        {
-                            return new LineItemResult(context.LineItem);
-                        }
+                        return new LineItemResult(context.LineItem);
                     }
-                    else
-                    {
-                        return StatusCode(context.StatusCode);
-                    }
+                    return StatusCode(context.StatusCode);
                 }
             }
             catch (Exception ex)
@@ -204,8 +198,6 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                 {
                     await OnPutLineItem(context);
                 }
-
-                await OnPutLineItem(context);
 
                 return StatusCode(context.StatusCode);
             }

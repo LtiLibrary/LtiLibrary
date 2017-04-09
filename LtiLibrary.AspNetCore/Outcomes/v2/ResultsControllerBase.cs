@@ -102,10 +102,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                             StatusCode = context.StatusCode
                         };
                     }
-                    else
-                    {
-                        return StatusCode(context.StatusCode);
-                    }
+                    return StatusCode(context.StatusCode);
                 }
                 else
                 {
@@ -122,10 +119,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                             StatusCode = context.StatusCode
                         };
                     }
-                    else
-                    {
-                        return StatusCode(context.StatusCode);
-                    }
+                    return StatusCode(context.StatusCode);
                 }
             }
             catch (Exception ex)
@@ -145,7 +139,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                 var context = new PostResultContext(contextId, lineItemId, result);
 
                 await OnPostResult(context);
-
+                
                 if (context.StatusCode == StatusCodes.Status201Created)
                 {
                     return new ResultResult(context.Result)
@@ -153,10 +147,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                         StatusCode = context.StatusCode
                     };
                 }
-                else
-                {
-                    return StatusCode(context.StatusCode);
-                }
+                return StatusCode(context.StatusCode);
             }
             catch (Exception ex)
             {

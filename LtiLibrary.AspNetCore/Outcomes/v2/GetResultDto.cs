@@ -3,18 +3,20 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class GetLineItemContext
+    public class GetResultDto
     {
-        public GetLineItemContext(string contextId, string id)
+        public GetResultDto(string contextId, string lineItemId, string id)
         {
             ContextId = contextId;
             Id = id;
+            LineItemId = lineItemId;
             StatusCode = StatusCodes.Status200OK;
         }
 
         public string ContextId { get; set; }
-        public string Id { get; private set; }
-        public LineItem LineItem { get; set; }
+        public string LineItemId { get; set; }
+        public string Id { get; set; }
+        public LisResult Result { get; set; }
         public int StatusCode { get; set; }
     }
 }

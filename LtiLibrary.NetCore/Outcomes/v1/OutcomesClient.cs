@@ -12,7 +12,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using HttpRequestMessage = System.Net.Http.HttpRequestMessage;
 
 namespace LtiLibrary.NetCore.Outcomes.v1
 {
@@ -47,7 +46,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="sourcedId">The LisResultSourcedId to be deleted.</param>
-        /// <returns>A <see cref="ClientResponse"/> with the result of the request.</returns>
+        /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string sourcedId)
         {
             try
@@ -80,6 +79,8 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
+                        httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -129,7 +130,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to read.</param>
-        /// <returns>The LisResult.</returns>
+        /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse<LisResult>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             try
@@ -162,6 +163,8 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
+                        httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -187,7 +190,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                             }
                             else
                             {
-                                outcomeResponse.StatusCode = HttpStatusCode.InternalServerError;
+                                outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
                             }
                         }
     #if DEBUG
@@ -227,7 +230,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
         /// <param name="score">The score.</param>
-        /// <returns>A <see cref="ClientResponse"/> with the success of the request.</returns>
+        /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
         {
             try
@@ -271,6 +274,8 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
+                        httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -314,15 +319,8 @@ namespace LtiLibrary.NetCore.Outcomes.v1
 
         #region Private Methods
 
-        private static void SignRequest(HttpRequestMessage request, byte[] body, string consumerKey, string consumerSecret)
+        private static async Task<AuthenticationHeaderValue> SignRequest(Uri absoluteUri, HttpContent body, string consumerKey, string consumerSecret)
         {
-            if (body == null)
-                body = new byte[0];
-            if (body.Length > 0 && request.Content.Headers.ContentLength != body.Length)
-            {
-                throw new ArgumentException("body length does not match request.ContentLength", nameof(body));
-            }
-
             var parameters = new NameValueCollection();
             parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
             parameters.AddParameter(OAuthConstants.NonceParameter, Guid.NewGuid().ToString());
@@ -337,14 +335,13 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             // Calculate the body hash
             using (var sha1 = SHA1.Create())
             {
-                var hash = sha1.ComputeHash(body);
+                var hash = sha1.ComputeHash(await body.ReadAsByteArrayAsync());
                 var hash64 = Convert.ToBase64String(hash);
                 parameters.AddParameter(OAuthConstants.BodyHashParameter, hash64);
             }
 
             // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(request.Method.Method.ToUpper(), request.RequestUri, parameters,
-                consumerSecret);
+            var signature = OAuthUtility.GenerateSignature("POST", absoluteUri, parameters, consumerSecret);
             parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
 
             // Build the Authorization header
@@ -353,7 +350,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            request.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
+            return AuthenticationHeaderValue.Parse(authorization.ToString(0, authorization.Length -1));
         }
 
         #endregion

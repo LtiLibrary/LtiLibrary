@@ -3,22 +3,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class GetResultsContext
+    public class PutResultDto
     {
-        public GetResultsContext(string contextId, string lineItemId, int? limit, int page)
+        public PutResultDto(string contextId, string lineItemId, string id, LisResult result)
         {
             ContextId = contextId;
-            Limit = limit;
             LineItemId = lineItemId;
-            Page = page;
+            Id = id;
+            Result = result;
             StatusCode = StatusCodes.Status200OK;
         }
 
         public string ContextId { get; set; }
         public string LineItemId { get; set; }
-        public int? Limit { get; set; }
-        public ResultContainerPage ResultContainerPage { get; set; }
-        public int Page { get; set; }
+        public string Id { get; set; }
+        public LisResult Result { get; }
         public int StatusCode { get; set; }
     }
 }

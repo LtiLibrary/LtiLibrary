@@ -34,7 +34,6 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         [Fact]
         public async void ReplaceResult()
         {
-            // TODO: Authentication!
             var replaceResult = await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
             Assert.True(replaceResult.StatusCode == HttpStatusCode.OK, $"{replaceResult.StatusCode} == {HttpStatusCode.OK}");
         }
@@ -45,6 +44,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
             var readResult = await OutcomesClient.ReadResultAsync(_client, Url, Key, Secret, Id);
             Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             Assert.True(readResult.Response.Score == Value, $"{readResult.Response.Score} == {Value}");
             Assert.True(readResult.Response.SourcedId == Id, $"{readResult.Response.SourcedId} == {Id}");
         }
@@ -57,6 +57,29 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             Assert.True(deleteResult.StatusCode == HttpStatusCode.OK, $"{deleteResult.StatusCode} == {HttpStatusCode.OK}");
             var readResult = await OutcomesClient.ReadResultAsync(_client, Url, Key, Secret, Id);
             Assert.True(readResult.Response == null, "readResult.Response == null");
+        }
+
+        [Fact]
+        public async void NotReplaceResult_IfUsingDifferentSecrets()
+        {
+            var replaceResult = await OutcomesClient.ReplaceResultAsync(_client, Url, Key, "nosecret", Id, Value);
+            Assert.True(replaceResult.StatusCode == HttpStatusCode.Unauthorized, $"{replaceResult.StatusCode} == {HttpStatusCode.Unauthorized}");
+        }
+
+        [Fact]
+        public async void NotReadResult_IfUsingDifferentSecrets()
+        {
+            await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            var readResult = await OutcomesClient.ReadResultAsync(_client, Url, Key, "nosecret", Id);
+            Assert.True(readResult.StatusCode == HttpStatusCode.Unauthorized, $"{readResult.StatusCode} == {HttpStatusCode.Unauthorized}");
+        }
+
+        [Fact]
+        public async void NotDeleteResult_IfUsingDifferentSecrets()
+        {
+            await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            var deleteResult = await OutcomesClient.DeleteResultAsync(_client, Url, Key, "nosecret", Id);
+            Assert.True(deleteResult.StatusCode == HttpStatusCode.Unauthorized, $"{deleteResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
         public void Dispose()

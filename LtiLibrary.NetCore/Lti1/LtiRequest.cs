@@ -12,6 +12,7 @@ using LtiLibrary.NetCore.Outcomes.v1;
 
 namespace LtiLibrary.NetCore.Lti1
 {
+    [DataContract]
     public class LtiRequest 
         : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
     {
@@ -941,11 +942,6 @@ namespace LtiLibrary.NetCore.Lti1
                 Parameters[LtiConstants.LisResultSourcedIdParameter] = value;
             }
         }
-
-        /// <summary>
-        /// The XML payload in an LTI Outcomes request and response
-        /// </summary>
-        public string ImsxPoxEnvelope { get; set; }
 
         #endregion
 

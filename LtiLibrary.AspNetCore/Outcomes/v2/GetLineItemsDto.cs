@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class GetLineItemsContext
+    public class GetLineItemsDto
     {
-        public GetLineItemsContext(string contextId, int? limit, string activityId, int page)
+        public GetLineItemsDto(string contextId, int? limit, string activityId, int page)
         {
             ActivityId = activityId;
             ContextId = contextId;
@@ -16,9 +16,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
         public string ActivityId { get; set; }
         public string ContextId { get; set; }
-        public int? Limit { get; private set; }
+        public int? Limit { get; }
         public LineItemContainerPage LineItemContainerPage { get; set; }
-        public int Page { get; private set; }
+        public int Page { get; }
         public int StatusCode { get; set; }
     }
 }

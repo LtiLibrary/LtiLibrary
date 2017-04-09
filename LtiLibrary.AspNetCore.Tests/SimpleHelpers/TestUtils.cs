@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace LtiLibrary.AspNetCore.Tests.TestHelpers
+namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
 {
     internal static class TestUtils
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LtiLibrary.NetCore.Outcomes.v1;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {
@@ -8,10 +9,18 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// </summary>
     public class ImsxXmlMediaTypeResult : ObjectResult
     {
-        public ImsxXmlMediaTypeResult(object value) : base(value)
+        public ImsxXmlMediaTypeResult(imsx_POXEnvelopeType value) : base(value)
         {
             // This formatter produces an imsx_POXEnvelopeType with an imsx_POXEnvelopeResponse
             Formatters.Add(new ImsxXmlMediaTypeOutputFormatter());
+        }
+
+        public imsx_POXEnvelopeType Response
+        {
+            get
+            {
+                return Value as imsx_POXEnvelopeType;
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
-using LtiLibrary.AspNetCore.Tests.TestHelpers;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
-using LtiLibrary.NetCore.Tests.SimpleHelpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NodaTime;
@@ -33,11 +31,11 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
                 Debug.WriteLine(diff.NewValues);
                 Debug.WriteLine(diff.OldValues);
 
-                Assert.Null(diff.NewValues);
-                Assert.Null(diff.OldValues);
+                Assert.True(diff.NewValues == null, diff.NewValues?.ToString());
+                Assert.True(diff.OldValues == null, diff.NewValues?.ToString());
             }
 
-            public static void AssertSameJsonLdObject( JsonLdObject obj, string eventReferenceFile )
+        public static void AssertSameJsonLdObject( JsonLdObject obj, string eventReferenceFile )
             {
                var eventJsonString = obj.ToJsonLdString();
                var eventJObject = JObject.Parse( eventJsonString );

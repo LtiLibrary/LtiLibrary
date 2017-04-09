@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using LtiLibrary.NetCore.Outcomes.v2;
@@ -12,6 +13,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// "A REST API for LineItem Resources in multiple formats, Internal Draft 2.1"
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LISResult/service.html
     /// </summary>
+    [AddBodyHashHeader]
     [Route("ims/courses/{contextId}/lineitems/{lineItemId}/results/{id?}", Name = "ResultsApi")]
     [Consumes(LtiConstants.LisResultMediaType, LtiConstants.LisResultContainerMediaType)]
     [Produces(LtiConstants.LisResultMediaType, LtiConstants.LisResultContainerMediaType)]
@@ -19,33 +21,33 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     {
         protected ResultsControllerBase()
         {
-            OnDeleteResult = context => { throw new NotImplementedException(); };
-            OnGetResult = context => { throw new NotImplementedException(); };
-            OnGetResults = context => { throw new NotImplementedException(); };
-            OnPostResult = context => { throw new NotImplementedException(); };
-            OnPutResult = context => { throw new NotImplementedException(); };
+            OnDeleteResult = dto => throw new NotImplementedException();
+            OnGetResult = dto => throw new NotImplementedException();
+            OnGetResults = dto => throw new NotImplementedException();
+            OnPostResult = dto => throw new NotImplementedException();
+            OnPutResult = dto => throw new NotImplementedException();
         }
 
         /// <summary>
         /// Delete a particular LisResult instance in the Tool Consumer application.
         /// </summary>
-        public Func<DeleteResultContext, Task> OnDeleteResult { get; set; }
+        public Func<DeleteResultDto, Task> OnDeleteResult { get; set; }
         /// <summary>
         /// Get a representation of a particular LisResult instance from the Tool Consumer application.
         /// </summary>
-        public Func<GetResultContext, Task> OnGetResult { get; set; }
+        public Func<GetResultDto, Task> OnGetResult { get; set; }
         /// <summary>
         /// Get a paginated list of LisResult resources from an LisResultContainer in the Tool Consumer application.
         /// </summary>
-        public Func<GetResultsContext, Task> OnGetResults { get; set; }
+        public Func<GetResultsDto, Task> OnGetResults { get; set; }
         /// <summary>
         /// Create a new LisResult instance within the Tool Consumer Application.
         /// </summary>
-        public Func<PostResultContext, Task> OnPostResult { get; set; }
+        public Func<PostResultDto, Task> OnPostResult { get; set; }
         /// <summary>
         /// Update a particular LisResult instance in the Tool Consumer Application.
         /// </summary>
-        public Func<PutResultContext, Task> OnPutResult { get; set; }
+        public Func<PutResultDto, Task> OnPutResult { get; set; }
 
         /// <summary>
         /// Delete a particular LisResult instance.
@@ -55,11 +57,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
-                var context = new DeleteResultContext(contextId, lineItemId, id);
+                var dto = new DeleteResultDto(contextId, lineItemId, id);
 
-                await OnDeleteResult(context);
+                await OnDeleteResult(dto);
 
-                return StatusCode(context.StatusCode);
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {
@@ -76,11 +78,10 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
+                // Get a paginated list of results from a ResultContainer
                 if (string.IsNullOrEmpty(id))
                 {
-                    // Get a paginated list of results from a ResultContainer
-
-                    int page = 1;
+                    var page = 1;
                     if (p.HasValue)
                     {
                         if (firstPage != null && p.Value != 1)
@@ -89,42 +90,34 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                         }
                         page = p.Value;
                     }
-                    var context = new GetResultsContext(contextId, lineItemId, limit, page);
+                    var resultsDto = new GetResultsDto(contextId, lineItemId, limit, page);
 
-                    await OnGetResults(context);
+                    await OnGetResults(resultsDto);
 
-                    if (context.StatusCode == StatusCodes.Status200OK)
+                    if (resultsDto.StatusCode == StatusCodes.Status200OK)
                     {
-                        return new ResultContainerPageResult(context.ResultContainerPage)
+                        return new ResultContainerPageResult(resultsDto.ResultContainerPage)
                         {
-                            StatusCode = context.StatusCode
+                            StatusCode = resultsDto.StatusCode
                         };
                     }
-                    else
-                    {
-                        return StatusCode(context.StatusCode);
-                    }
+                    return StatusCode(resultsDto.StatusCode);
                 }
-                else
+
+                // Get a representation of a particular LisResult instance
+
+                var resultDto = new GetResultDto(contextId, lineItemId, id);
+
+                await OnGetResult(resultDto);
+
+                if (resultDto.StatusCode == StatusCodes.Status200OK)
                 {
-                    // Get a representation of a particular LisResult instance
-
-                    var context = new GetResultContext(contextId, lineItemId, id);
-
-                    await OnGetResult(context);
-
-                    if (context.StatusCode == StatusCodes.Status200OK)
+                    return new ResultResult(resultDto.Result)
                     {
-                        return new ResultResult(context.Result)
-                        {
-                            StatusCode = context.StatusCode
-                        };
-                    }
-                    else
-                    {
-                        return StatusCode(context.StatusCode);
-                    }
+                        StatusCode = resultDto.StatusCode
+                    };
                 }
+                return StatusCode(resultDto.StatusCode);
             }
             catch (Exception ex)
             {
@@ -140,21 +133,18 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
-                var context = new PostResultContext(contextId, lineItemId, result);
+                var dto = new PostResultDto(contextId, lineItemId, result);
 
-                await OnPostResult(context);
-
-                if (context.StatusCode == StatusCodes.Status201Created)
+                await OnPostResult(dto);
+                
+                if (dto.StatusCode == StatusCodes.Status201Created)
                 {
-                    return new ResultResult(context.Result)
+                    return new ResultResult(dto.Result)
                     {
-                        StatusCode = context.StatusCode
+                        StatusCode = dto.StatusCode
                     };
                 }
-                else
-                {
-                    return StatusCode(context.StatusCode);
-                }
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {
@@ -170,11 +160,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         {
             try
             {
-                var context = new PutResultContext(contextId, lineItemId, id, result);
+                var dto = new PutResultDto(contextId, lineItemId, id, result);
 
-                await OnPutResult(context);
+                await OnPutResult(dto);
 
-                return StatusCode(context.StatusCode);
+                return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
             {

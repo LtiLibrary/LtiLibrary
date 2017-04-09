@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class PostLineItemContext
+    public class PutLineItemDto
     {
-        public PostLineItemContext(string contextId, LineItem lineItem)
+        public PutLineItemDto(LineItem lineItem)
         {
-            ContextId = contextId;
             LineItem = lineItem;
             StatusCode = StatusCodes.Status200OK;
         }
 
-        public string ContextId { get; set; }
-        public LineItem LineItem { get; set; }
+        public LineItem LineItem { get; }
         public int StatusCode { get; set; }
     }
 }

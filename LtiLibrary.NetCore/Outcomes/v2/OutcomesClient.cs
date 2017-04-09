@@ -30,7 +30,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         public static async Task<ClientResponse> DeleteLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         public static async Task<ClientResponse> DeleteLineItemResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
         }
 
         /// <summary>
@@ -229,11 +229,11 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         #region Private Methods
 
         private static async Task<ClientResponse> DeleteOutcomeAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, string contentType = null)
+            string consumerSecret)
         {
             try
             {
-                //SignRequest(request, null, consumerKey, consumerSecret);
+                await SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -281,7 +281,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 
-                // SignRequest(request, null, consumerKey, consumerSecret);
+                await SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
                 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -324,12 +324,12 @@ namespace LtiLibrary.NetCore.Outcomes.v2
 
         private static string GetPagingServiceUrl(string serviceUrl, int? limit, bool? firstPage, int? p, string activityId = null)
         {
-            string urlPath = serviceUrl;
-            string urlQuery = "?";
+            var urlPath = serviceUrl;
+            var urlQuery = "?";
             if (serviceUrl.Contains("?"))
             {
-                urlPath = serviceUrl.Substring(0, serviceUrl.IndexOf("?"));
-                urlQuery = serviceUrl.Substring(serviceUrl.IndexOf("?"));
+                urlPath = serviceUrl.Substring(0, serviceUrl.IndexOf("?", StringComparison.Ordinal));
+                urlQuery = serviceUrl.Substring(serviceUrl.IndexOf("?", StringComparison.Ordinal));
             }
             var query = new StringBuilder(urlQuery);
             if (limit != null)
@@ -359,7 +359,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             {
                 var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
 
-                //SignRequest(request, body, consumerKey, consumerSecret);
+                await SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -407,7 +407,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             {
                 var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
 
-                //SignRequest(request, body, consumerKey, consumerSecret);
+                await SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -443,15 +443,8 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             }
         }
 
-        private static void SignRequest(HttpRequestMessage request, byte[] body, string consumerKey, string consumerSecret)
+        private static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl, HttpContent content, string consumerKey, string consumerSecret)
         {
-            if (body == null)
-                body = new byte[0];
-            if (body.Length > 0 && request.Content.Headers.ContentLength != body.Length)
-            {
-                throw new ArgumentException("body length does not match request.ContentLength", nameof(body));
-            }
-
             var parameters = new NameValueCollection();
             parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
             parameters.AddParameter(OAuthConstants.NonceParameter, Guid.NewGuid().ToString());
@@ -466,14 +459,13 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             // Calculate the body hash
             using (var sha1 = SHA1.Create())
             {
-                var hash = sha1.ComputeHash(body);
+                var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
                 var hash64 = Convert.ToBase64String(hash);
                 parameters.AddParameter(OAuthConstants.BodyHashParameter, hash64);
             }
 
             // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(request.Method.Method.ToUpper(), request.RequestUri, parameters,
-                consumerSecret);
+            var signature = OAuthUtility.GenerateSignature(method.Method, new Uri(client.BaseAddress, serviceUrl), parameters, consumerSecret);
             parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
 
             // Build the Authorization header
@@ -482,7 +474,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            request.Headers.Add(OAuthConstants.AuthorizationHeader, authorization.ToString(0, authorization.Length - 1));
+            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authorization.ToString(0, authorization.Length - 1));
         }
 
         #endregion

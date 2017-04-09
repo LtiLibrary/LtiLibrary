@@ -5,10 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ProviderController.cs" />
+    <None Remove="ReferenceJson\basic-lti-launch-request.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="ReferenceJson\basic-lti-launch-request.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceJson\ContentItemSelectionRequest.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ReferenceJson\EmbeddedHtmlContentItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

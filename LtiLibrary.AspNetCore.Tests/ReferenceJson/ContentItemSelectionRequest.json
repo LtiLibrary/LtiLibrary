@@ -1,0 +1,13 @@
+﻿{
+  "lti_message_type": "ContentItemSelectionRequest",
+  "oauth_callback": "about:blank",
+  "oauth_consumer_key": "12345",
+  "oauth_signature_method": "HMAC-SHA1",
+  "oauth_version": "1.0",
+  "launch_presentation_locale": "en-US",
+  "lti_version": "LTI-1p0",
+  "resource_link_id": "launch",
+  "accept_media_types": "text/html,image/*",
+  "accept_presentation_document_targets": "embed,frame",
+  "content_item_return_url": "http://localhost/consumer/placecontentitem"
+}

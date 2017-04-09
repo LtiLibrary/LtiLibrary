@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Runtime.Serialization;
 using LtiLibrary.NetCore.Common;
-using Newtonsoft.Json;
+using LtiLibrary.NetCore.Extensions;
 
 namespace LtiLibrary.NetCore.OAuth
 {
+    [DataContract]
     public class OAuthRequest : IOAuthRequest
     {
         public OAuthRequest()
@@ -13,8 +15,12 @@ namespace LtiLibrary.NetCore.OAuth
         }
 
         /// <summary>
-        /// The OAuth body hash.
+        /// The OAuth body hash from the Authorization header.
         /// </summary>
+        /// <remarks>
+        /// This hash is calculated by the sender.
+        /// </remarks>
+        [DataMember(Name = OAuthConstants.BodyHashParameter)]
         public string BodyHash
         {
             get
@@ -27,6 +33,15 @@ namespace LtiLibrary.NetCore.OAuth
             }
         }
 
+        /// <summary>
+        /// The OAuth body hash calculated by LtiLibrary.AspNetCore.Common.AddBodyHashHeaderAttribute.
+        /// </summary>
+        /// <remarks>
+        /// This hash is calculated by the receiver.
+        /// </remarks>
+        public string BodyHashReceived { get; set; }
+
+        [DataMember(Name = OAuthConstants.CallbackParameter)]
         public string CallBack
         {
             get
@@ -42,6 +57,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// OAuth consumer key
         /// </summary>
+        [DataMember(Name = OAuthConstants.ConsumerKeyParameter)]
         public string ConsumerKey
         {
             get
@@ -57,6 +73,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The custom_ and ext_ parameters in Querystring format suitable for saving in the database.
         /// </summary>
+        [DataMember]
         public string CustomParameters
         {
             get
@@ -93,6 +110,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// OAuth nonce
         /// </summary>
+        [DataMember(Name = OAuthConstants.NonceParameter)]
         public string Nonce
         {
             get
@@ -108,12 +126,12 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// All the OAuth parameters in the request
         /// </summary>
-        [JsonIgnore]
         public NameValueCollection Parameters { get; }
 
         /// <summary>
         /// OAuth signature
         /// </summary>
+        [DataMember(Name = OAuthConstants.SignatureParameter)]
         public string Signature
         {
             get
@@ -129,6 +147,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The OAuth signature method.
         /// </summary>
+        [DataMember(Name = OAuthConstants.SignatureMethodParameter)]
         public string SignatureMethod
         {
             get
@@ -144,7 +163,8 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// OAuth timestamp (number of seconds since 1/1/1970)
         /// </summary>
-        public Int64 Timestamp
+        [DataMember(Name = OAuthConstants.TimestampParameter)]
+        public long Timestamp
         {
             get
             {
@@ -179,6 +199,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The OAuth version.
         /// </summary>
+        [DataMember(Name = OAuthConstants.VersionParameter)]
         public string Version
         {
             get
@@ -196,10 +217,24 @@ namespace LtiLibrary.NetCore.OAuth
         /// </summary>
         /// <param name="consumerSecret">The OAuth Consumer Secret to use.</param>
         /// <returns>The calculated OAuth Signature.</returns>
-        /// <remarks>This is typically used by Tool Providers to verify the incoming request signature.</remarks>
+        /// <remarks>This method works whether the parameters are based on form fields or OAuth Authorization header.</remarks>
         public string GenerateSignature(string consumerSecret)
         {
-            return OAuthUtility.GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
+            // If there is no BodyHashReceived, calculate signature based on form parameters
+            if (string.IsNullOrEmpty(BodyHashReceived))
+            {
+                return OAuthUtility.GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
+            }
+
+            // Otherwise calculate the signature using the body hash instead of form parameters
+            var parameters = new NameValueCollection();
+            parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, ConsumerKey);
+            parameters.AddParameter(OAuthConstants.NonceParameter, Nonce);
+            parameters.AddParameter(OAuthConstants.SignatureMethodParameter, OAuthConstants.SignatureMethodHmacSha1);
+            parameters.AddParameter(OAuthConstants.VersionParameter, OAuthConstants.Version10);
+            parameters.AddParameter(OAuthConstants.TimestampParameter, Timestamp);
+            parameters.AddParameter(OAuthConstants.BodyHashParameter, BodyHashReceived);
+            return OAuthUtility.GenerateSignature(HttpMethod, Url, parameters, consumerSecret);
         }
     }
 }

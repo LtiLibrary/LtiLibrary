@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti1;
 using LtiLibrary.NetCore.OAuth;
@@ -46,17 +47,6 @@ namespace LtiLibrary.AspNetCore.Extensions
                 LtiConstants.ContentItemPlacementParameter
             };
 
-        public static string GenerateOAuthSignature(this HttpRequest request, string consumerSecret)
-        {
-            var url = request.GetUri();
-            var parameters = new NameValueCollection();
-            foreach (var formKey in request.Form.Keys)
-            {
-                parameters.Set(formKey, request.Form[formKey]);
-            }
-            return OAuthUtility.GenerateSignature(request.Method, url, parameters, consumerSecret);
-        }
-
         public static LisContextType? GetLisContextType(this HttpRequest request, string key)
         {
             var stringValue = request.Form[key];
@@ -86,13 +76,23 @@ namespace LtiLibrary.AspNetCore.Extensions
         /// </summary>
         public static bool IsAuthenticatedWithLti(this HttpRequest request)
         {
-            var messageType = request.Form[LtiConstants.LtiMessageTypeParameter][0] ?? string.Empty;
-            return request.Method.Equals("POST")
-                   && (
-                       messageType.Equals(LtiConstants.BasicLaunchLtiMessageType, StringComparison.OrdinalIgnoreCase)
-                       || messageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType, StringComparison.OrdinalIgnoreCase)
-                       || messageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType, StringComparison.OrdinalIgnoreCase)
+            // Normal LTI launch with form parameters
+            if (request.HasFormContentType)
+            {
+                var messageType = request.Form[LtiConstants.LtiMessageTypeParameter][0] ?? string.Empty;
+                return request.Method.Equals("POST")
+                       && (
+                           messageType.Equals(LtiConstants.BasicLaunchLtiMessageType,
+                               StringComparison.OrdinalIgnoreCase)
+                           || messageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType,
+                               StringComparison.OrdinalIgnoreCase)
+                           || messageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType,
+                               StringComparison.OrdinalIgnoreCase)
                        );
+            }
+
+            // Otherwise look for an OAuth Authorization header
+            return request.ParseAuthenticationHeader().HasKeys();
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace LtiLibrary.AspNetCore.Extensions
         /// <param name="request">The HttpRequest to parse.</param>
         /// <returns>An LtiInboundRequest filled in with the OAuth and LTI parameters
         /// sent by the consumer.</returns>
-        public static void CheckForRequiredLtiParameters(this HttpRequest request)
+        public static void CheckForRequiredLtiFormParameters(this HttpRequest request)
         {
             if (!request.IsAuthenticatedWithLti())
             {
@@ -128,6 +128,63 @@ namespace LtiLibrary.AspNetCore.Extensions
                         break;
                     }
             }
+        }
+
+        private static NameValueCollection ParseAuthenticationHeader(this HttpRequest request)
+        {
+            var parameters = new NameValueCollection();
+            var headerValues = request.Headers[OAuthConstants.AuthorizationHeader];
+            if (headerValues.Count == 0) return parameters;
+
+            var header = headerValues[0];
+            var schemeSeparatorIndex = header.IndexOf(' ');
+            var scheme = header.Substring(0, schemeSeparatorIndex);
+            if (!scheme.Equals(OAuthConstants.AuthScheme)) return parameters;
+
+            var headerParameter = header.Substring(schemeSeparatorIndex + 1);
+            foreach (var pair in headerParameter.Split(','))
+            {
+                var keyValue = pair.Split('=');
+                var key = keyValue[0].Trim();
+
+                // Ignore unknown parameters
+                if (!OAuthConstants.OAuthParameters.Any(p => p.Equals(key)))
+                    continue;
+
+                var value = System.Net.WebUtility.UrlDecode(keyValue[1].Trim('"'));
+                parameters.Set(key, value);
+            }
+            return parameters;
+        }
+
+        public static async Task<LtiRequest> ParseLtiRequestAsync(this HttpRequest request)
+        {
+            var ltiRequest = new LtiRequest(null)
+            {
+                Url = request.GetUri(),
+                HttpMethod = request.Method
+            };
+
+            // LTI launch and content item requests are sent as form posts
+            if (request.HasFormContentType)
+            {
+                var form = await request.ReadFormAsync();
+                foreach (var pair in form)
+                {
+                    ltiRequest.Parameters.Add(pair.Key, string.Join(",", pair.Value));
+                }
+                return ltiRequest;
+            }
+
+            // All other LTI requests pass the authentication parameters in an
+            // Authorization header
+            ltiRequest.Parameters.Add(request.ParseAuthenticationHeader());
+            // Save the BodyHash calculated by the AddBodyHashHeaderAttribute
+            if (request.Headers["BodyHash"].Any())
+            {
+                ltiRequest.BodyHashReceived = request.Headers["BodyHash"].First();
+            }
+            return ltiRequest;
         }
 
         public static void RequireAllOf(this HttpRequest request, IEnumerable<string> parameters)

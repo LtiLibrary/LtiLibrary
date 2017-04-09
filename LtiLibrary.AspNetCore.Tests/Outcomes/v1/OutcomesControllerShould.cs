@@ -63,7 +63,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         public async void NotReplaceResult_IfUsingDifferentSecrets()
         {
             var replaceResult = await OutcomesClient.ReplaceResultAsync(_client, Url, Key, "nosecret", Id, Value);
-            Assert.True(replaceResult.StatusCode == HttpStatusCode.BadRequest, $"{replaceResult.StatusCode} == {HttpStatusCode.BadRequest}");
+            Assert.True(replaceResult.StatusCode == HttpStatusCode.Unauthorized, $"{replaceResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         {
             await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
             var readResult = await OutcomesClient.ReadResultAsync(_client, Url, Key, "nosecret", Id);
-            Assert.True(readResult.StatusCode == HttpStatusCode.BadRequest, $"{readResult.StatusCode} == {HttpStatusCode.BadRequest}");
+            Assert.True(readResult.StatusCode == HttpStatusCode.Unauthorized, $"{readResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         {
             await OutcomesClient.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
             var deleteResult = await OutcomesClient.DeleteResultAsync(_client, Url, Key, "nosecret", Id);
-            Assert.True(deleteResult.StatusCode == HttpStatusCode.BadRequest, $"{deleteResult.StatusCode} == {HttpStatusCode.BadRequest}");
+            Assert.True(deleteResult.StatusCode == HttpStatusCode.Unauthorized, $"{deleteResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
         public void Dispose()

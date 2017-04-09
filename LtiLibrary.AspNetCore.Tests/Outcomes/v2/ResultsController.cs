@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;

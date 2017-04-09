@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Outcomes.v1;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1
@@ -17,100 +18,68 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     [Produces("application/xml")]
     public abstract class OutcomesControllerBase : Controller
     {
-        /// <summary>
-        /// Delete the result (grade, score, outcome) from the consumer.
-        /// </summary>
-        /// <param name="lisResultSourcedId">The sourcedId of the LisResult to delete.</param>
-        /// <returns>True if the result was deleted.</returns>
-        protected abstract Task<bool> DeleteResult(string lisResultSourcedId);
-
-        /// <summary>
-        /// Read the result (grade, score, outcome) from the consumer.
-        /// </summary>
-        /// <param name="lisResultSourcedId">The sourcedId of the LisResult to read.</param>
-        /// <returns>The LisResult read. IsValid is true if the result is valid.</returns>
-        protected abstract Task<LisResult> ReadResult(string lisResultSourcedId);
-
-        /// <summary>
-        /// Save or update the result (grade, score, outcome) in the consumer.
-        /// </summary>
-        /// <param name="result">The result to save or update.</param>
-        /// <returns>True if the result was saved or updated.</returns>
-        protected abstract Task<bool> ReplaceResult(LisResult result);
-
-        // POST api/outcomes
-
-        [HttpPost]
-        public async Task<ImsxXmlMediaTypeResult> Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
+        protected OutcomesControllerBase()
         {
-            imsx_POXEnvelopeType response;
-            if (request == null)
-            {
-                response = CreateCustomResponse(string.Empty,
-                    "Invalid request",
-                    imsx_CodeMajorType.failure);
-            }
-            else
-            {
-                var requestHeader = request.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
-                if (requestHeader == null)
-                {
-                    response = CreateCustomResponse(string.Empty,
-                        "Invalid request header",
-                        imsx_CodeMajorType.failure);
-                }
-                else
-                {
-                    // All requests come in the same basic body element
-                    var requestBody = request.imsx_POXBody;
-
-                    // Delete Result
-                    if (requestBody.Item is deleteResultRequest)
-                    {
-                        response = await HandleDeleteResultRequest(requestHeader, requestBody);
-                    }
-                    else if (requestBody.Item is readResultRequest)
-                    {
-                        response = await HandleReadResultRequest(requestHeader, requestBody);
-                    }
-                    else if (requestBody.Item is replaceResultRequest)
-                    {
-                        response = await HandleReplaceResultRequest(requestHeader, requestBody);
-                    }
-                    else
-                    {
-                        response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                            "Request is not supported",
-                            imsx_CodeMajorType.unsupported);
-                    }
-                }
-            }
-            return new ImsxXmlMediaTypeResult(response);
+            OnDeleteResult = dto => throw new NotImplementedException();
+            OnReadResult = dto => throw new NotImplementedException();
+            OnReplaceResult = dto => throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Create a simple, but complete response envelope.
+        /// Delete the result (grade, score, outcome) from the consumer.
         /// </summary>
-        /// <param name="messageRefId">The request message ID.</param>
-        /// <param name="description">The status description.</param>
-        /// <param name="codeMajor">The custom status code.</param>
-        /// <returns>A response envelope.</returns>
-        private static imsx_POXEnvelopeType CreateCustomResponse(string messageRefId, string description, imsx_CodeMajorType codeMajor)
-        {
-            var response = CreateSuccessResponse(messageRefId, description);
-            var header = (imsx_ResponseHeaderInfoType) response.imsx_POXHeader.Item;
-            header.imsx_statusInfo.imsx_codeMajor = codeMajor;
+        public Func<DeleteResultDto, Task> OnDeleteResult { get; set; }
+        /// <summary>
+        /// Read the result (grade, score, outcome) from the consumer.
+        /// </summary>
+        public Func<ReadResultDto, Task> OnReadResult { get; set; }
+        /// <summary>
+        /// Save or update the result (grade, score, outcome) in the consumer.
+        /// </summary>
+        public Func<ReplaceResultDto, Task> OnReplaceResult { get; set; }
 
-            return response;
+        // POST api/outcomes
+        [HttpPost]
+        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Empty request.");
+            }
+
+            var requestHeader = request.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
+            if (requestHeader == null)
+            {
+                return BadRequest("Invalid request header.");
+            }
+
+            // All requests come in the same basic body element
+            var requestBody = request.imsx_POXBody;
+
+            // Delete Result
+            if (requestBody.Item is deleteResultRequest)
+            {
+                return await HandleDeleteResultRequest(requestHeader, requestBody);
+            }
+            if (requestBody.Item is readResultRequest)
+            {
+                return await HandleReadResultRequest(requestHeader, requestBody);
+            }
+            if (requestBody.Item is replaceResultRequest)
+            {
+                return await HandleReplaceResultRequest(requestHeader, requestBody);
+            }
+            return BadRequest("Request type not supported.");
         }
 
         /// <summary>
         /// Create a simple, but complete response envelope. The status is set to success.
         /// </summary>
+        /// <param name="responseItem">The ismx response element.</param>
         /// <param name="messageRefId">The request message ID.</param>
         /// <param name="description">The status description.</param>
         /// <returns>A response envelope.</returns>
-        private static imsx_POXEnvelopeType CreateSuccessResponse(string messageRefId, string description)
+        private static ImsxXmlMediaTypeResult CreateSuccessResponse(object responseItem, string messageRefId, string description)
         {
             var response = new imsx_POXEnvelopeType
             {
@@ -128,8 +97,8 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             status.imsx_description = description;
             status.imsx_messageRefIdentifier = messageRefId;
 
-            response.imsx_POXBody = new imsx_POXBodyType();
-            return response;
+            response.imsx_POXBody = new imsx_POXBodyType {Item = responseItem};
+            return new ImsxXmlMediaTypeResult(response);
         }
 
         /// <summary>
@@ -160,124 +129,102 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             return result;
         }
 
-        private async Task<imsx_POXEnvelopeType> HandleDeleteResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
+        private async Task<IActionResult> HandleDeleteResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
-            imsx_POXEnvelopeType response;
             var deleteRequest = requestBody.Item as deleteResultRequest ?? new deleteResultRequest();
             var deleteResponse = new deleteResultResponse();
 
             var result = GetResult(deleteRequest.resultRecord);
             try
             {
-                if (await DeleteResult(result.SourcedId))
+                var dto = new DeleteResultDto(result.SourcedId);
+
+                await OnDeleteResult(dto);
+
+                if (dto.StatusCode == StatusCodes.Status200OK)
                 {
-                    response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
+                    return CreateSuccessResponse(deleteResponse, requestHeader.imsx_messageIdentifier,
                         $"Score for {result.SourcedId} is deleted");
                 }
-                else
-                {
-                    response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                        $"Score for {result.SourcedId} not deleted", imsx_CodeMajorType.failure);
-                }
+                return StatusCode(dto.StatusCode);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                    e.Message,
-                    imsx_CodeMajorType.failure);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
-            response.imsx_POXBody.Item = deleteResponse;
-            return response;
         }
 
-        private async Task<imsx_POXEnvelopeType> HandleReadResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
+        private async Task<IActionResult> HandleReadResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
-            imsx_POXEnvelopeType response;
             var readRequest = requestBody.Item as readResultRequest ?? new readResultRequest();
             var readResponse = new readResultResponse();
 
             try
             {
-                var result = await ReadResult(readRequest.resultRecord.sourcedGUID.sourcedId);
-                if (result != null)
+                var dto = new ReadResultDto(readRequest.resultRecord.sourcedGUID.sourcedId);
+
+                await OnReadResult(dto);
+
+                if (dto.StatusCode == StatusCodes.Status200OK)
                 {
-                    if (!result.Score.HasValue)
+                    if (dto.LisResult != null)
                     {
-                        // The score could exist, but not found. If the grade has not yet been set via a replaceResult operation
-                        // or an existing grade has been deleted via a deleteResult operation, the TC should return a valid
-                        // response with a present but empty textString element. The TC should not return 0.0 to indicate a
-                        // non-existent grade and the TC should not return a failure status when a grade does not exist.
-                        // It should simply return an "empty" grade.
-                        response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
-                            $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is null");
-                        readResponse.result = new ResultType {resultScore = new TextType()};
-                        var cultureInfo = new CultureInfo("en");
-                        readResponse.result.resultScore.language = cultureInfo.Name;
-                        readResponse.result.resultScore.textString = string.Empty;
-                    }
-                    else
-                    {
-                        // The score exists
-                        response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
-                            $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
-                        readResponse.result = new ResultType {resultScore = new TextType()};
-                        var cultureInfo = new CultureInfo("en");
-                        readResponse.result.resultScore.language = cultureInfo.Name;
-                        readResponse.result.resultScore.textString = result.Score.Value.ToString(cultureInfo);
+                        if (dto.LisResult.Score.HasValue)
+                        {
+                            // The score exists
+                            readResponse.result = new ResultType { resultScore = new TextType() };
+                            var cultureInfo = new CultureInfo("en");
+                            readResponse.result.resultScore.language = cultureInfo.Name;
+                            readResponse.result.resultScore.textString = dto.LisResult.Score.Value.ToString(cultureInfo);
+                            return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
+                                $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
+                        }
+                        else
+                        {
+                            // The score could exist, but not found. If the grade has not yet been set via a replaceResult operation
+                            // or an existing grade has been deleted via a deleteResult operation, the TC should return a valid
+                            // response with a present but empty textString element. The TC should not return 0.0 to indicate a
+                            // non-existent grade and the TC should not return a failure status when a grade does not exist.
+                            // It should simply return an "empty" grade.
+                            readResponse.result = new ResultType { resultScore = new TextType() };
+                            var cultureInfo = new CultureInfo("en");
+                            readResponse.result.resultScore.language = cultureInfo.Name;
+                            readResponse.result.resultScore.textString = string.Empty;
+                            return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
+                                $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is null");
+                        }
                     }
                 }
-                else
-                {
-                    // The score could not exist (invalid assignment or user)
-                    response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                        $"Invalid score sourcedId {readRequest.resultRecord.sourcedGUID.sourcedId}",
-                        imsx_CodeMajorType.failure);
-                }
+                return StatusCode(dto.StatusCode);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                    e.Message,
-                    imsx_CodeMajorType.failure);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
-            response.imsx_POXBody.Item = readResponse;
-            return response;
         }
 
-        private async Task<imsx_POXEnvelopeType> HandleReplaceResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
+        private async Task<IActionResult> HandleReplaceResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
-            imsx_POXEnvelopeType response;
             var replaceRequest = requestBody.Item as replaceResultRequest ?? new replaceResultRequest();
 
             var result = GetResult(replaceRequest.resultRecord);
             try
             {
-                if (!result.Score.HasValue)
+                var dto = new ReplaceResultDto(result);
+
+                await OnReplaceResult(dto);
+
+                if (dto.StatusCode == StatusCodes.Status200OK)
                 {
-                    response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                        "Invalid result",
-                        imsx_CodeMajorType.failure);
-                }
-                else if (await ReplaceResult(result))
-                {
-                    response = CreateSuccessResponse(requestHeader.imsx_messageIdentifier,
+                    return CreateSuccessResponse(replaceRequest, requestHeader.imsx_messageIdentifier,
                         $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} is now {replaceRequest.resultRecord.result.resultScore.textString}");
                 }
-                else
-                {
-                    response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                        $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} not replaced",
-                        imsx_CodeMajorType.failure);
-                }
+                return StatusCode(dto.StatusCode);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                response = CreateCustomResponse(requestHeader.imsx_messageIdentifier,
-                    e.Message,
-                    imsx_CodeMajorType.failure);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
-            response.imsx_POXBody.Item = new replaceResultResponse();
-            return response;
         }
     }
 }

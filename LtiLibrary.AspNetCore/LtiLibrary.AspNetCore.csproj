@@ -16,7 +16,7 @@
 2.0.0-beta
 - New library for ASP.NET Core
 2.0.1-beta
-- Fixed bugs discovered by integration tests.
+- Fixed minor bugs discovered by integration tests.
       ]]>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>

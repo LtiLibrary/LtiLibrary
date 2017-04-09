@@ -12,6 +12,7 @@ using LtiLibrary.NetCore.Outcomes.v1;
 
 namespace LtiLibrary.NetCore.Lti1
 {
+    [DataContract]
     public class LtiRequest 
         : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
     {

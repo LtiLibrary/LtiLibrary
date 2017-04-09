@@ -30,7 +30,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         public static async Task<ClientResponse> DeleteLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemMediaType);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         public static async Task<ClientResponse> DeleteLineItemResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LineItemResultsMediaType);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
         }
 
         /// <summary>
@@ -229,7 +229,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         #region Private Methods
 
         private static async Task<ClientResponse> DeleteOutcomeAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, string contentType = null)
+            string consumerSecret)
         {
             try
             {

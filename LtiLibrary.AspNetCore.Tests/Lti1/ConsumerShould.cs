@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti1;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.PlatformAbstractions;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace LtiLibrary.AspNetCore.Tests.Lti1
 {
-    public class ProviderShould : IDisposable
+    public class ConsumerShould : IDisposable
     {
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
-        public ProviderShould()
+        public ConsumerShould()
         {
             _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             _client = _server.CreateClient();
@@ -30,6 +34,90 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
 
         [Fact]
         public async void LaunchATool_WithValidCredentials()
+        {
+            var ltiRequest = GetLtiLaunchRequest();
+
+            // Substitute custom variables and calculate the signature
+            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("secret");
+
+            using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
+            {
+                Assert.True(response.IsSuccessStatusCode, $"Response status code does not indicate success: {response.StatusCode}");
+                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), LtiConstants.BasicLaunchLtiMessageType);
+            }
+        }
+
+        [Fact]
+        public async void NotLaunchATool_WithInvalidCredentials()
+        {
+            var ltiRequest = GetLtiLaunchRequest();
+
+            // Substitute custom variables and calculate the signature
+            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("nosecret");
+
+            using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
+            {
+                Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, $"Response status code is not Unauthorized: {response.StatusCode}");
+            }
+        }
+
+        [Fact]
+        public async void LaunchAContentItemSelectionTool_WithValidCredentials()
+        {
+            var ltiRequest = GetLtiContentItemSelectionRequest();
+
+            // Substitute custom variables and calculate the signature
+            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("secret");
+
+            using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
+            {
+                Assert.True(response.IsSuccessStatusCode, $"Response status code does not indicate success: {response.StatusCode}");
+                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), LtiConstants.ContentItemSelectionRequestLtiMessageType);
+            }
+        }
+
+        [Fact]
+        public async void DoesNotLaunchAContentItemSelectionTool_WithInvalidCredentials()
+        {
+            var ltiRequest = GetLtiContentItemSelectionRequest();
+
+            // Substitute custom variables and calculate the signature
+            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("nosecret");
+
+            using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
+            {
+                Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, $"Response status code is not Unauthorized: {response.StatusCode}");
+            }
+        }
+
+        private static async Task<JObject> GetContentAsJObject(HttpResponseMessage response)
+        {
+            var request = JObject.Parse(await response.Content.ReadAsStringAsync());
+            // Remove temporal values that were validated by the controller when the signatures where checked
+            request.Remove(OAuthConstants.NonceParameter);
+            request.Remove(OAuthConstants.SignatureParameter);
+            request.Remove(OAuthConstants.TimestampParameter);
+            return request;
+        }
+
+        private LtiRequest GetLtiContentItemSelectionRequest()
+        {
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            var ltiRequest = new LtiRequest(LtiConstants.ContentItemSelectionRequestLtiMessageType)
+            {
+                ConsumerKey = "12345",
+                ResourceLinkId = "launch",
+                Url = new Uri(_client.BaseAddress, "provider/library")
+            };
+
+            ltiRequest.AcceptMediaTypes = string.Join(",", "text/html", "image/*");
+            ltiRequest.AcceptPresentationDocumentTargets = string.Join(",", DocumentTarget.embed, DocumentTarget.frame);
+            ltiRequest.ContentItemReturnUrl = new Uri(_client.BaseAddress, "consumer/placecontentitem").AbsoluteUri;
+
+            return ltiRequest;
+        }
+
+        private LtiRequest GetLtiLaunchRequest()
         {
             // ReSharper disable once UseObjectOrCollectionInitializer
             var ltiRequest = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
@@ -83,14 +171,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
             // Tool Consumer Profile service (WebApi controller)
             ltiRequest.ToolConsumerProfileUrl = new Uri(_client.BaseAddress, "ims/toolconsumerprofile").AbsoluteUri;
             ltiRequest.AddCustomParameter("tc_profile_url", "$ToolConsumerProfile.url");
-
-            // Substitute custom variables and calculate the signature
-            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("secret");
-
-            using (var response = await _client.PostAsync("provider/tool/1", GetContent(ltiRequest, signature)))
-            {
-                response.EnsureSuccessStatusCode();
-            }
+            return ltiRequest;
         }
 
         private static FormUrlEncodedContent GetContent(LtiRequest request, string signature)

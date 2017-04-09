@@ -3,8 +3,6 @@ using System.Collections.Specialized;
 using System.Runtime.Serialization;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace LtiLibrary.NetCore.OAuth
 {

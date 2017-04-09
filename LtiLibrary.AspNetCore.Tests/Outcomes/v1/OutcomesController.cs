@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using LtiLibrary.AspNetCore.Extensions;
+﻿using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v1;
 using LtiLibrary.NetCore.Outcomes.v1;
 using Microsoft.AspNetCore.Http;
@@ -73,8 +71,11 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
                 {
                     _lisResult = new LisResult();
                 }
-                _lisResult.Score = dto.LisResult.Score;
-                _lisResult.SourcedId = dto.LisResult.SourcedId;
+                if (_lisResult != null)
+                {
+                    _lisResult.Score = dto.LisResult.Score;
+                    _lisResult.SourcedId = dto.LisResult.SourcedId;
+                }
             };
         }
     }

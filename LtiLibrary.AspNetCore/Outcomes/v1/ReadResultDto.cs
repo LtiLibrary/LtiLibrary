@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LtiLibrary.NetCore.Outcomes.v1;
+﻿using LtiLibrary.NetCore.Outcomes.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1

@@ -31,11 +31,11 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
                 Debug.WriteLine(diff.NewValues);
                 Debug.WriteLine(diff.OldValues);
 
-                Assert.Null(diff.NewValues);
-                Assert.Null(diff.OldValues);
+                Assert.True(diff.NewValues == null, diff.NewValues?.ToString());
+                Assert.True(diff.OldValues == null, diff.NewValues?.ToString());
             }
 
-            public static void AssertSameJsonLdObject( JsonLdObject obj, string eventReferenceFile )
+        public static void AssertSameJsonLdObject( JsonLdObject obj, string eventReferenceFile )
             {
                var eventJsonString = obj.ToJsonLdString();
                var eventJObject = JObject.Parse( eventJsonString );

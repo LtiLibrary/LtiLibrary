@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.Runtime.Serialization;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LtiLibrary.NetCore.OAuth
 {
+    [DataContract]
     public class OAuthRequest : IOAuthRequest
     {
         public OAuthRequest()
@@ -19,6 +22,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <remarks>
         /// This hash is calculated by the sender.
         /// </remarks>
+        [DataMember(Name = OAuthConstants.BodyHashParameter)]
         public string BodyHash
         {
             get
@@ -39,6 +43,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// </remarks>
         public string BodyHashReceived { get; set; }
 
+        [DataMember(Name = OAuthConstants.CallbackParameter)]
         public string CallBack
         {
             get
@@ -54,6 +59,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// OAuth consumer key
         /// </summary>
+        [DataMember(Name = OAuthConstants.ConsumerKeyParameter)]
         public string ConsumerKey
         {
             get
@@ -69,6 +75,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The custom_ and ext_ parameters in Querystring format suitable for saving in the database.
         /// </summary>
+        [DataMember]
         public string CustomParameters
         {
             get
@@ -105,6 +112,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// OAuth nonce
         /// </summary>
+        [DataMember(Name = OAuthConstants.NonceParameter)]
         public string Nonce
         {
             get
@@ -120,12 +128,12 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// All the OAuth parameters in the request
         /// </summary>
-        [JsonIgnore]
         public NameValueCollection Parameters { get; }
 
         /// <summary>
         /// OAuth signature
         /// </summary>
+        [DataMember(Name = OAuthConstants.SignatureParameter)]
         public string Signature
         {
             get
@@ -141,6 +149,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The OAuth signature method.
         /// </summary>
+        [DataMember(Name = OAuthConstants.SignatureMethodParameter)]
         public string SignatureMethod
         {
             get
@@ -156,7 +165,8 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// OAuth timestamp (number of seconds since 1/1/1970)
         /// </summary>
-        public Int64 Timestamp
+        [DataMember(Name = OAuthConstants.TimestampParameter)]
+        public long Timestamp
         {
             get
             {
@@ -191,6 +201,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The OAuth version.
         /// </summary>
+        [DataMember(Name = OAuthConstants.VersionParameter)]
         public string Version
         {
             get

@@ -16,3 +16,5 @@ Available on NuGet: https://www.nuget.org/packages/LtiLibrary.AspNet and https:/
 
 ## Test Projects
 There are also four xUnit test projects: one for each project above. These can be helpful examples for how to use the four libraries.
+
+[![Build status](https://ci.appveyor.com/api/projects/status/qpkjtvp91mra9ogr/branch/master?svg=true)](https://ci.appveyor.com/project/andyfmiller/ltilibrary/branch/master)

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.ContentItems;
 using LtiLibrary.NetCore.Extensions;
@@ -35,7 +33,7 @@ namespace LtiLibrary.NetCore.Tests
                 ResourceLinkId = "launch"
             };
             var ex = Assert.Throws<LtiException>(() => request.SubstituteCustomVariablesAndGenerateSignature("secret"));
-            Assert.Equal($"Invalid HTTP method: null.", ex.Message);
+            Assert.Equal("Invalid HTTP method: null.", ex.Message);
         }
 
         [Fact]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.ContentItems;
 using LtiLibrary.NetCore.Extensions;
@@ -191,6 +192,40 @@ namespace LtiLibrary.NetCore.Tests
                 };
             var ex = Assert.Throws<LtiException>(() => request.SubstituteCustomVariablesAndGenerateSignature("secret"));
             Assert.Equal($"Missing parameter(s): {LtiConstants.ContentItemPlacementParameter}.", ex.Message);
+        }
+
+        [Fact]
+        public void GenerateAKnownSignature_GivenKnownParameters()
+        {
+            var request = new LtiRequest
+            {
+                CallBack = "about:blank",
+                ConsumerKey = "12345",
+                ContextId = "1219",
+                ContextTitle = "docker",
+                ContextType = LisContextType.CourseTemplate,
+                HttpMethod = HttpMethod.Post.Method,
+                LaunchPresentationLocale = "en-US",
+                LisPersonNameFamily = "Miller",
+                LisPersonNameGiven = "Andy",
+                LtiMessageType = "basic-lti-launch-request",
+                LtiVersion = "LTI-1p0",
+                Nonce = "c5c9781bfc3e4a1fb11b09ac119c860c",
+                ResourceLinkId = "3280",
+                ResourceLinkTitle = "docker",
+                Roles = "Instructor,Learner",
+                SignatureMethod = "HMAC-SHA1",
+                Timestamp = 1492745602,
+                ToolConsumerInfoProductFamilyCode = "Consumer",
+                ToolConsumerInfoVersion = "1.5.0.0",
+                ToolConsumerInstanceGuid = "http://consumer.azurewebsites.net/",
+                ToolConsumerInstanceName = "Consumer Sample",
+                Url = new Uri("http://localhost:32768/home/tool?one=one"),
+                UserId = "98befcbc-117d-4328-9c70-93d198e44ddc",
+                Version = "1.0"
+            };
+            var signature = request.GenerateSignature("secret");
+            Assert.Equal("Im/RhYIEApfbsy+luuisvQqBjgs=", signature);
         }
     }
 }

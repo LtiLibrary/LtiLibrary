@@ -24,29 +24,22 @@ namespace LtiLibrary.AspNetCore.Common
 
             if (request.Body.CanRead)
             {
-                byte[] content;
-                using (var ms = new MemoryStream())
+                // Calculate the body hash
+                try
                 {
-                    try
+                    using (var sha1 = SHA1.Create())
                     {
-                        await request.Body.CopyToAsync(ms);
-                        content = ms.ToArray();
-                    }
-                    finally
-                    {
-                        if (request.Body.CanSeek)
-                        {
-                            request.Body.Position = 0;
-                        }
+                        var hash = sha1.ComputeHash(request.Body);
+                        var hash64 = Convert.ToBase64String(hash);
+                        request.Headers.Add("BodyHash", hash64);
                     }
                 }
-
-                // Calculate the body hash
-                using (var sha1 = SHA1.Create())
+                finally
                 {
-                    var hash = sha1.ComputeHash(content);
-                    var hash64 = Convert.ToBase64String(hash);
-                    request.Headers.Add("BodyHash", hash64);
+                    if (request.Body.CanSeek)
+                    {
+                        request.Body.Position = 0;
+                    }
                 }
             }
 

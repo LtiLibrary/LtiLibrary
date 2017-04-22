@@ -19,18 +19,19 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
         {
             try
             {
+                // Parse and validate the request
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+
                 // Make sure this is an LtiRequest
                 try
                 {
-                    Request.CheckForRequiredLtiFormParameters();
+                    ltiRequest.CheckForRequiredLtiParameters();
                 }
                 catch (Exception ex)
                 {
                     return BadRequest(ex);
                 }
 
-                // Parse and validate the request
-                var ltiRequest = await Request.ParseLtiRequestAsync();
 
                 if (!ltiRequest.ConsumerKey.Equals("12345"))
                 {
@@ -62,18 +63,18 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
         {
             try
             {
+                // Parse and validate the request
+                var ltiRequest = await Request.ParseLtiRequestAsync();
+
                 // Make sure this is an LtiRequest
                 try
                 {
-                    Request.CheckForRequiredLtiFormParameters();
+                    ltiRequest.CheckForRequiredLtiParameters();
                 }
                 catch (Exception ex)
                 {
                     return BadRequest(ex);
                 }
-
-                // Parse and validate the request
-                var ltiRequest = await Request.ParseLtiRequestAsync();
 
                 if (!ltiRequest.ConsumerKey.Equals("12345"))
                 {

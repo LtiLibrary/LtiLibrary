@@ -79,8 +79,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
-                        httpContent, consumerKey, consumerSecret);
+                    await SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -163,8 +162,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
-                        httpContent, consumerKey, consumerSecret);
+                    await SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -274,8 +272,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    client.DefaultRequestHeaders.Authorization = await SignRequest(new Uri(client.BaseAddress, serviceUrl),
-                        httpContent, consumerKey, consumerSecret);
+                    await SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -319,7 +316,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
 
         #region Private Methods
 
-        private static async Task<AuthenticationHeaderValue> SignRequest(Uri absoluteUri, HttpContent body, string consumerKey, string consumerSecret)
+        private static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl, HttpContent content, string consumerKey, string consumerSecret)
         {
             var parameters = new NameValueCollection();
             parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
@@ -335,13 +332,13 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             // Calculate the body hash
             using (var sha1 = SHA1.Create())
             {
-                var hash = sha1.ComputeHash(await body.ReadAsByteArrayAsync());
+                var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
                 var hash64 = Convert.ToBase64String(hash);
                 parameters.AddParameter(OAuthConstants.BodyHashParameter, hash64);
             }
 
             // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature("POST", absoluteUri, parameters, consumerSecret);
+            var signature = OAuthUtility.GenerateSignature(method.Method, new Uri(client.BaseAddress, serviceUrl), parameters, consumerSecret);
             parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
 
             // Build the Authorization header
@@ -350,7 +347,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             {
                 authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
             }
-            return AuthenticationHeaderValue.Parse(authorization.ToString(0, authorization.Length -1));
+            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authorization.ToString(0, authorization.Length - 1));
         }
 
         #endregion

@@ -16,6 +16,58 @@ namespace LtiLibrary.NetCore.Lti1
     public class LtiRequest 
         : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
     {
+        #region Static Member Data
+
+        // These OAuth parameters are required
+        private static readonly string[] RequiredOauthParameters =
+        {
+            OAuthConstants.ConsumerKeyParameter,
+            OAuthConstants.NonceParameter,
+            OAuthConstants.SignatureMethodParameter,
+            OAuthConstants.TimestampParameter,
+            OAuthConstants.VersionParameter
+        };
+
+        // These LTI launch parameters are required
+        private static readonly string[] RequiredBasicLaunchParameters =
+        {
+            LtiConstants.LtiMessageTypeParameter,
+            LtiConstants.LtiVersionParameter,
+            LtiConstants.ResourceLinkIdParameter
+        };
+
+        // These LTI Content Item parameters are required
+        private static readonly string[] RequiredContentItemLaunchParameters =
+        {
+            LtiConstants.AcceptMediaTypesParameter,
+            LtiConstants.AcceptPresentationDocumentTargetsParameter,
+            LtiConstants.ContentItemReturnUrlParameter,
+            LtiConstants.LtiMessageTypeParameter,
+            LtiConstants.LtiVersionParameter
+        };
+
+        // These LTI Content Item parameters are required
+        private static readonly string[] RequiredContentItemResponseParameters =
+        {
+            LtiConstants.ContentItemPlacementParameter
+        };
+
+        // Required Outcomes 1 parameters if LisOutcomeServiceUrl is specified
+        private static readonly string[] RequiredOutcomes1Parameters =
+        {
+            LtiConstants.LisResultSourcedIdParameter
+        };
+
+        // Required Outcomes 2 parameters if any service URLs are specificed
+        private static readonly string[] RequiredOutcomes2Parameters =
+        {
+            LtiConstants.UserIdParameter
+        };
+
+        #endregion
+
+        #region Constructors
+
         public LtiRequest() : this(null) {}
         public LtiRequest(string messageType)
         {
@@ -35,6 +87,8 @@ namespace LtiLibrary.NetCore.Lti1
             LtiMessageType = messageType;
             LtiVersion = LtiConstants.LtiVersion;
         }
+
+#endregion
 
         #region ILtiRequest Parameters
 
@@ -2176,6 +2230,62 @@ namespace LtiLibrary.NetCore.Lti1
         }
 
         /// <summary>
+        /// Throws an <see cref="LtiException"/> if any required parameters are missing.
+        /// </summary>
+        public void CheckForRequiredLtiParameters()
+        {
+            if (HttpMethod == null || !HttpMethod.Equals(System.Net.Http.HttpMethod.Post.Method))
+            {
+                throw new LtiException($"Invalid HTTP method: {HttpMethod??"null"}.");
+            }
+
+            if (Url == null)
+            {
+                throw new LtiException("Missing parameter(s): Url.");
+            }
+
+            // Make sure the request contains all the required parameters
+            RequireAllOf(RequiredOauthParameters);
+            switch (LtiMessageType)
+            {
+                case LtiConstants.BasicLaunchLtiMessageType:
+                {
+                    RequireAllOf(RequiredBasicLaunchParameters);
+                    break;
+                }
+                case LtiConstants.ContentItemSelectionRequestLtiMessageType:
+                {
+                    RequireAllOf(RequiredContentItemLaunchParameters);
+                    if (!Uri.IsWellFormedUriString(ContentItemReturnUrl, UriKind.RelativeOrAbsolute))
+                    {
+                        throw new LtiException($"Invalid {LtiConstants.ContentItemReturnUrlParameter}: {ContentItemReturnUrl}.");
+                    }
+                    break;
+                }
+                case LtiConstants.ContentItemSelectionLtiMessageType:
+                {
+                    RequireAllOf(RequiredContentItemResponseParameters);
+                    break;
+                }
+                default:
+                    throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}.");
+            }
+
+            // If the request is configured to support Outcomes 1.0, make sure lis_result_sourcedid is specified
+            if (!string.IsNullOrWhiteSpace(LisOutcomeServiceUrl))
+            {
+                RequireAllOf(RequiredOutcomes1Parameters);
+            }
+
+            // If the request is configured to support Outcomes 2.0, make sure user_id is specified
+            if (!string.IsNullOrWhiteSpace(LineItemServiceUrl) || !string.IsNullOrWhiteSpace(LineItemsServiceUrl)
+                || !string.IsNullOrWhiteSpace(ResultServiceUrl) || !string.IsNullOrWhiteSpace(ResultsServiceUrl))
+            {
+                RequireAllOf(RequiredOutcomes2Parameters);
+            }
+        }
+
+        /// <summary>
         /// Get the roles in the LtiRequest as an IList of LtiRoles.
         /// </summary>
         /// <returns></returns>
@@ -2203,6 +2313,17 @@ namespace LtiLibrary.NetCore.Lti1
                 }
             }
             return roles;
+        }
+
+        public void RequireAllOf(IEnumerable<string> parameters)
+        {
+            var missing = parameters.Where(parameter => string.IsNullOrWhiteSpace(Parameters[parameter])).ToList();
+
+            if (missing.Count > 0)
+            {
+                var missingParameters = string.Join(", ", missing.ToArray());
+                throw new LtiException($"Missing parameter(s): {missingParameters}.");
+            }
         }
 
         /// <summary>
@@ -2390,8 +2511,15 @@ namespace LtiLibrary.NetCore.Lti1
             SubstituteCustomVariables(parameters);
         }
 
+        /// <summary>
+        /// Checks for required Lti parameters, substitutes custom variables, returns the OAuth signature.
+        /// </summary>
+        /// <param name="secret"></param>
+        /// <returns>The OAuth signature for the request.</returns>
+        /// <remarks>Throws an LtiException if the request is missing required parameters.</remarks>
         public string SubstituteCustomVariablesAndGenerateSignature(string secret)
         {
+            CheckForRequiredLtiParameters();
             SubstituteCustomVariables();
             return GenerateSignature(secret);
         }

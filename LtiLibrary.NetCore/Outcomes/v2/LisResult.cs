@@ -5,8 +5,14 @@ using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Outcomes.v2
 {
+    /// <summary>
+    /// Represents an IMS LisResult object.
+    /// </summary>
     public class LisResult : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the LisResult class.
+        /// </summary>
         public LisResult()
         {
             Type = LtiConstants.LisResultType;

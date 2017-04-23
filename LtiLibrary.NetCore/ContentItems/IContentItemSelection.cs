@@ -3,7 +3,7 @@
     /// <summary>
     /// LTI Content-Item Message 1.0 ContentItemSelection interface (3 Feb 2015 draft)
     /// </summary>
-    public interface IContentItemSelection
+    internal interface IContentItemSelection
     {
         string ConfirmUrl { get; set; }
         string ContentItems { get; set; }

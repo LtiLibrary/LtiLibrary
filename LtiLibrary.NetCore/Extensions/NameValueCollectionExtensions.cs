@@ -8,8 +8,17 @@ using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Extensions
 {
+    /// <summary>
+    /// Extension methods for the <see cref="NameValueCollection"/> type.
+    /// </summary>
     public static class NameValueCollectionExtensions
     {
+        /// <summary>
+        /// Add a list of <see cref="Role"/> values as a comma separated string.
+        /// </summary>
+        /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
+        /// <param name="name">The key of the entry to add.</param>
+        /// <param name="values">The list of <see cref="Role"/> values to add.</param>
         public static void AddParameter(this NameValueCollection parameters, string name, IList<Role> values)
         {
             if (values.Count > 0)
@@ -18,6 +27,12 @@ namespace LtiLibrary.NetCore.Extensions
             }
         }
 
+        /// <summary>
+        /// Add an <see cref="int"/> value if it is not null.
+        /// </summary>
+        /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
+        /// <param name="name">The key of the entry to add.</param>
+        /// <param name="value">The nullable <see cref="int"/> value to add.</param>
         public static void AddParameter(this NameValueCollection parameters, string name, int? value)
         {
             if (value.HasValue)
@@ -26,11 +41,23 @@ namespace LtiLibrary.NetCore.Extensions
             }
         }
 
-        public static void AddParameter(this NameValueCollection parameters, string name, Int64 value)
+        /// <summary>
+        /// Add an <see cref="long"/> value if it is not null.
+        /// </summary>
+        /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
+        /// <param name="name">The key of the entry to add.</param>
+        /// <param name="value">The nullable <see cref="long"/> value to add.</param>
+        public static void AddParameter(this NameValueCollection parameters, string name, long value)
         {
             parameters.Add(name, value.ToString(CultureInfo.InvariantCulture));
         }
 
+        /// <summary>
+        /// Add a <see cref="DocumentTarget"/> value if it is not null.
+        /// </summary>
+        /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
+        /// <param name="name">The key of the entry to add.</param>
+        /// <param name="value">The nullable <see cref="DocumentTarget"/> value to add.</param>
         public static void AddParameter(this NameValueCollection parameters, string name, DocumentTarget? value)
         {
             if (value.HasValue)
@@ -39,6 +66,12 @@ namespace LtiLibrary.NetCore.Extensions
             }
         }
 
+        /// <summary>
+        /// Add a <see cref="LisContextType"/> value if it is not null.
+        /// </summary>
+        /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
+        /// <param name="name">The key of the entry to add.</param>
+        /// <param name="value">The nullable <see cref="LisContextType"/> value to add.</param>
         public static void AddParameter(this NameValueCollection parameters, string name, LisContextType? value)
         {
             if (value.HasValue)
@@ -47,6 +80,12 @@ namespace LtiLibrary.NetCore.Extensions
             }
         }
 
+        /// <summary>
+        /// Add a <see cref="string"/> value if it is not null or whitespace.
+        /// </summary>
+        /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
+        /// <param name="name">The key of the entry to add.</param>
+        /// <param name="value">The <see cref="string"/> value to add.</param>
         public static void AddParameter(this NameValueCollection parameters, string name, string value)
         {
             if (!string.IsNullOrWhiteSpace(value))

@@ -9,6 +9,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public class Context : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the Context class.
+        /// </summary>
         public Context()
         {
             Type = LtiConstants.ContextType;

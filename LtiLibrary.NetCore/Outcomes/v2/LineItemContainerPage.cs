@@ -5,6 +5,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
 {
     public class LineItemContainerPage : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the LineItemContainerPage class.
+        /// </summary>
         public LineItemContainerPage()
         {
             Type = LtiConstants.LineItemContainerPageType;

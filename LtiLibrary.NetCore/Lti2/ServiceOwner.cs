@@ -4,8 +4,14 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Lti2
 {
+    /// <summary>
+    /// Represents an IMS ServiceOwner object.
+    /// </summary>
     public class ServiceOwner : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the ServiceOwner class.
+        /// </summary>
         public ServiceOwner()
         {
             Timestamp = DateTime.UtcNow;

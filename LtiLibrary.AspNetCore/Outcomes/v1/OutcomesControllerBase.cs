@@ -18,6 +18,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     [Produces("application/xml")]
     public abstract class OutcomesControllerBase : Controller
     {
+        /// <summary>
+        /// Initializes a new instance of the OutcomesControllerBase.
+        /// </summary>
         protected OutcomesControllerBase()
         {
             OnDeleteResult = dto => throw new NotImplementedException();

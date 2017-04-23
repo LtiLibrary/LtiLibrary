@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
-    public class LineItemModelBinder : IModelBinder
+    internal class LineItemModelBinder : IModelBinder
     {
         public async Task BindModelAsync(ModelBindingContext bindingContext)
         {

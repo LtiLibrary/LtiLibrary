@@ -200,7 +200,8 @@ namespace LtiLibrary.NetCore.Outcomes.v1 {
         private string imsx_codeMinorFieldNameField;
         
         private imsx_CodeMinorValueType imsx_codeMinorFieldValueField;
-        
+
+        /// <remarks/>
         public imsx_CodeMinorFieldType() {
             this.imsx_codeMinorFieldNameField = "TargetEndSystem";
         }

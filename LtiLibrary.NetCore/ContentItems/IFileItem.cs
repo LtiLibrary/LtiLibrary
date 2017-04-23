@@ -2,7 +2,7 @@
 
 namespace LtiLibrary.NetCore.ContentItems
 {
-    public interface IFileItem : IContentItem
+    internal interface IFileItem : IContentItem
     {
         bool? CopyAdvice { get; set; }
         DateTime? ExpiresAt { get; set; }

@@ -3,8 +3,17 @@ using HtmlAgilityPack;
 
 namespace LtiLibrary.AspNetCore.Extensions
 {
+    /// <summary>
+    /// <see cref="HtmlDocument"/> extension methods.
+    /// </summary>
     public static class HtmlDocumentExtensions
     {
+        /// <summary>
+        /// Convert the <see cref="HtmlDocument"/> into plain text for use in LTI parameters
+        /// that only accept plain text, such as <see cref="NetCore.Lti1.LtiRequest.ResourceLinkDescription"/>.
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         public static string ToPlainText(this HtmlDocument doc)
         {
             using (var sw = new StringWriter())

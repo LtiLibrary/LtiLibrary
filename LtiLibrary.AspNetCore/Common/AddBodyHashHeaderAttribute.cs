@@ -15,7 +15,7 @@ namespace LtiLibrary.AspNetCore.Common
     /// is executed just before ModelBinding and the hash is stored in a header that
     /// the Action can access.
     /// </remarks>
-    public class AddBodyHashHeaderAttribute : Attribute, IAsyncResourceFilter
+    internal class AddBodyHashHeaderAttribute : Attribute, IAsyncResourceFilter
     {
         public async Task OnResourceExecutionAsync(ResourceExecutingContext context, ResourceExecutionDelegate next)
         {

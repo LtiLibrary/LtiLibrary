@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents the Outcomes Management interface introduced in LTI 1.1.
     /// </summary>
-    public interface IOutcomesManagementRequest
+    internal interface IOutcomesManagementRequest
     {
         string BodyHashReceived { get; set; }
         string LisOutcomeServiceUrl { get; set; }

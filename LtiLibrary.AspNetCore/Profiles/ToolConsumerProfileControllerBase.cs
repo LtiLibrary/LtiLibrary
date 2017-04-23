@@ -14,13 +14,23 @@ namespace LtiLibrary.AspNetCore.Profiles
     [Produces(LtiConstants.ToolConsumerProfileMediaType)]
     public abstract class ToolConsumerProfileControllerBase : Controller
     {
+        /// <summary>
+        /// Initialize a new instance of the ToolConsumerProfileControllerBase class.
+        /// </summary>
         protected ToolConsumerProfileControllerBase()
         {
             OnGetToolConsumerProfile = dto => throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Return the ToolConsumerProfile.
+        /// </summary>
         public Func<GetToolConsumerProfileDto, Task> OnGetToolConsumerProfile { get; set; }
 
+        /// <summary>
+        /// Get the <see cref="NetCore.Profiles.ToolConsumerProfile"/>
+        /// </summary>
+        /// <param name="lti_version">The LTI version of the tool provider making the request. Defaults to "LTI-1p0".</param>
         [HttpGet]
 // ReSharper disable InconsistentNaming
         public async Task<IActionResult> GetAsync(string lti_version = "LTI-1p0")

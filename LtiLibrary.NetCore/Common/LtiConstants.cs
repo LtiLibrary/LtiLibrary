@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace LtiLibrary.NetCore.Common
 {
+    /// <summary>
+    /// LTI constants.
+    /// </summary>
     public static class LtiConstants
     {
         // ReSharper disable InconsistentNaming

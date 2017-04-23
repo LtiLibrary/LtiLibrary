@@ -27,6 +27,10 @@
     <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
+    <DocumentationFile>bin\Release\net451\LtiLibrary.AspNetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />

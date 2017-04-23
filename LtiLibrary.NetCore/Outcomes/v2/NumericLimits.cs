@@ -8,6 +8,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public class NumericLimits : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the NumericLimites class.
+        /// </summary>
         public NumericLimits()
         {
             Type = LtiConstants.NumericLimitsType;

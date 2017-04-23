@@ -11,7 +11,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// Use this ModelBinder to deserialize imsx_POXEnvelopeRequest XML. For example,
     /// <code>public ImsxXmlMediaTypeResult Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)</code>
     /// </summary>
-    public class ImsxXmlMediaTypeModelBinder : IModelBinder
+    internal class ImsxXmlMediaTypeModelBinder : IModelBinder
     {
         private static readonly XmlSerializer ImsxRequestSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType),
             null, null, new XmlRootAttribute("imsx_POXEnvelopeRequest"),

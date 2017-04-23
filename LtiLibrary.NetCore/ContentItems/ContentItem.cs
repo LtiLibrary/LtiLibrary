@@ -5,8 +5,14 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.ContentItems
 {
+    /// <summary>
+    /// Represents an IMS ContentItem (http://purl.imsglobal.org/ctx/lti/v1/ContentItem).
+    /// </summary>
     public class ContentItem : JsonLdObject, IFileItem, ILtiLink
     {
+        /// <summary>
+        /// Initialze a new instance of the ContentItem class.
+        /// </summary>
         public ContentItem()
         {
             Type = LtiConstants.ContentItemType;
@@ -58,6 +64,9 @@ namespace LtiLibrary.NetCore.ContentItems
         [JsonProperty("title")]
         public string Title { get; set; }
 
+        /// <summary>
+        /// The URL associated with the ContentItem.
+        /// </summary>
         [JsonProperty("url")]
         public string Url { get; set; }
 

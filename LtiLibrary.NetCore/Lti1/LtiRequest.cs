@@ -12,6 +12,9 @@ using LtiLibrary.NetCore.Outcomes.v1;
 
 namespace LtiLibrary.NetCore.Lti1
 {
+    /// <summary>
+    /// Represents an IMS LTI request.
+    /// </summary>
     [DataContract]
     public class LtiRequest 
         : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
@@ -68,7 +71,17 @@ namespace LtiLibrary.NetCore.Lti1
 
         #region Constructors
 
+        /// <summary>
+        /// Initialize an empty LtiRequest.
+        /// </summary>
+        /// <remarks>This is used when extracting an LtiRequest from an HttpRequest and for unit tests.</remarks>
         public LtiRequest() : this(null) {}
+
+        /// <summary>
+        /// Initialize a new instanace of the LtiRequest class with the specified message type. This also sets up
+        /// the OAuth values such as Nonce and Timestamp.
+        /// </summary>
+        /// <param name="messageType">The <see cref="LtiMessageType"/> for this request.</param>
         public LtiRequest(string messageType)
         {
             // Create empty request if no messageType
@@ -2192,6 +2205,13 @@ namespace LtiLibrary.NetCore.Lti1
 
         #region Methods
 
+        /// <summary>
+        /// Add a custom parameter to the LtiRequest.
+        /// </summary>
+        /// <param name="name">The name of the custom parameter. The name will be converted to meet the
+        /// LTI spec (e.g. lowercase letters, numbers, and underscore only) and if the name
+        /// does not start with "custom_" or "ext_", then "custom_" will be prepended.</param>
+        /// <param name="value">The value of the custom parameter.</param>
         public void AddCustomParameter(string name, string value)
         {
             // Per the LTI 1.x specs, custom parameter
@@ -2315,6 +2335,11 @@ namespace LtiLibrary.NetCore.Lti1
             return roles;
         }
 
+        /// <summary>
+        /// Throws an <see cref="LtiException"/> if this instance of the LtiRequest does not have a
+        /// value set for any of the named parameters.
+        /// </summary>
+        /// <param name="parameters">The list of parameter names to check.</param>
         public void RequireAllOf(IEnumerable<string> parameters)
         {
             var missing = parameters.Where(parameter => string.IsNullOrWhiteSpace(Parameters[parameter])).ToList();

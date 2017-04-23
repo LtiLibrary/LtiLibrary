@@ -44,5 +44,9 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
     <DefineConstants>$(DefineConstants);NetCore</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
+    <DocumentationFile>bin\Release\net451\LtiLibrary.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
 
 </Project>

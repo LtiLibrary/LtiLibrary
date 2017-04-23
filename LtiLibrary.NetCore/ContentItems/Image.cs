@@ -2,6 +2,9 @@
 
 namespace LtiLibrary.NetCore.ContentItems
 {
+    /// <summary>
+    /// Represents an IMS ContentItem Image.
+    /// </summary>
     [DataContract]
     public class Image
     {

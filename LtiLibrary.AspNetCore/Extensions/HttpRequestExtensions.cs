@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Extensions
 {
+    /// <summary>
+    /// <see cref="HttpRequest"/> extension methods.
+    /// </summary>
     public static class HttpRequestExtensions
     {
         /// <summary>
@@ -36,6 +39,11 @@ namespace LtiLibrary.AspNetCore.Extensions
             return request.ParseAuthenticationHeader().HasKeys();
         }
 
+        /// <summary>
+        /// Parse the Authentication header into a <see cref="NameValueCollection"/> of OAuth parameters.
+        /// Non-OAuth parameters are ignored.
+        /// </summary>
+        /// <returns>A <see cref="NameValueCollection"/> with each OAuth parameter in the header.</returns>
         private static NameValueCollection ParseAuthenticationHeader(this HttpRequest request)
         {
             var parameters = new NameValueCollection();
@@ -63,6 +71,10 @@ namespace LtiLibrary.AspNetCore.Extensions
             return parameters;
         }
 
+        /// <summary>
+        /// Parse the <see cref="HttpRequest"/> into an <see cref="LtiRequest"/> object.
+        /// </summary>
+        /// <returns>The <see cref="LtiRequest"/> with every LTI value found in the request filled in.</returns>
         public static async Task<LtiRequest> ParseLtiRequestAsync(this HttpRequest request)
         {
             var ltiRequest = new LtiRequest(null)
@@ -93,6 +105,10 @@ namespace LtiLibrary.AspNetCore.Extensions
             return ltiRequest;
         }
 
+        /// <summary>
+        /// Get the <see cref="Uri"/> from the <see cref="HttpRequest"/>.
+        /// </summary>
+        /// <returns>The fully formed <see cref="Uri"/> of the request.</returns>
         public static Uri GetUri(this HttpRequest request)
         {
             var hostComponents = request.Host.ToUriComponent().Split(':');

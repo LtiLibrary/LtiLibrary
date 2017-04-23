@@ -20,6 +20,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     [Produces(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]
     public abstract class LineItemsControllerBase : Controller
     {
+        /// <summary>
+        /// Initializes a new instance of the LineItemsControllerBase class.
+        /// </summary>
         protected LineItemsControllerBase()
         {
             OnDeleteLineItem = dto => throw new NotImplementedException();

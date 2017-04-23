@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 
 namespace LtiLibrary.NetCore.OAuth
 {
-    public interface IOAuthRequest
+    internal interface IOAuthRequest
     {
         string BodyHash { get; set; }
         string CallBack { get; set; }

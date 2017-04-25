@@ -5,17 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ReferenceJson\EmbeddedHtmlContentItem.json" />
-    <None Remove="ReferenceJson\EmbeddedImageContentItem.json" />
-    <None Remove="ReferenceJson\ExternalAndInternalContexts.json" />
-    <None Remove="ReferenceJson\ExternalContextOnly.json" />
-    <None Remove="ReferenceJson\HyperlinkWithThumbnailContentItem.json" />
-    <None Remove="ReferenceJson\InternalContextOnly.json" />
-    <None Remove="ReferenceJson\LtiLinkContentItem.json" />
-    <None Remove="ReferenceJson\ToolConsumerProfile.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="ReferenceJson\EmbeddedHtmlContentItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

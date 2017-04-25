@@ -8,6 +8,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// </summary>
     public class DeleteResultDto
     {
+        /// <summary>
+        /// Initialize a new instance of the class.
+        /// </summary>
         public DeleteResultDto(string lisResultSourcedId)
         {
             LisResultSourcedId = lisResultSourcedId;

@@ -3,8 +3,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {
+    /// <summary>
+    /// Represents a ReplaceResult DTO.
+    /// </summary>
     public class ReplaceResultDto
     {
+        /// <summary>
+        /// Initialize a new instance of the class.
+        /// </summary>
         public ReplaceResultDto(LisResult result)
         {
             LisResult = result;

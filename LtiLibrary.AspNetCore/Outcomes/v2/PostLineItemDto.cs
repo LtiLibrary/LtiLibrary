@@ -8,6 +8,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// </summary>
     public class PostLineItemDto
     {
+        /// <summary>
+        /// Initialize a new instance of the class.
+        /// </summary>
         public PostLineItemDto(string contextId, LineItem lineItem)
         {
             ContextId = contextId;

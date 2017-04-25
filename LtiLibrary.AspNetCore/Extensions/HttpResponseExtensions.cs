@@ -5,6 +5,9 @@ using LtiLibrary.NetCore.Lti1;
 
 namespace LtiLibrary.AspNetCore.Extensions
 {
+    /// <summary>
+    /// <see cref="HttpResponse"/> extension methods.
+    /// </summary>
     public static class HttpResponseExtensions
     {
         /// <summary>

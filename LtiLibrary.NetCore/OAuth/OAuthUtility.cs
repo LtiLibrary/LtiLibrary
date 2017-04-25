@@ -7,6 +7,9 @@ using LtiLibrary.NetCore.Extensions;
 
 namespace LtiLibrary.NetCore.OAuth
 {
+    /// <summary>
+    /// Utility methods for handling OAuth requests.
+    /// </summary>
     public static class OAuthUtility
     {
         /// <summary>

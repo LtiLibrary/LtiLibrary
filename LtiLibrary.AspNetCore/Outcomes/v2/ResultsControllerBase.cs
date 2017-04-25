@@ -19,6 +19,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     [Produces(LtiConstants.LisResultMediaType, LtiConstants.LisResultContainerMediaType)]
     public abstract class ResultsControllerBase : Controller
     {
+        /// <summary>
+        /// Initialize a new instance of the ResultsControllerBase class.
+        /// </summary>
         protected ResultsControllerBase()
         {
             OnDeleteResult = dto => throw new NotImplementedException();
@@ -71,7 +74,6 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
         /// <summary>
         /// Get a paginated list of LisResult resources from a ResultContainer, or get a representation of a particular LisResult instance.
-        /// <param name="id">The LineItem id.</param>
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAsync(string contextId = null, string lineItemId = null, string id = null, int? limit = null, string firstPage = null, int? p = null)

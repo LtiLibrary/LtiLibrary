@@ -1,6 +1,6 @@
 namespace LtiLibrary.NetCore.Lti1
 {
-    public interface IBasicLaunchRequest : ILtiRequest
+    internal interface IBasicLaunchRequest : ILtiRequest
     {
         /// <summary>
         /// This field should be no more than 1023 characters long. 

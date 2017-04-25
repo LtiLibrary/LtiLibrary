@@ -6,9 +6,15 @@ using LtiLibrary.NetCore.Extensions;
 
 namespace LtiLibrary.NetCore.OAuth
 {
+    /// <summary>
+    /// Represents an OAuth 1.0a HTTP request.
+    /// </summary>
     [DataContract]
     public class OAuthRequest : IOAuthRequest
     {
+        /// <summary>
+        /// Initialize a new instance of the OAuthRequest class.
+        /// </summary>
         public OAuthRequest()
         {
             Parameters = new NameValueCollection();
@@ -41,6 +47,9 @@ namespace LtiLibrary.NetCore.OAuth
         /// </remarks>
         public string BodyHashReceived { get; set; }
 
+        /// <summary>
+        /// Not used in OAuth 1.0a.
+        /// </summary>
         [DataMember(Name = OAuthConstants.CallbackParameter)]
         public string CallBack
         {

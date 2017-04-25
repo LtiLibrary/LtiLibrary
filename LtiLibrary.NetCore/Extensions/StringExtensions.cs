@@ -3,8 +3,16 @@ using System.Text;
 
 namespace LtiLibrary.NetCore.Extensions
 {
+    /// <summary>
+    /// <see cref="string"/> extensions.
+    /// </summary>
     public static class StringExtensions
     {
+        /// <summary>
+        /// Returns an encoded version of the string per RFC 3986.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static string ToRfc3986EncodedString(this string value)
         {
             // The following function was written by Andrew Arnott

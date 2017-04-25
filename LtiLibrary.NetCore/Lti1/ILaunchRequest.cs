@@ -1,6 +1,6 @@
 ﻿namespace LtiLibrary.NetCore.Lti1
 {
-    public interface ILaunchRequest
+    internal interface ILaunchRequest
     {
         string ResourceLinkDescription { get; set; }
         string ResourceLinkId { get; set; }

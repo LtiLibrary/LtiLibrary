@@ -10,6 +10,9 @@ namespace LtiLibrary.NetCore.Common
     [JsonConverter(typeof(JsonLdObjectConverter))]
     public class JsonLdObject : IJsonLdObject
     {
+        /// <summary>
+        /// Initialize a new instance of the JsonLdObject class.
+        /// </summary>
         public JsonLdObject()
         {
             Terms = new Dictionary<string, string>();

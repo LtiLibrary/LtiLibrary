@@ -9,6 +9,9 @@ namespace LtiLibrary.NetCore.Lti2
     /// </summary>
     public class RestService : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the RestService class.
+        /// </summary>
         public RestService()
         {
             Type = LtiConstants.RestService;

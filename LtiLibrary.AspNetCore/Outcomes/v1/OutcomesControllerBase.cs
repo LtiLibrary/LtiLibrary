@@ -18,6 +18,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     [Produces("application/xml")]
     public abstract class OutcomesControllerBase : Controller
     {
+        /// <summary>
+        /// Initializes a new instance of the OutcomesControllerBase.
+        /// </summary>
         protected OutcomesControllerBase()
         {
             OnDeleteResult = dto => throw new NotImplementedException();
@@ -38,7 +41,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         /// </summary>
         public Func<ReplaceResultDto, Task> OnReplaceResult { get; set; }
 
-        // POST api/outcomes
+        /// <summary>
+        /// Receive the Outcomes 1.0 Post request.
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
         {

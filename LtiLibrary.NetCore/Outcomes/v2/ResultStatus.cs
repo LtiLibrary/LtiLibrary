@@ -7,12 +7,27 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public enum ResultStatus
     {
+        /// <summary>
+        /// The result is complete.
+        /// </summary>
         [Uri("http://purl.imsglobal.org/vocab/lis/v2/outcomes#Completed")]
         Completed,
+
+        /// <summary>
+        /// The result is final.
+        /// </summary>
         [Uri("http://purl.imsglobal.org/vocab/lis/v2/outcomes#Final")]
         Final,
+
+        /// <summary>
+        /// The result is initialized.
+        /// </summary>
         [Uri("http://purl.imsglobal.org/vocab/lis/v2/outcomes#Initialized")]
         Initialized,
+
+        /// <summary>
+        /// The results is started.
+        /// </summary>
         [Uri("http://purl.imsglobal.org/vocab/lis/v2/outcomes#Started")]
         Started
     }

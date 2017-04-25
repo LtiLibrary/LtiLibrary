@@ -4,7 +4,10 @@ using System.Text;
 
 namespace LtiLibrary.NetCore.Extensions
 {
-    public static class HttpWebResponseExtensions
+    /// <summary>
+    /// Extension methods for the <see cref="HttpResponseMessage"/> type.
+    /// </summary>
+    public static class HttpResponseMessageExtensions
     {
         /// <summary>
         /// Create a string representation of the <see cref="HttpResponseMessage"/> similar to Fiddler's.

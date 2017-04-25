@@ -3,7 +3,7 @@
     /// <summary>
     /// LTI Content-Item Message 1.0 ContentItemSelectionRequest interface (3 Feb 2015 draft)
     /// </summary>
-    public interface IContentItemSelectionRequest
+    internal interface IContentItemSelectionRequest
     {
         string AcceptMediaTypes { get; set; }
         bool? AcceptMultiple { get; set; }

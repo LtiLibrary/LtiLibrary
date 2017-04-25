@@ -8,6 +8,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// </summary>
     public class ReadResultDto
     {
+        /// <summary>
+        /// Initialize a new instance of the class.
+        /// </summary>
         public ReadResultDto(string lisResultSourcedId)
         {
             LisResultSourcedId = lisResultSourcedId;

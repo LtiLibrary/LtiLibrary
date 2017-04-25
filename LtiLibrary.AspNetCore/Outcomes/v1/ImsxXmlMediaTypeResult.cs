@@ -7,7 +7,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// Use to attach a specific XML formatter to controller results. For example,
     /// <code>public ImsxXmlMediaTypeResult Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)</code>
     /// </summary>
-    public class ImsxXmlMediaTypeResult : ObjectResult
+    internal class ImsxXmlMediaTypeResult : ObjectResult
     {
         public ImsxXmlMediaTypeResult(imsx_POXEnvelopeType value) : base(value)
         {

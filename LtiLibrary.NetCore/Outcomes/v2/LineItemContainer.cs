@@ -9,6 +9,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public class LineItemContainer : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the LineItemContainer class.
+        /// </summary>
         public LineItemContainer()
         {
             Type = LtiConstants.LineItemContainerType;

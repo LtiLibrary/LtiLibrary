@@ -9,6 +9,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public class Activity : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the Activity class.
+        /// </summary>
         public Activity()
         {
             Type = LtiConstants.ActivityType;

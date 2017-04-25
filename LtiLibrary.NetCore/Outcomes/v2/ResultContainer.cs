@@ -9,6 +9,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public class ResultContainer : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the ResultContainer class.
+        /// </summary>
         public ResultContainer()
         {
             Type = LtiConstants.LisResultContainerType;

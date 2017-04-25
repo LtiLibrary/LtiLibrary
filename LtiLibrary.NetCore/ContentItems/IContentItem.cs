@@ -3,7 +3,7 @@ using LtiLibrary.NetCore.Common;
 
 namespace LtiLibrary.NetCore.ContentItems
 {
-    public interface IContentItem : IJsonLdObject
+    internal interface IContentItem : IJsonLdObject
     {
         Image Icon { get; set; }
         string MediaType { get; set; }

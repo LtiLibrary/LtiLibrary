@@ -10,7 +10,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
     /// <summary>
     /// AspNetCore.Mvc output formatter returns an imsx_POXEnvelopeType with an imsx_POXEnvelopeResponse.
     /// </summary>
-    public class ImsxXmlMediaTypeOutputFormatter : IOutputFormatter
+    internal class ImsxXmlMediaTypeOutputFormatter : IOutputFormatter
     {
         // The XSD code generator only creates one imsx_POXEnvelopeType which has the 
         // imsx_POXEnvelopeRequest root element. The IMS spec says the root element

@@ -3,8 +3,14 @@ using System.Net;
 
 namespace LtiLibrary.NetCore.Common
 {
+    /// <summary>
+    /// Encapsulates the client response to API calls such as <see cref="Outcomes.v1.OutcomesClient.DeleteResultAsync"/>.
+    /// </summary>
     public class ClientResponse
     {
+        /// <summary>
+        /// The <see cref="HttpStatusCode"/> from the underlying API call.
+        /// </summary>
         public HttpStatusCode StatusCode { get; set; }
 
         /// <summary>
@@ -24,8 +30,15 @@ namespace LtiLibrary.NetCore.Common
 #endif
     }
 
+    /// <summary>
+    /// Represents a <see cref="ClientResponse"/> that also contains a Response of type T.
+    /// </summary>
+    /// <typeparam name="T">The type of the Response object that is in the client response.</typeparam>
     public class ClientResponse<T> : ClientResponse where T : class 
     {
+        /// <summary>
+        /// Get or Set the Response.
+        /// </summary>
         public T Response { get; set; }
     }
 }

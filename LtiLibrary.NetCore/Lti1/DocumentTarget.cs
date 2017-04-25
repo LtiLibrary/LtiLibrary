@@ -4,6 +4,9 @@ using Newtonsoft.Json.Converters;
 // ReSharper disable InconsistentNaming
 namespace LtiLibrary.NetCore.Lti1
 {
+    /// <summary>
+    /// Represents IMS DocumentTarget values.
+    /// </summary>
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DocumentTarget
     {

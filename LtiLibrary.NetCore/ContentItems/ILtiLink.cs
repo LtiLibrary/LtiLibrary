@@ -2,7 +2,7 @@
 
 namespace LtiLibrary.NetCore.ContentItems
 {
-    public interface ILtiLink : IContentItem
+    internal interface ILtiLink : IContentItem
     {
         IDictionary<string, string> Custom { get; set; }
     }

@@ -12,6 +12,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     /// </summary>
     public class LineItem : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the LineItem class.
+        /// </summary>
         public LineItem()
         {
             Context = LtiConstants.LineItemContextId;

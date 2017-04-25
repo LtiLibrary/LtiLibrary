@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Extensions
 {
+    /// <summary>
+    /// Extension methods for the <see cref="HttpContent"/> type.
+    /// </summary>
     public static class HttpContentExtensions
     {
         /// <summary>

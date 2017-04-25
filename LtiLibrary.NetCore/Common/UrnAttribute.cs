@@ -10,11 +10,18 @@ namespace LtiLibrary.NetCore.Common
     [AttributeUsage(AttributeTargets.Field)]
     public class UrnAttribute : Attribute
     {
+        /// <summary>
+        /// Initialize a new instance of the UrnAttribute class.
+        /// </summary>
+        /// <param name="urn">The URN associated with the enumerated field value.</param>
         public UrnAttribute(string urn)
         {
             Urn = urn;
         }
 
+        /// <summary>
+        /// Get or Set the URN associated with the enumerated field value.
+        /// </summary>
         public string Urn { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace LtiLibrary.NetCore.Common
     /// Collects JsonLdObject Terms and writes them first as @context.
     /// Does not convert JSON to a JsonLdObject.
     /// </remarks>
-    public class JsonLdObjectConverter : JsonConverter
+    internal class JsonLdObjectConverter : JsonConverter
     {
         private static readonly Type JsonLdObjectType = typeof(IJsonLdObject);
         private static readonly Type JsonLdObjectArrayType = typeof (IEnumerable<IJsonLdObject>);

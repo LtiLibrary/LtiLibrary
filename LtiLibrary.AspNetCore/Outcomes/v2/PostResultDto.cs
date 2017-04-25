@@ -8,6 +8,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// </summary>
     public class PostResultDto
     {
+        /// <summary>
+        /// Initialize a new instance of the class.
+        /// </summary>
         public PostResultDto(string contextId, string lineItemId, LisResult result)
         {
             ContextId = contextId;

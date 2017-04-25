@@ -8,7 +8,7 @@ namespace LtiLibrary.NetCore.Common
     /// DefaultContractResolver with null Converter for JsonLdObjects
     /// to prevent recusive calls to JsonLdObjectConverter.
     /// </summary>
-    public class JsonLdObjectContractResolver : DefaultContractResolver
+    internal class JsonLdObjectContractResolver : DefaultContractResolver
     {
         private readonly bool _unsetConverter;
 

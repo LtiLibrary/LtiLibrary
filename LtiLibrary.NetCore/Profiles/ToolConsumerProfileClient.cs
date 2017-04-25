@@ -6,6 +6,9 @@ using LtiLibrary.NetCore.Extensions;
 
 namespace LtiLibrary.NetCore.Profiles
 {
+    /// <summary>
+    /// Helper class for Tool Providers requesting a <see cref="ToolConsumerProfile"/> from a Tool Consumer.
+    /// </summary>
     public static class ToolConsumerProfileClient
     {
         /// <summary>

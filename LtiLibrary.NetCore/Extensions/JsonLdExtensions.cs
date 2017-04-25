@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace LtiLibrary.NetCore.Extensions
 {
+    /// <summary>
+    /// Extension methods for JSON-LD objects.
+    /// </summary>
     public static class JsonLdExtensions
     {
         /// <summary>

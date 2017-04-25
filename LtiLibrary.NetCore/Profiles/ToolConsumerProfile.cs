@@ -27,6 +27,9 @@ namespace LtiLibrary.NetCore.Profiles
     /// </remarks>
     public class ToolConsumerProfile : JsonLdObject
     {
+        /// <summary>
+        /// Initialized a new instance of the ToolConsumerProfile class.
+        /// </summary>
         public ToolConsumerProfile()
         {
             ExternalContextId = LtiConstants.ToolConsumerProfileContextId;

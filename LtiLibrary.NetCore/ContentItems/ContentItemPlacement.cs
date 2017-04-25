@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.ContentItems
 {
+    /// <summary>
+    /// Represents a ContentItemPlacement.
+    /// </summary>
     public class ContentItemPlacement
     {
         /// <summary>

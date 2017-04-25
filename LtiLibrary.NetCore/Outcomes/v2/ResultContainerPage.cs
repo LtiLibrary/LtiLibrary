@@ -3,8 +3,14 @@ using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Outcomes.v2
 {
+    /// <summary>
+    /// Represents an IMS ResultContainerPage object.
+    /// </summary>
     public class ResultContainerPage : JsonLdObject
     {
+        /// <summary>
+        /// Initializes a new instance of the ResultContainerPage class.
+        /// </summary>
         public ResultContainerPage()
         {
             Type = LtiConstants.LisResultContainerType;

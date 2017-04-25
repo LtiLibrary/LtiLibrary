@@ -1,11 +1,13 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using LtiLibrary.AspNetCore.Lti1;
 using LtiLibrary.NetCore.Lti1;
 
 namespace LtiLibrary.AspNetCore.Extensions
 {
+    /// <summary>
+    /// <see cref="HttpResponse"/> extension methods.
+    /// </summary>
     public static class HttpResponseExtensions
     {
         /// <summary>
@@ -17,18 +19,17 @@ namespace LtiLibrary.AspNetCore.Extensions
         /// <param name="consumerSecret">The OAuth secret to use when signing the request.</param>
         public static async Task WriteLtiRequest(this HttpResponse response, LtiRequest request, string consumerSecret)
         {
-            var model = request.GetViewModel(consumerSecret);
+            request.Signature = request.SubstituteCustomVariablesAndGenerateSignature(consumerSecret);
             var form = new StringBuilder();
             form.AppendLine("<html>");
             form.AppendLine("<head><title></title></head>");
             form.AppendLine("<body>");
-            form.AppendFormat("<form method='post' action='{0}' id='form'>", model.Action).AppendLine();
-            foreach (var key in model.Fields.AllKeys)
+            form.AppendFormat("<form method='post' action='{0}' id='form'>", request.Url.AbsoluteUri).AppendLine();
+            foreach (var key in request.Parameters.AllKeys)
             {
-                form.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", key, model.Fields[key])
+                form.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", key, request.Parameters[key])
                     .AppendLine();
             }
-            form.AppendFormat("<input type='hidden' name='oauth_signature' value='{0}' />", model.Signature).AppendLine();
             form.AppendLine("</form>");
             form.AppendLine("<script>");
             form.AppendLine(" document.getElementById('form').submit();");

@@ -3,7 +3,7 @@ using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Lti1
 {
-    public interface ILtiRequest : IOAuthRequest
+    internal interface ILtiRequest : IOAuthRequest
     {
         string ContextId { get; set; }
         string ContextLabel { get; set; }

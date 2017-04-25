@@ -19,6 +19,7 @@
 - Changed interface of v1.OutcomesClient, v2.OutcomesClient, and ToolConsumerProfileClient to take an HttpClient. This facilitated using Microsoft.AspNetCore.TestHost for integration testing.
 2.0.2-beta
 - Merged fix to issue #39.
+- Added XML documentation.
       ]]>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
@@ -46,6 +47,10 @@
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
+    <DocumentationFile>bin\Release\net451\LtiLibrary.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.6|AnyCPU'">
     <DocumentationFile>bin\Release\net451\LtiLibrary.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 

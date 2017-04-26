@@ -195,7 +195,7 @@ namespace LtiLibrary.NetCore.Tests
         }
 
         [Fact]
-        public void GenerateAKnownSignature_GivenKnownParameters()
+        public void GenerateKnownSignature_GivenKnownLaunchParameters()
         {
             var request = new LtiRequest
             {
@@ -226,6 +226,24 @@ namespace LtiLibrary.NetCore.Tests
             };
             var signature = request.GenerateSignature("secret");
             Assert.Equal("Im/RhYIEApfbsy+luuisvQqBjgs=", signature);
+        }
+
+        [Fact]
+        public void GenerateKnownSignature_GivenKnownOutcomesParameters()
+        {
+            var request = new LtiRequest
+            {
+                BodyHash = "zxNf/lJoveI1hmN1ENbcdZdQ4Js=",
+                ConsumerKey = "jisc.ac.uk",
+                HttpMethod = HttpMethod.Post.Method,
+                Nonce = "83e29bff47b7690a3f6b371c77526405",
+                SignatureMethod = "HMAC-SHA1",
+                Timestamp = 1493164209,
+                Url = new Uri("http://lti.tools/test/tc-outcomes.php"),
+                Version = "1.0"
+            };
+            var signature = request.GenerateSignature("secret");
+            Assert.Equal("1lsA7F7WPN48KzxVXDI25Lpam1E=", signature);
         }
     }
 }

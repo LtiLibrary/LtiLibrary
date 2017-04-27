@@ -20,7 +20,7 @@ namespace LtiLibrary.NetCore.Profiles
         public static async Task<ClientResponse<ToolConsumerProfile>> GetToolConsumerProfileAsync(HttpClient client, string serviceUrl)
         {
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.LtiToolConsumerProfileMediaType));
 
             var profileResponse = new ClientResponse<ToolConsumerProfile>();
             using (var response = await client.GetAsync(serviceUrl))

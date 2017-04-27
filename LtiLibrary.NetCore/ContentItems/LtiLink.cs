@@ -13,7 +13,7 @@ namespace LtiLibrary.NetCore.ContentItems
         public LtiLink()
         {
             Type = LtiConstants.LtiLinkType;
-            MediaType = LtiConstants.LtiLinkMediaType;
+            MediaType = LtiConstants.LtiLtiLinkMediaType;
         }
     }
 }

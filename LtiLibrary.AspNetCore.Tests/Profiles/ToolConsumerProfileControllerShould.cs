@@ -33,12 +33,12 @@ namespace LtiLibrary.AspNetCore.Tests.Profiles
         public async void ReturnAToolConsumerProfile()
         {
             _client.DefaultRequestHeaders.Accept.Clear();
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ToolConsumerProfileMediaType));
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.LtiToolConsumerProfileMediaType));
 
             using (var response = await _client.GetAsync("ims/toolconsumerprofile"))
             {
                 response.EnsureSuccessStatusCode();
-                Assert.Equal(LtiConstants.ToolConsumerProfileMediaType, response.Content.Headers.ContentType.MediaType);
+                Assert.Equal(LtiConstants.LtiToolConsumerProfileMediaType, response.Content.Headers.ContentType.MediaType);
                 var profile = await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
                 Assert.NotNull(profile);
                 JsonAssertions.AssertSameObjectJson(profile, "ToolConsumerProfile");

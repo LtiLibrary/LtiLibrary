@@ -1,5 +1,6 @@
 ﻿using System;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Lis.v2;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -53,7 +54,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// The URI for the person whose score is recorded in this Result.
         /// </summary>
         [JsonProperty("resultAgent")]
-        public LisPerson ResultAgent { get; set; }
+        public Person ResultAgent { get; set; }
 
         /// <summary>
         /// The URI for the LineItem within which this Result is contained.

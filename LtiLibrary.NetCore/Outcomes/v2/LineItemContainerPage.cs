@@ -13,7 +13,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// </summary>
         public LineItemContainerPage()
         {
-            Type = LtiConstants.LineItemContainerPageType;
+            Type = LtiConstants.PageType;
         }
 
         /// <summary>

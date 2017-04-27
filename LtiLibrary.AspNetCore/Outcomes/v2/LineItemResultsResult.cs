@@ -16,7 +16,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// <param name="statusCode">The HTTP StatusCode to return.</param>
         public LineItemResultsResult(object value, int statusCode = StatusCodes.Status200OK) : base(value)
         {
-            ContentType = LtiConstants.LineItemResultsMediaType;
+            ContentType = LtiConstants.LisLineItemResultsMediaType;
             StatusCode = statusCode;
         }
     }

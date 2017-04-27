@@ -14,7 +14,7 @@ namespace LtiLibrary.AspNetCore.Profiles
         /// </summary>
         public ToolConsumerProfileResult(ToolConsumerProfile value) : base(value)
         {
-            ContentType = LtiConstants.ToolConsumerProfileMediaType;
+            ContentType = LtiConstants.LtiToolConsumerProfileMediaType;
         }
     }
 }

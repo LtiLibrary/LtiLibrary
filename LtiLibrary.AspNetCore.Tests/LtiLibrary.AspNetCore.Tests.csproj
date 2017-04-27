@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ReferenceJson\basic-lti-launch-request.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="ReferenceJson\basic-lti-launch-request.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

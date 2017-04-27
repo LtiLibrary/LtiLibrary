@@ -54,6 +54,11 @@ namespace LtiLibrary.NetCore.Common
         /// </summary>
         public const string ContentItemSelectionLtiMessageType = "ContentItemSelection";
 
+        /// <summary>
+        /// This is used internally to identify outcomes requests
+        /// </summary>
+        public const string OutcomesMessageType = "OutcomesRequest";
+
         #endregion
 
         #region Message Parameter Names

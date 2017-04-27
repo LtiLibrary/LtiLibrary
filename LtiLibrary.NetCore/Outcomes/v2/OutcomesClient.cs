@@ -9,6 +9,7 @@ using LtiLibrary.NetCore.OAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using LtiLibrary.NetCore.Lti1;
 
 namespace LtiLibrary.NetCore.Outcomes.v2
 {
@@ -445,36 +446,24 @@ namespace LtiLibrary.NetCore.Outcomes.v2
 
         private static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl, HttpContent content, string consumerKey, string consumerSecret)
         {
-            var parameters = new NameValueCollection();
-            parameters.AddParameter(OAuthConstants.ConsumerKeyParameter, consumerKey);
-            parameters.AddParameter(OAuthConstants.NonceParameter, Guid.NewGuid().ToString());
-            parameters.AddParameter(OAuthConstants.SignatureMethodParameter, OAuthConstants.SignatureMethodHmacSha1);
-            parameters.AddParameter(OAuthConstants.VersionParameter, OAuthConstants.Version10);
+            var ltiRequest = new LtiRequest(LtiConstants.OutcomesMessageType)
+            {
+                ConsumerKey = consumerKey,
+                HttpMethod = method.Method,
+                Url = new Uri(client.BaseAddress, serviceUrl)
+            };
 
-            // Calculate the timestamp
-            var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            var timestamp = Convert.ToInt64(ts.TotalSeconds);
-            parameters.AddParameter(OAuthConstants.TimestampParameter, timestamp);
+            AuthenticationHeaderValue authorizationHeader;
 
-            // Calculate the body hash
+            // Create an Authorization header using the body hash
             using (var sha1 = SHA1.Create())
             {
                 var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
-                var hash64 = Convert.ToBase64String(hash);
-                parameters.AddParameter(OAuthConstants.BodyHashParameter, hash64);
+                authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
             }
 
-            // Calculate the signature
-            var signature = OAuthUtility.GenerateSignature(method.Method, new Uri(client.BaseAddress, serviceUrl), parameters, consumerSecret);
-            parameters.AddParameter(OAuthConstants.SignatureParameter, signature);
-
-            // Build the Authorization header
-            var authorization = new StringBuilder(OAuthConstants.AuthScheme).Append(" ");
-            foreach (var key in parameters.AllKeys)
-            {
-                authorization.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(parameters[key]));
-            }
-            client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authorization.ToString(0, authorization.Length - 1));
+            // Attach the header to the client request
+            client.DefaultRequestHeaders.Authorization = authorizationHeader;
         }
 
         #endregion

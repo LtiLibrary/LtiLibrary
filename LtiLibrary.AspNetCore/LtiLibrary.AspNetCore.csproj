@@ -4,8 +4,7 @@
     <Description>ASP.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.AspNetCore</AssemblyTitle>
-    <VersionPrefix>2.0.2</VersionPrefix>
-    <VersionSuffix>beta</VersionSuffix>
+    <Version>2.0.3</Version>
     <Authors>andyfmiller.com</Authors>
     <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
     <AssemblyName>LtiLibrary.AspNetCore</AssemblyName>
@@ -13,13 +12,15 @@
     <PackageTags>IMS;LTI;.NET Core;ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
       <![CDATA[
-2.0.0-beta
-- New library for ASP.NET Core
-2.0.1-beta
-- Fixed minor bugs discovered by integration tests.
+2.0.3
+- Removed beta suffix.
 2.0.2-beta
 - Merged fix to issue #39.
 - Added XML documentation.
+2.0.1-beta
+- Fixed minor bugs discovered by integration tests.
+2.0.0-beta
+- New library for ASP.NET Core.
       ]]>
     </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>

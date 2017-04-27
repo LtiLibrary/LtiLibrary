@@ -21,16 +21,6 @@ namespace LtiLibrary.NetCore.Lti1
     {
         #region Static Member Data
 
-        // These OAuth parameters are required
-        private static readonly string[] RequiredOauthParameters =
-        {
-            OAuthConstants.ConsumerKeyParameter,
-            OAuthConstants.NonceParameter,
-            OAuthConstants.SignatureMethodParameter,
-            OAuthConstants.TimestampParameter,
-            OAuthConstants.VersionParameter
-        };
-
         // These LTI launch parameters are required
         private static readonly string[] RequiredBasicLaunchParameters =
         {
@@ -94,11 +84,14 @@ namespace LtiLibrary.NetCore.Lti1
             TimestampAsDateTime = DateTime.UtcNow;
             Version = OAuthConstants.Version10;
 
-            // LTI defaults
-            HttpMethod = "POST";
-            LaunchPresentationLocale = CultureInfo.CurrentCulture.Name;
-            LtiMessageType = messageType;
-            LtiVersion = LtiConstants.LtiVersion;
+            if (!messageType.Equals(LtiConstants.OutcomesMessageType))
+            {
+                // LTI defaults
+                HttpMethod = System.Net.Http.HttpMethod.Post.Method;
+                LaunchPresentationLocale = CultureInfo.CurrentCulture.Name;
+                LtiMessageType = messageType;
+                LtiVersion = LtiConstants.LtiVersion;
+            }
         }
 
 #endregion

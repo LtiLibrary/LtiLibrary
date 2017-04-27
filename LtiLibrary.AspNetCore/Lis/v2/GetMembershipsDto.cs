@@ -8,24 +8,28 @@ namespace LtiLibrary.AspNetCore.Lis.v2
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public GetMembershipsDto(int? limit, string rlid, Role? role)
+        public GetMembershipsDto(int? limit, string rlid, Role? role, int? p)
         {
             Limit = limit;
             Rlid = rlid;
             Role = role;
+            P = p;
         }
 
         /// <summary>
         /// Specifies the maximum number of items that should be delivered per page. This parameter is merely a hint. The server is not obligated to honor this limit and may at its own discretion choose a different value for the number of items per page.
         /// </summary>
         public int? Limit { get; }
-
-
+        
         /// <summary>
         /// Get or set the MembershipContainerPage.
         /// </summary>
         public MembershipContainerPage MembershipContainerPage { get; set; }
-
+        
+        /// <summary>
+        /// Get or set the page #.
+        /// </summary>
+        public int? P { get; }
 
         /// <summary>
         /// The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.

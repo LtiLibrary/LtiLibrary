@@ -29,9 +29,9 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// <returns></returns>
         public static async Task<ClientResponse<MembershipContainerPage>> GetMembershipsAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            int? limit = 0, string rlid = null, Role? role = null)
+            int? limit = 0, string rlid = null, Role? role = null, int? p = null)
         {
-            var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
+            var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role, p);
             return await GetFilteredMembershipsAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
                 LtiConstants.LisMembershipContainerMediaType);
         }
@@ -87,7 +87,7 @@ namespace LtiLibrary.NetCore.Lis.v2
             }
         }
 
-        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, Role? role)
+        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, Role? role, int? p)
         {
             var query = new StringBuilder();
             if (limit.HasValue)
@@ -102,19 +102,20 @@ namespace LtiLibrary.NetCore.Lis.v2
             {
                 query.Append($"role={role}&");
             }
-            if (query.Length > 0)
+            if (p.HasValue)
             {
-                query.Remove(query.Length - 1, 1);
-                if (serviceUrl.Contains("?"))
-                {
-                    return $"{serviceUrl}&{query}";
-                }
-                else
-                {
-                    return $"{serviceUrl}?{query}";
-                }
+                query.Append($"p={p}&");
             }
-            return serviceUrl;
+            if (query.Length <= 0)
+            {
+                return serviceUrl;
+            }
+            query.Remove(query.Length - 1, 1);
+            if (serviceUrl.Contains("?"))
+            {
+                return $"{serviceUrl}&{query}";
+            }
+            return $"{serviceUrl}?{query}";
         }
 
         private static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,

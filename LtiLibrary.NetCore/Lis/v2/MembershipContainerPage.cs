@@ -13,6 +13,7 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// </summary>
         public MembershipContainerPage()
         {
+            ExternalContextId = LtiConstants.LisMembershipContainerContextId;
             Type = LtiConstants.PageType;
         }
 

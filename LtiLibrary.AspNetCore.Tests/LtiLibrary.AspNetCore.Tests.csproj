@@ -32,6 +32,9 @@
     <Content Include="ReferenceJson\LtiLinkContentItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ReferenceJson\MembershipContainerPage.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ReferenceJson\ToolConsumerProfile.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

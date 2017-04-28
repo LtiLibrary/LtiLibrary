@@ -1,5 +1,6 @@
 ﻿using LtiLibrary.NetCore.Common;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -17,7 +18,44 @@ namespace LtiLibrary.NetCore.Lis.v2
     public static class MembershipClient
     {
         /// <summary>
-        /// Get the membership list of a context.
+        /// Get the membership of a context. Calls GetMembershipPageAsync until NextPage is not specified.
+        /// </summary>
+        /// <param name="client">The HTTP client to use for this request.</param>
+        /// <param name="serviceUrl">The membership service URL. In LTI 1 the parameter will be in the launch as <code>custom_context_membership</code>.</param>
+        /// <param name="consumerKey">The OAuth Consumer Key.</param>
+        /// <param name="consumerSecret">The OAuth Consumer Secret to use for signing the request.</param>
+        /// <param name="rlid">The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.</param>
+        /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
+        public static async Task<ClientResponse<IEnumerable<Membership>>> GetMembershipAsync(
+            HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
+            string rlid = null, Role? role = null)
+        {
+            var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
+            var page = await GetFilteredMembershipAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
+            var result = new ClientResponse<IEnumerable<Membership>>();
+            var members = new List<Membership>();
+            do
+            {
+#if DEBUG
+                result.HttpRequest = page.HttpRequest;
+                result.HttpResponse = page.HttpResponse;
+#endif
+                result.StatusCode = page.StatusCode;
+                if (page.StatusCode != HttpStatusCode.OK)
+                {
+                    return result;
+                }
+                members.AddRange(page.Response.MembershipContainer.MembershipSubject.Membership);
+                if (string.IsNullOrWhiteSpace(page.Response.NextPage)) break;
+                filteredServiceUrl = GetFilteredServiceUrl(page.Response.NextPage, null, rlid, role);
+                page = await GetFilteredMembershipAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
+            } while (true);
+            result.Response = members;
+            return result;
+        }
+
+        /// <summary>
+        /// Get a page of membership.
         /// </summary>
         /// <param name="client">The HTTP client to use for this request.</param>
         /// <param name="serviceUrl">The membership service URL. In LTI 1 the parameter will be in the launch as <code>custom_context_membership</code>.</param>
@@ -26,17 +64,16 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// <param name="limit">Specifies the maximum number of items that should be delivered per page. This parameter is merely a hint. The server is not obligated to honor this limit and may at its own discretion choose a different value for the number of items per page.</param>
         /// <param name="rlid">The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.</param>
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
-        /// <returns></returns>
-        public static async Task<ClientResponse<MembershipContainerPage>> GetMembershipsAsync(
+        public static async Task<ClientResponse<MembershipContainerPage>> GetMembershipPageAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            int? limit = 0, string rlid = null, Role? role = null, int? p = null)
+            int? limit = null, string rlid = null, Role? role = null)
         {
-            var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role, p);
-            return await GetFilteredMembershipsAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
+            var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
+            return await GetFilteredMembershipAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
                 LtiConstants.LisMembershipContainerMediaType);
         }
 
-        private static async Task<ClientResponse<MembershipContainerPage>> GetFilteredMembershipsAsync(
+        private static async Task<ClientResponse<MembershipContainerPage>> GetFilteredMembershipAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string contentType)
         {
@@ -87,12 +124,12 @@ namespace LtiLibrary.NetCore.Lis.v2
             }
         }
 
-        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, Role? role, int? p)
+        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, Role? role)
         {
             var query = new StringBuilder();
             if (limit.HasValue)
             {
-                query.Append($"limit={limit.Value}&");
+                query.Append($"limit={limit}&");
             }
             if (!string.IsNullOrWhiteSpace(rlid))
             {
@@ -101,10 +138,6 @@ namespace LtiLibrary.NetCore.Lis.v2
             if (role.HasValue)
             {
                 query.Append($"role={role}&");
-            }
-            if (p.HasValue)
-            {
-                query.Append($"p={p}&");
             }
             if (query.Length <= 0)
             {

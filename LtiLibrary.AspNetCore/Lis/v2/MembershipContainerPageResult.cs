@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LtiLibrary.AspNetCore.Lis.v2
 {
     /// <summary>
-    /// Represents the MembershipContainerPage returned from the LineItemsController to the <see cref="MembershipsControllerBase"/>.
+    /// Represents the MembershipContainerPage returned from the LineItemsController to the <see cref="MembershipControllerBase"/>.
     /// </summary>
     public class MembershipContainerPageResult : JsonResult
     {

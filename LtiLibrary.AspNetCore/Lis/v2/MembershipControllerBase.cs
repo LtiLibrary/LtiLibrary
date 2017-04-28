@@ -13,15 +13,15 @@ namespace LtiLibrary.AspNetCore.Lis.v2
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/mm/LISMembershipContainer/service.html
     /// </summary>
     [AddBodyHashHeader]
-    [Route("ims/memberships", Name = "MembershipsApi")]
+    [Route("ims/membership", Name = "MembershipApi")]
     [Consumes(LtiConstants.LisMembershipContainerMediaType)]
     [Produces(LtiConstants.LisMembershipContainerMediaType)]
-    public abstract class MembershipsControllerBase : Controller
+    public abstract class MembershipControllerBase : Controller
     {
         /// <summary>
         /// Initializes a new instance of the LineItemsControllerBase class.
         /// </summary>
-        protected MembershipsControllerBase()
+        protected MembershipControllerBase()
         {
             OnGetMemberships = dto => throw new NotImplementedException();
         }
@@ -35,15 +35,15 @@ namespace LtiLibrary.AspNetCore.Lis.v2
         /// Get a list of memberships.
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAsync(int? limit = null, string rlid = null, Role? role = null, int? p = null)
+        public async Task<IActionResult> GetAsync(int? limit = null, string rlid = null, Role? role = null, int? page = null)
         {
             try
             {
-                var membershipsDto = new GetMembershipsDto(limit, rlid, role, p);
+                var membershipsDto = new GetMembershipsDto(limit, rlid, role, page);
                 await OnGetMemberships(membershipsDto);
                 if (membershipsDto.StatusCode == StatusCodes.Status200OK)
                 {
-                    return new MembershipContainerPageResult(membershipsDto);
+                    return new MembershipContainerPageResult(membershipsDto.MembershipContainerPage);
                 }
                 return StatusCode(membershipsDto.StatusCode);
             }

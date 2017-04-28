@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Lis.v2;
+using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Lti1;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace LtiLibrary.AspNetCore.Tests.Lis.v2
 {
-    public class MembershipsController : MembershipsControllerBase
+    public class MembershipController : MembershipControllerBase
     {
-        public MembershipsController()
+        public MembershipController()
         {
             OnGetMemberships = async dto =>
             {
@@ -30,9 +32,9 @@ namespace LtiLibrary.AspNetCore.Tests.Lis.v2
 
                 dto.MembershipContainerPage = new MembershipContainerPage
                 {
-                    Id = new Uri("http://lms.example.com/sections/2923/memberships/?rlid=49566-rkk96"),
-                    NextPage = "http://lms.example.com/sections/2923/memberships/?rlid=49566-rkk96&p=2",
-                    Differences = "http://lms.example.com/sections/2923/memberships/?x=1422554502",
+                    Id = new Uri(Request.GetUri(), "/ims/membership/1422554502"),
+                    NextPage = dto.Page.HasValue ? null : new Uri(Request.GetUri(), "/ims/membership?page=2").AbsoluteUri,
+                    Differences = new Uri(Request.GetUri(), "/ims/membership?x=1422554502").AbsoluteUri,
                     MembershipContainer = new MembershipContainer
                     {
                         MembershipSubject = new Context

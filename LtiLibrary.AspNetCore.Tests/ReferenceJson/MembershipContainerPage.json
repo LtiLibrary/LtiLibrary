@@ -1,0 +1,45 @@
+﻿{
+  "@context": "http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer",
+  "@type": "Page",
+  "@id": "http://localhost/ims/membership/1422554502",
+  "nextPage": "http://localhost/ims/membership?page=2",
+  "differences": "http://localhost/ims/membership?x=1422554502",
+  "pageOf": {
+    "@type": "LISMembershipContainer",
+    "membershipSubject": {
+      "@type": "Context",
+      "contextId": "2923-abc",
+      "membership": [
+        {
+          "status": "Active",
+          "member": {
+            "@type": "LISPerson",
+            "sourcedId": "school.edu:user",
+            "userId": "0ae836b9-7fc9-4060-006f-27b2066ac545",
+            "email": "user@school.edu",
+            "familyName": "Public",
+            "name": "Jane Q. Public",
+            "image": "http://imsglobal.org/favicon.ico",
+            "givenName": "Jane"
+          },
+          "message": [
+            {
+              "message_type": "basic-lti-launch-request",
+              "lis_result_sourcedid": "83873872987329873264783687634",
+              "ext": {
+                "user_username": "jpublic"
+              },
+              "custom": {
+                "country": "Canada",
+                "user_mobile": "123-456-7890"
+              }
+            }
+          ],
+          "role": [
+            "Instructor"
+          ]
+        }
+      ]
+    }
+  }
+}

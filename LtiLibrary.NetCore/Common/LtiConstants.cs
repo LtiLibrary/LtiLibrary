@@ -422,6 +422,11 @@ namespace LtiLibrary.NetCore.Common
         public const string LisMembershipContainerType = "LISMembershipContainer";
 
         /// <summary>
+        /// LISPerson object type.
+        /// </summary>
+        public const string LisPersonType = "LISPerson";
+
+        /// <summary>
         /// LISResult object type.
         /// </summary>
         public const string LisResultType = "LISResult";
@@ -474,6 +479,11 @@ namespace LtiLibrary.NetCore.Common
         /// http://purl.imsglobal.org/ctx/lis/v2/LineItem context id.
         /// </summary>
         public static readonly Uri LineItemContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/LineItem");
+
+        /// <summary>
+        /// http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer context id.
+        /// </summary>
+        public static readonly Uri LisMembershipContainerContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer");
 
         /// <summary>
         /// http://purl.imsglobal.org/vocab/lis/v2/outcomes# context id.

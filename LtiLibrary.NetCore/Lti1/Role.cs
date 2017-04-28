@@ -1,10 +1,13 @@
 using LtiLibrary.NetCore.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Lti1
 {
     /// <summary>
     /// Represents IMS roles.
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum Role
     {
         /// <summary>

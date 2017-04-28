@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using Xunit;
 using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +14,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace LtiLibrary.AspNetCore.Tests.Lis.v2
 {
-    public class MembershipsControllerShould : IDisposable
+    public class MembershipControllerShould : IDisposable
     {
         private readonly TestServer _server;
         private readonly HttpClient _client;
@@ -20,7 +22,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lis.v2
         private const string Key = "12345";
         private const string Secret = "secret";
 
-        public MembershipsControllerShould()
+        public MembershipControllerShould()
         {
             _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             _client = _server.CreateClient();
@@ -31,12 +33,21 @@ namespace LtiLibrary.AspNetCore.Tests.Lis.v2
         }
 
         [Fact]
-        public async void ReturnMemberships()
+        public async void GetsMembership()
         {
-            var clientResponse = await MembershipClient.GetMembershipsAsync(_client, "/ims/memberships", Key, Secret);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK);
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret);
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             Assert.NotNull(clientResponse.Response);
-            Assert.NotNull(clientResponse.Response.MembershipContainer);
+            Assert.Equal(2, clientResponse.Response.Count());
+        }
+
+        [Fact]
+        public async void GetsMembershipPage()
+        {
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership", Key, Secret);
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            Assert.NotNull(clientResponse.Response);
+            JsonAssertions.AssertSameObjectJson(clientResponse.Response, "MembershipContainerPage");
         }
 
         public void Dispose()

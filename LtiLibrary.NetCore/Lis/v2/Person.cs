@@ -10,6 +10,14 @@ namespace LtiLibrary.NetCore.Lis.v2
     public class Person : JsonLdObject
     {
         /// <summary>
+        /// Initialize a new instance of the Person class.
+        /// </summary>
+        public Person()
+        {
+            Type = LtiConstants.LisPersonType;
+        }
+
+        /// <summary>
         /// The primary email address for the person.
         /// </summary>
         [JsonProperty("email")]

@@ -3,12 +3,12 @@ using LtiLibrary.NetCore.Lti1;
 
 namespace LtiLibrary.AspNetCore.Lis.v2
 {
-    public class GetMembershipsDto
+    public class GetMembershipDto
     {
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public GetMembershipsDto(int? limit, string rlid, Role? role, int? page)
+        public GetMembershipDto(int? limit, string rlid, Role? role, int? page)
         {
             Limit = limit;
             Rlid = rlid;

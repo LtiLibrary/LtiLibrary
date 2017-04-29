@@ -23,13 +23,13 @@ namespace LtiLibrary.AspNetCore.Lis.v2
         /// </summary>
         protected MembershipControllerBase()
         {
-            OnGetMemberships = dto => throw new NotImplementedException();
+            OnGetMembership = dto => throw new NotImplementedException();
         }
 
         /// <summary>
         /// Get a list of memberships.
         /// </summary>
-        public Func<GetMembershipsDto, Task> OnGetMemberships { get; set; }
+        public Func<GetMembershipDto, Task> OnGetMembership { get; set; }
 
         /// <summary>
         /// Get a list of memberships.
@@ -39,8 +39,8 @@ namespace LtiLibrary.AspNetCore.Lis.v2
         {
             try
             {
-                var membershipsDto = new GetMembershipsDto(limit, rlid, role, page);
-                await OnGetMemberships(membershipsDto);
+                var membershipsDto = new GetMembershipDto(limit, rlid, role, page);
+                await OnGetMembership(membershipsDto);
                 if (membershipsDto.StatusCode == StatusCodes.Status200OK)
                 {
                     return new MembershipContainerPageResult(membershipsDto.MembershipContainerPage);

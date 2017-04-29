@@ -1,5 +1,4 @@
-﻿using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti1;
+﻿using LtiLibrary.NetCore.Lti1;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

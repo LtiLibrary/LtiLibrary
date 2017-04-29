@@ -18,7 +18,7 @@ namespace LtiLibrary.NetCore.Lis.v2
     public static class MembershipClient
     {
         /// <summary>
-        /// Get the membership of a context. Calls GetMembershipPageAsync until NextPage is not specified.
+        /// Get the membership of a context. Calls GetMembershipPageAsync until there is no NextPage, and returns all the <see cref="Membership"/> records collected.
         /// </summary>
         /// <param name="client">The HTTP client to use for this request.</param>
         /// <param name="serviceUrl">The membership service URL. In LTI 1 the parameter will be in the launch as <code>custom_context_membership</code>.</param>
@@ -26,31 +26,55 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// <param name="consumerSecret">The OAuth Consumer Secret to use for signing the request.</param>
         /// <param name="rlid">The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.</param>
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
-        public static async Task<ClientResponse<IEnumerable<Membership>>> GetMembershipAsync(
+        public static async Task<ClientResponse<List<Membership>>> GetMembershipAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string rlid = null, Role? role = null)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
-            var page = await GetFilteredMembershipAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
-            var result = new ClientResponse<IEnumerable<Membership>>();
-            var members = new List<Membership>();
+            var pageResponse = await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
+            Uri pageId = null;
+            var result = new ClientResponse<List<Membership>>
+            {
+                Response = new List<Membership>()
+            };
             do
             {
 #if DEBUG
-                result.HttpRequest = page.HttpRequest;
-                result.HttpResponse = page.HttpResponse;
+                result.HttpRequest = pageResponse.HttpRequest;
+                result.HttpResponse = pageResponse.HttpResponse;
 #endif
-                result.StatusCode = page.StatusCode;
-                if (page.StatusCode != HttpStatusCode.OK)
+                result.StatusCode = pageResponse.StatusCode;
+                if (pageResponse.StatusCode != HttpStatusCode.OK)
                 {
                     return result;
                 }
-                members.AddRange(page.Response.MembershipContainer.MembershipSubject.Membership);
-                if (string.IsNullOrWhiteSpace(page.Response.NextPage)) break;
-                filteredServiceUrl = GetFilteredServiceUrl(page.Response.NextPage, null, rlid, role);
-                page = await GetFilteredMembershipAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
+                if (pageResponse.Response == null)
+                {
+                    return result;
+                }
+
+                // If the same page is comming back from the consumer, just
+                // return what we have.
+                if (pageId != null && pageId == pageResponse.Response.Id)
+                {
+                    return result;
+                }
+                pageId = pageResponse.Response.Id;
+                
+                // Add the memberships to the list (the collection cannot be null)
+                if (pageResponse.Response.MembershipContainer?.MembershipSubject?.Membership != null)
+                {
+                    result.Response.AddRange(pageResponse.Response.MembershipContainer.MembershipSubject.Membership);
+                }
+                
+                // Repeat until there is no NextPage
+                if (string.IsNullOrWhiteSpace(pageResponse.Response.NextPage)) break;
+
+                // Get the next page
+                filteredServiceUrl = GetFilteredServiceUrl(pageResponse.Response.NextPage, null, rlid, role);
+                pageResponse = await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
             } while (true);
-            result.Response = members;
+
             return result;
         }
 
@@ -69,11 +93,11 @@ namespace LtiLibrary.NetCore.Lis.v2
             int? limit = null, string rlid = null, Role? role = null)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
-            return await GetFilteredMembershipAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
+            return await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
                 LtiConstants.LisMembershipContainerMediaType);
         }
 
-        private static async Task<ClientResponse<MembershipContainerPage>> GetFilteredMembershipAsync(
+        private static async Task<ClientResponse<MembershipContainerPage>> GetFilteredMembershipPageAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string contentType)
         {

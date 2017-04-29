@@ -1,0 +1,62 @@
+﻿{
+  "Response":  [ 
+    {
+      "status": "Active",
+      "member": {
+        "@type": "LISPerson",
+        "sourcedId": "school.edu:user",
+        "userId": "0ae836b9-7fc9-4060-006f-27b2066ac545",
+        "email": "user@school.edu",
+        "familyName": "Public",
+        "name": "Jane Q. Public",
+        "image": "http://imsglobal.org/favicon.ico",
+        "givenName": "Jane"
+      },
+      "message": [
+        {
+          "message_type": "basic-lti-launch-request",
+          "lis_result_sourcedid": "83873872987329873264783687634",
+          "ext": {
+            "user_username": "jpublic"
+          },
+          "custom": {
+            "country": "Canada",
+            "user_mobile": "123-456-7890"
+          }
+        }
+      ],
+      "role": [
+        "Instructor"
+      ]
+    },
+    {
+      "status": "Active",
+      "member": {
+        "@type": "LISPerson",
+        "sourcedId": "school.edu:user",
+        "userId": "0ae836b9-7fc9-4060-006f-27b2066ac5452",
+        "email": "user@school.edu",
+        "familyName": "Public",
+        "name": "John Q. Public",
+        "image": "http://imsglobal.org/favicon.ico",
+        "givenName": "John"
+      },
+      "message": [
+        {
+          "message_type": "basic-lti-launch-request",
+          "lis_result_sourcedid": "838738729873298732647836876342",
+          "ext": {
+            "user_username": "jpublic2"
+          },
+          "custom": {
+            "country": "Canada",
+            "user_mobile": "123-456-7890"
+          }
+        }
+      ],
+      "role": [
+        "Learner"
+      ]
+    }
+  ]
+}

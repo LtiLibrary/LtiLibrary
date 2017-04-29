@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using Xunit;
 using LtiLibrary.NetCore.Lis.v2;
+using LtiLibrary.NetCore.Lti1;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -33,21 +31,29 @@ namespace LtiLibrary.AspNetCore.Tests.Lis.v2
         }
 
         [Fact]
-        public async void GetsMembership()
+        public async void GetAllMemberships_WhenGetMembershipAsyncIsCalled()
         {
             var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret);
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             Assert.NotNull(clientResponse.Response);
-            Assert.Equal(2, clientResponse.Response.Count());
+            JsonAssertions.AssertSameObjectJson(new {clientResponse.Response}, "Memberships");
         }
 
         [Fact]
-        public async void GetsMembershipPage()
+        public async void GetOneMembershipPage_WhenGetMembershipPageAsyncIsCalled()
         {
             var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership", Key, Secret);
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             Assert.NotNull(clientResponse.Response);
             JsonAssertions.AssertSameObjectJson(clientResponse.Response, "MembershipContainerPage");
+        }
+
+        [Fact]
+        public async void GetOneMembership_WhenRoleIsLearner()
+        {
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret, role: Role.Learner);
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            Assert.Equal(1, clientResponse.Response.Count);
         }
 
         public void Dispose()

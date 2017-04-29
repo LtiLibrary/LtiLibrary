@@ -1,5 +1,4 @@
-﻿using LtiLibrary.NetCore.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -7,10 +6,12 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
+using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Lti1;
 
-namespace LtiLibrary.NetCore.Lis.v2
+namespace LtiLibrary.NetCore.Membership
 {
     /// <summary>
     /// Helper class for Membership clients.
@@ -26,16 +27,16 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// <param name="consumerSecret">The OAuth Consumer Secret to use for signing the request.</param>
         /// <param name="rlid">The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.</param>
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
-        public static async Task<ClientResponse<List<Membership>>> GetMembershipAsync(
+        public static async Task<ClientResponse<List<Lis.v2.Membership>>> GetMembershipAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string rlid = null, Role? role = null)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
             var pageResponse = await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType);
             Uri pageId = null;
-            var result = new ClientResponse<List<Membership>>
+            var result = new ClientResponse<List<Lis.v2.Membership>>
             {
-                Response = new List<Membership>()
+                Response = new List<Lis.v2.Membership>()
             };
             do
             {

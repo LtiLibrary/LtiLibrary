@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
-using LtiLibrary.NetCore.OAuth;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;

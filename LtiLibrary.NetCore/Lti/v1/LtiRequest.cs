@@ -11,7 +11,7 @@ using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 using LtiLibrary.NetCore.Outcomes.v1;
 
-namespace LtiLibrary.NetCore.Lti1
+namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents an IMS LTI request.
@@ -66,7 +66,7 @@ namespace LtiLibrary.NetCore.Lti1
         /// Initialize an empty LtiRequest.
         /// </summary>
         /// <remarks>This is used when extracting an LtiRequest from an HttpRequest and for unit tests.</remarks>
-        public LtiRequest() : this(null) {}
+        public LtiRequest() : this((string) null) {}
 
         /// <summary>
         /// Initialize a new instanace of the LtiRequest class with the specified message type. This also sets up
@@ -2259,7 +2259,7 @@ namespace LtiLibrary.NetCore.Lti1
             }
 
             // Make sure the request contains all the required parameters
-            RequireAllOf(RequiredOauthParameters);
+            RequireAllOf(OAuthRequest.RequiredOauthParameters);
             switch (LtiMessageType)
             {
                 case LtiConstants.BasicLaunchLtiMessageType:

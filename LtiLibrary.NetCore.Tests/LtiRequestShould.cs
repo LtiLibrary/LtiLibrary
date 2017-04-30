@@ -4,7 +4,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.ContentItems;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 using Xunit;
 

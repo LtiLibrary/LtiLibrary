@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lis.v1;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;

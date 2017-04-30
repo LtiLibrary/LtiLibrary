@@ -1,4 +1,4 @@
-﻿using LtiLibrary.NetCore.Lti1;
+﻿using LtiLibrary.NetCore.Lti.v1;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.ContentItems

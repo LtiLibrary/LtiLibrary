@@ -2,7 +2,7 @@
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 
-namespace LtiLibrary.NetCore.Lti1
+namespace LtiLibrary.NetCore.Lti.v1
 {
     internal interface ILtiRequest : IOAuthRequest
     {

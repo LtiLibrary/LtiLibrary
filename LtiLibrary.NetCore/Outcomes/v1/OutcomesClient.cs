@@ -10,7 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lti.v1;
 
 namespace LtiLibrary.NetCore.Outcomes.v1
 {

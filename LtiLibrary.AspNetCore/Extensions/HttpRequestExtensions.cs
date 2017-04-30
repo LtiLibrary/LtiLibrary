@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Http;
 

@@ -10,7 +10,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lti.v1;
 
 namespace LtiLibrary.NetCore.Membership
 {

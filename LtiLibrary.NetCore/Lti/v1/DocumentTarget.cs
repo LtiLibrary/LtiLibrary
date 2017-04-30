@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Converters;
 
 // ReSharper disable InconsistentNaming
-namespace LtiLibrary.NetCore.Lti1
+namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents IMS DocumentTarget values.

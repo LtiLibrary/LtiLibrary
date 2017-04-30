@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
 using LtiLibrary.NetCore.Lis.v1;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Extensions

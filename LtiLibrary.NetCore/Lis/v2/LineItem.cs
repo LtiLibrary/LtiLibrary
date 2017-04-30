@@ -1,9 +1,8 @@
 ﻿using System;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lis.v2;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
     /// A line item is equivalent to a column in a gradebook; it is able to hold the results

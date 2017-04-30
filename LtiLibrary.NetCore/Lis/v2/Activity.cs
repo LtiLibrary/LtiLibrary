@@ -1,7 +1,7 @@
 ﻿using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
     /// A resource that a person may experience such as a video or an assessment.

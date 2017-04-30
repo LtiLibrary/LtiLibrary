@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Lis.v2;
-using LtiLibrary.NetCore.Outcomes.v2;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 

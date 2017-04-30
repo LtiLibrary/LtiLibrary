@@ -1,7 +1,7 @@
 ﻿using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
     /// An ResultContainer defines the endpoint to which clients POST new LisResult resources 

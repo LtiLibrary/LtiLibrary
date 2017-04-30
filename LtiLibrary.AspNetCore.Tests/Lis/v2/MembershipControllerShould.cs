@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Http;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using Xunit;
-using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Lti1;
 using LtiLibrary.NetCore.Membership;
 using Microsoft.AspNetCore.Hosting;

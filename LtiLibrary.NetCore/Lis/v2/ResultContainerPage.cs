@@ -1,19 +1,19 @@
 ﻿using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
-    /// Represents an IMS LineItemContainerPage object.
+    /// Represents an IMS ResultContainerPage object.
     /// </summary>
-    public class LineItemContainerPage : JsonLdObject
+    public class ResultContainerPage : JsonLdObject
     {
         /// <summary>
-        /// Initializes a new instance of the LineItemContainerPage class.
+        /// Initializes a new instance of the ResultContainerPage class.
         /// </summary>
-        public LineItemContainerPage()
+        public ResultContainerPage()
         {
-            Type = LtiConstants.PageType;
+            Type = LtiConstants.LisResultContainerType;
         }
 
         /// <summary>
@@ -23,9 +23,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         public string NextPage { get; set; }
 
         /// <summary>
-        /// The LineItems within this page.
+        /// The Results within this page.
         /// </summary>
         [JsonProperty("pageOf")]
-        public LineItemContainer LineItemContainer { get; set; }
+        public ResultContainer ResultContainer { get; set; }
     }
 }

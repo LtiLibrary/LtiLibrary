@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using LtiLibrary.NetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lis.v2;
 

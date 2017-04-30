@@ -1,5 +1,4 @@
 ﻿using LtiLibrary.NetCore.Lis.v2;
-using LtiLibrary.NetCore.Outcomes.v2;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Outcomes.v2;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

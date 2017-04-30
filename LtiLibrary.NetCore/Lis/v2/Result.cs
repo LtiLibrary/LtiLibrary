@@ -1,20 +1,20 @@
 ﻿using System;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lis.v2;
+using LtiLibrary.NetCore.Outcomes.v2;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
     /// Represents an IMS LisResult object.
     /// </summary>
-    public class LisResult : JsonLdObject
+    public class Result : JsonLdObject
     {
         /// <summary>
         /// Initializes a new instance of the LisResult class.
         /// </summary>
-        public LisResult()
+        public Result()
         {
             Type = LtiConstants.LisResultType;
         }

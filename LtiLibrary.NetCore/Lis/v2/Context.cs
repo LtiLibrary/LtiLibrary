@@ -40,7 +40,7 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// Zero or more LISResults that record results for some learning activity within this context.
         /// </summary>
         [JsonProperty("result")]
-        public ICollection<LisResult> Results { get; set; }
+        public ICollection<Result> Results { get; set; }
 
         /// <summary>
         /// Get or set the organization's assigned name.

@@ -1,4 +1,5 @@
 ﻿using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Lis.v2;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Outcomes.v2
@@ -9,9 +10,9 @@ namespace LtiLibrary.NetCore.Outcomes.v2
     public class ResultMembershipSubject : JsonLdObject
     {
         /// <summary>
-        /// Get or set the array of <see cref="LisResult"/>'s.
+        /// Get or set the array of <see cref="Result"/>'s.
         /// </summary>
         [JsonProperty("result")]
-        public LisResult[] Results { get; set; }
+        public Result[] Results { get; set; }
     }
 }

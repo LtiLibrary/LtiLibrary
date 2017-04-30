@@ -7,6 +7,7 @@ using LtiLibrary.NetCore.Extensions;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Lti1;
 
 namespace LtiLibrary.NetCore.Outcomes.v2
@@ -170,10 +171,10 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <returns>If successful, the LISResult specified in the REST endpoint.</returns>
-        public static async Task<ClientResponse<LisResult>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
+        public static async Task<ClientResponse<Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await GetOutcomeAsync<LisResult>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
         /// <summary>
@@ -203,8 +204,8 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="result">The LISResult to create within the server.</param>
         /// <returns>If successful, the LISResult with @id filled in.</returns>
-        public static async Task<ClientResponse<LisResult>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, LisResult result)
+        public static async Task<ClientResponse<Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
+            string consumerSecret, Result result)
         {
             return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
         }
@@ -218,7 +219,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="result">The LISResult to be updated within the server.</param>
         /// <returns>No content is returned.</returns>
-        public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, LisResult result)
+        public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, Result result)
         {
             return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
         }

@@ -55,7 +55,7 @@ namespace LtiLibrary.NetCore.Outcomes.v2
         /// application/vnd.ims.lis.v2.lineitemresults+json.
         /// </remarks>
         [JsonProperty("result")]
-        public LisResult[] Result { get; set; }
+        public Result[] Result { get; set; }
 
         /// <summary>
         /// Optional URI for the container holding the Results for this LineItem. 

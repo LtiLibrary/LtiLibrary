@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using LtiLibrary.NetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Lis.v2;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
 {
@@ -131,7 +132,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Create a new LisResult instance.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> PostAsync(string contextId, string lineItemId, [ModelBinder(BinderType = typeof(LisResultModelBinder))] LisResult result)
+        public async Task<IActionResult> PostAsync(string contextId, string lineItemId, [ModelBinder(BinderType = typeof(LisResultModelBinder))] Result result)
         {
             try
             {
@@ -158,7 +159,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Update a particular LisResult instance.
         /// </summary>
         [HttpPut]
-        public async Task<IActionResult> PutAsync(string contextId, string lineItemId, string id, [ModelBinder(BinderType = typeof(LisResultModelBinder))] LisResult result)
+        public async Task<IActionResult> PutAsync(string contextId, string lineItemId, string id, [ModelBinder(BinderType = typeof(LisResultModelBinder))] Result result)
         {
             try
             {

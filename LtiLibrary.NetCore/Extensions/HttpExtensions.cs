@@ -1,19 +1,21 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Enumerable = System.Linq.Enumerable;
 
 namespace LtiLibrary.NetCore.Extensions
 {
 #if DEBUG
+
     internal static class HttpExtensions
     {
         /// <summary>
         /// Create a string representation of the request similar to Fiddler's.
         /// </summary>
         /// <remarks>Created for learning and debugging LTI.</remarks>
-        public static async Task<string> ToFormattedRequestStringAsync(this HttpRequestMessage message, HttpContent content = null)
+        public static async Task<string> ToFormattedRequestStringAsync(this HttpRequestMessage message,
+            HttpContent content = null)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1} HTTP/{2}\n", message.Method, message.RequestUri, message.Version);
@@ -36,7 +38,8 @@ namespace LtiLibrary.NetCore.Extensions
         public static async Task<string> ToFormattedResponseStringAsync(this HttpResponseMessage response)
         {
             var sb = new StringBuilder();
-            sb.AppendFormat("HTTP/{0} {1} {2}\n", response.Version, Convert.ToInt32(response.StatusCode), response.StatusCode);
+            sb.AppendFormat("HTTP/{0} {1} {2}\n", response.Version, Convert.ToInt32(response.StatusCode),
+                response.StatusCode);
             foreach (var header in response.Headers)
             {
                 sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
@@ -49,5 +52,6 @@ namespace LtiLibrary.NetCore.Extensions
             return sb.ToString();
         }
     }
+
 #endif
 }

@@ -108,7 +108,7 @@ namespace LtiLibrary.NetCore.Extensions
             // https://tools.ietf.org/html/rfc5849#section-3.4.1.3.1
             // Exclude the OAuth signature or realm in the signature base string
             var list = new List<KeyValuePair<string, string>>();
-            var excludedNames = new List<string> { OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter };
+            var excludedNames = new List<string> {OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter};
             foreach (var key in collection.AllKeys)
             {
                 if (excludedNames.Contains(key)) continue;

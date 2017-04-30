@@ -9,6 +9,11 @@ namespace LtiLibrary.NetCore.Extensions
     public static class StringExtensions
     {
         /// <summary>
+        /// The set of characters that are unreserved in RFC 2396 but are NOT unreserved in RFC 3986.
+        /// </summary>
+        private static readonly string[] UriRfc3986CharsToEscape = {"!", "*", "'", "(", ")"};
+
+        /// <summary>
         /// Returns an encoded version of the string per RFC 3986.
         /// </summary>
         /// <param name="value"></param>
@@ -19,11 +24,6 @@ namespace LtiLibrary.NetCore.Extensions
             // http://stackoverflow.com/questions/846487/how-to-get-uri-escapedatastring-to-comply-with-rfc-3986
             return EscapeUriDataStringRfc3986(value);
         }
-
-        /// <summary>
-        /// The set of characters that are unreserved in RFC 2396 but are NOT unreserved in RFC 3986.
-        /// </summary>
-        private static readonly string[] UriRfc3986CharsToEscape = { "!", "*", "'", "(", ")" };
 
         /// <summary>
         /// Escapes a string according to the URI data string rules given in RFC 3986.

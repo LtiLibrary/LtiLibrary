@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using LtiLibrary.NetCore.Common;
-using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
+using LtiLibrary.NetCore.Common;
+using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Extensions
 {

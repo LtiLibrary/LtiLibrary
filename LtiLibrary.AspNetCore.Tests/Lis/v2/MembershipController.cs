@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Lis.v2;
+using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
-using LtiLibrary.NetCore.Lti1;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Tests.Lis.v2

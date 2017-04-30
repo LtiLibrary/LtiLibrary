@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lis.v1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

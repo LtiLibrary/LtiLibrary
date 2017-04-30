@@ -2,7 +2,7 @@ using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace LtiLibrary.NetCore.Lti1
+namespace LtiLibrary.NetCore.Lis.v1
 {
     /// <summary>
     /// Represents IMS roles.

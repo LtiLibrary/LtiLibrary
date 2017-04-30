@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using LtiLibrary.NetCore.Lti1;
 using System.Linq;
+using LtiLibrary.NetCore.Lis.v1;
 
 namespace LtiLibrary.NetCore.Common
 {

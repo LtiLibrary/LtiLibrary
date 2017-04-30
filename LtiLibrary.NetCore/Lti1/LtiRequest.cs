@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.ContentItems;
+using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 using LtiLibrary.NetCore.Outcomes.v1;
 
@@ -202,14 +203,14 @@ namespace LtiLibrary.NetCore.Lti1
         /// </para>
         /// </summary>
         [DataMember(Name = LtiConstants.ContextTypeParameter)]
-        public LisContextType? ContextType
+        public ContextType? ContextType
         {
             get
             {
-                LisContextType contextType;
+                ContextType contextType;
                 return Enum.TryParse(Parameters[LtiConstants.ContextTypeParameter], out contextType)
                    ? contextType
-                   : default(LisContextType?);
+                   : default(ContextType?);
             }
             set
             {

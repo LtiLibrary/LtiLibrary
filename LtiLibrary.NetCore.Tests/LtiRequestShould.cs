@@ -3,6 +3,7 @@ using System.Net.Http;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.ContentItems;
 using LtiLibrary.NetCore.Extensions;
+using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lti1;
 using LtiLibrary.NetCore.OAuth;
 using Xunit;
@@ -203,7 +204,7 @@ namespace LtiLibrary.NetCore.Tests
                 ConsumerKey = "12345",
                 ContextId = "1219",
                 ContextTitle = "docker",
-                ContextType = LisContextType.CourseTemplate,
+                ContextType = ContextType.CourseTemplate,
                 HttpMethod = HttpMethod.Post.Method,
                 LaunchPresentationLocale = "en-US",
                 LisPersonNameFamily = "Miller",

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
+using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lti1;
 using LtiLibrary.NetCore.OAuth;
 
@@ -67,12 +68,12 @@ namespace LtiLibrary.NetCore.Extensions
         }
 
         /// <summary>
-        /// Add a <see cref="LisContextType"/> value if it is not null.
+        /// Add a <see cref="ContextType"/> value if it is not null.
         /// </summary>
         /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
         /// <param name="name">The key of the entry to add.</param>
-        /// <param name="value">The nullable <see cref="LisContextType"/> value to add.</param>
-        public static void AddParameter(this NameValueCollection parameters, string name, LisContextType? value)
+        /// <param name="value">The nullable <see cref="ContextType"/> value to add.</param>
+        public static void AddParameter(this NameValueCollection parameters, string name, ContextType? value)
         {
             if (value.HasValue)
             {

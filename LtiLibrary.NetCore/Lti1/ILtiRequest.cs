@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Lti1
@@ -8,7 +9,7 @@ namespace LtiLibrary.NetCore.Lti1
         string ContextId { get; set; }
         string ContextLabel { get; set; }
         string ContextTitle { get; set; }
-        LisContextType? ContextType { get; set; }
+        ContextType? ContextType { get; set; }
         string LaunchPresentationCssUrl { get; set; }
         DocumentTarget? LaunchPresentationDocumentTarget { get; set; }
         int? LaunchPresentationHeight { get; set; }

@@ -1,7 +1,7 @@
 ﻿using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
 
-namespace LtiLibrary.AspNetCore.Lis.v2
+namespace LtiLibrary.AspNetCore.Membership
 {
     public class GetMembershipDto
     {

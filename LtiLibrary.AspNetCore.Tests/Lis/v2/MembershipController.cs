@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Extensions;
-using LtiLibrary.AspNetCore.Lis.v2;
+using LtiLibrary.AspNetCore.Membership;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
@@ -55,7 +55,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lis.v2
                         ContextId = "2923-abc",
                         Membership = new[]
                         {
-                            new Membership
+                            new NetCore.Lis.v2.Membership
                             {
                                 Member = new Person
                                 {
@@ -107,7 +107,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lis.v2
                         ContextId = "2923-abc",
                         Membership = new[]
                         {
-                            new Membership
+                            new NetCore.Lis.v2.Membership
                             {
                                 Member = new Person
                                 {

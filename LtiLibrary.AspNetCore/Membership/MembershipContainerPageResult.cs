@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LtiLibrary.AspNetCore.Lis.v2
+namespace LtiLibrary.AspNetCore.Membership
 {
     /// <summary>
     /// Represents the MembershipContainerPage returned from the LineItemsController to the <see cref="MembershipControllerBase"/>.

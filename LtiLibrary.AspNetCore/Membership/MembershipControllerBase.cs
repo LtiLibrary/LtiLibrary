@@ -6,7 +6,7 @@ using LtiLibrary.NetCore.Lis.v1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LtiLibrary.AspNetCore.Lis.v2
+namespace LtiLibrary.AspNetCore.Membership
 {
     /// <summary>
     /// A <see cref="Controller" /> that implements a REST API for reading LISMembershipContainer resources

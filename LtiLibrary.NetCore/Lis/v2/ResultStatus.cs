@@ -1,10 +1,13 @@
 ﻿using LtiLibrary.NetCore.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
     /// ResultStatus instances are enumerable, and they must be referenced by a simple name.
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ResultStatus
     {
         /// <summary>

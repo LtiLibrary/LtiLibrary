@@ -1,10 +1,13 @@
 using LtiLibrary.NetCore.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Lis.v1
 {
     /// <summary>
     /// Represents IMS LisContextTypes.
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ContextType
     {
         /// <summary>

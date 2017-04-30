@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Outcomes.v2;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;

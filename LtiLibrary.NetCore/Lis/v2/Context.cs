@@ -1,4 +1,6 @@
-﻿using LtiLibrary.NetCore.Common;
+﻿using System.Collections.Generic;
+using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Outcomes.v2;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Lis.v2
@@ -23,10 +25,22 @@ namespace LtiLibrary.NetCore.Lis.v2
         public string ContextId { get; set; }
 
         /// <summary>
+        /// Zero or more LineItems that record results for some learning activity within this context.
+        /// </summary>
+        [JsonProperty("lineItem")]
+        public ICollection<LineItem> LineItems { get; set; }
+
+        /// <summary>
         /// Get or set the array of membership entities that records the role of some Agent within this Organization.
         /// </summary>
         [JsonProperty("membership")]
-        public Membership[] Membership { get; set; }
+        public ICollection<Membership> Membership { get; set; }
+
+        /// <summary>
+        /// Zero or more LISResults that record results for some learning activity within this context.
+        /// </summary>
+        [JsonProperty("result")]
+        public ICollection<LisResult> Results { get; set; }
 
         /// <summary>
         /// Get or set the organization's assigned name.

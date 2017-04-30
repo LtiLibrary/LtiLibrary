@@ -1,5 +1,6 @@
 ﻿using System;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Lis.v2;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Outcomes.v2

@@ -12,7 +12,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
     public class OutcomesController : OutcomesControllerBase
     {
         // Simple "database" of scores for demonstration purposes
-        private static LisResult _lisResult;
+        private static Result _result;
 
         public OutcomesController()
         {
@@ -31,7 +31,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
                     return;
                 }
 
-                _lisResult = null;
+                _result = null;
             };
 
             OnReadResult = async dto =>
@@ -49,7 +49,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
                     return;
                 }
 
-                dto.LisResult = _lisResult;
+                dto.Result = _result;
             };
 
             OnReplaceResult = async dto =>
@@ -67,14 +67,14 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
                     return;
                 }
 
-                if (_lisResult == null)
+                if (_result == null)
                 {
-                    _lisResult = new LisResult();
+                    _result = new Result();
                 }
-                if (_lisResult != null)
+                if (_result != null)
                 {
-                    _lisResult.Score = dto.LisResult.Score;
-                    _lisResult.SourcedId = dto.LisResult.SourcedId;
+                    _result.Score = dto.Result.Score;
+                    _result.SourcedId = dto.Result.SourcedId;
                 }
             };
         }

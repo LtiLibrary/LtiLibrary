@@ -11,16 +11,16 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public ReplaceResultDto(LisResult result)
+        public ReplaceResultDto(Result result)
         {
-            LisResult = result;
+            Result = result;
             StatusCode = StatusCodes.Status200OK;
         }
 
         /// <summary>
-        /// The <see cref="LisResult"/>.
+        /// The <see cref="Result"/>.
         /// </summary>
-        public LisResult LisResult { get; set; }
+        public Result Result { get; set; }
 
         /// <summary>
         /// The HTTP StatusCode representing the result of the action (OK, NotFound, Unauthorized)

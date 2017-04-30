@@ -129,7 +129,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to read.</param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse<LisResult>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<ClientResponse<Result>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                     sourcedGUID = new SourcedGUIDType { sourcedId = lisResultSourcedId }
                 };
 
-                var outcomeResponse = new ClientResponse<LisResult>();
+                var outcomeResponse = new ClientResponse<Result>();
                 try
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
@@ -176,13 +176,13 @@ namespace LtiLibrary.NetCore.Outcomes.v1
                                 var imsxResponseBody = (readResultResponse)imsxResponseEnvelope.imsx_POXBody.Item;
                                 if (imsxResponseBody?.result == null)
                                 {
-                                    outcomeResponse.Response = new LisResult { Score = null };
+                                    outcomeResponse.Response = new Result { Score = null };
                                 }
                                 else
                                 {
                                     outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, out double result) 
-                                        ? new LisResult { Score = result, SourcedId = lisResultSourcedId } 
-                                        : new LisResult { Score = null, SourcedId = lisResultSourcedId };
+                                        ? new Result { Score = result, SourcedId = lisResultSourcedId } 
+                                        : new Result { Score = null, SourcedId = lisResultSourcedId };
                                 }
                             }
                             else
@@ -210,7 +210,7 @@ namespace LtiLibrary.NetCore.Outcomes.v1
             }
             catch (Exception ex)
             {
-                return new ClientResponse<LisResult>
+                return new ClientResponse<Result>
                 {
                     Exception = ex,
                     StatusCode = HttpStatusCode.InternalServerError

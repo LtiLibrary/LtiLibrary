@@ -18,7 +18,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         }
 
         /// <summary>
-        /// The LineItemId for this <see cref="LisResult"/>.
+        /// The LineItemId for this <see cref="Result"/>.
         /// </summary>
         public string LisResultSourcedId { get; set; }
 

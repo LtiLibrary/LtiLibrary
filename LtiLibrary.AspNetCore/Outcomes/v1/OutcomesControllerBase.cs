@@ -112,9 +112,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         /// <param name="resultRecord">The ResultRecordType which 
         /// specifies the assignment and score.</param>
         /// <returns>The corresponding Result</returns>
-        private static LisResult GetResult(ResultRecordType resultRecord)
+        private static Result GetResult(ResultRecordType resultRecord)
         {
-            var result = new LisResult { SourcedId = resultRecord.sourcedGUID.sourcedId };
+            var result = new Result { SourcedId = resultRecord.sourcedGUID.sourcedId };
             if (resultRecord.result != null)
             {
                 // The LTI 1.1 specification states in 6.1.1. that the score in replaceResult should
@@ -172,15 +172,15 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
 
                 if (dto.StatusCode == StatusCodes.Status200OK)
                 {
-                    if (dto.LisResult != null)
+                    if (dto.Result != null)
                     {
-                        if (dto.LisResult.Score.HasValue)
+                        if (dto.Result.Score.HasValue)
                         {
                             // The score exists
                             readResponse.result = new ResultType { resultScore = new TextType() };
                             var cultureInfo = new CultureInfo("en");
                             readResponse.result.resultScore.language = cultureInfo.Name;
-                            readResponse.result.resultScore.textString = dto.LisResult.Score.Value.ToString(cultureInfo);
+                            readResponse.result.resultScore.textString = dto.Result.Score.Value.ToString(cultureInfo);
                             return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
                                 $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
                         }

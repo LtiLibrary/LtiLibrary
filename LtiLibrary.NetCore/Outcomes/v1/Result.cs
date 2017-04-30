@@ -1,9 +1,9 @@
 ﻿namespace LtiLibrary.NetCore.Outcomes.v1
 {
     /// <summary>
-    /// Represents an IMS LisResult.
+    /// Represents an Outcomes 1.0 result.
     /// </summary>
-    public class LisResult
+    public class Result
     {
         /// <summary>
         /// Get or set the score for this result. Can be null.

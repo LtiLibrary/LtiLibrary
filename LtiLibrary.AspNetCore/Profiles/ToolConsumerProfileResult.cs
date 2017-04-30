@@ -1,5 +1,5 @@
 ﻿using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Profiles;
+using LtiLibrary.NetCore.Lti.v2;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LtiLibrary.AspNetCore.Profiles

@@ -3,7 +3,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti2;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Profiles
+namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// The ToolConsumerProfile advertises the Tool Consumer's capabilities and services offered.

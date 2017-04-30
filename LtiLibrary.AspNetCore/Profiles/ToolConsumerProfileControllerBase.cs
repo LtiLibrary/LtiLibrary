@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Lti.v2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +29,7 @@ namespace LtiLibrary.AspNetCore.Profiles
         public Func<GetToolConsumerProfileDto, Task> OnGetToolConsumerProfile { get; set; }
 
         /// <summary>
-        /// Get the <see cref="NetCore.Profiles.ToolConsumerProfile"/>
+        /// Get the <see cref="ToolConsumerProfile"/>
         /// </summary>
         /// <param name="lti_version">The LTI version of the tool provider making the request. Defaults to "LTI-1p0".</param>
         [HttpGet]

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
+using LtiLibrary.NetCore.Lti.v2;
 using LtiLibrary.NetCore.Profiles;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;

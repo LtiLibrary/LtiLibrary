@@ -1,4 +1,4 @@
-﻿using LtiLibrary.NetCore.Profiles;
+﻿using LtiLibrary.NetCore.Lti.v2;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Profiles

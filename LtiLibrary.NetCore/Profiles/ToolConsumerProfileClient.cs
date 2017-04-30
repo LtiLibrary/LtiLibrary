@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
+using LtiLibrary.NetCore.Lti.v2;
 
 namespace LtiLibrary.NetCore.Profiles
 {

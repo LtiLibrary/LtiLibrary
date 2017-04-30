@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2; Outcomes 1.0; Outcomes 2.0 (Draft); and Content-Item Message 1.0.</Description>
+    <Description>.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2, Outcomes 1.0, Outcomes 2.0 (Draft), Content-Item Message 1.0, and Membership 1.0.</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.NetCore</AssemblyTitle>
-    <Version>2.0.3</Version>
+    <Version>2.1.0</Version>
     <Authors>andyfmiller.com</Authors>
     <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
     <AssemblyName>LtiLibrary.NetCore</AssemblyName>
@@ -12,6 +12,9 @@
     <PackageTags>IMS;LTI;.NET Core</PackageTags>
     <PackageReleaseNotes>
       <![CDATA[
+2.1.0
+- Added support for Membership Service 1.0
+- Significant code cleanup (many namespace changes relative to 2.0.3, but no breaking functionality changes)
 2.0.3
 - Removed beta suffix.
 - Moved OAuthUtility methods to OAuthRequest and removed OAuthUtility.

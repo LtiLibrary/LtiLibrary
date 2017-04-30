@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using LtiLibrary.NetCore.Lti1;
 using System.Linq;
+using LtiLibrary.NetCore.Lis.v1;
 
 namespace LtiLibrary.NetCore.Common
 {
@@ -340,17 +340,22 @@ namespace LtiLibrary.NetCore.Common
         /// <summary>
         /// application/vnd.ims.lis.v2.lineitemcontainer+json media type.
         /// </summary>
-        public const string LineItemContainerMediaType = "application/vnd.ims.lis.v2.lineitemcontainer+json";
+        public const string LisLineItemContainerMediaType = "application/vnd.ims.lis.v2.lineitemcontainer+json";
 
         /// <summary>
         /// application/vnd.ims.lis.v2.lineitem+json media type.
         /// </summary>
-        public const string LineItemMediaType = "application/vnd.ims.lis.v2.lineitem+json";
+        public const string LisLineItemMediaType = "application/vnd.ims.lis.v2.lineitem+json";
 
         /// <summary>
         /// application/vnd.ims.lis.v2.lineitemresults+json media type.
         /// </summary>
-        public const string LineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";
+        public const string LisLineItemResultsMediaType = "application/vnd.ims.lis.v2.lineitemresults+json";
+
+        /// <summary>
+        /// https://www.imsglobal.org/lti/model/mediatype/application/vnd/ims/lis/v2/membershipcontainer%2Bjson/index.html
+        /// </summary>
+        public const string LisMembershipContainerMediaType = "application/vnd.ims.lis.v2.membershipcontainer+json";
 
         /// <summary>
         /// application/vnd.ims.lis.v2.resultcontainer+json media type.
@@ -365,17 +370,17 @@ namespace LtiLibrary.NetCore.Common
         /// <summary>
         /// application/vnd.ims.lti.v1.ltilink media type.
         /// </summary>
-        public const string LtiLinkMediaType = "application/vnd.ims.lti.v1.ltilink";
+        public const string LtiLtiLinkMediaType = "application/vnd.ims.lti.v1.ltilink";
 
         /// <summary>
         /// application/vnd.ims.lti.v1.outcome+xml media type.
         /// </summary>
-        public const string OutcomeMediaType = "application/vnd.ims.lti.v1.outcome+xml";
+        public const string LtiOutcomeMediaType = "application/vnd.ims.lti.v1.outcome+xml";
 
         /// <summary>
         /// application/vnd.ims.lti.v2.toolconsumerprofile+json media type.
         /// </summary>
-        public const string ToolConsumerProfileMediaType = "application/vnd.ims.lti.v2.toolconsumerprofile+json";
+        public const string LtiToolConsumerProfileMediaType = "application/vnd.ims.lti.v2.toolconsumerprofile+json";
 
         #endregion
 
@@ -402,11 +407,6 @@ namespace LtiLibrary.NetCore.Common
         public const string FileItemType = "FileItem";
 
         /// <summary>
-        /// Page object type.
-        /// </summary>
-        public const string LineItemContainerPageType = "Page";
-
-        /// <summary>
         /// LineItemContainer object type.
         /// </summary>
         public const string LineItemContainerType = "LineItemContainer";
@@ -415,6 +415,16 @@ namespace LtiLibrary.NetCore.Common
         /// LineItem object type.
         /// </summary>
         public const string LineItemType = "LineItem";
+
+        /// <summary>
+        /// LISMembershipContainer object type.
+        /// </summary>
+        public const string LisMembershipContainerType = "LISMembershipContainer";
+
+        /// <summary>
+        /// LISPerson object type.
+        /// </summary>
+        public const string LisPersonType = "LISPerson";
 
         /// <summary>
         /// LISResult object type.
@@ -435,6 +445,11 @@ namespace LtiLibrary.NetCore.Common
         /// NumericLimits object type.
         /// </summary>
         public const string NumericLimitsType = "NumericLimits";
+
+        /// <summary>
+        /// Page object type.
+        /// </summary>
+        public const string PageType = "Page";
 
         /// <summary>
         /// RestService object type.
@@ -464,6 +479,11 @@ namespace LtiLibrary.NetCore.Common
         /// http://purl.imsglobal.org/ctx/lis/v2/LineItem context id.
         /// </summary>
         public static readonly Uri LineItemContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/LineItem");
+
+        /// <summary>
+        /// http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer context id.
+        /// </summary>
+        public static readonly Uri LisMembershipContainerContextId = new Uri("http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer");
 
         /// <summary>
         /// http://purl.imsglobal.org/vocab/lis/v2/outcomes# context id.

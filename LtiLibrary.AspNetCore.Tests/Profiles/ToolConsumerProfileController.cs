@@ -2,8 +2,7 @@
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Profiles;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti2;
-using LtiLibrary.NetCore.Profiles;
+using LtiLibrary.NetCore.Lti.v2;
 using NodaTime;
 
 namespace LtiLibrary.AspNetCore.Tests.Profiles

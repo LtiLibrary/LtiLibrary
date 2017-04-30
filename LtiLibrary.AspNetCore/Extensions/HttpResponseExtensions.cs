@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
-using LtiLibrary.NetCore.Lti1;
 
 namespace LtiLibrary.AspNetCore.Extensions
 {

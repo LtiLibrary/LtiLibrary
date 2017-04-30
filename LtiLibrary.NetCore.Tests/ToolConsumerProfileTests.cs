@@ -1,8 +1,7 @@
 ﻿using System;
 using LtiLibrary.NetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti2;
-using LtiLibrary.NetCore.Profiles;
+using LtiLibrary.NetCore.Lti.v2;
 using NodaTime;
 using Xunit;
 

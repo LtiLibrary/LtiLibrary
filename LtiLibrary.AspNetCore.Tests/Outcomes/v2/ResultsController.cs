@@ -2,7 +2,7 @@
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Outcomes.v2;
+using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
@@ -67,7 +67,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                 }
                 else if (OutcomesDataFixture.Result == null || !OutcomesDataFixture.Result.Id.Equals(resultUri))
                 {
-                    dto.Result = new LisResult
+                    dto.Result = new Result
                     {
                         ExternalContextId = LtiConstants.ResultContextId,
                         Id = resultUri,
@@ -113,7 +113,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
                         {
                             MembershipSubject = new ResultMembershipSubject
                             {
-                                Results = OutcomesDataFixture.Result == null ? new LisResult[] { } : new[] { OutcomesDataFixture.Result }
+                                Results = OutcomesDataFixture.Result == null ? new Result[] { } : new[] { OutcomesDataFixture.Result }
                             }
                         }
                     };

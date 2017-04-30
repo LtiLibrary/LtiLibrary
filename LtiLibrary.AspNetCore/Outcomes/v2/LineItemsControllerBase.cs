@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Outcomes.v2;
+using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +16,8 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// </summary>
     [AddBodyHashHeader]
     [Route("ims/courses/{contextId}/lineitems/{id?}", Name = "LineItemsApi")]
-    [Consumes(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]
-    [Produces(LtiConstants.LineItemMediaType, LtiConstants.LineItemResultsMediaType, LtiConstants.LineItemContainerMediaType)]
+    [Consumes(LtiConstants.LisLineItemMediaType, LtiConstants.LisLineItemResultsMediaType, LtiConstants.LisLineItemContainerMediaType)]
+    [Produces(LtiConstants.LisLineItemMediaType, LtiConstants.LisLineItemResultsMediaType, LtiConstants.LisLineItemContainerMediaType)]
     public abstract class LineItemsControllerBase : Controller
     {
         /// <summary>
@@ -74,7 +74,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                 var dto = new DeleteLineItemDto(contextId, id);
 
                 await OnDeleteLineItem(dto);
-                
+
                 return StatusCode(dto.StatusCode);
             }
             catch (Exception ex)
@@ -122,11 +122,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 var lineItemDto = new GetLineItemDto(contextId, id);
                 var mediaType =
-                    Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
-                        ? LtiConstants.LineItemResultsMediaType
-                        : LtiConstants.LineItemMediaType;
+                    Request.Headers["Accept"].Contains(LtiConstants.LisLineItemResultsMediaType)
+                        ? LtiConstants.LisLineItemResultsMediaType
+                        : LtiConstants.LisLineItemMediaType;
 
-                if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
+                if (mediaType.Equals(LtiConstants.LisLineItemResultsMediaType))
                 {
                     await OnGetLineItemWithResults(lineItemDto);
                 }
@@ -137,7 +137,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 if (lineItemDto.StatusCode == StatusCodes.Status200OK)
                 {
-                    if (mediaType == LtiConstants.LineItemResultsMediaType)
+                    if (mediaType == LtiConstants.LisLineItemResultsMediaType)
                     {
                         return new LineItemResultsResult(lineItemDto.LineItem);
                     }
@@ -187,11 +187,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                 var dto = new PutLineItemDto(lineItem);
 
                 var mediaType =
-                    Request.Headers["Accept"].Contains(LtiConstants.LineItemResultsMediaType)
-                        ? LtiConstants.LineItemResultsMediaType
-                        : LtiConstants.LineItemMediaType;
+                    Request.Headers["Accept"].Contains(LtiConstants.LisLineItemResultsMediaType)
+                        ? LtiConstants.LisLineItemResultsMediaType
+                        : LtiConstants.LisLineItemMediaType;
 
-                if (mediaType.Equals(LtiConstants.LineItemResultsMediaType))
+                if (mediaType.Equals(LtiConstants.LisLineItemResultsMediaType))
                 {
                     await OnPutLineItemWithResults(dto);
                 }
@@ -209,4 +209,3 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         }
     }
 }
-

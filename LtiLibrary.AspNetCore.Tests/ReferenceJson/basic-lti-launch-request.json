@@ -8,7 +8,7 @@
   "resource_link_id": "launch",
   "context_id": "course-1",
   "context_title": "Course 1",
-  "context_type": 1,
+  "context_type": "CourseSection",
   "launch_presentation_locale": "en-US",
   "lis_person_contact_email_primary": "jdoe@andyfmiller.com",
   "lis_person_name_family": "Doe",

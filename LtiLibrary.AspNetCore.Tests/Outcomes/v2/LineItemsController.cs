@@ -2,7 +2,7 @@
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v2;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Outcomes.v2;
+using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
@@ -87,7 +87,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
                 if (dto.LineItem != null && OutcomesDataFixture.Result != null)
                 {
-                    dto.LineItem.Result = OutcomesDataFixture.Result == null ? new LisResult[] { } : new[] { OutcomesDataFixture.Result };
+                    dto.LineItem.Result = OutcomesDataFixture.Result == null ? new Result[] { } : new[] { OutcomesDataFixture.Result };
                 }
             };
 

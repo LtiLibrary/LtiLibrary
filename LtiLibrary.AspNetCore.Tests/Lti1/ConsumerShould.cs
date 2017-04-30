@@ -7,7 +7,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lis.v1;
+using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -134,7 +135,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
             // Context
             ltiRequest.ContextId = "course-1";
             ltiRequest.ContextTitle = "Course 1";
-            ltiRequest.ContextType = LisContextType.CourseSection;
+            ltiRequest.ContextType = ContextType.CourseSection;
 
             // Instance
             ltiRequest.ToolConsumerInstanceGuid = "LtiLibrary.AspNetCore.Tests";

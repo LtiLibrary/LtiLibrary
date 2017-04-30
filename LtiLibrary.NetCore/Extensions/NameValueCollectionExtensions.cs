@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Text;
-using LtiLibrary.NetCore.Lti1;
+using LtiLibrary.NetCore.Lis.v1;
+using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Extensions
@@ -67,12 +68,12 @@ namespace LtiLibrary.NetCore.Extensions
         }
 
         /// <summary>
-        /// Add a <see cref="LisContextType"/> value if it is not null.
+        /// Add a <see cref="ContextType"/> value if it is not null.
         /// </summary>
         /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
         /// <param name="name">The key of the entry to add.</param>
-        /// <param name="value">The nullable <see cref="LisContextType"/> value to add.</param>
-        public static void AddParameter(this NameValueCollection parameters, string name, LisContextType? value)
+        /// <param name="value">The nullable <see cref="ContextType"/> value to add.</param>
+        public static void AddParameter(this NameValueCollection parameters, string name, ContextType? value)
         {
             if (value.HasValue)
             {
@@ -107,7 +108,7 @@ namespace LtiLibrary.NetCore.Extensions
             // https://tools.ietf.org/html/rfc5849#section-3.4.1.3.1
             // Exclude the OAuth signature or realm in the signature base string
             var list = new List<KeyValuePair<string, string>>();
-            var excludedNames = new List<string> { OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter };
+            var excludedNames = new List<string> {OAuthConstants.SignatureParameter, OAuthConstants.RealmParameter};
             foreach (var key in collection.AllKeys)
             {
                 if (excludedNames.Contains(key)) continue;

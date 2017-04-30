@@ -10,7 +10,7 @@ namespace LtiLibrary.AspNetCore.Extensions
     {
         /// <summary>
         /// Convert the <see cref="HtmlDocument"/> into plain text for use in LTI parameters
-        /// that only accept plain text, such as <see cref="NetCore.Lti1.LtiRequest.ResourceLinkDescription"/>.
+        /// that only accept plain text, such as <see cref="NetCore.Lti.v1.LtiRequest.ResourceLinkDescription"/>.
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>

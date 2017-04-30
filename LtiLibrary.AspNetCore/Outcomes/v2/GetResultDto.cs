@@ -1,4 +1,4 @@
-﻿using LtiLibrary.NetCore.Outcomes.v2;
+﻿using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
@@ -37,7 +37,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// <summary>
         /// Get or set the Result.
         /// </summary>
-        public LisResult Result { get; set; }
+        public Result Result { get; set; }
 
         /// <summary>
         /// Get or set the HTTP StatusCode.

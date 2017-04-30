@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using LtiLibrary.NetCore.Outcomes.v2;
+using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
@@ -24,7 +24,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                     using (var reader = new StreamReader(bindingContext.HttpContext.Request.Body))
                     {
                         var body = await reader.ReadToEndAsync();
-                        var model = JsonConvert.DeserializeObject<LisResult>(body);
+                        var model = JsonConvert.DeserializeObject<Result>(body);
                         bindingContext.Result = ModelBindingResult.Success(model);
                     }
                 }

@@ -1,4 +1,4 @@
-﻿using LtiLibrary.NetCore.Outcomes.v2;
+﻿using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v2
@@ -11,7 +11,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public PutResultDto(string contextId, string lineItemId, string id, LisResult result)
+        public PutResultDto(string contextId, string lineItemId, string id, Result result)
         {
             ContextId = contextId;
             LineItemId = lineItemId;
@@ -38,7 +38,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// <summary>
         /// Get or set the Result.
         /// </summary>
-        public LisResult Result { get; }
+        public Result Result { get; }
 
         /// <summary>
         /// Get or set the HTTP StatusCode.

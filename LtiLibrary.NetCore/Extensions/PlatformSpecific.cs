@@ -1,13 +1,14 @@
-﻿namespace LtiLibrary.NetCore.Extensions
-{
-    using System;
+﻿using System;
 
+namespace LtiLibrary.NetCore.Extensions
+{
     /// <summary>
     /// Contains platform specific implementations.
     /// </summary>
     public static class PlatformSpecific
     {
-        private static readonly char[] HexUpperChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+        private static readonly char[] HexUpperChars =
+            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
         /// <summary>
         /// Converts a specified character into its hexadecimal equivalent.
@@ -22,12 +23,13 @@
                 throw new ArgumentOutOfRangeException(nameof(character));
             }
 
-            return "%" + HexUpperChars[((character & 0xf0) >> 4)] + HexUpperChars[((character & 0x0f))];
+            return "%" + HexUpperChars[(character & 0xf0) >> 4] + HexUpperChars[character & 0x0f];
         }
     }
 }
 
 #if NetCore
+
 namespace System
 {
     /// <summary>
@@ -39,4 +41,5 @@ namespace System
     {
     }
 }
+
 #endif

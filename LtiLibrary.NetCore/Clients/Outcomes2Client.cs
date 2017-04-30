@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Lti.v1;
 
-namespace LtiLibrary.NetCore.Outcomes.v2
+namespace LtiLibrary.NetCore.Clients
 {
     /// <summary>
     /// Helper class for Outcomes-2 clients.
     /// </summary>
-    public static class OutcomesClient
+    public static class Outcomes2Client
     {
         #region LineItems
 

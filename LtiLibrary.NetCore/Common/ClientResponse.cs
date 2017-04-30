@@ -4,7 +4,7 @@ using System.Net;
 namespace LtiLibrary.NetCore.Common
 {
     /// <summary>
-    /// Encapsulates the client response to API calls such as <see cref="Outcomes.v1.OutcomesClient.DeleteResultAsync"/>.
+    /// Encapsulates the client response to API calls such as <see cref="Clients.Outcomes1Client.DeleteResultAsync"/>.
     /// </summary>
     public class ClientResponse
     {

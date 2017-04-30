@@ -5,7 +5,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lti.v2;
 
-namespace LtiLibrary.NetCore.Profiles
+namespace LtiLibrary.NetCore.Clients
 {
     /// <summary>
     /// Helper class for Tool Providers requesting a <see cref="ToolConsumerProfile"/> from a Tool Consumer.

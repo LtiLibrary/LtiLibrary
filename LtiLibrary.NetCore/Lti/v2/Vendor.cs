@@ -2,7 +2,7 @@
 using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Lti2
+namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// A person or agency that offers products to the market. The key types of products relevant to LTI 

@@ -2,7 +2,7 @@
 using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Lti2
+namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// This resource represents the service provider that hosts a product (Tool or Tool Consumer).

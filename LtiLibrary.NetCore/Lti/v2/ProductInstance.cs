@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Lti2
+namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// The resource encapsulates information about one deployed instance of a web-based product (Tool or Tool Consumer).

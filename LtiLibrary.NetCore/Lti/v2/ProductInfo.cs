@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Lti2
+namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// Encapsulates information about one released version of a product (Tool Consumer or Tool).

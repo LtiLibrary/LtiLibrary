@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti2;
 using Newtonsoft.Json;
 
 namespace LtiLibrary.NetCore.Lti.v2

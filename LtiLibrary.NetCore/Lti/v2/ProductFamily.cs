@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Lti2
+namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// A ProductFamily represents the collection of all versions of a particular product over time. Two products that 

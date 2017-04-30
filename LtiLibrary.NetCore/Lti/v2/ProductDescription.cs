@@ -1,4 +1,4 @@
-﻿namespace LtiLibrary.NetCore.Lti2
+﻿namespace LtiLibrary.NetCore.Lti.v2
 {
     /// <summary>
     /// Represents the IMS ProductDescription.

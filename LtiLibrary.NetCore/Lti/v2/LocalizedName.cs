@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.Lti2
+namespace LtiLibrary.NetCore.Lti.v2
 {
-    // TODO: Conflate LocalizedText and LocalizedName
-
     /// <summary>
-    /// This container defines a block of text. The container includes a default value for the text, plus a 
-    /// key that can be used to lookup a locale-specific value from a resource bundle.
+    /// This container stores the default display name for some object plus a key that may be used to lookup 
+    /// a translation for the display name from a resource bundle for a particular locale. The string value 
+    /// has a maximum length of 128 characters.
     /// </summary>
-    public class LocalizedText
+    public class LocalizedName
     {
         /// <summary>
         /// The key used to lookup the locale-specific value from a resource bundle.
@@ -17,7 +16,7 @@ namespace LtiLibrary.NetCore.Lti2
         public string Key { get; protected set; }
 
         /// <summary>
-        /// The default value for the text. This value is used if (1) the key attribute is undefined, 
+        /// The default value for the display name. This value is used if (1) the key attribute is undefined, 
         /// (2) the localization capability is not enabled, or (3) a value for the specified key is not found 
         /// in the locale-specific resource bundle.
         /// </summary>

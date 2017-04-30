@@ -1,7 +1,7 @@
 ﻿
 using LtiLibrary.NetCore.Common;
 
-namespace LtiLibrary.NetCore.ContentItems
+namespace LtiLibrary.NetCore.Lti.v1
 {
     internal interface IContentItem : IJsonLdObject
     {

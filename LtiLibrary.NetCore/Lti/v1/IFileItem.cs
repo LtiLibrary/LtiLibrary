@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LtiLibrary.NetCore.ContentItems
+namespace LtiLibrary.NetCore.Lti.v1
 {
     internal interface IFileItem : IContentItem
     {

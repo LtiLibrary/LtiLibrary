@@ -1,7 +1,6 @@
-﻿using LtiLibrary.NetCore.Lti.v1;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.ContentItems
+namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents a ContentItemPlacement.

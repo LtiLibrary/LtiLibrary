@@ -1,4 +1,4 @@
-﻿namespace LtiLibrary.NetCore.ContentItems
+﻿namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// LTI Content-Item Message 1.0 ContentItemSelection interface (3 Feb 2015 draft)

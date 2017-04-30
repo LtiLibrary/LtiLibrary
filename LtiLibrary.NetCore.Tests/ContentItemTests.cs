@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using LtiLibrary.NetCore.ContentItems;
 using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.Tests.SimpleHelpers;
 using Xunit;

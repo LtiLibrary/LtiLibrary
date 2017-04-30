@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.ContentItems;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 using LtiLibrary.NetCore.Outcomes.v1;
@@ -66,7 +65,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         /// Initialize an empty LtiRequest.
         /// </summary>
         /// <remarks>This is used when extracting an LtiRequest from an HttpRequest and for unit tests.</remarks>
-        public LtiRequest() : this((string) null) {}
+        public LtiRequest() : this(null) {}
 
         /// <summary>
         /// Initialize a new instanace of the LtiRequest class with the specified message type. This also sets up
@@ -2259,7 +2258,7 @@ namespace LtiLibrary.NetCore.Lti.v1
             }
 
             // Make sure the request contains all the required parameters
-            RequireAllOf(OAuthRequest.RequiredOauthParameters);
+            RequireAllOf(RequiredOauthParameters);
             switch (LtiMessageType)
             {
                 case LtiConstants.BasicLaunchLtiMessageType:

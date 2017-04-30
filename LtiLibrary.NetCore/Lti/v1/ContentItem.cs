@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
 
-namespace LtiLibrary.NetCore.ContentItems
+namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents an IMS ContentItem (http://purl.imsglobal.org/ctx/lti/v1/ContentItem).

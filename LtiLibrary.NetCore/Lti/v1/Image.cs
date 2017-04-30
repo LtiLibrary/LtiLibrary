@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace LtiLibrary.NetCore.ContentItems
+namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents an IMS ContentItem Image.

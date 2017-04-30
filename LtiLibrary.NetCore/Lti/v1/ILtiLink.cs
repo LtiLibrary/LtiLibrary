@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LtiLibrary.NetCore.ContentItems
+namespace LtiLibrary.NetCore.Lti.v1
 {
     internal interface ILtiLink : IContentItem
     {

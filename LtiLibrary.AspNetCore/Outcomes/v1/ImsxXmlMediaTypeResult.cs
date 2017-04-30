@@ -1,4 +1,4 @@
-﻿using LtiLibrary.NetCore.Outcomes.v1;
+﻿using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1

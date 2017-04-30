@@ -1,6 +1,6 @@
 ﻿using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v1;
-using LtiLibrary.NetCore.Outcomes.v1;
+using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1

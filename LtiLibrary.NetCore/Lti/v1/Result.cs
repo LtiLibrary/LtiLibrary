@@ -1,4 +1,4 @@
-﻿namespace LtiLibrary.NetCore.Outcomes.v1
+﻿namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents an Outcomes 1.0 result.

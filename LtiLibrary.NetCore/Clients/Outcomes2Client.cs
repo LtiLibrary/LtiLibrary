@@ -9,6 +9,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v2;
 using LtiLibrary.NetCore.Lti.v1;
+using Result = LtiLibrary.NetCore.Lis.v2.Result;
 
 namespace LtiLibrary.NetCore.Clients
 {
@@ -171,10 +172,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <returns>If successful, the LISResult specified in the REST endpoint.</returns>
-        public static async Task<ClientResponse<Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
+        public static async Task<ClientResponse<Lis.v2.Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+            return await GetOutcomeAsync<Lis.v2.Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
         }
 
         /// <summary>
@@ -204,8 +205,8 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="result">The LISResult to create within the server.</param>
         /// <returns>If successful, the LISResult with @id filled in.</returns>
-        public static async Task<ClientResponse<Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, Result result)
+        public static async Task<ClientResponse<Lis.v2.Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
+            string consumerSecret, Lis.v2.Result result)
         {
             return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
         }

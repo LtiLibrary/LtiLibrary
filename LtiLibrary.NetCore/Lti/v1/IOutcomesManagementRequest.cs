@@ -1,4 +1,4 @@
-﻿namespace LtiLibrary.NetCore.Outcomes.v1
+﻿namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
     /// Represents the Outcomes Management interface introduced in LTI 1.1.

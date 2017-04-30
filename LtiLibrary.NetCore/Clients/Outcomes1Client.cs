@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lti.v1;
-using LtiLibrary.NetCore.Outcomes.v1;
 
 namespace LtiLibrary.NetCore.Clients
 {

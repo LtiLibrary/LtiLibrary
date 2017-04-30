@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Outcomes.v1;
+using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

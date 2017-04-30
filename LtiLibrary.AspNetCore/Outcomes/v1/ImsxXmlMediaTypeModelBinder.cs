@@ -1,9 +1,9 @@
-﻿using LtiLibrary.NetCore.Outcomes.v1;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using LtiLibrary.NetCore.Lti.v1;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {

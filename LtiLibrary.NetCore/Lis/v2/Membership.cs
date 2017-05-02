@@ -1,6 +1,5 @@
 ﻿using LtiLibrary.NetCore.Lis.v1;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Lis.v2
 {
@@ -33,7 +32,6 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// The current status of a membership which applies to all roles.
         /// </summary>
         [JsonProperty("status")]
-        [JsonConverter(typeof(StringEnumConverter))]
         public Status Status { get; set; }
     }
 }

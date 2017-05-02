@@ -11,7 +11,7 @@
       "contextId": "2923-abc",
       "membership": [
         {
-          "status": "Active",
+          "status": "liss:Active",
           "member": {
             "@type": "LISPerson",
             "sourcedId": "school.edu:user",
@@ -36,7 +36,7 @@
             }
           ],
           "role": [
-            "Instructor"
+            "lism:Instructor"
           ]
         }
       ]

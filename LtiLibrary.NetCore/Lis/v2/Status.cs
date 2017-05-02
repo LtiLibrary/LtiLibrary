@@ -1,13 +1,13 @@
 ﻿using LtiLibrary.NetCore.Common;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Lis.v2
 {
     /// <summary>
-    /// Possible status values for LIS entities. They must be referenced by a simple name.
+    /// Possible status values for LIS entities.
+    /// http://purl.imsglobal.org/vocab/lis/v2/status
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(StatusConverter))]
     public enum Status
     {
         /// <summary>

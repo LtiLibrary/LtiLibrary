@@ -6,7 +6,7 @@ using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
 using Microsoft.AspNetCore.Http;
 
-namespace LtiLibrary.AspNetCore.Tests.Lis.v2
+namespace LtiLibrary.AspNetCore.Tests.Membership
 {
     public class MembershipController : MembershipControllerBase
     {

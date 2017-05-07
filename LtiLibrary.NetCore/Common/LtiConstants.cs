@@ -55,9 +55,11 @@ namespace LtiLibrary.NetCore.Common
         public const string ContentItemSelectionLtiMessageType = "ContentItemSelection";
 
         /// <summary>
-        /// This is used internally to identify outcomes requests
+        /// This is used internally to identify service requests that should be secured
+        /// by signing using the lti_oauth_body_hash_ws_security Web Services Security
+        /// Profile.
         /// </summary>
-        public const string OutcomesMessageType = "OutcomesRequest";
+        public const string LtiOauthBodyHashMessageType = "LtiOAuthBodyHashMessage";
 
         #endregion
 

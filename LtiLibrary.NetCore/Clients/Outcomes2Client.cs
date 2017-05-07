@@ -2,13 +2,11 @@
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v2;
-using LtiLibrary.NetCore.Lti.v1;
 using Result = LtiLibrary.NetCore.Lis.v2.Result;
 
 namespace LtiLibrary.NetCore.Clients
@@ -234,7 +232,7 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                await SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -282,7 +280,7 @@ namespace LtiLibrary.NetCore.Clients
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 
-                await SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
                 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -360,7 +358,7 @@ namespace LtiLibrary.NetCore.Clients
             {
                 var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
 
-                await SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -408,7 +406,7 @@ namespace LtiLibrary.NetCore.Clients
             {
                 var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
 
-                await SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -442,28 +440,6 @@ namespace LtiLibrary.NetCore.Clients
                     StatusCode = HttpStatusCode.InternalServerError
                 };
             }
-        }
-
-        private static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl, HttpContent content, string consumerKey, string consumerSecret)
-        {
-            var ltiRequest = new LtiRequest(LtiConstants.OutcomesMessageType)
-            {
-                ConsumerKey = consumerKey,
-                HttpMethod = method.Method,
-                Url = new Uri(client.BaseAddress, serviceUrl)
-            };
-
-            AuthenticationHeaderValue authorizationHeader;
-
-            // Create an Authorization header using the body hash
-            using (var sha1 = SHA1.Create())
-            {
-                var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
-                authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
-            }
-
-            // Attach the header to the client request
-            client.DefaultRequestHeaders.Authorization = authorizationHeader;
         }
 
         #endregion

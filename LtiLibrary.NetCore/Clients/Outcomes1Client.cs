@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -78,7 +77,7 @@ namespace LtiLibrary.NetCore.Clients
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SignRequest(client, serviceUrl, httpContent, consumerKey, consumerSecret);
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -161,7 +160,7 @@ namespace LtiLibrary.NetCore.Clients
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SignRequest(client, serviceUrl, httpContent, consumerKey, consumerSecret);
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -271,7 +270,7 @@ namespace LtiLibrary.NetCore.Clients
                         await writer.FlushAsync();
                     }
                     var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SignRequest(client, serviceUrl, httpContent, consumerKey, consumerSecret);
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
                     using (var response = await client.PostAsync(serviceUrl, httpContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
@@ -312,32 +311,5 @@ namespace LtiLibrary.NetCore.Clients
                 };
             }
         }
-
-        #region Private Methods
-
-        private static async Task SignRequest(HttpClient client, string serviceUrl, HttpContent content, string consumerKey, string consumerSecret)
-        {
-            var ltiRequest = new LtiRequest(LtiConstants.OutcomesMessageType)
-            {
-                ConsumerKey = consumerKey,
-                HttpMethod = HttpMethod.Post.Method,
-                Url = new Uri(client.BaseAddress, serviceUrl)
-            };
-
-            AuthenticationHeaderValue authorizationHeader;
-
-            // Create an Authorization header using the body hash
-            using (var sha1 = SHA1.Create())
-            {
-                var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
-                authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
-            }
-
-            // Attach the header to the client request
-            client.DefaultRequestHeaders.Authorization = authorizationHeader;
-        }
-
-        #endregion
-
     }
 }

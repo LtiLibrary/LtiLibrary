@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
-using LtiLibrary.NetCore.Lti.v1;
 
 namespace LtiLibrary.NetCore.Clients
 {
@@ -108,7 +106,7 @@ namespace LtiLibrary.NetCore.Clients
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 
-                await SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey,
+                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey,
                     consumerSecret);
 
                 var outcomeResponse = new ClientResponse<MembershipContainerPage>();
@@ -175,29 +173,6 @@ namespace LtiLibrary.NetCore.Clients
                 return $"{serviceUrl}&{query}";
             }
             return $"{serviceUrl}?{query}";
-        }
-
-        private static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
-            HttpContent content, string consumerKey, string consumerSecret)
-        {
-            var ltiRequest = new LtiRequest(LtiConstants.OutcomesMessageType)
-            {
-                ConsumerKey = consumerKey,
-                HttpMethod = method.Method,
-                Url = new Uri(client.BaseAddress, serviceUrl)
-            };
-
-            AuthenticationHeaderValue authorizationHeader;
-
-            // Create an Authorization header using the body hash
-            using (var sha1 = SHA1.Create())
-            {
-                var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
-                authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
-            }
-
-            // Attach the header to the client request
-            client.DefaultRequestHeaders.Authorization = authorizationHeader;
         }
     }
 }

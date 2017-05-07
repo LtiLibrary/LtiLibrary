@@ -14,6 +14,8 @@ namespace LtiLibrary.NetCore.Lis.v2
         public MembershipContainerPage()
         {
             ExternalContextId = LtiConstants.LisMembershipContainerContextId;
+            Terms.Add("liss", "http://purl.imsglobal.org/vocab/lis/v2/status#");
+            Terms.Add("lism", "http://purl.imsglobal.org/vocab/lis/v2/membership#");
             Type = LtiConstants.PageType;
         }
 

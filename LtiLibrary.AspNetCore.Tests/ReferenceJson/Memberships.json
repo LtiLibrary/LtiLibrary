@@ -1,7 +1,7 @@
 ﻿{
   "Response":  [ 
     {
-      "status": "Active",
+      "status": "liss:Active",
       "member": {
         "@type": "LISPerson",
         "sourcedId": "school.edu:user",
@@ -26,11 +26,11 @@
         }
       ],
       "role": [
-        "Instructor"
+        "lism:Instructor"
       ]
     },
     {
-      "status": "Active",
+      "status": "liss:Active",
       "member": {
         "@type": "LISPerson",
         "sourcedId": "school.edu:user",
@@ -55,7 +55,7 @@
         }
       ],
       "role": [
-        "Learner"
+        "lism:Learner"
       ]
     }
   ]

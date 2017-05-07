@@ -1,5 +1,11 @@
 ﻿{
-  "@context": "http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer",
+  "@context": [
+    "http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer",
+    {
+      "liss": "http://purl.imsglobal.org/vocab/lis/v2/status#",
+      "lism": "http://purl.imsglobal.org/vocab/lis/v2/membership#"
+    }
+  ],
   "@type": "Page",
   "@id": "http://localhost/ims/membership/1422554502",
   "nextPage": "http://localhost/ims/membership?page=2",
@@ -11,7 +17,7 @@
       "contextId": "2923-abc",
       "membership": [
         {
-          "status": "Active",
+          "status": "liss:Active",
           "member": {
             "@type": "LISPerson",
             "sourcedId": "school.edu:user",
@@ -36,7 +42,7 @@
             }
           ],
           "role": [
-            "Instructor"
+            "lism:Instructor"
           ]
         }
       ]

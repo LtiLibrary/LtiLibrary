@@ -83,7 +83,7 @@ namespace LtiLibrary.NetCore.Lti.v1
             TimestampAsDateTime = DateTime.UtcNow;
             Version = OAuthConstants.Version10;
 
-            if (!messageType.Equals(LtiConstants.OutcomesMessageType))
+            if (!messageType.Equals(LtiConstants.LtiOauthBodyHashMessageType))
             {
                 // LTI defaults
                 HttpMethod = System.Net.Http.HttpMethod.Post.Method;

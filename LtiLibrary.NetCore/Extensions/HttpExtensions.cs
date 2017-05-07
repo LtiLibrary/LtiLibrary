@@ -19,7 +19,7 @@ namespace LtiLibrary.NetCore.Extensions
         {
             var sb = new StringBuilder();
             sb.AppendFormat("{0} {1} HTTP/{2}\n", message.Method, message.RequestUri, message.Version);
-            foreach (var header in Enumerable.ToList(message.Headers))
+            foreach (var header in message.Headers.ToList())
             {
                 sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
             }

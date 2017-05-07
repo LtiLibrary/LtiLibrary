@@ -5,12 +5,12 @@ using System.Net.Http;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Clients;
 using LtiLibrary.NetCore.Lis.v1;
-using Xunit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.PlatformAbstractions;
+using Xunit;
 
-namespace LtiLibrary.AspNetCore.Tests.Lis.v2
+namespace LtiLibrary.AspNetCore.Tests.Membership
 {
     public class MembershipControllerShould : IDisposable
     {

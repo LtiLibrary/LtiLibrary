@@ -19,7 +19,9 @@
     "LtiLibrary.Core": "2.0.0-beta",
     "HtmlAgilityPack": "1.4.9.5",
     "Microsoft.AspNet.WebApi.Client": "5.2.3",
-    "Microsoft.AspNet.WebApi.Core": "5.2.3"
+    "Microsoft.AspNet.WebApi.Core": "5.2.3",
+    "System.Net.Http": "4.1.0",
+    "System.Net.Http.Formatting.Extension": "5.2.3"
   },
   "frameworks": {
     "net45": {

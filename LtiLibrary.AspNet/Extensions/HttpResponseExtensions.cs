@@ -27,7 +27,6 @@ namespace LtiLibrary.AspNet.Extensions
                 form.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", key, model.Fields[key])
                     .AppendLine();
             }
-            form.AppendFormat("<input type='hidden' name='oauth_signature' value='{0}' />", model.Signature).AppendLine();
             form.AppendLine("</form>");
             form.AppendLine("<script>");
             form.AppendLine(" document.getElementById('form').submit();");

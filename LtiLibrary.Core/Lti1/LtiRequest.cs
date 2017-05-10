@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using LtiLibrary.Core.Common;
@@ -16,6 +17,46 @@ namespace LtiLibrary.Core.Lti1
     public class LtiRequest 
         : OAuthRequest, IBasicLaunchRequest, IOutcomesManagementRequest, IContentItemSelectionRequest, IContentItemSelection
     {
+        #region Static Member Data
+
+        // These OAuth parameters are required
+        private static readonly string[] RequiredOauthParameters =
+            {
+                OAuthConstants.ConsumerKeyParameter,
+                OAuthConstants.NonceParameter,
+                OAuthConstants.SignatureParameter,
+                OAuthConstants.SignatureMethodParameter,
+                OAuthConstants.TimestampParameter,
+                OAuthConstants.VersionParameter
+            };
+
+        // These LTI launch parameters are required
+        private static readonly string[] RequiredBasicLaunchParameters =
+            {
+                LtiConstants.LtiMessageTypeParameter,
+                LtiConstants.LtiVersionParameter,
+                LtiConstants.ResourceLinkIdParameter
+            };
+
+        // These LTI Content Item parameters are required
+        private static readonly string[] RequiredContentItemLaunchParameters =
+            {
+                LtiConstants.AcceptMediaTypesParameter,
+                LtiConstants.AcceptPresentationDocumentTargetsParameter,
+                LtiConstants.ContentItemReturnUrlParameter,
+                LtiConstants.LtiMessageTypeParameter,
+                LtiConstants.LtiVersionParameter
+            };
+
+        // These LTI Content Item parameters are required
+        private static readonly string[] RequiredContentItemResponseParameters =
+            {
+                LtiConstants.ContentItemPlacementParameter
+            };
+        #endregion
+
+        #region Constructors
+
         public LtiRequest() : this(null) {}
         public LtiRequest(string messageType)
         {
@@ -35,6 +76,8 @@ namespace LtiLibrary.Core.Lti1
             LtiMessageType = messageType;
             LtiVersion = LtiConstants.LtiVersion;
         }
+
+        #endregion
 
         #region ILtiRequest Parameters
 
@@ -2268,6 +2311,79 @@ namespace LtiLibrary.Core.Lti1
         }
 
         /// <summary>
+        /// Remove empty parameters, substitute custom variables, and add the signature.
+        /// </summary>
+        public void SubstituteVariablesAndCalculateSignature(string consumerSecret)
+        {
+            // Remove empty/null parameters
+            foreach (var key in Parameters.AllKeys.Where(key => string.IsNullOrWhiteSpace(Parameters[key])))
+            {
+                Parameters.Remove(key);
+            }
+
+            // Perform the custom variable substitutions
+            SubstituteCustomVariables(Parameters);
+
+            // Calculate the signature based on the substituted values
+            Signature = GenerateSignature(Parameters, consumerSecret);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="LtiException"/> if the LtiRequest does not have required parameters.
+        /// </summary>
+        public void CheckForRequiredLtiParameters()
+        {
+            if (!HttpMethod.Equals(WebRequestMethods.Http.Post))
+            {
+                throw new LtiException($"Invalid HTTP Method {HttpMethod}.");
+            }
+
+            // Make sure the request contains all the required parameters
+            RequireAllOf(RequiredOauthParameters);
+            switch (LtiMessageType)
+            {
+                case LtiConstants.BasicLaunchLtiMessageType:
+                    {
+                        RequireAllOf(RequiredBasicLaunchParameters);
+                        break;
+                    }
+                case LtiConstants.ContentItemSelectionRequestLtiMessageType:
+                    {
+                        RequireAllOf(RequiredContentItemLaunchParameters);
+                        break;
+                    }
+                case LtiConstants.ContentItemSelectionLtiMessageType:
+                    {
+                        RequireAllOf(RequiredContentItemResponseParameters);
+                        break;
+                    }
+                default:
+                    throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}.");
+            }
+
+            // If the request is configured to support Outcomes 1.0, make sure lis_result_sourcedid is specified.
+            if (!string.IsNullOrWhiteSpace(LisOutcomeServiceUrl))
+            {
+                if (string.IsNullOrWhiteSpace(LisResultSourcedId))
+                {
+                    throw new LtiException($"Missing parameter(s): {LtiConstants.LisResultSourcedIdParameter}. Required by Outcomes 1.0.");
+                }
+            }
+
+            // If the request is configured to support Outcomes 2.0, make sure user_id is specified.
+            if (!string.IsNullOrWhiteSpace(LineItemServiceUrl)
+                && !string.IsNullOrWhiteSpace(LineItemsServiceUrl)
+                && !string.IsNullOrWhiteSpace(ResultServiceUrl)
+                && !string.IsNullOrWhiteSpace(ResultsServiceUrl))
+            {
+                if (string.IsNullOrWhiteSpace(UserId))
+                {
+                    throw new LtiException($"Missing parameter(s): {LtiConstants.UserIdParameter}. Required by Outcomes 2.0.");
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the roles in the LtiRequest as an IList of LtiRoles.
         /// </summary>
         /// <returns></returns>
@@ -2295,6 +2411,20 @@ namespace LtiLibrary.Core.Lti1
                 }
             }
             return roles;
+        }
+
+        /// <summary>
+        /// Throw an <see cref="LtiException"/> if this LtiRequest does not have a value specified for all of the parameters.
+        /// </summary>
+        /// <param name="parameters"></param>
+        private void RequireAllOf(IEnumerable<string> parameters)
+        {
+            var missing = parameters.Where(parameter => string.IsNullOrEmpty(Parameters[parameter])).ToList();
+
+            if (missing.Count > 0)
+            {
+                throw new LtiException("Missing parameter(s): " + string.Join(", ", missing.ToArray()) + ".");
+            }
         }
 
         /// <summary>

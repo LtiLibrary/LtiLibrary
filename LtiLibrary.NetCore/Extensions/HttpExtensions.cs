@@ -23,10 +23,17 @@ namespace LtiLibrary.NetCore.Extensions
             {
                 sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
             }
-            if (content != null && content.Headers.ContentLength > 0)
+            if (content != null)
             {
-                sb.AppendLine();
-                sb.Append(await content.ReadAsStringAsync());
+                foreach (var header in content.Headers)
+                {
+                    sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
+                }
+                if (content.Headers.ContentLength > 0)
+                {
+                    sb.AppendLine();
+                    sb.Append(await content.ReadAsStringAsync());
+                }
             }
             return sb.ToString();
         }
@@ -44,10 +51,17 @@ namespace LtiLibrary.NetCore.Extensions
             {
                 sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
             }
-            if (response.Content != null && response.Content.Headers.ContentLength > 0)
+            if (response.Content != null)
             {
-                sb.AppendLine();
-                sb.Append(await response.Content.ReadAsStringAsync());
+                foreach (var header in response.Content.Headers)
+                {
+                    sb.AppendFormat("{0}: {1}\n", header.Key, string.Join(",", header.Value ?? new string[] { }));
+                }
+                if (response.Content.Headers.ContentLength > 0)
+                {
+                    sb.AppendLine();
+                    sb.Append(await response.Content.ReadAsStringAsync());
+                }
             }
             return sb.ToString();
         }

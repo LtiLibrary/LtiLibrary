@@ -11,19 +11,20 @@ namespace LtiLibrary.NetCore.Lis.v1
     public enum ContextType
     {
         /// <summary>
-        /// A course offering that might appear in a course catalog (e.g. ECON 101).
+        /// A course offering relates to the specific period of time when the course is available.
         /// </summary>
         [Urn("urn:lti:context-type:ims/lis/CourseOffering")]
         CourseOffering,
 
         /// <summary>
-        /// An instance of the course (e.g. Miss Marple's Home Room Class, or ECON 101 - Section 1).
+        /// A course section is the specific instance into which students are enrolled and taught.
         /// </summary>
         [Urn("urn:lti:context-type:ims/lis/CourseSection")]
         CourseSection,
 
         /// <summary>
-        /// The syllabus or curriculum for a course offering.
+        /// A course template is the abstract course which is independent of when it is taught.
+        /// The course template may have one or more course offerings, each of which may have one or more course sections.
         /// </summary>
         [Urn("urn:lti:context-type:ims/lis/CourseTemplate")]
         CourseTemplate,

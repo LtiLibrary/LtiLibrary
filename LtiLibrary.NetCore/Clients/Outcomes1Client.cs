@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Serialization;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
@@ -70,15 +71,14 @@ namespace LtiLibrary.NetCore.Clients
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    var xml = new StringBuilder();
-                    using (var writer = new StringWriter(xml))
-                    {
-                        ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
-                        await writer.FlushAsync();
-                    }
-                    var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
-                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+
+                    // Create a UTF8 encoding of the request
+                    var xml = await GetXmlAsync(imsxEnvelope);
+                    var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret);
+
+                    // Post the request and check the response
+                    using (var response = await client.PostAsync(serviceUrl, xmlContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.IsSuccessStatusCode)
@@ -92,7 +92,7 @@ namespace LtiLibrary.NetCore.Clients
                                 : HttpStatusCode.BadRequest;
                         }
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
                         outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
 #endif
                     }
@@ -153,15 +153,14 @@ namespace LtiLibrary.NetCore.Clients
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    var xml = new StringBuilder();
-                    using (var writer = new StringWriter(xml))
-                    {
-                        ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
-                        await writer.FlushAsync();
-                    }
-                    var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
-                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+
+                    // Create a UTF8 encoding of the request
+                    var xml = await GetXmlAsync(imsxEnvelope);
+                    var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret);
+
+                    // Post the request and check the response
+                    using (var response = await client.PostAsync(serviceUrl, xmlContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.IsSuccessStatusCode)
@@ -190,7 +189,7 @@ namespace LtiLibrary.NetCore.Clients
                             }
                         }
     #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
                         outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
     #endif
                     }
@@ -250,28 +249,27 @@ namespace LtiLibrary.NetCore.Clients
                         resultScore = new TextType
                         {
                             language = LtiConstants.ScoreLanguage,
+                            // The LTI 1.1 specification states in 6.1.1. that the score in replaceResult should
+                            // always be formatted using “en” formatting
+                            // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
                             textString = score?.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
                         }
                     }
                 };
-                // The LTI 1.1 specification states in 6.1.1. that the score in replaceResult should
-                // always be formatted using “en” formatting
-                // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
 
                 var outcomeResponse = new ClientResponse();
                 try
                 {
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    var xml = new StringBuilder();
-                    using (var writer = new StringWriter(xml))
-                    {
-                        ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
-                        await writer.FlushAsync();
-                    }
-                    var httpContent = new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
-                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+
+                    // Create a UTF8 encoding of the request
+                    var xml = await GetXmlAsync(imsxEnvelope);
+                    var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret);
+
+                    // Post the request and check the response
+                    using (var response = await client.PostAsync(serviceUrl, xmlContent))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.IsSuccessStatusCode)
@@ -285,7 +283,7 @@ namespace LtiLibrary.NetCore.Clients
                                 : HttpStatusCode.BadRequest;
                         }
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml.ToString(), Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
                         outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
 #endif
                     }
@@ -309,6 +307,30 @@ namespace LtiLibrary.NetCore.Clients
                     Exception = ex,
                     StatusCode = HttpStatusCode.InternalServerError
                 };
+            }
+        }
+
+        /// <summary>
+        /// Serialize the <see cref="imsx_POXEnvelopeType"/> into a <see cref="Encoding.UTF8"/> encoded string.
+        /// </summary>
+        /// <param name="imsxEnvelope"></param>
+        /// <returns></returns>
+        private static async Task<string> GetXmlAsync(imsx_POXEnvelopeType imsxEnvelope)
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (var writer =
+                    XmlWriter.Create(ms, new XmlWriterSettings
+                    {
+                        Async = true,
+                        Encoding = Encoding.UTF8,
+                        Indent = true
+                    }))
+                {
+                    ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
+                    await writer.FlushAsync();
+                }
+                return Encoding.UTF8.GetString(ms.ToArray());
             }
         }
     }

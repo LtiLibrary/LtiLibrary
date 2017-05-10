@@ -16,11 +16,35 @@ namespace LtiLibrary.NetCore.Clients
         internal static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
             HttpContent content, string consumerKey, string consumerSecret)
         {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (string.IsNullOrEmpty(serviceUrl))
+            {
+                throw new ArgumentNullException(nameof(serviceUrl));
+            }
+
+            var serviceUri = new Uri(serviceUrl, UriKind.RelativeOrAbsolute);
+            if (!serviceUri.IsAbsoluteUri)
+            {
+                if (client.BaseAddress == null)
+                {
+                    throw new LtiException("If serviceUrl is relative, client.BaseAddress cannot be null.");
+                }
+
+                if (!Uri.TryCreate(client.BaseAddress, serviceUrl, out serviceUri))
+                {
+                    throw new LtiException($"Cannot form a valid URI from {client.BaseAddress} and {serviceUrl}.");
+                }
+            }
+            
             var ltiRequest = new LtiRequest(LtiConstants.LtiOauthBodyHashMessageType)
             {
                 ConsumerKey = consumerKey,
                 HttpMethod = method.Method,
-                Url = new Uri(client.BaseAddress, serviceUrl)
+                Url = serviceUri
             };
 
             AuthenticationHeaderValue authorizationHeader;

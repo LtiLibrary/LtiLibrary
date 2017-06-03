@@ -10,9 +10,9 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
 {
     public class MembershipController : MembershipControllerBase
     {
-        protected override Func<GetMembershipRequest, Task<GetMembershipResponse>> OnGetMembershipAsync => GetMembership;
+        protected override Func<GetMembershipRequest, Task<GetMembershipResponse>> OnGetMembershipAsync => GetMembershipAsync;
 
-        private async Task<GetMembershipResponse> GetMembership(GetMembershipRequest request)
+        private async Task<GetMembershipResponse> GetMembershipAsync(GetMembershipRequest request)
         {
             var response = new GetMembershipResponse();
 

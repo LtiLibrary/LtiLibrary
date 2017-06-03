@@ -14,9 +14,7 @@ namespace LtiLibrary.AspNetCore.Membership
     /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/mm/LISMembershipContainer/service.html
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// By default the Route for this controller will be "ims/[controller]" named "MembershipApi".
-    /// </para>
+    /// Unless it is overridden, the route for this controller will be "ims/[controller]/context/{contextid}" named "MembershipApi".
     /// </remarks>
     [AddBodyHashHeader]
     [Route("ims/[controller]/context/{contextid}", Name = "MembershipApi")]
@@ -64,11 +62,11 @@ namespace LtiLibrary.AspNetCore.Membership
                     return StatusCode(StatusCodes.Status400BadRequest, $"{nameof(contextId)} is null or empty.");
                 }
 
-                // 
-                var membershipRequest = new GetMembershipRequest(contextId, limit, rlid, role);
+                // Invoke OnGetMembershipAsync in the application's controller to fill in the membership
+                var request = new GetMembershipRequest(contextId, limit, rlid, role);
+                var response = await OnGetMembershipAsync(request);
 
-                // Invoke OnGetMembership in the application's controller to fill in the membership
-                var response = await OnGetMembershipAsync(membershipRequest);
+                // Return the result
                 if (response.StatusCode == StatusCodes.Status200OK)
                 {
                     return new MembershipContainerPageResult(response.MembershipContainerPage);

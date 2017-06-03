@@ -31,28 +31,54 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void GetAllMemberships_WhenGetMembershipAsyncIsCalled()
+        public async void GetMembershipPageAsync_ReturnsMembershipPage()
         {
-            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret);
-            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
-            Assert.NotNull(clientResponse.Response);
-            JsonAssertions.AssertSameObjectJson(new {clientResponse.Response}, "Memberships");
-        }
-
-        [Fact]
-        public async void GetOneMembershipPage_WhenGetMembershipPageAsyncIsCalled()
-        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipPageAsync without any filters
             var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership", Key, Secret);
+            // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
             Assert.NotNull(clientResponse.Response);
+            // And the response matches the response in MembershipContainerPage.json
             JsonAssertions.AssertSameObjectJson(clientResponse.Response, "MembershipContainerPage");
         }
 
         [Fact]
-        public async void GetOneMembership_WhenRoleIsLearner()
+        public async void GetMembershipPageAsync_ReturnsNotFound_WhenTheSpecifiedPageDoesNotExist()
         {
-            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret, role: Role.Learner);
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipPageAsync with an invalid page number
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership&page=3", Key, Secret);
+            // Then I get a NotFound response
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
+        }
+
+        [Fact]
+        public async void GetMembership_ReturnsAllMemberships()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync without any filters
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret);
+            // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And the response matches the response in Memberships.json
+            JsonAssertions.AssertSameObjectJson(new {clientResponse.Response}, "Memberships");
+        }
+
+        [Fact]
+        public async void GetMembership_ReturnsLearners_WhenRoleFilterIsLearner()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync with the Learner role filter
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret, role: Role.Learner);
+            // Then I get an OK response
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And there is exactly one membership
             Assert.Equal(1, clientResponse.Response.Count);
         }
 

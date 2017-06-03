@@ -7,7 +7,7 @@
     }
   ],
   "@type": "Page",
-  "@id": "http://localhost/ims/membership/1422554502",
+  "@id": "http://localhost/ims/membership/1422554502-i",
   "nextPage": "http://localhost/ims/membership?page=2",
   "differences": "http://localhost/ims/membership?x=1422554502",
   "pageOf": {
@@ -21,7 +21,7 @@
           "member": {
             "@type": "LISPerson",
             "sourcedId": "school.edu:user",
-            "userId": "0ae836b9-7fc9-4060-006f-27b2066ac545",
+            "userId": "0ae836b9-7fc9-4060-006f-27b2066ac545-i",
             "email": "user@school.edu",
             "familyName": "Public",
             "name": "Jane Q. Public",

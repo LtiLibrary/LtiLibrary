@@ -3,17 +3,19 @@ using LtiLibrary.NetCore.Lis.v2;
 
 namespace LtiLibrary.AspNetCore.Membership
 {
+    /// <summary>
+    /// Represents a GetMembership DTO.
+    /// </summary>
     public class GetMembershipDto
     {
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public GetMembershipDto(int? limit, string rlid, Role? role, int? page)
+        public GetMembershipDto(int? limit = null, string rlid = null, Role? role = null)
         {
             Limit = limit;
             Rlid = rlid;
             Role = role;
-            Page = page;
         }
 
         /// <summary>
@@ -25,11 +27,6 @@ namespace LtiLibrary.AspNetCore.Membership
         /// Get or set the MembershipContainerPage.
         /// </summary>
         public MembershipContainerPage MembershipContainerPage { get; set; }
-        
-        /// <summary>
-        /// Get or set the page #.
-        /// </summary>
-        public int? Page { get; }
 
         /// <summary>
         /// The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.

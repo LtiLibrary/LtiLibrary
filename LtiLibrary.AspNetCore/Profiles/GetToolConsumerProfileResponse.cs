@@ -4,23 +4,17 @@ using Microsoft.AspNetCore.Http;
 namespace LtiLibrary.AspNetCore.Profiles
 {
     /// <summary>
-    /// Represents a GetToolConsumerProfile DTO.
+    /// Represents a GetToolConsumerProfile response.
     /// </summary>
-    public class GetToolConsumerProfileDto
+    public class GetToolConsumerProfileResponse
     {
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public GetToolConsumerProfileDto(string ltiVersion)
+        public GetToolConsumerProfileResponse()
         {
-            LtiVersion = ltiVersion;
             StatusCode = StatusCodes.Status200OK;
         }
-
-        /// <summary>
-        /// Get or set the LtiVersion.
-        /// </summary>
-        public string LtiVersion { get; }
 
         /// <summary>
         /// Get or set the HTTP StatusCode.

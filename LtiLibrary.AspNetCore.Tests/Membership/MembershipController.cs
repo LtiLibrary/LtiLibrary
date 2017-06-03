@@ -17,11 +17,6 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
             var response = new GetMembershipResponse();
 
             // This test controller implements a very simple authorization scheme
-            if (!Request.IsAuthenticatedWithLti())
-            {
-                response.StatusCode = StatusCodes.Status401Unauthorized;
-                return response;
-            }
             var ltiRequest = await Request.ParseLtiRequestAsync();
             var signature = ltiRequest.GenerateSignature("secret");
             if (!ltiRequest.Signature.Equals(signature))

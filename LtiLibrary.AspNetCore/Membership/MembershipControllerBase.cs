@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
+using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lis.v1;
 using Microsoft.AspNetCore.Http;
@@ -31,9 +32,11 @@ namespace LtiLibrary.AspNetCore.Membership
 
         /// <summary>
         /// To get a representation of a particular LISMembershipContainer instance, the client submits an HTTP GET 
-        /// request to the resource's REST endpoint, in accordance with the following rules:
-        /// The request may contain the query parameters specified in Table 1 
-        /// (https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/mm/LISMembershipContainer/service.html#queryParams).
+        /// request to the resource's REST endpoint. The contextId is embedded in the endpoint URL.
+        /// The request may contain the query parameters specified in Table 1:
+        /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/mm/LISMembershipContainer/service.html#queryParams.
+        /// The request must contain the headers in Table 2: 
+        /// https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/mm/LISMembershipContainer/service.html#getHeader.
         /// </summary>
         /// <param name="contextId">The LTI context_id of the context from which to pull the membership.</param>
         /// <param name="limit">Optional. Specifies the maximum number of items that should be delivered per page. This parameter is merely a hint. The server is not obligated to honor this limit and may at its own discretion choose a different value for the number of items per page.</param>
@@ -45,6 +48,12 @@ namespace LtiLibrary.AspNetCore.Membership
         {
             try
             {
+                // Check for required Authorization header with parameters dictated by the OAuth Body Hash Protocol
+                if (!Request.IsAuthenticatedWithLti())
+                {
+                    return Unauthorized();
+                }
+
                 if (OnGetMembershipAsync == null)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);

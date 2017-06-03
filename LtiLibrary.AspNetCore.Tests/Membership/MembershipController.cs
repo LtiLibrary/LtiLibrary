@@ -10,28 +10,37 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
 {
     public class MembershipController : MembershipControllerBase
     {
-        protected override Func<GetMembershipDto, Task> OnGetMembership => GetMembership;
+        protected override Func<GetMembershipRequest, Task<GetMembershipResponse>> OnGetMembershipAsync => GetMembership;
 
-        private async Task GetMembership(GetMembershipDto dto)
+        private async Task<GetMembershipResponse> GetMembership(GetMembershipRequest request)
         {
+            var response = new GetMembershipResponse();
+
             // This test controller implements a very simple authorization scheme
             if (!Request.IsAuthenticatedWithLti())
             {
-                dto.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                return response;
             }
             var ltiRequest = await Request.ParseLtiRequestAsync();
             var signature = ltiRequest.GenerateSignature("secret");
             if (!ltiRequest.Signature.Equals(signature))
             {
-                dto.StatusCode = StatusCodes.Status401Unauthorized;
-                return;
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                return response;
+            }
+
+            // If the contextId is unknown, return NotFound
+            if (!request.ContextId.Equals("context-1"))
+            {
+                response.StatusCode = StatusCodes.Status404NotFound;
+                return response;
             }
 
             // If the Role filter is specified, only return the corresponding page
-            if (dto.Role == Role.Learner)
+            if (request.Role == Role.Learner)
             {
-                dto.MembershipContainerPage = GetMembershipPageOfLearners();
+                response.MembershipContainerPage = GetMembershipPageOfLearners();
             }
             else
             {
@@ -41,46 +50,47 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
                 // and set the next page URL to include page=2
                 if (page.Count == 0)
                 {
-                    dto.MembershipContainerPage = GetMembershipPageOfInstructors();
-                    dto.MembershipContainerPage.NextPage = new Uri(Request.GetUri(), "/ims/membership?page=2").AbsoluteUri;
+                    response.MembershipContainerPage = GetMembershipPageOfInstructors();
+                    response.MembershipContainerPage.NextPage = new Uri(Request.GetUri(), "/ims/membership/context/context-1?page=2").AbsoluteUri;
                 }
 
                 // If this is the second page, return the list of learners
                 // but do not set the next page URL
                 else if (page[0].Equals("2"))
                 {
-                    dto.MembershipContainerPage = GetMembershipPageOfLearners();
+                    response.MembershipContainerPage = GetMembershipPageOfLearners();
                 }
 
-                // Otherwise, I don't know what page they want
+                // Otherwise, we don't know what page they want
                 else
                 {
-                    dto.StatusCode = StatusCodes.Status404NotFound;
-                    return;
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    return response;
                 }
             }
-            dto.StatusCode = StatusCodes.Status200OK;
+            response.StatusCode = StatusCodes.Status200OK;
+            return response;
         }
 
         private MembershipContainerPage GetMembershipPageOfInstructors()
         {
             return new MembershipContainerPage
             {
-                Id = new Uri(Request.GetUri(), $"/ims/membership/1422554502-i"),
-                Differences = new Uri(Request.GetUri(), "/ims/membership?x=1422554502").AbsoluteUri,
+                Id = new Uri(Request.GetUri(), "/ims/membership/context/context-1?page=1"),
+                Differences = new Uri(Request.GetUri(), "/ims/membership/context/context-1?diff=1422554502").AbsoluteUri,
                 MembershipContainer = new MembershipContainer
                 {
                     MembershipSubject = new Context
                     {
-                        ContextId = "2923-abc",
+                        ContextId = "context-1",
                         Membership = new[]
                         {
                             new NetCore.Lis.v2.Membership
                             {
                                 Member = new Person
                                 {
-                                    SourcedId = "school.edu:user",
-                                    UserId = $"0ae836b9-7fc9-4060-006f-27b2066ac545-i",
+                                    SourcedId = "sis:942a8dd9",
+                                    UserId = "instructor-1",
                                     Email = "user@school.edu",
                                     FamilyName = "Public",
                                     Name = "Jane Q. Public",
@@ -119,20 +129,20 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         {
             return new MembershipContainerPage
             {
-                Id = new Uri(Request.GetUri(), $"/ims/membership/1422554502-l"),
+                Id = new Uri(Request.GetUri(), "/ims/membership/context/context-1?page-2"),
                 MembershipContainer = new MembershipContainer
                 {
                     MembershipSubject = new Context
                     {
-                        ContextId = "2923-abc",
+                        ContextId = "context-1",
                         Membership = new[]
                         {
                             new NetCore.Lis.v2.Membership
                             {
                                 Member = new Person
                                 {
-                                    SourcedId = "school.edu:user",
-                                    UserId = "0ae836b9-7fc9-4060-006f-27b2066ac5452",
+                                    SourcedId = "sis:123abc456",
+                                    UserId = "student-1",
                                     Email = "user@school.edu",
                                     FamilyName = "Public",
                                     Name = "John Q. Public",

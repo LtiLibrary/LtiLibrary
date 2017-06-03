@@ -14,6 +14,6 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
     [Route("api/[controller]", Name = "MembershipsApi")]
     public class MembershipsController : MembershipControllerBase
     {
-        protected override Func<GetMembershipDto, Task> OnGetMembership => null;
+        protected override Func<GetMembershipRequest, Task<GetMembershipResponse>> OnGetMembershipAsync => null;
     }
 }

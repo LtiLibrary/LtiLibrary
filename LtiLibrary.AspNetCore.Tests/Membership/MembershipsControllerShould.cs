@@ -2,9 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Clients;
-using LtiLibrary.NetCore.Lis.v1;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -31,21 +29,21 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void GetAllMembershipPage_ReturnsNotFound_WhenOnGetMembershipIsNull()
+        public async void ReturnNotFound_WhenControllerHasNotImplementedOnGetMembershipAsync()
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipPageAsync
-            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/api/memberships", Key, Secret);
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/api/memberships/context/context-1", Key, Secret);
             // Then I get a NotFound response
             Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
         }
 
         [Fact]
-        public async void GetAllMembershipPage_ReturnsNotFound_WhenEndpointDoesNotExist()
+        public async void ReturnNotFound_WhenEndpointDoesNotExist()
         {
             // Given a non-existent LTI Membership Service endpoint
             // When I call GetMembershipPageAsync
-            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/api/nowhere", Key, Secret);
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/api/nowhere/context/context-1", Key, Secret);
             // Then I get a NotFound response
             Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
         }

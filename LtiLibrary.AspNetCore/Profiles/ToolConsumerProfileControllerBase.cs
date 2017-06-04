@@ -10,23 +10,18 @@ namespace LtiLibrary.AspNetCore.Profiles
     /// <summary>
     /// Implements the LTI Tool Consumer Profile API.
     /// </summary>
-    [Route("ims/toolconsumerprofile", Name = "ToolConsumerProfileApi")]
+    /// <remarks>
+    /// Unless it is overridden, the route for this controller will be "ims/[controller]" named "ToolConsumerProfileApi".
+    /// </remarks>
+    [Route("ims/[controller]", Name = "ToolConsumerProfileApi")]
     [Consumes(LtiConstants.LtiToolConsumerProfileMediaType)]
     [Produces(LtiConstants.LtiToolConsumerProfileMediaType)]
     public abstract class ToolConsumerProfileControllerBase : Controller
     {
         /// <summary>
-        /// Initialize a new instance of the ToolConsumerProfileControllerBase class.
-        /// </summary>
-        protected ToolConsumerProfileControllerBase()
-        {
-            OnGetToolConsumerProfile = dto => throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Return the ToolConsumerProfile.
         /// </summary>
-        public Func<GetToolConsumerProfileDto, Task> OnGetToolConsumerProfile { get; set; }
+        protected abstract Func<GetToolConsumerProfileRequest, Task<GetToolConsumerProfileResponse>> OnGetToolConsumerProfileAsync { get; }
 
         /// <summary>
         /// Get the <see cref="ToolConsumerProfile"/>
@@ -39,16 +34,21 @@ namespace LtiLibrary.AspNetCore.Profiles
         {
             try
             {
-                var dto = new GetToolConsumerProfileDto(lti_version);
-
-                await OnGetToolConsumerProfile(dto);
-
-                if (dto.StatusCode == StatusCodes.Status200OK)
+                if (OnGetToolConsumerProfileAsync == null)
                 {
-                    // Set the Content-Type of the ObjectResult
-                    return new ToolConsumerProfileResult(dto.ToolConsumerProfile);
+                    return StatusCode(StatusCodes.Status404NotFound);
                 }
-                return StatusCode(dto.StatusCode);
+
+                // Invoke OnGetToolConsumerProfileAsync in the application's controller to fill in the profile
+                var request = new GetToolConsumerProfileRequest(lti_version);
+                var response = await OnGetToolConsumerProfileAsync(request);
+
+                // Return the result
+                if (response.StatusCode == StatusCodes.Status200OK)
+                {
+                    return new ToolConsumerProfileResult(response.ToolConsumerProfile);
+                }
+                return StatusCode(response.StatusCode);
             }
             catch (Exception ex)
             {

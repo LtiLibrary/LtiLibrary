@@ -4,16 +4,15 @@ using Microsoft.AspNetCore.Http;
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {
     /// <summary>
-    /// DTO to transfer data between the OutcomesControllerBase and a derived OutcomesController.
+    /// Represents the ReadResult response.
     /// </summary>
-    public class ReadResultDto
+    public class ReadResultResponse
     {
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public ReadResultDto(string lisResultSourcedId)
+        public ReadResultResponse()
         {
-            LisResultSourcedId = lisResultSourcedId;
             StatusCode = StatusCodes.Status200OK;
         }
 
@@ -21,11 +20,6 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         /// The <see cref="Result"/>.
         /// </summary>
         public Result Result { get; set; }
-
-        /// <summary>
-        /// The LineItemId for this <see cref="Result"/>.
-        /// </summary>
-        public string LisResultSourcedId { get; set; }
 
         /// <summary>
         /// The HTTP StatusCode representing the result of the action (OK, NotFound, Unauthorized)

@@ -49,8 +49,7 @@ namespace LtiLibrary.AspNetCore.Tests.Profiles
         [Fact]
         public async void ReturnAToolConsumerProfile_FromGetToolConsumerProfileAsync()
         {
-            var uri = new Uri(_client.BaseAddress, "ims/toolconsumerprofile");
-            var clientResponse = await ToolConsumerProfileClient.GetToolConsumerProfileAsync(_client, uri.AbsoluteUri);
+            var clientResponse = await ToolConsumerProfileClient.GetToolConsumerProfileAsync(_client, "/ims/toolconsumerprofile");
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             JsonAssertions.AssertSameObjectJson(clientResponse.Response, "ToolConsumerProfile");
         }

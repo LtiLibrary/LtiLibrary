@@ -7,21 +7,21 @@
     }
   ],
   "@type": "Page",
-  "@id": "http://localhost/ims/membership/1422554502",
-  "nextPage": "http://localhost/ims/membership?page=2",
-  "differences": "http://localhost/ims/membership?x=1422554502",
+  "@id": "http://localhost/ims/membership/context/context-1?page=1",
+  "nextPage": "http://localhost/ims/membership/context/context-1?page=2",
+  "differences": "http://localhost/ims/membership/context/context-1?diff=1422554502",
   "pageOf": {
     "@type": "LISMembershipContainer",
     "membershipSubject": {
       "@type": "Context",
-      "contextId": "2923-abc",
+      "contextId": "context-1",
       "membership": [
         {
           "status": "liss:Active",
           "member": {
             "@type": "LISPerson",
-            "sourcedId": "school.edu:user",
-            "userId": "0ae836b9-7fc9-4060-006f-27b2066ac545",
+            "sourcedId": "sis:942a8dd9",
+            "userId": "instructor-1",
             "email": "user@school.edu",
             "familyName": "Public",
             "name": "Jane Q. Public",

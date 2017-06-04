@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
+using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
@@ -10,46 +11,46 @@ using Microsoft.AspNetCore.Mvc;
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {
     /// <summary>
-    /// Implements the LTI Basic Outcomes service introduced in LTI 1.1.
+    /// A <see cref="Controller" /> that implements the LTI Outcomes Management 1.0 service.
+    /// https://www.imsglobal.org/specs/ltiomv1p0/specification
     /// </summary>
+    /// <remarks>
+    /// Unless it is overridden, the route for this controller will be "ims/[controller]" named "OutcomesApi".
+    /// </remarks>
     [AddBodyHashHeader]
-    [Route("ims/outcomes", Name = "OutcomesApi")]
+    [Route("ims/[controller]", Name = "OutcomesApi")]
     [Consumes("application/xml")]
     [Produces("application/xml")]
     public abstract class OutcomesControllerBase : Controller
     {
         /// <summary>
-        /// Initializes a new instance of the OutcomesControllerBase.
-        /// </summary>
-        protected OutcomesControllerBase()
-        {
-            OnDeleteResult = dto => throw new NotImplementedException();
-            OnReadResult = dto => throw new NotImplementedException();
-            OnReplaceResult = dto => throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Delete the result (grade, score, outcome) from the consumer.
         /// </summary>
-        public Func<DeleteResultDto, Task> OnDeleteResult { get; set; }
+        protected abstract Func<DeleteResultRequest, Task<DeleteResultResponse>> OnDeleteResultAsync { get; }
         /// <summary>
         /// Read the result (grade, score, outcome) from the consumer.
         /// </summary>
-        public Func<ReadResultDto, Task> OnReadResult { get; set; }
+        protected abstract Func<ReadResultRequest, Task<ReadResultResponse>> OnReadResultAsync { get; }
         /// <summary>
         /// Save or update the result (grade, score, outcome) in the consumer.
         /// </summary>
-        public Func<ReplaceResultDto, Task> OnReplaceResult { get; set; }
+        protected abstract Func<ReplaceResultRequest, Task<ReplaceResultResponse>> OnReplaceResultAsync { get; }
 
         /// <summary>
         /// Receive the Outcomes 1.0 Post request.
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
+        public virtual async Task<IActionResult> Post([ModelBinder(BinderType = typeof(ImsxXmlMediaTypeModelBinder))] imsx_POXEnvelopeType request)
         {
             if (request == null)
             {
                 return BadRequest("Empty request.");
+            }
+
+            // Check for required Authorization header with parameters dictated by the OAuth Body Hash Protocol
+            if (!Request.IsAuthenticatedWithLti())
+            {
+                return Unauthorized();
             }
 
             var requestHeader = request.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
@@ -64,14 +65,26 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             // Delete Result
             if (requestBody.Item is deleteResultRequest)
             {
+                if (OnDeleteResultAsync == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound);
+                }
                 return await HandleDeleteResultRequest(requestHeader, requestBody);
             }
             if (requestBody.Item is readResultRequest)
             {
+                if (OnReadResultAsync == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound);
+                }
                 return await HandleReadResultRequest(requestHeader, requestBody);
             }
             if (requestBody.Item is replaceResultRequest)
             {
+                if (OnReplaceResultAsync == null)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound);
+                }
                 return await HandleReplaceResultRequest(requestHeader, requestBody);
             }
             return BadRequest("Request type not supported.");
@@ -142,16 +155,15 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             var result = GetResult(deleteRequest.resultRecord);
             try
             {
-                var dto = new DeleteResultDto(result.SourcedId);
+                var request = new DeleteResultRequest(result.SourcedId);
+                var response = await OnDeleteResultAsync(request);
 
-                await OnDeleteResult(dto);
-
-                if (dto.StatusCode == StatusCodes.Status200OK)
+                if (response.StatusCode == StatusCodes.Status200OK)
                 {
                     return CreateSuccessResponse(deleteResponse, requestHeader.imsx_messageIdentifier,
                         $"Score for {result.SourcedId} is deleted");
                 }
-                return StatusCode(dto.StatusCode);
+                return StatusCode(response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -166,21 +178,20 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
 
             try
             {
-                var dto = new ReadResultDto(readRequest.resultRecord.sourcedGUID.sourcedId);
+                var request = new ReadResultRequest(readRequest.resultRecord.sourcedGUID.sourcedId);
+                var response = await OnReadResultAsync(request);
 
-                await OnReadResult(dto);
-
-                if (dto.StatusCode == StatusCodes.Status200OK)
+                if (response.StatusCode == StatusCodes.Status200OK)
                 {
-                    if (dto.Result != null)
+                    if (response.Result != null)
                     {
-                        if (dto.Result.Score.HasValue)
+                        if (response.Result.Score.HasValue)
                         {
                             // The score exists
                             readResponse.result = new ResultType { resultScore = new TextType() };
                             var cultureInfo = new CultureInfo("en");
                             readResponse.result.resultScore.language = cultureInfo.Name;
-                            readResponse.result.resultScore.textString = dto.Result.Score.Value.ToString(cultureInfo);
+                            readResponse.result.resultScore.textString = response.Result.Score.Value.ToString(cultureInfo);
                             return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
                                 $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
                         }
@@ -200,7 +211,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                         }
                     }
                 }
-                return StatusCode(dto.StatusCode);
+                return StatusCode(response.StatusCode);
             }
             catch (Exception ex)
             {
@@ -215,16 +226,15 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             var result = GetResult(replaceRequest.resultRecord);
             try
             {
-                var dto = new ReplaceResultDto(result);
+                var request = new ReplaceResultRequest(result);
+                var response = await OnReplaceResultAsync(request);
 
-                await OnReplaceResult(dto);
-
-                if (dto.StatusCode == StatusCodes.Status200OK)
+                if (response.StatusCode == StatusCodes.Status200OK)
                 {
                     return CreateSuccessResponse(replaceRequest, requestHeader.imsx_messageIdentifier,
                         $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} is now {replaceRequest.resultRecord.result.resultScore.textString}");
                 }
-                return StatusCode(dto.StatusCode);
+                return StatusCode(response.StatusCode);
             }
             catch (Exception ex)
             {

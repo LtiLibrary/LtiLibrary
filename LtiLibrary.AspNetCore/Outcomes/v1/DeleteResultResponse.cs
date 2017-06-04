@@ -1,31 +1,23 @@
-﻿using LtiLibrary.NetCore.Lti.v1;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {
     /// <summary>
-    /// Represents a ReplaceResult DTO.
+    /// Represents the response to the delete request.
     /// </summary>
-    public class ReplaceResultDto
+    public class DeleteResultResponse
     {
         /// <summary>
         /// Initialize a new instance of the class.
         /// </summary>
-        public ReplaceResultDto(Result result)
+        public DeleteResultResponse()
         {
-            Result = result;
             StatusCode = StatusCodes.Status200OK;
         }
-
-        /// <summary>
-        /// The <see cref="Result"/>.
-        /// </summary>
-        public Result Result { get; set; }
 
         /// <summary>
         /// The HTTP StatusCode representing the result of the action (OK, NotFound, Unauthorized)
         /// </summary>
         public int StatusCode { get; set; }
-
     }
 }

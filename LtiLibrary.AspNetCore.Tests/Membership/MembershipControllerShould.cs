@@ -31,29 +31,75 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void GetAllMemberships_WhenGetMembershipAsyncIsCalled()
+        public async void ReturnMembershipPage()
         {
-            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret);
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipPageAsync without any filters
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership/context/context-1", Key, Secret);
+            // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
             Assert.NotNull(clientResponse.Response);
-            JsonAssertions.AssertSameObjectJson(new {clientResponse.Response}, "Memberships");
-        }
-
-        [Fact]
-        public async void GetOneMembershipPage_WhenGetMembershipPageAsyncIsCalled()
-        {
-            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership", Key, Secret);
-            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
-            Assert.NotNull(clientResponse.Response);
+            // And the response matches the response in MembershipContainerPage.json
             JsonAssertions.AssertSameObjectJson(clientResponse.Response, "MembershipContainerPage");
         }
 
         [Fact]
-        public async void GetOneMembership_WhenRoleIsLearner()
+        public async void ReturnNotFound_WhenTheSpecifiedPageDoesNotExist()
         {
-            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership", Key, Secret, role: Role.Learner);
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipPageAsync with an invalid page number
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership/context/context-1?page=3", Key, Secret);
+            // Then I get a NotFound response
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
+        }
+
+        [Fact]
+        public async void ReturnAllMemberships()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync without any filters
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-1", Key, Secret);
+            // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And the response matches the response in Memberships.json
+            JsonAssertions.AssertSameObjectJson(new {clientResponse.Response}, "Memberships");
+        }
+
+        [Fact]
+        public async void ReturnsLearners_WhenRoleFilterIsLearner()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync with the Learner role filter
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-1", Key, Secret, role: Role.Learner);
+            // Then I get an OK response
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And there is exactly one membership
             Assert.Equal(1, clientResponse.Response.Count);
+        }
+
+        [Fact]
+        public async void ReturnNotFound_WhenThereIsNoContextId()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I do not specify a contextId
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context", Key, Secret);
+            // Then I get a NotFound response
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
+        }
+
+        [Fact]
+        public async void ReturnNotFound_WhenThereIsAnUnknownContextId()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I specify an unknown contextId
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-2", Key, Secret);
+            // Then I get a NotFound response
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
         }
 
         public void Dispose()

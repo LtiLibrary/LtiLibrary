@@ -1,4 +1,6 @@
-﻿using LtiLibrary.AspNetCore.Extensions;
+﻿using System;
+using System.Threading.Tasks;
+using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Outcomes.v1;
 using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
@@ -14,69 +16,65 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         // Simple "database" of scores for demonstration purposes
         private static Result _result;
 
-        public OutcomesController()
+        protected override Func<DeleteResultRequest, Task<DeleteResultResponse>> OnDeleteResultAsync => DeleteResultAsync;
+        protected override Func<ReadResultRequest, Task<ReadResultResponse>> OnReadResultAsync => ReadResultAsync;
+        protected override Func<ReplaceResultRequest, Task<ReplaceResultResponse>> OnReplaceResultAsync => ReplaceResultAsync;
+
+        private async Task<DeleteResultResponse> DeleteResultAsync(DeleteResultRequest request)
         {
-            OnDeleteResult = async dto =>
+            var response = new DeleteResultResponse();
+
+            var ltiRequest = await Request.ParseLtiRequestAsync();
+            var signature = ltiRequest.GenerateSignature("secret");
+            if (!ltiRequest.Signature.Equals(signature))
             {
-                if (!Request.IsAuthenticatedWithLti())
-                {
-                    dto.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
-                var ltiRequest = await Request.ParseLtiRequestAsync();
-                var signature = ltiRequest.GenerateSignature("secret");
-                if (!ltiRequest.Signature.Equals(signature))
-                {
-                    dto.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                return response;
+            }
 
-                _result = null;
-            };
+            _result = null;
+            return response;
+        }
 
-            OnReadResult = async dto =>
+        private async Task<ReadResultResponse> ReadResultAsync(ReadResultRequest request)
+        {
+            var response = new ReadResultResponse();
+
+            var ltiRequest = await Request.ParseLtiRequestAsync();
+            var signature = ltiRequest.GenerateSignature("secret");
+            if (!ltiRequest.Signature.Equals(signature))
             {
-                if (!Request.IsAuthenticatedWithLti())
-                {
-                    dto.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
-                var ltiRequest = await Request.ParseLtiRequestAsync();
-                var signature = ltiRequest.GenerateSignature("secret");
-                if (!ltiRequest.Signature.Equals(signature))
-                {
-                    dto.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                return response;
+            }
 
-                dto.Result = _result;
-            };
+            response.Result = _result;
+            return response;
+        }
 
-            OnReplaceResult = async dto =>
+        private async Task<ReplaceResultResponse> ReplaceResultAsync(ReplaceResultRequest request)
+        {
+            var response= new ReplaceResultResponse();
+
+            var ltiRequest = await Request.ParseLtiRequestAsync();
+            var signature = ltiRequest.GenerateSignature("secret");
+            if (!ltiRequest.Signature.Equals(signature))
             {
-                if (!Request.IsAuthenticatedWithLti())
-                {
-                    dto.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
-                var ltiRequest = await Request.ParseLtiRequestAsync();
-                var signature = ltiRequest.GenerateSignature("secret");
-                if (!ltiRequest.Signature.Equals(signature))
-                {
-                    dto.StatusCode = StatusCodes.Status401Unauthorized;
-                    return;
-                }
+                response.StatusCode = StatusCodes.Status401Unauthorized;
+                return response;
+            }
 
-                if (_result == null)
-                {
-                    _result = new Result();
-                }
-                if (_result != null)
-                {
-                    _result.Score = dto.Result.Score;
-                    _result.SourcedId = dto.Result.SourcedId;
-                }
-            };
+            if (_result == null)
+            {
+                _result = new Result();
+            }
+            if (_result != null)
+            {
+                _result.Score = request.Result.Score;
+                _result.SourcedId = request.Result.SourcedId;
+            }
+
+            return response;
         }
     }
 }

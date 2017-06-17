@@ -5,7 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ReferenceJson\ContentItemSelection.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="ReferenceJson\basic-lti-launch-request.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceJson\ContentItemSelection.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceJson\ContentItemSelectionRequest.json">

@@ -1,0 +1,31 @@
+﻿{
+  "@context": "http://purl.imsglobal.org/ctx/lti/v1/ContentItem",
+  "@graph": [
+    {
+      "@id": "https://www.company.com/tool/1",
+      "@type": "LtiLinkItem",
+      "mediaType": "application/vnd.ims.lti.v1.ltilink",
+      "placementAdvice": {
+        "presentationDocumentTarget": "window"
+      },
+      "text": "Tool 1",
+      "title": "Tool 1",
+      "custom": {
+        "username": "$User.username"
+      }
+    },
+    {
+      "@id": "https://www.company.com/tool/2",
+      "@type": "LtiLinkItem",
+      "mediaType": "application/vnd.ims.lti.v1.ltilink",
+      "placementAdvice": {
+        "presentationDocumentTarget": "iframe"
+      },
+      "text": "Tool 2",
+      "title": "Tool 2",
+      "custom": {
+        "username": "$User.username"
+      }
+    }
+  ],
+}

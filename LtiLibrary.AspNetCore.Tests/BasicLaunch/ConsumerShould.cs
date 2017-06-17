@@ -16,7 +16,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace LtiLibrary.AspNetCore.Tests.Lti1
+namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
 {
     public class ConsumerShould : IDisposable
     {
@@ -62,35 +62,6 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
             }
         }
 
-        [Fact]
-        public async void LaunchAContentItemSelectionTool_WithValidCredentials()
-        {
-            var ltiRequest = GetLtiContentItemSelectionRequest();
-
-            // Substitute custom variables and calculate the signature
-            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("secret");
-
-            using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
-            {
-                Assert.True(response.IsSuccessStatusCode, $"Response status code does not indicate success: {response.StatusCode}");
-                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), LtiConstants.ContentItemSelectionRequestLtiMessageType);
-            }
-        }
-
-        [Fact]
-        public async void DoesNotLaunchAContentItemSelectionTool_WithInvalidCredentials()
-        {
-            var ltiRequest = GetLtiContentItemSelectionRequest();
-
-            // Substitute custom variables and calculate the signature
-            var signature = ltiRequest.SubstituteCustomVariablesAndGenerateSignature("nosecret");
-
-            using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
-            {
-                Assert.True(response.StatusCode == HttpStatusCode.Unauthorized, $"Response status code is not Unauthorized: {response.StatusCode}");
-            }
-        }
-
         private static async Task<JObject> GetContentAsJObject(HttpResponseMessage response)
         {
             var request = JObject.Parse(await response.Content.ReadAsStringAsync());
@@ -101,23 +72,6 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
             return request;
         }
 
-        private LtiRequest GetLtiContentItemSelectionRequest()
-        {
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            var ltiRequest = new LtiRequest(LtiConstants.ContentItemSelectionRequestLtiMessageType)
-            {
-                ConsumerKey = "12345",
-                ResourceLinkId = "launch",
-                Url = new Uri(_client.BaseAddress, "provider/library")
-            };
-
-            ltiRequest.AcceptMediaTypes = string.Join(",", "text/html", "image/*");
-            ltiRequest.AcceptPresentationDocumentTargets = string.Join(",", DocumentTarget.embed, DocumentTarget.frame);
-            ltiRequest.ContentItemReturnUrl = new Uri(_client.BaseAddress, "consumer/placecontentitem").AbsoluteUri;
-
-            return ltiRequest;
-        }
-
         private LtiRequest GetLtiLaunchRequest()
         {
             // ReSharper disable once UseObjectOrCollectionInitializer
@@ -125,7 +79,7 @@ namespace LtiLibrary.AspNetCore.Tests.Lti1
             {
                 ConsumerKey = "12345",
                 ResourceLinkId = "launch",
-                Url = new Uri(_client.BaseAddress, "provider/tool/1")
+                Url = new Uri(_client.BaseAddress, "toolprovider/tool/1")
             };
 
             // Tool

@@ -5,19 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ReferenceJson\ContentItemSelection.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="ReferenceJson\basic-lti-launch-request.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ReferenceJson\ContentItemSelection.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ReferenceJson\ContentItemSelectionRequest.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ReferenceJson\EmbeddedHtmlContentItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -39,22 +26,12 @@
     <Content Include="ReferenceJson\LtiLinkContentItem.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ReferenceJson\Memberships.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ReferenceJson\MembershipContainerPage.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="ReferenceJson\ToolConsumerProfile.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="NodaTime" Version="2.2.0" />
     <PackageReference Include="NodaTime.Serialization.JsonNet" Version="2.0.0" />
@@ -64,8 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LtiLibrary.AspNetCore\LtiLibrary.AspNetCore.csproj" />
-    <ProjectReference Include="..\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj" />
+    <ProjectReference Include="..\..\src\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

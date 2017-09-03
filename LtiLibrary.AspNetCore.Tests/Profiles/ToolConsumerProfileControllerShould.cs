@@ -10,7 +10,6 @@ using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lti.v2;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.PlatformAbstractions;
 using Xunit;
 
 namespace LtiLibrary.AspNetCore.Tests.Profiles
@@ -27,7 +26,7 @@ namespace LtiLibrary.AspNetCore.Tests.Profiles
 
             // Set the current directory to the compiler output directory so that
             // the reference json is found
-            Directory.SetCurrentDirectory(PlatformServices.Default.Application.ApplicationBasePath);
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory);
         }
 
         [Fact]

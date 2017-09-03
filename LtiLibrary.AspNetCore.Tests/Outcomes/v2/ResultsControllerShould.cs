@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Http;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 {
@@ -19,7 +18,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             // Set the current directory to the compiler output directory so that
             // the reference json is found
-            Directory.SetCurrentDirectory(PlatformServices.Default.Application.ApplicationBasePath);
+            Directory.SetCurrentDirectory(AppContext.BaseDirectory);
         }
 
         public void Dispose()

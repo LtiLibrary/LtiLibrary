@@ -4,14 +4,16 @@
     <Description>ASP.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2, Outcomes 1.0, Outcomes 2.0 (Draft), Content-Item Message 1.0, and Membership 1.0.</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.AspNetCore</AssemblyTitle>
-    <Version>2.2.0</Version>
+    <Version>3.0.0</Version>
     <Authors>andyfmiller.com</Authors>
-    <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>LtiLibrary.AspNetCore</AssemblyName>
     <PackageId>LtiLibrary.AspNetCore</PackageId>
     <PackageTags>IMS;LTI;.NET Core;ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
       <![CDATA[
+3.0.0
+- Updated to ASP.NET Core 2.0 and to latest NuGet packages
 2.2.0
 - Add contextId to Membership controller route
 - Made OnXxx methods in base controllers abstract
@@ -38,19 +40,15 @@
     <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
-    <DocumentationFile>bin\Release\net451\LtiLibrary.AspNetCore.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.6|AnyCPU'">
-    <DocumentationFile>bin\Release\net451\LtiLibrary.AspNetCore.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\LtiLibrary.AspNetCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>

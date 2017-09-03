@@ -4,14 +4,16 @@
     <Description>.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2, Outcomes 1.0, Outcomes 2.0 (Draft), Content-Item Message 1.0, and Membership 1.0.</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.NetCore</AssemblyTitle>
-    <Version>2.2.0</Version>
+    <Version>3.0.0</Version>
     <Authors>andyfmiller.com</Authors>
-    <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>LtiLibrary.NetCore</AssemblyName>
     <PackageId>LtiLibrary.NetCore</PackageId>
     <PackageTags>IMS;LTI;.NET Core</PackageTags>
     <PackageReleaseNotes>
       <![CDATA[
+3.0.0
+- Updated to .NET Core 2.0 and to latest NuGet packages
 2.2.0
 - Updated version
 2.1.2
@@ -42,29 +44,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <PackageReference Include="System.Net.Http" Version="4.3.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="System.Collections.Specialized" Version="4.3.0" />
-    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
-  </ItemGroup>
-  
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NetCore</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
-    <DocumentationFile>bin\Release\net451\LtiLibrary.NetCore.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard1.6|AnyCPU'">
-    <DocumentationFile>bin\Release\net451\LtiLibrary.NetCore.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\LtiLibrary.NetCore.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

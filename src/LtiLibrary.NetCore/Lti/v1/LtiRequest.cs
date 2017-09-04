@@ -44,12 +44,6 @@ namespace LtiLibrary.NetCore.Lti.v1
             LtiConstants.ContentItemPlacementParameter
         };
 
-        // Required Outcomes 1 parameters if LisOutcomeServiceUrl is specified
-        private static readonly string[] RequiredOutcomes1Parameters =
-        {
-            LtiConstants.LisResultSourcedIdParameter
-        };
-
         // Required Outcomes 2 parameters if any service URLs are specificed
         private static readonly string[] RequiredOutcomes2Parameters =
         {
@@ -2281,12 +2275,6 @@ namespace LtiLibrary.NetCore.Lti.v1
                 }
                 default:
                     throw new LtiException($"Invalid {LtiConstants.LtiMessageTypeParameter}: {LtiMessageType}.");
-            }
-
-            // If the request is configured to support Outcomes 1.0, make sure lis_result_sourcedid is specified
-            if (!string.IsNullOrWhiteSpace(LisOutcomeServiceUrl))
-            {
-                RequireAllOf(RequiredOutcomes1Parameters);
             }
 
             // If the request is configured to support Outcomes 2.0, make sure user_id is specified

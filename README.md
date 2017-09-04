@@ -1,6 +1,8 @@
 LTI Library
 ===========
-There are two .NET Core projects in this solution to support IMS LTI Tool Providers and Tool Consumers. See the LtiLibrary1.6 repository for the last non-.NET Core source for LtiLibrary.
+There are two .NET Core 2.0 projects in this solution to support IMS LTI Tool Providers and Tool Consumers. The Visual Studio solution and project files are compatible with Visual Studio 2017 (v15.3).
+
+See the LtiLibrary1.6 repository for the last non-.NET Core source for LtiLibrary.
 
 ## LtiLibrary.NetCore
 This is the only library you need if you are going to roll your own support for web pages or native apps.
@@ -10,7 +12,7 @@ This library includes the classes, properties, and methods to support LTI 1.x la
 Available on NuGet: https://www.nuget.org/packages/LtiLibrary.NetCore
 
 ## Ltibrary.AspNetCore
-This library depends on LtiLibrary.NetCore and adds useful extensions and helper methods for ASP.NET Core applications such as an OutcomesApiController which implements the LTI Outcomes API as a Controller.
+This library depends on LtiLibrary.NetCore and adds useful extensions and helper methods for ASP.NET Core 2.0 applications such as an OutcomesApiController which implements the LTI Outcomes API as a Controller.
 
 Available on NuGet: https://www.nuget.org/packages/LtiLibrary.AspNetCore
 

@@ -1,8 +1,0 @@
-﻿{
-  "@type" : "ContentItem",
-  "mediaType" : "text/html",
-  "text" : "<p>IMS has a <a href=\"http://imscatalog.org/\">catalog of certified products</a> available on their website</p>",
-  "placementAdvice" : {
-    "presentationDocumentTarget" : "embed"
-  }
-}

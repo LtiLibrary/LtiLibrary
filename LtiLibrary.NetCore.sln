@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.AspNetCore", "LtiLibrary.AspNetCore\LtiLibrary.AspNetCore.csproj", "{67B242B6-4DAD-4688-81AF-E429FA3257A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.AspNetCore", "src\LtiLibrary.AspNetCore\LtiLibrary.AspNetCore.csproj", "{67B242B6-4DAD-4688-81AF-E429FA3257A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.NetCore", "LtiLibrary.NetCore\LtiLibrary.NetCore.csproj", "{8FE9A86F-1B16-4281-97B2-403CEE34B175}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.NetCore", "src\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj", "{8FE9A86F-1B16-4281-97B2-403CEE34B175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.NetCore.Tests", "LtiLibrary.NetCore.Tests\LtiLibrary.NetCore.Tests.csproj", "{66F45058-8007-4DFD-AAFA-34F480AD9072}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.NetCore.Tests", "test\LtiLibrary.NetCore.Tests\LtiLibrary.NetCore.Tests.csproj", "{66F45058-8007-4DFD-AAFA-34F480AD9072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.AspNetCore.Tests", "LtiLibrary.AspNetCore.Tests\LtiLibrary.AspNetCore.Tests.csproj", "{91F5C3AE-117C-4E16-A505-98E9FD00398D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.AspNetCore.Tests", "test\LtiLibrary.AspNetCore.Tests\LtiLibrary.AspNetCore.Tests.csproj", "{91F5C3AE-117C-4E16-A505-98E9FD00398D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

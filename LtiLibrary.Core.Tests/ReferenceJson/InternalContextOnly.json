@@ -1,9 +1,0 @@
-﻿{
-  "@context": { "Child": "ChildTerms" },
-  "@type": "Child",
-  "Name": "MyChild",
-  "GrandChild": {
-    "@type": "Child",
-    "Name": "MyGrandChild"
-  }
-}

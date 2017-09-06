@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2, Outcomes 1.0, Outcomes 2.0 (Draft), Content-Item Message 1.0, and Membership 1.0.</Description>
+    <Copyright>Copyright 2017</Copyright>
+    <AssemblyTitle>LtiLibrary.NetCore</AssemblyTitle>
+    <Version>3.0.0</Version>
+    <Authors>andyfmiller.com</Authors>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>LtiLibrary.NetCore</AssemblyName>
+    <PackageId>LtiLibrary.NetCore</PackageId>
+    <PackageTags>IMS;LTI;.NET Core</PackageTags>
+    <PackageReleaseNotes>
+      <![CDATA[
+3.0.0
+- Updated to .NET Core 2.0 and to latest NuGet packages
+2.2.0
+- Updated version
+2.1.2
+- Fix a bug in Outcomes1Client that encoded request with utf-8 and xml with utf-16
+- Fix a bug in SecureClient that choked on null BaseAddress in the HttpClient
+2.1.1
+- Add support for liss and lism prefixes on Membership status and role.
+2.1.0
+- Added support for Membership Service 1.0
+- Significant code cleanup (many namespace changes relative to 2.0.3, but no breaking functionality changes)
+2.0.3
+- Removed beta suffix.
+- Moved OAuthUtility methods to OAuthRequest and removed OAuthUtility.
+- Added test for OAuth Authentication header.
+2.0.2-beta
+- Merged fix to issue #39.
+- Added XML documentation.
+2.0.1-beta
+- Changed interface of v1.OutcomesClient, v2.OutcomesClient, and ToolConsumerProfileClient to take an HttpClient. This facilitated using Microsoft.AspNetCore.TestHost for integration testing.
+2.0.0-beta
+- Updated to .NET Core 1.1
+      ]]>
+    </PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\LtiLibrary.NetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

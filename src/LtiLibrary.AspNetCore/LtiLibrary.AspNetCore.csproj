@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>ASP.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2, Outcomes 1.0, Outcomes 2.0 (Draft), Content-Item Message 1.0, and Membership 1.0.</Description>
+    <Copyright>Copyright 2017</Copyright>
+    <AssemblyTitle>LtiLibrary.AspNetCore</AssemblyTitle>
+    <Version>3.0.0</Version>
+    <Authors>andyfmiller.com</Authors>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>LtiLibrary.AspNetCore</AssemblyName>
+    <PackageId>LtiLibrary.AspNetCore</PackageId>
+    <PackageTags>IMS;LTI;.NET Core;ASP.NET Core</PackageTags>
+    <PackageReleaseNotes>
+      <![CDATA[
+3.0.0
+- Updated to ASP.NET Core 2.0 and to latest NuGet packages
+2.2.0
+- Add contextId to Membership controller route
+- Made OnXxx methods in base controllers abstract
+- Made ActionMethods in base controllers virtual so they can be overridden
+2.1.1
+- Add support for liss and lism prefixes on Membership status and role
+2.1.0
+- Added support for Membership Service 1.0
+- Significant code cleanup (many namespace changes relative to 2.0.3, but no breaking functionality changes)
+2.0.3
+- Removed beta suffix.
+2.0.2-beta
+- Merged fix to issue #39.
+- Added XML documentation.
+2.0.1-beta
+- Fixed minor bugs discovered by integration tests.
+2.0.0-beta
+- New library for ASP.NET Core.
+      ]]>
+    </PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\LtiLibrary.AspNetCore.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj" />
+  </ItemGroup>
+
+</Project>

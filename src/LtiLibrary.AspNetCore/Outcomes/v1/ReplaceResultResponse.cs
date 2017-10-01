@@ -1,5 +1,4 @@
-﻿using LtiLibrary.NetCore.Lti.v1;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Outcomes.v1
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Profiles;
 using LtiLibrary.NetCore.Common;

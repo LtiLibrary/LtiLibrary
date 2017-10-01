@@ -107,7 +107,7 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
             {
                 return result;
             }
-            else if (source == null || target == null)
+            if (source == null || target == null)
             {
                 result.OldValues = source;
                 result.NewValues = target;
@@ -248,61 +248,58 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
             {
                 return diffJson;
             }
-            else if (diffJson.Type != JTokenType.Object)
+            if (diffJson.Type != JTokenType.Object)
             {
                 return diffJson;
             }
             // deal with objects
-            else
-            {
-                var diffObj = (JObject)diffJson;
-                JToken token;
-                if (sourceJson.Type == JTokenType.Array)
-                {                    
-                    var sz = 0;
-                    var foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
-                    if (foundArraySize)
+            var diffObj = (JObject)diffJson;
+            JToken token;
+            if (sourceJson.Type == JTokenType.Array)
+            {                    
+                var sz = 0;
+                var foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
+                if (foundArraySize)
+                {
+                    diffObj.Remove (PrefixArraySize);
+                    sz = token.Value<int> ();                        
+                }
+                var array = sourceJson as JArray;
+                // resize array
+                if (array != null && foundArraySize && array.Count != sz)
+                {
+                    var snapshot = array.DeepClone () as JArray;
+                    array.Clear ();
+                    for (var i = 0; i < sz; i++)
                     {
-                        diffObj.Remove (PrefixArraySize);
-                        sz = token.Value<int> ();                        
-                    }
-                    var array = sourceJson as JArray;
-                    // resize array
-                    if (array != null && foundArraySize && array.Count != sz)
-                    {
-                        var snapshot = array.DeepClone () as JArray;
-                        array.Clear ();
-                        for (var i = 0; i < sz; i++)
-                        {
-                            array.Add (snapshot != null && i < snapshot.Count ? snapshot[i] : null);
-                        }
-                    }
-                    // patch it
-                    foreach (var f in diffObj)
-                    {
-                        if (int.TryParse (f.Key, out var ix))
-                        {
-                            if (array != null) array[ix] = Patch (array[ix], f.Value);
-                        }
+                        array.Add (snapshot != null && i < snapshot.Count ? snapshot[i] : null);
                     }
                 }
-                else
+                // patch it
+                foreach (var f in diffObj)
                 {
-                    var sourceObj = sourceJson as JObject ?? new JObject();
-                    // remove fields
-                    if (diffObj.TryGetValue (PrefixRemovedFields, out token))
+                    if (int.TryParse (f.Key, out var ix))
                     {
-                        diffObj.Remove (PrefixRemovedFields);
-                        if (token is JArray jArray)
-                            foreach (var f in jArray)
-                                sourceObj.Remove (f.ToString ());
+                        if (array != null) array[ix] = Patch (array[ix], f.Value);
                     }
+                }
+            }
+            else
+            {
+                var sourceObj = sourceJson as JObject ?? new JObject();
+                // remove fields
+                if (diffObj.TryGetValue (PrefixRemovedFields, out token))
+                {
+                    diffObj.Remove (PrefixRemovedFields);
+                    if (token is JArray jArray)
+                        foreach (var f in jArray)
+                            sourceObj.Remove (f.ToString ());
+                }
 
-                    // patch it
-                    foreach (var f in diffObj)
-                    {
-                        sourceObj[f.Key] = Patch (sourceObj[f.Key], f.Value);
-                    }
+                // patch it
+                foreach (var f in diffObj)
+                {
+                    sourceObj[f.Key] = Patch (sourceObj[f.Key], f.Value);
                 }
             }
             return sourceJson;

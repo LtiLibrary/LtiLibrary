@@ -32,7 +32,7 @@ namespace LtiLibrary.NetCore.Tests
             var parent = new Parent
             {
                 Id = new Uri("http://localhost/test/1"),
-                Name = "MyParent",
+                Name = "MyParent"
             };
             JsonAssertions.AssertSameJsonLdObject(parent, "ExternalContextOnly");
         }
@@ -43,7 +43,7 @@ namespace LtiLibrary.NetCore.Tests
             var parent = new Parent
             {
                 Id = new Uri("http://localhost/test/1"),
-                Name = "MyParent",
+                Name = "MyParent"
             };
             JsonAssertions.AssertSameJsonLdObject(parent, "ExternalContextOnly");
         }

@@ -112,8 +112,7 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
         private LtiRequest GetLtiContentItemSelectionResponse(string url, string data)
         {
             // Both links should pass the user's username as a custom parameter
-            var custom = new Dictionary<string, string>();
-            custom.Add("username", "$User.username");
+            var custom = new Dictionary<string, string> {{"username", "$User.username"}};
 
             // Create a graph with 2 LtiLinks
             var graph = new ContentItemSelectionGraph

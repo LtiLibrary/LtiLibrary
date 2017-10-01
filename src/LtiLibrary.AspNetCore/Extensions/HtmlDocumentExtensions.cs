@@ -26,7 +26,7 @@ namespace LtiLibrary.AspNetCore.Extensions
 
         private static void ConvertContentTo(HtmlNode node, TextWriter outText)
         {
-            foreach (HtmlNode subnode in node.ChildNodes)
+            foreach (var subnode in node.ChildNodes)
             {
                 ConvertTo(subnode, outText);
             }
@@ -46,12 +46,12 @@ namespace LtiLibrary.AspNetCore.Extensions
 
                 case HtmlNodeType.Text:
                     // script and style must not be output
-                    string parentName = node.ParentNode.Name;
-                    if ((parentName == "script") || (parentName == "style"))
+                    var parentName = node.ParentNode.Name;
+                    if (parentName == "script" || parentName == "style")
                         break;
 
                     // get text
-                    string html = ((HtmlTextNode)node).Text;
+                    var html = ((HtmlTextNode)node).Text;
 
                     // is it in fact a special closing node output as text?
                     if (HtmlNode.IsOverlappedClosingElement(html))

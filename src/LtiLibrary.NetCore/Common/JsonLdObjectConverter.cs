@@ -156,7 +156,7 @@ namespace LtiLibrary.NetCore.Common
             // Check for terms already in the @context
             if (obj.Context is JArray context && context.Count > 1)
             {
-                for (int index = 1; index < context.Count; index++)
+                for (var index = 1; index < context.Count; index++)
                 {
                     var contextObject = context[index] as JObject;
                     if (contextObject?.First is JProperty term)

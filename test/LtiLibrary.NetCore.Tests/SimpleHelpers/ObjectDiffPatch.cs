@@ -101,7 +101,7 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
 
         private static ObjectDiffPatchResult Diff (JObject source, JObject target)
         {
-            ObjectDiffPatchResult result = new ObjectDiffPatchResult ();
+            var result = new ObjectDiffPatchResult ();
             // check for null values
             if (source == null && target == null)
             {
@@ -115,8 +115,8 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
             }
 
             // compare internal fields           
-            JArray removedNew = new JArray ();
-            JArray removedOld = new JArray ();
+            var removedNew = new JArray ();
+            var removedOld = new JArray ();
             JToken token;
             // start by iterating in source fields
             foreach (var i in source)
@@ -176,23 +176,23 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
             }
             else
             {
-                var aT = (target as JArray);
-                var aS = (source as JArray);
+                var aT = target as JArray;
+                var aS = source as JArray;
                 if (source.Type == JTokenType.Array)
                 {
                     if (aS == null || aT == null)
                     {
                         AddToken(result, fieldName, source, target);
                     }
-                    else if ((aS.Count == 0 || aT.Count == 0) && (aS.Count != aT.Count))
+                    else if ((aS.Count == 0 || aT.Count == 0) && aS.Count != aT.Count)
                     {
                         AddToken (result, fieldName, source, target);
                     }
                     else
                     {
-                        ObjectDiffPatchResult arrayDiff = new ObjectDiffPatchResult ();
-                        int minCount = Math.Min (aS.Count, aT.Count);
-                        for (int i = 0; i < Math.Max (aS.Count, aT.Count); i++)
+                        var arrayDiff = new ObjectDiffPatchResult ();
+                        var minCount = Math.Min (aS.Count, aT.Count);
+                        for (var i = 0; i < Math.Max (aS.Count, aT.Count); i++)
                         {
                             if (i < minCount)
                             {
@@ -256,12 +256,12 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
             // deal with objects
             else
             {
-                JObject diffObj = (JObject)diffJson;
+                var diffObj = (JObject)diffJson;
                 JToken token;
                 if (sourceJson.Type == JTokenType.Array)
                 {                    
-                    int sz = 0;
-                    bool foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
+                    var sz = 0;
+                    var foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
                     if (foundArraySize)
                     {
                         diffObj.Remove (PrefixArraySize);
@@ -269,11 +269,11 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
                     }
                     var array = sourceJson as JArray;
                     // resize array
-                    if (array != null && (foundArraySize && array.Count != sz))
+                    if (array != null && foundArraySize && array.Count != sz)
                     {
-                        JArray snapshot = array.DeepClone () as JArray;
+                        var snapshot = array.DeepClone () as JArray;
                         array.Clear ();
-                        for (int i = 0; i < sz; i++)
+                        for (var i = 0; i < sz; i++)
                         {
                             array.Add (snapshot != null && i < snapshot.Count ? snapshot[i] : null);
                         }
@@ -281,7 +281,7 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
                     // patch it
                     foreach (var f in diffObj)
                     {
-                        if (Int32.TryParse (f.Key, out var ix))
+                        if (int.TryParse (f.Key, out var ix))
                         {
                             if (array != null) array[ix] = Patch (array[ix], f.Value);
                         }
@@ -376,7 +376,7 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
         }
     }
 
-    class ObjectDiffPatchJTokenComparer : IEqualityComparer<JToken>
+    internal class ObjectDiffPatchJTokenComparer : IEqualityComparer<JToken>
     {
         public bool Equals (JToken x, JToken y)
         {

@@ -178,7 +178,7 @@ namespace LtiLibrary.NetCore.Clients
                                 }
                                 else
                                 {
-                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, out double result) 
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, out var result) 
                                         ? new Result { Score = result, SourcedId = lisResultSourcedId } 
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
                                 }

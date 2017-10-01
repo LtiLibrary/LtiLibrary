@@ -14,7 +14,7 @@ namespace LtiLibrary.NetCore.OAuth
         NameValueCollection Parameters { get; }
         string Signature { get; set; }
         string SignatureMethod { get; set; }
-        Int64 Timestamp { get; set; }
+        long Timestamp { get; set; }
         DateTime TimestampAsDateTime { get; set; }
         Uri Url { get; set; }
         string Version { get; set; }

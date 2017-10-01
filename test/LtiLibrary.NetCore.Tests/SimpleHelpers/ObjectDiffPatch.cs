@@ -174,52 +174,54 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
                 if (!r.AreEqual)
                     AddToken (result, fieldName, r);
             }
-            else if (source.Type == JTokenType.Array)
+            else
             {
-                var aS = (source as JArray);
                 var aT = (target as JArray);
+                var aS = (source as JArray);
+                if (source.Type == JTokenType.Array)
+                {
+                    if (aS == null || aT == null)
+                    {
+                        AddToken(result, fieldName, source, target);
+                    }
+                    else if ((aS.Count == 0 || aT.Count == 0) && (aS.Count != aT.Count))
+                    {
+                        AddToken (result, fieldName, source, target);
+                    }
+                    else
+                    {
+                        ObjectDiffPatchResult arrayDiff = new ObjectDiffPatchResult ();
+                        int minCount = Math.Min (aS.Count, aT.Count);
+                        for (int i = 0; i < Math.Max (aS.Count, aT.Count); i++)
+                        {
+                            if (i < minCount)
+                            {
+                                DiffField (i.ToString (), aS[i], aT[i], arrayDiff);
+                            }
+                            else if (i >= aS.Count)
+                            {
+                                AddNewValuesToken (arrayDiff, aT[i], i.ToString ());
+                            }
+                            else
+                            {
+                                AddOldValuesToken (arrayDiff, aS[i], i.ToString ());
+                            }
+                        }
 
-                if (aS == null || aT == null)
-                {
-                    AddToken(result, fieldName, source, target);
-                }
-                else if ((aS.Count == 0 || aT.Count == 0) && (aS.Count != aT.Count))
-                {
-                    AddToken (result, fieldName, source, target);
+                        if (!arrayDiff.AreEqual)
+                        {
+                            if (aS.Count != aT.Count)
+                                AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
+                            AddToken (result, fieldName, arrayDiff);
+                        }
+                    }
                 }
                 else
                 {
-                    ObjectDiffPatchResult arrayDiff = new ObjectDiffPatchResult ();
-                    int minCount = Math.Min (aS.Count, aT.Count);
-                    for (int i = 0; i < Math.Max (aS.Count, aT.Count); i++)
+                    if (!JToken.DeepEquals (source, target))
                     {
-                        if (i < minCount)
-                        {
-                            DiffField (i.ToString (), aS[i], aT[i], arrayDiff);
-                        }
-                        else if (i >= aS.Count)
-                        {
-                            AddNewValuesToken (arrayDiff, aT[i], i.ToString ());
-                        }
-                        else
-                        {
-                            AddOldValuesToken (arrayDiff, aS[i], i.ToString ());
-                        }
+                        AddToken (result, fieldName, source, target);
                     }
-
-                    if (!arrayDiff.AreEqual)
-                    {
-                        if (aS.Count != aT.Count)
-                            AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
-                        AddToken (result, fieldName, arrayDiff);
-                    }
-                }
-            }
-            else
-            {
-                if (!JToken.DeepEquals (source, target))
-                {
-                    AddToken (result, fieldName, source, target);
                 }
             }
         }
@@ -292,8 +294,7 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
                     if (diffObj.TryGetValue (PrefixRemovedFields, out token))
                     {
                         diffObj.Remove (PrefixRemovedFields);
-                        var jArray = token as JArray;
-                        if (jArray != null)
+                        if (token is JArray jArray)
                             foreach (var f in jArray)
                                 sourceObj.Remove (f.ToString ());
                     }

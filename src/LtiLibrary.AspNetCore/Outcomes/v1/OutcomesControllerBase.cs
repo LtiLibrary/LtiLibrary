@@ -53,8 +53,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 return Unauthorized();
             }
 
-            var requestHeader = request.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
-            if (requestHeader == null)
+            if (!(request.imsx_POXHeader.Item is imsx_RequestHeaderInfoType requestHeader))
             {
                 return BadRequest("Invalid request header.");
             }

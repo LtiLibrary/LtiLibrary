@@ -45,8 +45,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
                 var doc = new XmlDocument();
                 doc.LoadXml(xml);
 
-                var declaration = doc.FirstChild as XmlDeclaration;
-                if (declaration == null)
+                if (!(doc.FirstChild is XmlDeclaration declaration))
                 {
                     return BadRequest();
                 }

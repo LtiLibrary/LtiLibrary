@@ -199,8 +199,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         {
             get
             {
-                ContextType contextType;
-                return Enum.TryParse(Parameters[LtiConstants.ContextTypeParameter], out contextType)
+                return Enum.TryParse(Parameters[LtiConstants.ContextTypeParameter], out ContextType contextType)
                    ? contextType
                    : default(ContextType?);
             }
@@ -252,8 +251,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         {
             get
             {
-                DocumentTarget presentationTarget;
-                return Enum.TryParse(Parameters[LtiConstants.LaunchPresentationDocumentTargetParameter], out presentationTarget)
+                return Enum.TryParse(Parameters[LtiConstants.LaunchPresentationDocumentTargetParameter], out DocumentTarget presentationTarget)
                    ? presentationTarget
                    : default(DocumentTarget?);
             }
@@ -279,8 +277,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         {
             get
             {
-                int value;
-                return int.TryParse(Parameters[LtiConstants.LaunchPresentationHeightParameter], out value)
+                return int.TryParse(Parameters[LtiConstants.LaunchPresentationHeightParameter], out var value)
                     ? value
                     : default(int?);
             }
@@ -361,8 +358,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         {
             get
             {
-                int value;
-                return int.TryParse(Parameters[LtiConstants.LaunchPresentationWidthParameter], out value)
+                return int.TryParse(Parameters[LtiConstants.LaunchPresentationWidthParameter], out var value)
                     ? value
                     : default(int?);
             }
@@ -1033,9 +1029,8 @@ namespace LtiLibrary.NetCore.Lti.v1
                 {
                     return null;
                 }
-                
-                bool value;
-                return Boolean.TryParse(Parameters[LtiConstants.AcceptMultipleParameter], out value) && value;
+
+                return bool.TryParse(Parameters[LtiConstants.AcceptMultipleParameter], out var value) && value;
             }
             set
             {
@@ -1076,8 +1071,7 @@ namespace LtiLibrary.NetCore.Lti.v1
                     return null;
                 }
 
-                bool value;
-                return Boolean.TryParse(Parameters[LtiConstants.AcceptUnsignedParameter], out value) && value;
+                return bool.TryParse(Parameters[LtiConstants.AcceptUnsignedParameter], out var value) && value;
             }
             set
             {
@@ -1100,8 +1094,7 @@ namespace LtiLibrary.NetCore.Lti.v1
                     return null;
                 }
 
-                bool value;
-                return Boolean.TryParse(Parameters[LtiConstants.AutoCreateParameter], out value) && value;
+                return bool.TryParse(Parameters[LtiConstants.AutoCreateParameter], out var value) && value;
             }
             set
             {
@@ -1128,8 +1121,7 @@ namespace LtiLibrary.NetCore.Lti.v1
                     return null;
                 }
 
-                bool value;
-                return Boolean.TryParse(Parameters[LtiConstants.CanConfirmParameter], out value) && value;
+                return bool.TryParse(Parameters[LtiConstants.CanConfirmParameter], out var value) && value;
             }
             set
             {
@@ -2299,8 +2291,7 @@ namespace LtiLibrary.NetCore.Lti.v1
             }
             foreach (var roleName in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                Role role;
-                if (Enum.TryParse(roleName, true, out role))
+                if (Enum.TryParse(roleName, true, out Role role))
                 {
                     roles.Add(role);
                 }

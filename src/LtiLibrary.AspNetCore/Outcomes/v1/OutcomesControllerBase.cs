@@ -135,8 +135,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
                 const NumberStyles style = NumberStyles.Number | NumberStyles.AllowDecimalPoint;
                 var culture = new CultureInfo(LtiConstants.ScoreLanguage);
-                double value;
-                if (double.TryParse(resultRecord.result.resultScore.textString, style, culture, out value))
+                if (double.TryParse(resultRecord.result.resultScore.textString, style, culture, out var value))
                 {
                     if (value >= 0 && value <= 1)
                     {

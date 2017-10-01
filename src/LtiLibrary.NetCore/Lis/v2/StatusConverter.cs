@@ -31,8 +31,7 @@ namespace LtiLibrary.NetCore.Lis.v2
             {
                 if (value.Length > index)
                 {
-                    Status enumValue;
-                    if (Enum.TryParse(value.Substring(5), out enumValue))
+                    if (Enum.TryParse(value.Substring(5), out Status enumValue))
                     {
                         return enumValue;
                     }

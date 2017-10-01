@@ -279,8 +279,7 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
                     // patch it
                     foreach (var f in diffObj)
                     {
-                        int ix;
-                        if (Int32.TryParse (f.Key, out ix))
+                        if (Int32.TryParse (f.Key, out var ix))
                         {
                             if (array != null) array[ix] = Patch (array[ix], f.Value);
                         }

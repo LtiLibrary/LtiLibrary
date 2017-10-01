@@ -127,7 +127,7 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
             return ltiRequest;
         }
 
-        private static FormUrlEncodedContent GetContent(LtiRequest request, string signature)
+        private static FormUrlEncodedContent GetContent(IOAuthRequest request, string signature)
         {
             var list = request.Parameters.AllKeys.Select(key => new KeyValuePair<string, string>(key, request.Parameters[key])).ToList();
             list.Add(new KeyValuePair<string, string>(OAuthConstants.SignatureParameter, signature));

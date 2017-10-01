@@ -109,7 +109,7 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
             }
         }
 
-        private LtiRequest GetLtiContentItemSelectionResponse(string url, string data)
+        private static LtiRequest GetLtiContentItemSelectionResponse(string url, string data)
         {
             // Both links should pass the user's username as a custom parameter
             var custom = new Dictionary<string, string> {{"username", "$User.username"}};

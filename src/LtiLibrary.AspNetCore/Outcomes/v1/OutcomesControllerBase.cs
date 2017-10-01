@@ -62,29 +62,26 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             var requestBody = request.imsx_POXBody;
 
             // Delete Result
-            if (requestBody.Item is deleteResultRequest)
+            switch (requestBody.Item)
             {
-                if (OnDeleteResultAsync == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                return await HandleDeleteResultRequest(requestHeader, requestBody);
-            }
-            if (requestBody.Item is readResultRequest)
-            {
-                if (OnReadResultAsync == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                return await HandleReadResultRequest(requestHeader, requestBody);
-            }
-            if (requestBody.Item is replaceResultRequest)
-            {
-                if (OnReplaceResultAsync == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                return await HandleReplaceResultRequest(requestHeader, requestBody);
+                case deleteResultRequest _:
+                    if (OnDeleteResultAsync == null)
+                    {
+                        return StatusCode(StatusCodes.Status404NotFound);
+                    }
+                    return await HandleDeleteResultRequest(requestHeader, requestBody);
+                case readResultRequest _:
+                    if (OnReadResultAsync == null)
+                    {
+                        return StatusCode(StatusCodes.Status404NotFound);
+                    }
+                    return await HandleReadResultRequest(requestHeader, requestBody);
+                case replaceResultRequest _:
+                    if (OnReplaceResultAsync == null)
+                    {
+                        return StatusCode(StatusCodes.Status404NotFound);
+                    }
+                    return await HandleReplaceResultRequest(requestHeader, requestBody);
             }
             return BadRequest("Request type not supported.");
         }

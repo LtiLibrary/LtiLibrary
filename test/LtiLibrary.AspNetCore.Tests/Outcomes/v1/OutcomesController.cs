@@ -68,11 +68,10 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             {
                 _result = new Result();
             }
-            if (_result != null)
-            {
-                _result.Score = request.Result.Score;
-                _result.SourcedId = request.Result.SourcedId;
-            }
+            if (_result == null) return response;
+
+            _result.Score = request.Result.Score;
+            _result.SourcedId = request.Result.SourcedId;
 
             return response;
         }

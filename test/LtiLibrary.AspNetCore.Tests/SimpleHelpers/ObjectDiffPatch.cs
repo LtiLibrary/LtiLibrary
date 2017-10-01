@@ -208,12 +208,11 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
                             }
                         }
 
-                        if (!arrayDiff.AreEqual)
-                        {
-                            if (aS.Count != aT.Count)
-                                AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
-                            AddToken (result, fieldName, arrayDiff);
-                        }
+                        if (arrayDiff.AreEqual) return;
+
+                        if (aS.Count != aT.Count)
+                            AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
+                        AddToken (result, fieldName, arrayDiff);
                     }
                 }
                 else
@@ -341,15 +340,11 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
     /// </summary>
     public class ObjectDiffPatchResult
     {
-        private JObject _oldValues;
-
-        private JObject _newValues;
-
         /// <summary>
         /// If the compared objects are equal.
         /// </summary>
         /// <value>true if the obects are equal; otherwise, false.</value>
-        public bool AreEqual => _oldValues == null && _newValues == null;
+        public bool AreEqual => OldValues == null && NewValues == null;
 
         /// <summary>
         /// The type of the compared objects.
@@ -360,20 +355,12 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
         /// <summary>
         /// The values modified in the original object.
         /// </summary>
-        public JObject OldValues
-        {
-            get => _oldValues;
-            set => _oldValues = value;
-        }
+        public JObject OldValues { get; set; }
 
         /// <summary>
         /// The values modified in the updated object.
         /// </summary>
-        public JObject NewValues
-        {
-            get => _newValues;
-            set => _newValues = value;
-        }
+        public JObject NewValues { get; set; }
     }
 
     internal class ObjectDiffPatchJTokenComparer : IEqualityComparer<JToken>

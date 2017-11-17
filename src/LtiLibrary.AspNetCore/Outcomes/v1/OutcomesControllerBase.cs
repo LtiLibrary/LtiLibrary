@@ -222,6 +222,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         private async Task<IActionResult> HandleReplaceResultRequest(imsx_RequestHeaderInfoType requestHeader, imsx_POXBodyType requestBody)
         {
             var replaceRequest = requestBody.Item as replaceResultRequest ?? new replaceResultRequest();
+            var replaceResponse = new replaceResultResponse();
 
             var result = GetResult(replaceRequest.resultRecord);
             try
@@ -231,7 +232,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
 
                 if (response.StatusCode == StatusCodes.Status200OK)
                 {
-                    return CreateSuccessResponse(replaceRequest, requestHeader.imsx_messageIdentifier,
+                    return CreateSuccessResponse(replaceResponse, requestHeader.imsx_messageIdentifier,
                         $"Score for {replaceRequest.resultRecord.sourcedGUID.sourcedId} is now {replaceRequest.resultRecord.result.resultScore.textString}");
                 }
                 return StatusCode(response.StatusCode);

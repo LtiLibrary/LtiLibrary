@@ -10,5 +10,6 @@
   "accept_media_types": "text/html,image/*",
   "accept_presentation_document_targets": "embed,frame",
   "content_item_return_url": "http://localhost/consumer/placecontentitem",
-  "data":  "VeryImportantData" 
+  "data": "VeryImportantData",
+  "url": "http://localhost/contentitemsprovider/library"
 }

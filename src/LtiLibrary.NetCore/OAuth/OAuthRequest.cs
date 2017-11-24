@@ -229,6 +229,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The resource URL.
         /// </summary>
+        [DataMember(Name = OAuthConstants.UrlParameter)]
         public Uri Url { get; set; }
 
         /// <summary>

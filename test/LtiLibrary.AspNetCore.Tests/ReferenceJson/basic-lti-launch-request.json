@@ -23,5 +23,6 @@
   "resource_link_title": "Launch",
   "lis_outcome_service_url": "http://localhost/ims/outcomes",
   "lis_result_sourcedid": "testId",
-  "CustomParameters": "custom_lineitem_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems/%257Bid%257D&custom_lineitems_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems&custom_result_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems/%257BlineitemId%257D/results/%257Bid%257D&custom_results_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems/%257BlineitemId%257D/results&custom_tc_profile_url=http://localhost/ims/toolconsumerprofile"
+  "CustomParameters": "custom_lineitem_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems/%257Bid%257D&custom_lineitems_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems&custom_result_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems/%257BlineitemId%257D/results/%257Bid%257D&custom_results_url=http://localhost/ims/courses/%257BcontextId%257D/lineitems/%257BlineitemId%257D/results&custom_tc_profile_url=http://localhost/ims/toolconsumerprofile",
+  "url": "http://localhost/toolprovider/tool/1"
 }

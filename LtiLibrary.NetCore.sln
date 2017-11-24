@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A677D33D-E0DD-499D-B69D-A342394A4245}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.AspNetCore", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.NetCore", "src\LtiLibrary.NetCore\LtiLibrary.NetCore.csproj", "{8FE9A86F-1B16-4281-97B2-403CEE34B175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.NetCore.Tests", "test\LtiLibrary.NetCore.Tests\LtiLibrary.NetCore.Tests.csproj", "{66F45058-8007-4DFD-AAFA-34F480AD9072}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.NetCore.Tests", "test\LtiLibrary.NetCore.Tests\LtiLibrary.NetCore.Tests.csproj", "{66F45058-8007-4DFD-AAFA-34F480AD9072}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LtiLibrary.AspNetCore.Tests", "test\LtiLibrary.AspNetCore.Tests\LtiLibrary.AspNetCore.Tests.csproj", "{91F5C3AE-117C-4E16-A505-98E9FD00398D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LtiLibrary.AspNetCore.Tests", "test\LtiLibrary.AspNetCore.Tests\LtiLibrary.AspNetCore.Tests.csproj", "{91F5C3AE-117C-4E16-A505-98E9FD00398D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +42,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E52F18A6-59B5-4BCA-8BED-BC6422B0CDFC}
 	EndGlobalSection
 EndGlobal

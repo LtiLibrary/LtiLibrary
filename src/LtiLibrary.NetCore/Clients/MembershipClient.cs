@@ -168,11 +168,7 @@ namespace LtiLibrary.NetCore.Clients
                 return serviceUrl;
             }
             query.Remove(query.Length - 1, 1);
-            if (serviceUrl.Contains("?"))
-            {
-                return $"{serviceUrl}&{query}";
-            }
-            return $"{serviceUrl}?{query}";
+            return serviceUrl.Contains("?") ? $"{serviceUrl}&{query}" : $"{serviceUrl}?{query}";
         }
     }
 }

@@ -53,8 +53,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 return Unauthorized();
             }
 
-            var requestHeader = request.imsx_POXHeader.Item as imsx_RequestHeaderInfoType;
-            if (requestHeader == null)
+            if (!(request.imsx_POXHeader.Item is imsx_RequestHeaderInfoType requestHeader))
             {
                 return BadRequest("Invalid request header.");
             }
@@ -63,29 +62,26 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             var requestBody = request.imsx_POXBody;
 
             // Delete Result
-            if (requestBody.Item is deleteResultRequest)
+            switch (requestBody.Item)
             {
-                if (OnDeleteResultAsync == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                return await HandleDeleteResultRequest(requestHeader, requestBody);
-            }
-            if (requestBody.Item is readResultRequest)
-            {
-                if (OnReadResultAsync == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                return await HandleReadResultRequest(requestHeader, requestBody);
-            }
-            if (requestBody.Item is replaceResultRequest)
-            {
-                if (OnReplaceResultAsync == null)
-                {
-                    return StatusCode(StatusCodes.Status404NotFound);
-                }
-                return await HandleReplaceResultRequest(requestHeader, requestBody);
+                case deleteResultRequest _:
+                    if (OnDeleteResultAsync == null)
+                    {
+                        return StatusCode(StatusCodes.Status404NotFound);
+                    }
+                    return await HandleDeleteResultRequest(requestHeader, requestBody);
+                case readResultRequest _:
+                    if (OnReadResultAsync == null)
+                    {
+                        return StatusCode(StatusCodes.Status404NotFound);
+                    }
+                    return await HandleReadResultRequest(requestHeader, requestBody);
+                case replaceResultRequest _:
+                    if (OnReplaceResultAsync == null)
+                    {
+                        return StatusCode(StatusCodes.Status404NotFound);
+                    }
+                    return await HandleReplaceResultRequest(requestHeader, requestBody);
             }
             return BadRequest("Request type not supported.");
         }
@@ -135,8 +131,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
                 const NumberStyles style = NumberStyles.Number | NumberStyles.AllowDecimalPoint;
                 var culture = new CultureInfo(LtiConstants.ScoreLanguage);
-                double value;
-                if (double.TryParse(resultRecord.result.resultScore.textString, style, culture, out value))
+                if (double.TryParse(resultRecord.result.resultScore.textString, style, culture, out var value))
                 {
                     if (value >= 0 && value <= 1)
                     {

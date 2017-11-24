@@ -78,6 +78,11 @@ namespace LtiLibrary.NetCore.OAuth
         public const string TokenParameter = "oauth_token";
 
         /// <summary>
+        /// URL.
+        /// </summary>
+        public const string UrlParameter = "url";
+
+        /// <summary>
         /// oauth_version parameter name.
         /// </summary>
         public const string VersionParameter = "oauth_version";

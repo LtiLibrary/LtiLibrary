@@ -34,7 +34,6 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Reflection;
 
 namespace LtiLibrary.NetCore.Tests.SimpleHelpers
 {    
@@ -102,13 +101,13 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
 
         private static ObjectDiffPatchResult Diff (JObject source, JObject target)
         {
-            ObjectDiffPatchResult result = new ObjectDiffPatchResult ();
+            var result = new ObjectDiffPatchResult ();
             // check for null values
             if (source == null && target == null)
             {
                 return result;
             }
-            else if (source == null || target == null)
+            if (source == null || target == null)
             {
                 result.OldValues = source;
                 result.NewValues = target;
@@ -116,8 +115,8 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
             }
 
             // compare internal fields           
-            JArray removedNew = new JArray ();
-            JArray removedOld = new JArray ();
+            var removedNew = new JArray ();
+            var removedOld = new JArray ();
             JToken token;
             // start by iterating in source fields
             foreach (var i in source)
@@ -175,52 +174,54 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
                 if (!r.AreEqual)
                     AddToken (result, fieldName, r);
             }
-            else if (source.Type == JTokenType.Array)
+            else
             {
-                var aS = (source as JArray);
-                var aT = (target as JArray);
+                var aT = target as JArray;
+                var aS = source as JArray;
+                if (source.Type == JTokenType.Array)
+                {
+                    if (aS == null || aT == null)
+                    {
+                        AddToken(result, fieldName, source, target);
+                    }
+                    else if ((aS.Count == 0 || aT.Count == 0) && aS.Count != aT.Count)
+                    {
+                        AddToken (result, fieldName, source, target);
+                    }
+                    else
+                    {
+                        var arrayDiff = new ObjectDiffPatchResult ();
+                        var minCount = Math.Min (aS.Count, aT.Count);
+                        for (var i = 0; i < Math.Max (aS.Count, aT.Count); i++)
+                        {
+                            if (i < minCount)
+                            {
+                                DiffField (i.ToString (), aS[i], aT[i], arrayDiff);
+                            }
+                            else if (i >= aS.Count)
+                            {
+                                AddNewValuesToken (arrayDiff, aT[i], i.ToString ());
+                            }
+                            else
+                            {
+                                AddOldValuesToken (arrayDiff, aS[i], i.ToString ());
+                            }
+                        }
 
-                if (aS == null || aT == null)
-                {
-                    AddToken(result, fieldName, source, target);
-                }
-                else if ((aS.Count == 0 || aT.Count == 0) && (aS.Count != aT.Count))
-                {
-                    AddToken (result, fieldName, source, target);
+                        if (!arrayDiff.AreEqual)
+                        {
+                            if (aS.Count != aT.Count)
+                                AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
+                            AddToken (result, fieldName, arrayDiff);
+                        }
+                    }
                 }
                 else
                 {
-                    ObjectDiffPatchResult arrayDiff = new ObjectDiffPatchResult ();
-                    int minCount = Math.Min (aS.Count, aT.Count);
-                    for (int i = 0; i < Math.Max (aS.Count, aT.Count); i++)
+                    if (!JToken.DeepEquals (source, target))
                     {
-                        if (i < minCount)
-                        {
-                            DiffField (i.ToString (), aS[i], aT[i], arrayDiff);
-                        }
-                        else if (i >= aS.Count)
-                        {
-                            AddNewValuesToken (arrayDiff, aT[i], i.ToString ());
-                        }
-                        else
-                        {
-                            AddOldValuesToken (arrayDiff, aS[i], i.ToString ());
-                        }
+                        AddToken (result, fieldName, source, target);
                     }
-
-                    if (!arrayDiff.AreEqual)
-                    {
-                        if (aS.Count != aT.Count)
-                            AddToken (arrayDiff, PrefixArraySize, aS.Count, aT.Count);
-                        AddToken (result, fieldName, arrayDiff);
-                    }
-                }
-            }
-            else
-            {
-                if (!JToken.DeepEquals (source, target))
-                {
-                    AddToken (result, fieldName, source, target);
                 }
             }
         }
@@ -248,63 +249,58 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
             {
                 return diffJson;
             }
-            else if (diffJson.Type != JTokenType.Object)
+            if (diffJson.Type != JTokenType.Object)
             {
                 return diffJson;
             }
             // deal with objects
-            else
-            {
-                JObject diffObj = (JObject)diffJson;
-                JToken token;
-                if (sourceJson.Type == JTokenType.Array)
-                {                    
-                    int sz = 0;
-                    bool foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
-                    if (foundArraySize)
+            var diffObj = (JObject)diffJson;
+            JToken token;
+            if (sourceJson.Type == JTokenType.Array)
+            {                    
+                var sz = 0;
+                var foundArraySize = diffObj.TryGetValue(PrefixArraySize, out token);
+                if (foundArraySize)
+                {
+                    diffObj.Remove (PrefixArraySize);
+                    sz = token.Value<int> ();                        
+                }
+                var array = sourceJson as JArray;
+                // resize array
+                if (array != null && foundArraySize && array.Count != sz)
+                {
+                    var snapshot = array.DeepClone () as JArray;
+                    array.Clear ();
+                    for (var i = 0; i < sz; i++)
                     {
-                        diffObj.Remove (PrefixArraySize);
-                        sz = token.Value<int> ();                        
-                    }
-                    var array = sourceJson as JArray;
-                    // resize array
-                    if (array != null && (foundArraySize && array.Count != sz))
-                    {
-                        JArray snapshot = array.DeepClone () as JArray;
-                        array.Clear ();
-                        for (int i = 0; i < sz; i++)
-                        {
-                            array.Add (snapshot != null && i < snapshot.Count ? snapshot[i] : null);
-                        }
-                    }
-                    // patch it
-                    foreach (var f in diffObj)
-                    {
-                        int ix;
-                        if (Int32.TryParse (f.Key, out ix))
-                        {
-                            if (array != null) array[ix] = Patch (array[ix], f.Value);
-                        }
+                        array.Add (snapshot != null && i < snapshot.Count ? snapshot[i] : null);
                     }
                 }
-                else
+                // patch it
+                foreach (var f in diffObj)
                 {
-                    var sourceObj = sourceJson as JObject ?? new JObject();
-                    // remove fields
-                    if (diffObj.TryGetValue (PrefixRemovedFields, out token))
+                    if (int.TryParse (f.Key, out var ix))
                     {
-                        diffObj.Remove (PrefixRemovedFields);
-                        var jArray = token as JArray;
-                        if (jArray != null)
-                            foreach (var f in jArray)
-                                sourceObj.Remove (f.ToString ());
+                        if (array != null) array[ix] = Patch (array[ix], f.Value);
                     }
+                }
+            }
+            else
+            {
+                var sourceObj = sourceJson as JObject ?? new JObject();
+                // remove fields
+                if (diffObj.TryGetValue (PrefixRemovedFields, out token))
+                {
+                    diffObj.Remove (PrefixRemovedFields);
+                    if (token is JArray jArray)
+                        foreach (var f in jArray)
+                            sourceObj.Remove (f.ToString ());
+                }
 
-                    // patch it
-                    foreach (var f in diffObj)
-                    {
-                        sourceObj[f.Key] = Patch (sourceObj[f.Key], f.Value);
-                    }
+                // patch it
+                foreach (var f in diffObj)
+                {
+                    sourceObj[f.Key] = Patch (sourceObj[f.Key], f.Value);
                 }
             }
             return sourceJson;
@@ -342,15 +338,11 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
     /// </summary>
     public class ObjectDiffPatchResult
     {
-        private JObject _oldValues;
-
-        private JObject _newValues;
-
         /// <summary>
         /// If the compared objects are equal.
         /// </summary>
         /// <value>true if the obects are equal; otherwise, false.</value>
-        public bool AreEqual => _oldValues == null && _newValues == null;
+        public bool AreEqual => OldValues == null && NewValues == null;
 
         /// <summary>
         /// The type of the compared objects.
@@ -361,23 +353,15 @@ namespace LtiLibrary.NetCore.Tests.SimpleHelpers
         /// <summary>
         /// The values modified in the original object.
         /// </summary>
-        public JObject OldValues
-        {
-            get => _oldValues;
-            set => _oldValues = value;
-        }
+        public JObject OldValues { get; set; }
 
         /// <summary>
         /// The values modified in the updated object.
         /// </summary>
-        public JObject NewValues
-        {
-            get => _newValues;
-            set => _newValues = value;
-        }
+        public JObject NewValues { get; set; }
     }
 
-    class ObjectDiffPatchJTokenComparer : IEqualityComparer<JToken>
+    internal class ObjectDiffPatchJTokenComparer : IEqualityComparer<JToken>
     {
         public bool Equals (JToken x, JToken y)
         {

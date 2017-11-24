@@ -154,14 +154,12 @@ namespace LtiLibrary.NetCore.Common
             }
 
             // Check for terms already in the @context
-            var context = obj.Context as JArray;
-            if (context != null && context.Count > 1)
+            if (obj.Context is JArray context && context.Count > 1)
             {
-                for (int index = 1; index < context.Count; index++)
+                for (var index = 1; index < context.Count; index++)
                 {
                     var contextObject = context[index] as JObject;
-                    var term = contextObject?.First as JProperty;
-                    if (term != null)
+                    if (contextObject?.First is JProperty term)
                     {
                         terms[term.Name] = term.Value;
                     }

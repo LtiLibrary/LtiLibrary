@@ -104,7 +104,7 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             ltiRequest.SetRoles(new[] { Role.Instructor });
 
             // Outcomes-1 service (WebApi controller)
-            ltiRequest.LisOutcomeServiceUrl = (new Uri(_client.BaseAddress, "ims/outcomes")).AbsoluteUri;
+            ltiRequest.LisOutcomeServiceUrl = new Uri(_client.BaseAddress, "ims/outcomes").AbsoluteUri;
             ltiRequest.LisResultSourcedId = "testId";
 
             // Outcomes-2 service (WebApi controller)
@@ -128,7 +128,7 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             return ltiRequest;
         }
 
-        private static FormUrlEncodedContent GetContent(LtiRequest request, string signature)
+        private static FormUrlEncodedContent GetContent(IOAuthRequest request, string signature)
         {
             var list = request.Parameters.AllKeys.Select(key => new KeyValuePair<string, string>(key, request.Parameters[key])).ToList();
             list.Add(new KeyValuePair<string, string>(OAuthConstants.SignatureParameter, signature));

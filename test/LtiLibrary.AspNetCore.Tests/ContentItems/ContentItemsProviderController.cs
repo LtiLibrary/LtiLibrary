@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using LtiLibrary.AspNetCore.Extensions;
+﻿using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lti.v1;
-using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LtiLibrary.AspNetCore.Tests.ContentItems
 {
@@ -112,11 +109,10 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
             }
         }
 
-        private LtiRequest GetLtiContentItemSelectionResponse(string url, string data)
+        private static LtiRequest GetLtiContentItemSelectionResponse(string url, string data)
         {
             // Both links should pass the user's username as a custom parameter
-            var custom = new Dictionary<string, string>();
-            custom.Add("username", "$User.username");
+            var custom = new Dictionary<string, string> {{"username", "$User.username"}};
 
             // Create a graph with 2 LtiLinks
             var graph = new ContentItemSelectionGraph

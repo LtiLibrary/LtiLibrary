@@ -229,6 +229,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <summary>
         /// The resource URL.
         /// </summary>
+        [DataMember(Name = OAuthConstants.UrlParameter)]
         public Uri Url { get; set; }
 
         /// <summary>
@@ -308,7 +309,7 @@ namespace LtiLibrary.NetCore.OAuth
             // https://tools.ietf.org/html/rfc5849#section-3.4.1.2
             // Exclude the query (query parameters in parameters collection) from the URI
             var normalizedUrl = $"{url.Scheme.ToLowerInvariant()}://{url.Host.ToLowerInvariant()}";
-            if (!((url.Scheme == "http" && url.Port == 80) || (url.Scheme == "https" && url.Port == 443)))
+            if (!(url.Scheme == "http" && url.Port == 80 || url.Scheme == "https" && url.Port == 443))
             {
                 normalizedUrl += ":" + url.Port;
             }

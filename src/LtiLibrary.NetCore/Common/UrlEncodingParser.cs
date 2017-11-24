@@ -81,7 +81,7 @@ namespace LtiLibrary.NetCore.Common
                 Clear();
             else
             {
-                int index = query.IndexOf('?');
+                var index = query.IndexOf('?');
                 if (index > -1)
                 {
                     if (query.Length >= index + 1)
@@ -91,7 +91,7 @@ namespace LtiLibrary.NetCore.Common
                 var pairs = query.Split('&');
                 foreach (var pair in pairs)
                 {
-                    int index2 = pair.IndexOf('=');
+                    var index2 = pair.IndexOf('=');
                     if (index2 > 0)
                     {
                         Add(pair.Substring(0, index2), pair.Substring(index2 + 1));
@@ -109,13 +109,13 @@ namespace LtiLibrary.NetCore.Common
         /// <returns>urlencoded data or url</returns>
         public override string ToString()
         {
-            string query = string.Empty;
+            var query = string.Empty;
             foreach (string key in Keys)
             {
-                string[] values = GetValues(key);
+                var values = GetValues(key);
                 if (values != null)
                 {
-                    query = values.Aggregate(query, (current, val) => current + (key + "=") + Uri.EscapeUriString(val) + "&");
+                    query = values.Aggregate(query, (current, val) => current + key + "=" + Uri.EscapeUriString(val) + "&");
                 }
             }
             query = query.Trim('&');

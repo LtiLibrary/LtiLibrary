@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Http.Internal;
 
 namespace LtiLibrary.AspNetCore.Common
 {
@@ -20,6 +21,8 @@ namespace LtiLibrary.AspNetCore.Common
         {
             var httpContext = context.HttpContext;
             var request = httpContext.Request;
+
+            request.EnableRewind();
 
             if (request.Body.CanRead)
             {

@@ -8,6 +8,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v2;
 using Result = LtiLibrary.NetCore.Lis.v2.Result;
+using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Clients
 {
@@ -25,11 +26,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="serviceUrl">The LineItem REST endpoint.</param>
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>No content is returned.</returns>
         public static async Task<ClientResponse> DeleteLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod = null)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod);
         }
 
         /// <summary>
@@ -39,11 +41,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="serviceUrl">The LineItem REST endpoint.</param>
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>No content is returned.</returns>
         public static async Task<ClientResponse> DeleteLineItemResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod = null)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod);
         }
 
         /// <summary>
@@ -53,11 +56,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="serviceUrl">The LineItem REST endpoint.</param>
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the LineItem specified in the REST endpoint, but without the results property filled in.</returns>
         public static async Task<ClientResponse<LineItem>> GetLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod = null)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType);
+            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -67,11 +71,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="serviceUrl">The LineItem REST endpoint.</param>
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the LineItem specified in the REST endpoint, including results.</returns>
         public static async Task<ClientResponse<LineItem>> GetLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod = null)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType);
+            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -85,12 +90,13 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="firstPage">True to request the first page of lineitems.</param>
         /// <param name="p">The page (2 to ?) of lineitems requested.</param>
         /// <param name="activityId">If specified, the result set will be filtered to only include lineitems that are associated with this activity.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the LineItemContainerPage.</returns>
         public static async Task<ClientResponse<LineItemContainerPage>> GetLineItemsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null)
+            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null, string signatureMethod = null)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p, activityId);
-            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType);
+            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -101,6 +107,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="lineItem">The LineItem to create within the server.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the LineItem with @id and results filled in.</returns>
         /// <remarks>
         /// https://www.imsglobal.org/specs/ltiomv2p0/specification-3
@@ -111,9 +118,9 @@ namespace LtiLibrary.NetCore.Clients
         /// result may be a PUT or a GET request.
         /// </remarks>
         public static async Task<ClientResponse<LineItem>> PostLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, LineItem lineItem)
+            string consumerSecret, LineItem lineItem, string signatureMethod = null)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType);
+            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -124,10 +131,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="lineItem">The LineItem to be updated within the server.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>No content is returned.</returns>
-        public static async Task<ClientResponse> PutLineItemAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, LineItem lineItem)
+        public static async Task<ClientResponse> PutLineItemAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+            LineItem lineItem, string signatureMethod = null)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -138,10 +147,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="lineItem">The LineItem to be updated within the server.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>No content is returned.</returns>
-        public static async Task<ClientResponse> PutLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, LineItem lineItem)
+        public static async Task<ClientResponse> PutLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+            LineItem lineItem, string signatureMethod = null)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemResultsMediaType);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemResultsMediaType, signatureMethod);
         }
 
         #endregion
@@ -155,11 +166,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="serviceUrl">The LISResult REST endpoint.</param>
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>No content is returned.</returns>
         public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod = null)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod);
         }
 
         /// <summary>
@@ -169,11 +181,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="serviceUrl">The LISResult REST endpoint.</param>
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the LISResult specified in the REST endpoint.</returns>
         public static async Task<ClientResponse<Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod = null)
         {
-            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -186,12 +199,13 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="limit">The suggested number of results to include in each page.</param>
         /// <param name="firstPage">True to request the first page of results.</param>
         /// <param name="p">The page (2 to ?) of results requested.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the ResultContainerPage.</returns>
         public static async Task<ClientResponse<ResultContainerPage>> GetResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null)
+            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string signatureMethod = null)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p);
-            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType);
+            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -202,11 +216,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="result">The LISResult to create within the server.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>If successful, the LISResult with @id filled in.</returns>
         public static async Task<ClientResponse<Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, Result result)
+            string consumerSecret, Result result, string signatureMethod)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
+            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod);
         }
 
         /// <summary>
@@ -217,10 +232,12 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="result">The LISResult to be updated within the server.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
         /// <returns>No content is returned.</returns>
-        public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, Result result)
+        public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, Result result,
+            string signatureMethod)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod);
         }
 
         #endregion
@@ -228,11 +245,11 @@ namespace LtiLibrary.NetCore.Clients
         #region Private Methods
 
         private static async Task<ClientResponse> DeleteOutcomeAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret)
+            string consumerSecret, string signatureMethod)
         {
             try
             {
-                await SecuredClient.SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -273,14 +290,14 @@ namespace LtiLibrary.NetCore.Clients
         }
 
         private static async Task<ClientResponse<T>> GetOutcomeAsync<T>(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, string contentType) where T : class
+            string consumerSecret, string contentType, string signatureMethod) where T : class
         {
             try
             {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 
-                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret, signatureMethod);
                 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -352,13 +369,13 @@ namespace LtiLibrary.NetCore.Clients
         }
 
         private static async Task<ClientResponse<T>> PostOutcomeAsync<T>(HttpClient client, string serviceUrl,
-            string consumerKey, string consumerSecret, T content, string contentType) where T : class
+            string consumerKey, string consumerSecret, T content, string contentType, string signatureMethod) where T : class
         {
             try
             {
                 var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
 
-                await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -400,13 +417,13 @@ namespace LtiLibrary.NetCore.Clients
         }
 
         private static async Task<ClientResponse> PutOutcomeAsync<T>(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, T content, string contentType)
+            string consumerSecret, T content, string contentType, string signatureMethod)
         {
             try
             {
                 var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
 
-                await SecuredClient.SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret);
+                await SecuredClient.SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse();
                 try

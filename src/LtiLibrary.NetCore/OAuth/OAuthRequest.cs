@@ -347,13 +347,21 @@ namespace LtiLibrary.NetCore.OAuth
             var signatureBase = GenerateSignatureBase(httpMethod, url, parameters);
 
             // Note that in LTI, the TokenSecret (second part of the key) is blank
-            var hmacsha1 = new HMACSHA1
+            var key = Encoding.ASCII.GetBytes($"{consumerSecret.ToRfc3986EncodedString()}&");
+
+            HMAC hmac;
+            switch (parameters[OAuthConstants.SignatureMethodParameter])
             {
-                Key = Encoding.ASCII.GetBytes($"{consumerSecret.ToRfc3986EncodedString()}&")
-            };
+                case OAuthConstants.SignatureMethodHmacSha256:
+                    hmac = new HMACSHA256 { Key = key };
+                    break;
+                default:
+                    hmac = new HMACSHA1 { Key = key };
+                    break;
+            }
 
             var dataBuffer = Encoding.ASCII.GetBytes(signatureBase);
-            var hashBytes = hmacsha1.ComputeHash(dataBuffer);
+            var hashBytes = hmac.ComputeHash(dataBuffer);
 
             return Convert.ToBase64String(hashBytes);
         }

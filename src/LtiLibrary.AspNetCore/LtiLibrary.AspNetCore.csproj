@@ -4,7 +4,7 @@
     <Description>ASP.NET Core library with IMS LTI support for Tool Consumer and Tool Provider applications. Supports IMS LTI 1.0, 1.1, 1.1.1 and 1.2, Outcomes 1.0, Outcomes 2.0 (Draft), Content-Item Message 1.0, and Membership 1.0.</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>LtiLibrary.AspNetCore</AssemblyTitle>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <Authors>andyfmiller.com</Authors>
     <TargetFrameworks>netstandard1.6;netstandard2.0</TargetFrameworks>
     <AssemblyName>LtiLibrary.AspNetCore</AssemblyName>
@@ -12,6 +12,9 @@
     <PackageTags>IMS;LTI;.NET Core;ASP.NET Core</PackageTags>
     <PackageReleaseNotes>
       <![CDATA[
+3.0.1
+- Added optional status description to outcomes responses (e.g. ReadResultResponse).
+- Added properly formatted failure response to body of Outcomes POST response when status code != 200 (including status description).
 3.0.0
 - Updated to ASP.NET Core 2.0 and to latest NuGet packages
 2.2.0

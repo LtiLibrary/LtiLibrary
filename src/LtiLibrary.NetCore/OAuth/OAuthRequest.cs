@@ -352,6 +352,12 @@ namespace LtiLibrary.NetCore.OAuth
             HMAC hmac;
             switch (parameters[OAuthConstants.SignatureMethodParameter])
             {
+                case OAuthConstants.SignatureMethodHmacSha512:
+                    hmac = new HMACSHA512 { Key = key };
+                    break;
+                case OAuthConstants.SignatureMethodHmacSha384:
+                    hmac = new HMACSHA384 { Key = key };
+                    break;
                 case OAuthConstants.SignatureMethodHmacSha256:
                     hmac = new HMACSHA256 { Key = key };
                     break;

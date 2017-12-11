@@ -15,7 +15,7 @@ namespace LtiLibrary.NetCore.Clients
     internal static class SecuredClient
     {
         internal static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
-            HttpContent content, string consumerKey, string consumerSecret, string signatureMethod)
+            HttpContent content, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
         {
             if (client == null)
             {
@@ -54,11 +54,18 @@ namespace LtiLibrary.NetCore.Clients
             HashAlgorithm sha;
             switch(signatureMethod)
             {
-                case OAuthConstants.SignatureMethodHmacSha256:
+                default:
+                case SignatureMethod.HmacSha1:
+                    sha = SHA1.Create();
+                    break;
+                case SignatureMethod.HmacSha256:
                     sha = SHA256.Create();
                     break;
-                default:
-                    sha = SHA1.Create();
+                case SignatureMethod.HmacSha384:
+                    sha = SHA384.Create();
+                    break;
+                case SignatureMethod.HmacSha512:
+                    sha = SHA512.Create();
                     break;
             }
 

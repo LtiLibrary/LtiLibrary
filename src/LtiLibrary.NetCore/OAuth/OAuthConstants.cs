@@ -68,9 +68,19 @@ namespace LtiLibrary.NetCore.OAuth
         public const string SignatureMethodHmacSha1 = "HMAC-SHA1";
 
         /// <summary>
-        /// HMAC-SHA1 signature method.
+        /// HMAC-SHA256 signature method.
         /// </summary>
         public const string SignatureMethodHmacSha256 = "HMAC-SHA256";
+
+        /// <summary>
+        /// HMAC-SHA384 signature method.
+        /// </summary>
+        public const string SignatureMethodHmacSha384 = "HMAC-SHA384";
+
+        /// <summary>
+        /// HMAC-SHA512 signature method.
+        /// </summary>
+        public const string SignatureMethodHmacSha512 = "HMAC-SHA512";
 
         /// <summary>
         /// oauth_timestamp parameter name.

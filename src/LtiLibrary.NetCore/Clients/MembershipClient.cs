@@ -27,10 +27,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth Consumer Secret to use for signing the request.</param>
         /// <param name="rlid">The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.</param>
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
-        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         public static async Task<ClientResponse<List<Membership>>> GetMembershipAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            string rlid = null, Role? role = null, string signatureMethod = null)
+            string rlid = null, Role? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
             var pageResponse = await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType, signatureMethod);
@@ -90,10 +90,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="limit">Specifies the maximum number of items that should be delivered per page. This parameter is merely a hint. The server is not obligated to honor this limit and may at its own discretion choose a different value for the number of items per page.</param>
         /// <param name="rlid">The ID of a resource link within the context and associated and the Tool Provider. The result set will be filtered so that it includes only those memberships that are permitted to access the resource link. If omitted, the result set will include all memberships for the context.</param>
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
-        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="OAuthConstants.SignatureMethodHmacSha1"/>, currently <see cref="OAuthConstants.SignatureMethodHmacSha256"/> is also available</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         public static async Task<ClientResponse<MembershipContainerPage>> GetMembershipPageAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            int? limit = null, string rlid = null, Role? role = null, string signatureMethod = null)
+            int? limit = null, string rlid = null, Role? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
             return await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
@@ -102,7 +102,7 @@ namespace LtiLibrary.NetCore.Clients
 
         private static async Task<ClientResponse<MembershipContainerPage>> GetFilteredMembershipPageAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            string contentType, string signatureMethod)
+            string contentType, SignatureMethod signatureMethod)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace LtiLibrary.NetCore.Clients
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 
                 await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey,
-                    consumerSecret, signatureMethod ?? OAuthConstants.SignatureMethodHmacSha1);
+                    consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse<MembershipContainerPage>();
                 try

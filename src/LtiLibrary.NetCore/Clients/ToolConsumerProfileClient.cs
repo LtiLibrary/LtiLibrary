@@ -24,17 +24,19 @@ namespace LtiLibrary.NetCore.Clients
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.LtiToolConsumerProfileMediaType));
 
             var profileResponse = new ClientResponse<ToolConsumerProfile>();
-            using (var response = await client.GetAsync(serviceUrl))
+            using (var response = await client.GetAsync(serviceUrl).ConfigureAwait(false))
             {
                 profileResponse.StatusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode)
                 {
                     profileResponse.Response =
-                        await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>();
+                        await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>().ConfigureAwait(false);
                 }
 #if DEBUG
-                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
-                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync()
+                    .ConfigureAwait(false);
+                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
+                    .ConfigureAwait(false);
 #endif
             }
             return profileResponse;

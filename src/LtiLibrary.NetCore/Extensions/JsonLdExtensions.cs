@@ -52,7 +52,7 @@ namespace LtiLibrary.NetCore.Extensions
         {
             try
             {
-                using (var stream = await response.Content.ReadAsStreamAsync())
+                using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                 {
                     if (stream == null)
                     {
@@ -61,7 +61,7 @@ namespace LtiLibrary.NetCore.Extensions
 
                     using (var reader = new StreamReader(stream))
                     {
-                        var body = await reader.ReadToEndAsync();
+                        var body = await reader.ReadToEndAsync().ConfigureAwait(false);
                         return JsonConvert.DeserializeObject<T>(body);
                     }
                 }

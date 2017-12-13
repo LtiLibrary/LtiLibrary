@@ -73,7 +73,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             {
                 var dto = new DeleteLineItemDto(contextId, id);
 
-                await OnDeleteLineItem(dto);
+                await OnDeleteLineItem(dto).ConfigureAwait(false);
 
                 return StatusCode(dto.StatusCode);
             }
@@ -106,7 +106,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                     }
                     var lineItemsDto = new GetLineItemsDto(contextId, limit, activityId, page);
 
-                    await OnGetLineItems(lineItemsDto);
+                    await OnGetLineItems(lineItemsDto).ConfigureAwait(false);
 
                     if (lineItemsDto.StatusCode == StatusCodes.Status200OK)
                     {
@@ -128,11 +128,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 if (mediaType.Equals(LtiConstants.LisLineItemResultsMediaType))
                 {
-                    await OnGetLineItemWithResults(lineItemDto);
+                    await OnGetLineItemWithResults(lineItemDto).ConfigureAwait(false);
                 }
                 else
                 {
-                    await OnGetLineItem(lineItemDto);
+                    await OnGetLineItem(lineItemDto).ConfigureAwait(false);
                 }
 
                 if (lineItemDto.StatusCode == StatusCodes.Status200OK)
@@ -162,7 +162,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             {
                 var dto = new PostLineItemDto(contextId, lineItem);
 
-                await OnPostLineItem(dto);
+                await OnPostLineItem(dto).ConfigureAwait(false);
 
                 if (dto.StatusCode == StatusCodes.Status201Created)
                 {
@@ -193,11 +193,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 if (mediaType.Equals(LtiConstants.LisLineItemResultsMediaType))
                 {
-                    await OnPutLineItemWithResults(dto);
+                    await OnPutLineItemWithResults(dto).ConfigureAwait(false);
                 }
                 else
                 {
-                    await OnPutLineItem(dto);
+                    await OnPutLineItem(dto).ConfigureAwait(false);
                 }
 
                 return StatusCode(dto.StatusCode);

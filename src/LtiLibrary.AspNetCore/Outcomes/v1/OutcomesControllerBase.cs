@@ -69,19 +69,22 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
                     }
-                    return await HandleDeleteResultRequest(requestHeader, requestBody);
+                    return await HandleDeleteResultRequest(requestHeader, requestBody)
+                        .ConfigureAwait(false);
                 case readResultRequest _:
                     if (OnReadResultAsync == null)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
                     }
-                    return await HandleReadResultRequest(requestHeader, requestBody);
+                    return await HandleReadResultRequest(requestHeader, requestBody)
+                        .ConfigureAwait(false);
                 case replaceResultRequest _:
                     if (OnReplaceResultAsync == null)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
                     }
-                    return await HandleReplaceResultRequest(requestHeader, requestBody);
+                    return await HandleReplaceResultRequest(requestHeader, requestBody)
+                        .ConfigureAwait(false);
             }
             return BadRequest("Request type not supported.");
         }

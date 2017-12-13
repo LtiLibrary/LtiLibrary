@@ -64,7 +64,7 @@ namespace LtiLibrary.AspNetCore.Membership
 
                 // Invoke OnGetMembershipAsync in the application's controller to fill in the membership
                 var request = new GetMembershipRequest(contextId, limit, rlid, role);
-                var response = await OnGetMembershipAsync(request);
+                var response = await OnGetMembershipAsync(request).ConfigureAwait(false);
 
                 // Return the result
                 if (response.StatusCode == StatusCodes.Status200OK)

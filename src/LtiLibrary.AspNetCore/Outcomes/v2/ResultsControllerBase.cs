@@ -62,7 +62,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             {
                 var dto = new DeleteResultDto(contextId, lineItemId, id);
 
-                await OnDeleteResult(dto);
+                await OnDeleteResult(dto).ConfigureAwait(false);
 
                 return StatusCode(dto.StatusCode);
             }
@@ -94,7 +94,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                     }
                     var resultsDto = new GetResultsDto(contextId, lineItemId, limit, page);
 
-                    await OnGetResults(resultsDto);
+                    await OnGetResults(resultsDto).ConfigureAwait(false);
 
                     if (resultsDto.StatusCode == StatusCodes.Status200OK)
                     {
@@ -110,7 +110,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
 
                 var resultDto = new GetResultDto(contextId, lineItemId, id);
 
-                await OnGetResult(resultDto);
+                await OnGetResult(resultDto).ConfigureAwait(false);
 
                 if (resultDto.StatusCode == StatusCodes.Status200OK)
                 {
@@ -137,7 +137,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             {
                 var dto = new PostResultDto(contextId, lineItemId, result);
 
-                await OnPostResult(dto);
+                await OnPostResult(dto).ConfigureAwait(false);
                 
                 if (dto.StatusCode == StatusCodes.Status201Created)
                 {
@@ -164,7 +164,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
             {
                 var dto = new PutResultDto(contextId, lineItemId, id, result);
 
-                await OnPutResult(dto);
+                await OnPutResult(dto).ConfigureAwait(false);
 
                 return StatusCode(dto.StatusCode);
             }

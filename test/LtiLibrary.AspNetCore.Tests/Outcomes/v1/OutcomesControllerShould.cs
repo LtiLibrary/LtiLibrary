@@ -14,7 +14,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
-        private const string Url = "ims/outcomes";
+        private const string Url = "basepath/ims/outcomes";
         private const string Key = "12345";
         private const string Secret = "secret";
         private const string Id = "testId";

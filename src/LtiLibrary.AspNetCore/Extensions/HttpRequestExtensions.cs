@@ -117,7 +117,7 @@ namespace LtiLibrary.AspNetCore.Extensions
             {
                 Scheme = request.Scheme,
                 Host = hostComponents[0],
-                Path = request.Path,
+                Path = request.PathBase + request.Path,
                 Query = request.QueryString.ToUriComponent()
             };
 

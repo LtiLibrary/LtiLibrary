@@ -93,8 +93,8 @@ namespace LtiLibrary.NetCore.Clients
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
 #endif
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
                     }
                 }
                 catch (HttpRequestException ex)
@@ -190,8 +190,8 @@ namespace LtiLibrary.NetCore.Clients
                         }
     #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
     #endif
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
                     }
                 }
                 catch (HttpRequestException ex)
@@ -284,8 +284,8 @@ namespace LtiLibrary.NetCore.Clients
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync(new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType));
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
 #endif
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
                     }
                 }
                 catch (HttpRequestException ex)

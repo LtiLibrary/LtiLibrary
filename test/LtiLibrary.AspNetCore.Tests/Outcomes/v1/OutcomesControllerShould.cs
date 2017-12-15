@@ -14,7 +14,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
-        private const string Url = "ims/outcomes";
+        private const string Url = "basepath/ims/outcomes";
         private const string Key = "12345";
         private const string Secret = "secret";
         private const string Id = "testId";
@@ -61,23 +61,39 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         [Fact]
         public async void NotReplaceResult_IfUsingDifferentSecrets()
         {
-            var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, "nosecret", Id, Value);
+            // First verify that plumbing works if secret is correct
+            var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            Assert.True(replaceResult.StatusCode == HttpStatusCode.OK, $"{replaceResult.StatusCode} == {HttpStatusCode.OK}");
+
+            // Now change secret and look for unauthorized
+            replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, "nosecret", Id, Value);
             Assert.True(replaceResult.StatusCode == HttpStatusCode.Unauthorized, $"{replaceResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
         [Fact]
         public async void NotReadResult_IfUsingDifferentSecrets()
         {
+            // First verify that plumbing works if secret is correct
             await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
-            var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, "nosecret", Id);
+            var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, Secret, Id);
+            Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
+
+            // Now change secret and look for unauthorized
+            readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, "nosecret", Id);
             Assert.True(readResult.StatusCode == HttpStatusCode.Unauthorized, $"{readResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
         [Fact]
         public async void NotDeleteResult_IfUsingDifferentSecrets()
         {
+            // First verify that plumbing works if secret is correct
             await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
-            var deleteResult = await Outcomes1Client.DeleteResultAsync(_client, Url, Key, "nosecret", Id);
+            var deleteResult = await Outcomes1Client.DeleteResultAsync(_client, Url, Key, Secret, Id);
+            Assert.True(deleteResult.StatusCode == HttpStatusCode.OK, $"{deleteResult.StatusCode} == {HttpStatusCode.OK}");
+
+            // Now change secret and look for unauthorized
+            await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            deleteResult = await Outcomes1Client.DeleteResultAsync(_client, Url, Key, "nosecret", Id);
             Assert.True(deleteResult.StatusCode == HttpStatusCode.Unauthorized, $"{deleteResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 

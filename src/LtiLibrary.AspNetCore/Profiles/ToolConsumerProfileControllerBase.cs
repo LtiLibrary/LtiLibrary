@@ -41,7 +41,7 @@ namespace LtiLibrary.AspNetCore.Profiles
 
                 // Invoke OnGetToolConsumerProfileAsync in the application's controller to fill in the profile
                 var request = new GetToolConsumerProfileRequest(lti_version);
-                var response = await OnGetToolConsumerProfileAsync(request);
+                var response = await OnGetToolConsumerProfileAsync(request).ConfigureAwait(false);
 
                 // Return the result
                 if (response.StatusCode == StatusCodes.Status200OK)

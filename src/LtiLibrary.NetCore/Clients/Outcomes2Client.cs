@@ -29,7 +29,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteLineItemResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -57,7 +57,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<LineItem>> GetLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType);
+            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -71,7 +72,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<LineItem>> GetLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType);
+            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -90,7 +92,8 @@ namespace LtiLibrary.NetCore.Clients
             string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p, activityId);
-            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType);
+            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -113,7 +116,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<LineItem>> PostLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, LineItem lineItem)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType);
+            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -127,7 +131,8 @@ namespace LtiLibrary.NetCore.Clients
         /// <returns>No content is returned.</returns>
         public static async Task<ClientResponse> PutLineItemAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, LineItem lineItem)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -141,7 +146,8 @@ namespace LtiLibrary.NetCore.Clients
         /// <returns>No content is returned.</returns>
         public static async Task<ClientResponse> PutLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, LineItem lineItem)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemResultsMediaType);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemResultsMediaType)
+                .ConfigureAwait(false);
         }
 
         #endregion
@@ -159,7 +165,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -173,7 +180,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret)
         {
-            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType);
+            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -191,7 +199,8 @@ namespace LtiLibrary.NetCore.Clients
             string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p);
-            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType);
+            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -206,7 +215,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, Result result)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
+            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -220,7 +230,8 @@ namespace LtiLibrary.NetCore.Clients
         /// <returns>No content is returned.</returns>
         public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, Result result)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType)
+                .ConfigureAwait(false);
         }
 
         #endregion

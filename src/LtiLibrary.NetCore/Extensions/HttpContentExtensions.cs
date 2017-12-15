@@ -19,7 +19,7 @@ namespace LtiLibrary.NetCore.Extensions
         /// </returns>
         public static async Task<T> ReadJsonAsObjectAsync<T>(this HttpContent content)
         {
-            var value = await content.ReadAsStringAsync();
+            var value = await content.ReadAsStringAsync().ConfigureAwait(false);
             var result = JsonConvert.DeserializeObject<T>(value);
             return result;
         }

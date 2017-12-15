@@ -13,8 +13,11 @@
     <PackageReleaseNotes>
       <![CDATA[
 3.0.1
-- Added optional status description to outcomes responses (e.g. ReadResultResponse).
-- Added properly formatted failure response to body of Outcomes POST response when status code != 200 (including status description).
+- Add optional status description to outcomes responses (e.g. ReadResultResponse).
+- Add properly formatted failure response to body of Outcomes POST response when status code != 200 (including status description).
+- Add support for PathBase (i.e. Map("basepath") in Startup.cs).
+- Add formatted HttpResponse to responses in Release version of Outcomes1Client.
+- Add ConfigureAwait(false) to all await call in public async methods so method().Result() does not block.
 3.0.0
 - Updated to ASP.NET Core 2.0 and to latest NuGet packages
 2.2.0

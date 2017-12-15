@@ -98,8 +98,9 @@ namespace LtiLibrary.NetCore.Clients
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync
                             (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType))
                             .ConfigureAwait(false);
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
+                            .ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException ex)
@@ -196,13 +197,13 @@ namespace LtiLibrary.NetCore.Clients
                                 outcomeResponse.StatusCode = HttpStatusCode.BadRequest;
                             }
                         }
-    #if DEBUG
+#if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync
                             (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType))
                             .ConfigureAwait(false);
+#endif
                         outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
                             .ConfigureAwait(false);
-    #endif
                     }
                 }
                 catch (HttpRequestException ex)
@@ -299,9 +300,9 @@ namespace LtiLibrary.NetCore.Clients
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync
                             (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType))
                             .ConfigureAwait(false);
+#endif
                         outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
                             .ConfigureAwait(false);
-#endif
                     }
                 }
                 catch (HttpRequestException ex)

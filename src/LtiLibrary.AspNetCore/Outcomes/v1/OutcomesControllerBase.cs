@@ -262,9 +262,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
 
             var result = GetResult(replaceRequest.resultRecord);
 
-            //The LTI 1.1 specification states in 6.1.1:
-            //The TC must check the incoming grade for validity and must fail when a grade is outside the range 0.0-1.0 or if the grade is not a valid number.   
-            //The TC must respond to these replaceResult operations with a imsx_codeMajor of "failure".
+            // The LTI 1.1 specification states in 6.1.1: https://www.imsglobal.org/specs/ltiv1p1/implementation-guide#toc-26
+            // The TC must check the incoming grade for validity and must fail when a grade is outside the range 0.0-1.0 or if the grade is not a valid number.   
+            // The TC must respond to these replaceResult operations with a imsx_codeMajor of "failure".
             if (!result.Score.HasValue || !(result.Score >= 0 && result.Score <= 1))
             {
                 return CreateFailureResponse(replaceResponse, requestHeader.imsx_messageIdentifier, StatusCodes.Status400BadRequest,

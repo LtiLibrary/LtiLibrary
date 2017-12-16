@@ -70,6 +70,17 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             Assert.True(replaceResult.StatusCode == HttpStatusCode.Unauthorized, $"{replaceResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData(-.01)]
+        [InlineData(1.01)]
+        public async void NotReplaceResult_IfScoreIsInvalid(double? score)
+        {
+            // First verify that plumbing works if secret is correct
+            var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, score);
+            Assert.True(replaceResult.StatusCode == HttpStatusCode.BadRequest, $"{replaceResult.StatusCode} == {HttpStatusCode.BadRequest}");
+        }
+
         [Fact]
         public async void NotReadResult_IfUsingDifferentSecrets()
         {

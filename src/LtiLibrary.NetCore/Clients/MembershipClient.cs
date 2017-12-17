@@ -28,7 +28,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
         public static async Task<ClientResponse<List<Membership>>> GetMembershipAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            string rlid = null, Role? role = null)
+            string rlid = null, ContextRole? role = null)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
             var pageResponse = await GetFilteredMembershipPageAsync(
@@ -96,7 +96,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="role">The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
         public static async Task<ClientResponse<MembershipContainerPage>> GetMembershipPageAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            int? limit = null, string rlid = null, Role? role = null)
+            int? limit = null, string rlid = null, ContextRole? role = null)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
             return await GetFilteredMembershipPageAsync(
@@ -159,7 +159,7 @@ namespace LtiLibrary.NetCore.Clients
             }
         }
 
-        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, Role? role)
+        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, ContextRole? role)
         {
             var query = new StringBuilder();
             if (limit.HasValue)

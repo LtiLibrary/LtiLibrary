@@ -26,7 +26,7 @@ namespace LtiLibrary.NetCore.Lis.v2
         /// Indicates the Roles that the Agent plays in a Membership relationship with an Organization.
         /// </summary>
         [JsonProperty("role")]
-        public Role[] Role { get; set; }
+        public ContextRole[] Role { get; set; }
 
         /// <summary>
         /// The current status of a membership which applies to all roles.

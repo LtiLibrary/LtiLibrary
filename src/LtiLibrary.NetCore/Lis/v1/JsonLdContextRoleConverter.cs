@@ -5,7 +5,7 @@ using Newtonsoft.Json.Converters;
 
 namespace LtiLibrary.NetCore.Lis.v1
 {
-    internal class RoleConverter : StringEnumConverter
+    internal class JsonLdContextRoleConverter : StringEnumConverter
     {
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
@@ -14,7 +14,7 @@ namespace LtiLibrary.NetCore.Lis.v1
                 return base.ReadJson(reader, objectType, existingValue, serializer);
             }
 
-            if (!objectType.GetTypeInfo().IsAssignableFrom(typeof(Role)))
+            if (!objectType.GetTypeInfo().IsAssignableFrom(typeof(ContextRole)))
             {
                 return base.ReadJson(reader, objectType, existingValue, serializer);
             }
@@ -31,9 +31,9 @@ namespace LtiLibrary.NetCore.Lis.v1
             {
                 if (value.Length > index)
                 {
-                    if (Enum.TryParse(value.Substring(5), out Role enumValue))
+                    if (Enum.TryParse(value.Substring(5), out ContextRole contextRole))
                     {
-                        return enumValue;
+                        return contextRole;
                     }
                     throw new JsonSerializationException($"Cannot convert {value} to {objectType.Name}.");
                 }
@@ -51,7 +51,7 @@ namespace LtiLibrary.NetCore.Lis.v1
                 return;
             }
 
-            if (value.GetType().GetTypeInfo().IsAssignableFrom(typeof(Role)))
+            if (value.GetType().GetTypeInfo().IsAssignableFrom(typeof(ContextRole)))
             {
                 var e = (Enum)value;
                 var enumName = e.ToString("G");

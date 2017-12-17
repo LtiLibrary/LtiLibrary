@@ -33,7 +33,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
             }
 
             // If the Role filter is specified, only return the corresponding page
-            if (request.Role == Role.Learner)
+            if (request.Role == ContextRole.Learner)
             {
                 response.MembershipContainerPage = GetMembershipPageOfLearners();
             }
@@ -111,7 +111,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
                                 },
                                 Role = new []
                                 {
-                                    Role.Instructor
+                                    ContextRole.Instructor
                                 }
                             }
                         }
@@ -163,7 +163,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
                                 },
                                 Role = new []
                                 {
-                                    Role.Learner
+                                    ContextRole.Learner
                                 }
                             }
                         }

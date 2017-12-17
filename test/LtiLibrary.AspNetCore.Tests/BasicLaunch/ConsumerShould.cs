@@ -101,7 +101,7 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             ltiRequest.LisPersonNameFamily = "Doe";
             ltiRequest.LisPersonNameGiven = "Joan";
             ltiRequest.UserId = "1";
-            ltiRequest.SetRoles(new[] { Role.Instructor });
+            ltiRequest.SetRoles(new List<Enum> { ContextRole.Instructor });
 
             // Outcomes-1 service (WebApi controller)
             ltiRequest.LisOutcomeServiceUrl = new Uri(_client.BaseAddress, "ims/outcomes").AbsoluteUri;

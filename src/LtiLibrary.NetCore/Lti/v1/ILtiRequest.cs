@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 
@@ -38,8 +39,8 @@ namespace LtiLibrary.NetCore.Lti.v1
 
         void AddCustomParameter(string name, string value);
         void AddCustomParameters(string parameters);
-        IList<Role> GetRoles();
-        void SetRoles(IList<Role> roles);
+        IList<Enum> GetRoles();
+        void SetRoles(IList<Enum> roles);
         string SubstituteCustomVariablesAndGenerateSignature(string consumerSecret);
     }
 }

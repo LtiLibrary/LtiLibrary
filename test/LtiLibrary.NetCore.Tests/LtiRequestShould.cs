@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
@@ -244,6 +245,38 @@ namespace LtiLibrary.NetCore.Tests
             };
             var signature = request.GenerateSignature("secret");
             Assert.Equal("1lsA7F7WPN48KzxVXDI25Lpam1E=", signature);
+        }
+
+        [Fact]
+        public void SendFullUrnsForNonContextRoles()
+        {
+            var request = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType);
+
+            request.SetRoles(
+                new List<Enum>
+                {
+                    ContextRole.Instructor,
+                    InstitutionalRole.Administrator,
+                    SystemRole.SysAdmin
+                });
+
+            Assert.Equal("Instructor,urn:lti:instrole:ims/lis/Administrator,urn:lti:sysrole:ims/lis/SysAdmin", request.Roles);
+        }
+
+        [Fact]
+        public void CorrectlyInterpretRoles_GivenContextAndNonContextRolesString()
+        {
+            var request = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
+            {
+                Roles = "Administrator,Instructor,urn:lti:instrole:ims/lis/Administrator,urn:lti:sysrole:ims/lis/SysAdmin"
+            };
+
+            var roles = request.GetRoles();
+            Assert.Equal(4, roles.Count);
+            Assert.Contains(ContextRole.Administrator, roles);
+            Assert.Contains(ContextRole.Instructor, roles);
+            Assert.Contains(InstitutionalRole.Administrator, roles);
+            Assert.Contains(SystemRole.SysAdmin, roles);
         }
     }
 }

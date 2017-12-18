@@ -19,4 +19,5 @@ Available on NuGet: https://www.nuget.org/packages/LtiLibrary.AspNetCore
 ## Test Projects
 There are also two xUnit test projects: one for each project above. These can be helpful examples for how to use the libraries.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/qpkjtvp91mra9ogr?svg=true)](https://ci.appveyor.com/project/andyfmiller/ltilibrary)
+AppVeyor: [![Build status](https://ci.appveyor.com/api/projects/status/qpkjtvp91mra9ogr?svg=true)](https://ci.appveyor.com/project/andyfmiller/ltilibrary)
+Travis: [![Build Status](https://travis-ci.org/andyfmiller/LtiLibrary.svg?branch=master)](https://travis-ci.org/andyfmiller/LtiLibrary)

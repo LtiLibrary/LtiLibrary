@@ -5,3 +5,4 @@ dotnet: 2.1.2
 script:
  - dotnet restore
  - dotnet build
+ - dotnet test

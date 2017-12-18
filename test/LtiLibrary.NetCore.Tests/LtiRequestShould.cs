@@ -194,8 +194,12 @@ namespace LtiLibrary.NetCore.Tests
             Assert.Equal($"Missing parameter(s): {LtiConstants.ContentItemPlacementParameter}.", ex.Message);
         }
 
-        [Fact]
-        public void GenerateKnownSignature_GivenKnownLaunchParameters()
+        [Theory]
+        [InlineData("HMAC-SHA1", "Im/RhYIEApfbsy+luuisvQqBjgs=")]
+        [InlineData("HMAC-SHA256", "qQbfvgDf7WK/6+6XYCKlpu8klUMjH28NBk/U/CGOGEg=")]
+        [InlineData("HMAC-SHA384", "FPZNr6ekXPwAI+B8N4Qvazgkq5mK7qnBvzRc52z/FxRfJA+hKggE2LBCqGVnkRud")]
+        [InlineData("HMAC-SHA512", "ukswtvxdFC7RCVcmtxt/kvg6oE1v3zAJhtuNLRUnM3fjXIxMkg85uEq6Vz+fxLCEQ/YTPM9aBnsmEizyv3LxtQ==")]
+        public void GenerateKnownSignature_GivenKnownLaunchParameters(string signatureMethod, string expectedSignature)
         {
             var request = new LtiRequest
             {
@@ -214,7 +218,7 @@ namespace LtiLibrary.NetCore.Tests
                 ResourceLinkId = "3280",
                 ResourceLinkTitle = "docker",
                 Roles = "Instructor,Learner",
-                SignatureMethod = "HMAC-SHA1",
+                SignatureMethod = signatureMethod,
                 Timestamp = 1492745602,
                 ToolConsumerInfoProductFamilyCode = "Consumer",
                 ToolConsumerInfoVersion = "1.5.0.0",
@@ -225,11 +229,15 @@ namespace LtiLibrary.NetCore.Tests
                 Version = "1.0"
             };
             var signature = request.GenerateSignature("secret");
-            Assert.Equal("Im/RhYIEApfbsy+luuisvQqBjgs=", signature);
+            Assert.Equal(expectedSignature, signature);
         }
 
-        [Fact]
-        public void GenerateKnownSignature_GivenKnownOutcomesParameters()
+        [Theory]
+        [InlineData("HMAC-SHA1", "1lsA7F7WPN48KzxVXDI25Lpam1E=")]
+        [InlineData("HMAC-SHA256", "4KGg3xbB7Ke1FpIpQIEDvUuq5i2+PL+nFhU4BwM/jNw=")]
+        [InlineData("HMAC-SHA384", "4qMYDlaEmS+c7SIXFHiJcuXsVgdKhtLS1pANiTCvHiWQK3m2aTG2fq9FNuAHZWbt")]
+        [InlineData("HMAC-SHA512", "kh1W81jm0S2PnWH5DA73lYjJVe93EwfzDcnqiNim6kylvj67tnWPvSdm8R/zBsRZ7aZZxAyvZSSFKQwnlCBljA==")]
+        public void GenerateKnownSignature_GivenKnownOutcomesParameters(string signatureMethod, string expectedSignature)
         {
             var request = new LtiRequest
             {
@@ -237,13 +245,13 @@ namespace LtiLibrary.NetCore.Tests
                 ConsumerKey = "jisc.ac.uk",
                 HttpMethod = HttpMethod.Post.Method,
                 Nonce = "83e29bff47b7690a3f6b371c77526405",
-                SignatureMethod = "HMAC-SHA1",
+                SignatureMethod = signatureMethod,
                 Timestamp = 1493164209,
                 Url = new Uri("http://lti.tools/test/tc-outcomes.php"),
                 Version = "1.0"
             };
             var signature = request.GenerateSignature("secret");
-            Assert.Equal("1lsA7F7WPN48KzxVXDI25Lpam1E=", signature);
+            Assert.Equal(expectedSignature, signature);
         }
     }
 }

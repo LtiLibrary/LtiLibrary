@@ -32,7 +32,7 @@ namespace LtiLibrary.NetCore.Extensions
                 if (content.Headers.ContentLength > 0)
                 {
                     sb.AppendLine();
-                    sb.Append(await content.ReadAsStringAsync());
+                    sb.Append(await content.ReadAsStringAsync().ConfigureAwait(false));
                 }
             }
             return sb.ToString();
@@ -60,7 +60,7 @@ namespace LtiLibrary.NetCore.Extensions
                 if (response.Content.Headers.ContentLength > 0)
                 {
                     sb.AppendLine();
-                    sb.Append(await response.Content.ReadAsStringAsync());
+                    sb.Append(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
                 }
             }
             return sb.ToString();

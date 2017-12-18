@@ -33,7 +33,11 @@ namespace LtiLibrary.NetCore.Clients
             string rlid = null, Role? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
-            var pageResponse = await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType, signatureMethod);
+            var pageResponse = await GetFilteredMembershipPageAsync(
+                client, filteredServiceUrl, consumerKey, consumerSecret, 
+                LtiConstants.LisMembershipContainerMediaType, signatureMethod)
+                .ConfigureAwait(false);
+
             Uri pageId = null;
             var result = new ClientResponse<List<Membership>>
             {
@@ -74,7 +78,10 @@ namespace LtiLibrary.NetCore.Clients
 
                 // Get the next page
                 filteredServiceUrl = GetFilteredServiceUrl(pageResponse.Response.NextPage, null, rlid, role);
-                pageResponse = await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret, LtiConstants.LisMembershipContainerMediaType, signatureMethod);
+                pageResponse = await GetFilteredMembershipPageAsync(
+                    client, filteredServiceUrl, consumerKey, consumerSecret, 
+                    LtiConstants.LisMembershipContainerMediaType, signatureMethod)
+                    .ConfigureAwait(false);
             } while (true);
 
             return result;
@@ -96,8 +103,10 @@ namespace LtiLibrary.NetCore.Clients
             int? limit = null, string rlid = null, Role? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
-            return await GetFilteredMembershipPageAsync(client, filteredServiceUrl, consumerKey, consumerSecret,
-                LtiConstants.LisMembershipContainerMediaType, signatureMethod);
+            return await GetFilteredMembershipPageAsync(
+                client, filteredServiceUrl, consumerKey, consumerSecret,
+                LtiConstants.LisMembershipContainerMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         private static async Task<ClientResponse<MembershipContainerPage>> GetFilteredMembershipPageAsync(
@@ -115,16 +124,19 @@ namespace LtiLibrary.NetCore.Clients
                 var outcomeResponse = new ClientResponse<MembershipContainerPage>();
                 try
                 {
-                    using (var response = await client.GetAsync(serviceUrl))
+                    using (var response = await client.GetAsync(serviceUrl).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<MembershipContainerPage>();
+                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<MembershipContainerPage>()
+                                .ConfigureAwait(false);
                         }
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync()
+                            .ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
+                            .ConfigureAwait(false);
 #endif
                     }
                 }

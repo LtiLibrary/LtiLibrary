@@ -38,7 +38,7 @@ namespace LtiLibrary.AspNetCore.Extensions
             form.AppendLine("</html>");
 
             response.ContentType = "text/html";
-            await response.WriteAsync(form.ToString());
+            await response.WriteAsync(form.ToString()).ConfigureAwait(false);
         }
     }
 }

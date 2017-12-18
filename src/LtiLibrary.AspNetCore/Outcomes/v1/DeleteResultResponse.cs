@@ -19,5 +19,10 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
         /// The HTTP StatusCode representing the result of the action (OK, NotFound, Unauthorized)
         /// </summary>
         public int StatusCode { get; set; }
+
+        /// <summary>
+        /// Optional description of the status. This will be included in the XML response.
+        /// </summary>
+        public string StatusDescription { get; set; }
     }
 }

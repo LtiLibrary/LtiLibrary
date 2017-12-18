@@ -86,7 +86,7 @@ namespace LtiLibrary.AspNetCore.Extensions
             // LTI launch and content item requests are sent as form posts
             if (request.HasFormContentType)
             {
-                var form = await request.ReadFormAsync();
+                var form = await request.ReadFormAsync().ConfigureAwait(false);
                 foreach (var pair in form)
                 {
                     ltiRequest.Parameters.Add(pair.Key, string.Join(",", pair.Value));
@@ -117,7 +117,7 @@ namespace LtiLibrary.AspNetCore.Extensions
             {
                 Scheme = request.Scheme,
                 Host = hostComponents[0],
-                Path = request.Path,
+                Path = request.PathBase + request.Path,
                 Query = request.QueryString.ToUriComponent()
             };
 

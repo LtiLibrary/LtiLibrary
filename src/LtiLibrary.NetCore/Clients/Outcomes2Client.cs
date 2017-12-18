@@ -31,7 +31,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteLineItemResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -61,7 +61,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<LineItem>> GetLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType, signatureMethod);
+            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -76,7 +77,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<LineItem>> GetLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType, signatureMethod);
+            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -96,7 +98,8 @@ namespace LtiLibrary.NetCore.Clients
             string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p, activityId);
-            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType, signatureMethod);
+            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -120,7 +123,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<LineItem>> PostLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, LineItem lineItem, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod);
+            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -136,7 +140,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> PutLineItemAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
             LineItem lineItem, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -152,7 +157,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> PutLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
             LineItem lineItem, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemResultsMediaType, signatureMethod);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemResultsMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         #endregion
@@ -171,7 +177,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -186,7 +193,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType, signatureMethod);
+            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -205,7 +213,8 @@ namespace LtiLibrary.NetCore.Clients
             string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p);
-            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType, signatureMethod);
+            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -221,7 +230,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse<Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, Result result, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod);
+            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -237,7 +247,8 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, Result result,
             SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod)
+                .ConfigureAwait(false);
         }
 
         #endregion

@@ -1,0 +1,9 @@
+language: csharp
+solution: LtiLibrary.NetCore.sln
+mono: none
+dotnet: 2.1.2
+script:
+ - dotnet restore
+ - dotnet build
+ - dotnet test test/LtiLibrary.NetCore.Tests/LtiLibrary.NetCore.Tests.csproj
+ - dotnet test test/LtiLibrary.AspNetCore.Tests/LtiLibrary.AspNetCore.Tests.csproj

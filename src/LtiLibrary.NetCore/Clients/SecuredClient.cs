@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti.v1;
+using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Clients
 {
@@ -14,7 +15,7 @@ namespace LtiLibrary.NetCore.Clients
     internal static class SecuredClient
     {
         internal static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
-            HttpContent content, string consumerKey, string consumerSecret)
+            HttpContent content, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
         {
             if (client == null)
             {
@@ -49,10 +50,29 @@ namespace LtiLibrary.NetCore.Clients
 
             AuthenticationHeaderValue authorizationHeader;
 
-            // Create an Authorization header using the body hash
-            using (var sha1 = SHA1.Create())
+            // Determine hashing algorithm
+            HashAlgorithm sha;
+            switch(signatureMethod)
             {
-                var hash = sha1.ComputeHash(await content.ReadAsByteArrayAsync());
+                default:
+                case SignatureMethod.HmacSha1:
+                    sha = SHA1.Create();
+                    break;
+                case SignatureMethod.HmacSha256:
+                    sha = SHA256.Create();
+                    break;
+                case SignatureMethod.HmacSha384:
+                    sha = SHA384.Create();
+                    break;
+                case SignatureMethod.HmacSha512:
+                    sha = SHA512.Create();
+                    break;
+            }
+
+            // Create an Authorization header using the body hash
+            using (sha)
+            {
+                var hash = sha.ComputeHash(await content.ReadAsByteArrayAsync());
                 authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
             }
 

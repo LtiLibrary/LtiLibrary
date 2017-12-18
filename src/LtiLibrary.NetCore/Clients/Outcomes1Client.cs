@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lti.v1;
+using LtiLibrary.NetCore.OAuth;
 
 namespace LtiLibrary.NetCore.Clients
 {
@@ -45,8 +46,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="sourcedId">The LisResultSourcedId to be deleted.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string sourcedId)
+        public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+            string sourcedId, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
@@ -76,7 +79,7 @@ namespace LtiLibrary.NetCore.Clients
                     var xml = await GetXmlAsync(imsxEnvelope).ConfigureAwait(false);
                     var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
                     await SecuredClient.SignRequest(
-                        client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret)
+                        client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
@@ -133,8 +136,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth key to sign the request.</param>
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to read.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse<Result>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId)
+        public static async Task<ClientResponse<Result>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+            string lisResultSourcedId, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
@@ -164,7 +169,7 @@ namespace LtiLibrary.NetCore.Clients
                     var xml = await GetXmlAsync(imsxEnvelope).ConfigureAwait(false);
                     var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
                     await SecuredClient.SignRequest
-                        (client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret)
+                        (client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
@@ -237,8 +242,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
         /// <param name="score">The score.</param>
+        /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, string lisResultSourcedId, double? score)
+        public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+            string lisResultSourcedId, double? score, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
@@ -278,7 +285,7 @@ namespace LtiLibrary.NetCore.Clients
                     // Create a UTF8 encoding of the request
                     var xml = await GetXmlAsync(imsxEnvelope).ConfigureAwait(false);
                     var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret)
+                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response

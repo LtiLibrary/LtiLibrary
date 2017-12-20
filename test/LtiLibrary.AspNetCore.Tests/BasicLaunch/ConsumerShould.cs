@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -32,9 +33,13 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
         }
 
-        [Fact]
-        public async void LaunchATool_WithValidCredentials()
+        [Theory]
+        [InlineData("en-US")]
+        [InlineData("nl-NL")]
+        public async void LaunchATool_WithValidCredentials(string lcid)
         {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(lcid);
+
             var ltiRequest = GetLtiLaunchRequest();
 
             // Substitute custom variables and calculate the signature
@@ -43,7 +48,9 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
             {
                 Assert.True(response.IsSuccessStatusCode, $"Response status code does not indicate success: {response.StatusCode}");
-                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), LtiConstants.BasicLaunchLtiMessageType);
+                var referenceJson = TestUtils.LoadReferenceJsonFile(LtiConstants.BasicLaunchLtiMessageType)
+                    .Replace("{lcid}", lcid);
+                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), JObject.Parse(referenceJson));
             }
         }
 
@@ -77,6 +84,7 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             var ltiRequest = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
                 ConsumerKey = "12345",
+                //LaunchPresentationLocale = "en-US",
                 ResourceLinkId = "launch",
                 Url = new Uri(_client.BaseAddress, "toolprovider/tool/1")
             };

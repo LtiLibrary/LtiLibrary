@@ -347,7 +347,7 @@ namespace LtiLibrary.NetCore.Clients
                     XmlWriter.Create(ms, new XmlWriterSettings
                     {
                         Async = true,
-                        Encoding = Encoding.UTF8,
+                        Encoding = new UTF8Encoding(false),
                         Indent = true
                     }))
                 {

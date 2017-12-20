@@ -4,7 +4,7 @@
   "oauth_consumer_key": "12345",
   "oauth_signature_method": "HMAC-SHA1",
   "oauth_version": "1.0",
-  "launch_presentation_locale": "en-US",
+  "launch_presentation_locale": "{lcid}",
   "lti_version": "LTI-1p0",
   "resource_link_id": "launch",
   "accept_media_types": "text/html,image/*",

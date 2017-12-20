@@ -192,7 +192,10 @@ namespace LtiLibrary.NetCore.Clients
                                 }
                                 else
                                 {
-                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, out var result) 
+                                    // The TC is supposed to use "en" language format, but this allows
+                                    // a little bit of misbehaving.
+                                    var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language??"en");
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var result) 
                                         ? new Result { Score = result, SourcedId = lisResultSourcedId } 
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
                                 }

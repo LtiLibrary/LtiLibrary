@@ -10,25 +10,6 @@
     <AssemblyName>LtiLibrary.AspNetCore</AssemblyName>
     <PackageId>LtiLibrary.AspNetCore</PackageId>
     <PackageTags>IMS;LTI;.NET Core;ASP.NET Core</PackageTags>
-    <PackageReleaseNotes>
-      <![CDATA[
-Bugs
-
-- Fix signature match failures due to byte order mark emitted by XmlWriter
-- Fix outcome failures when LCID is not "en"
-- Fix signature match failures when multiple parameters share the same name
-
-Improvements
-
-- Add validation of Outcomes result
-- Add support for SHA256, SHA384, SHA512 hash algorithms
-- Add support for Institutional and System roles
-
-Changes
-
-- Changed Role to ContextRole
-      ]]>
-    </PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>

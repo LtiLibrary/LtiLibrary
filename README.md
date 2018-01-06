@@ -24,3 +24,9 @@ There are also two xUnit test projects: one for each project above. These can be
 | --- | --- | --- |
 | AppVeyor | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/qpkjtvp91mra9ogr?svg=true)](https://ci.appveyor.com/project/andyfmiller/ltilibrary) |
 | travis-ci | Ubuntu | [![Build Status](https://travis-ci.org/andyfmiller/LtiLibrary.svg?branch=master)](https://travis-ci.org/andyfmiller/LtiLibrary) |
+
+## NuGet Status
+
+| Assembly | Status |
+| LtiLibrary.NetCore | [![NuGet Status](http://nugetstatus.com/LtiLibrary.NetCore.png)](http://nugetstatus.com/packages/LtiLibrary.NetCore) |
+| LtiLibrary.AspNetCore | [![NuGet Status](http://nugetstatus.com/LtiLibrary.AspNetCore.png)](http://nugetstatus.com/packages/LtiLibrary.NetCore) |

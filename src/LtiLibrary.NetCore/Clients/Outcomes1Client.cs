@@ -192,7 +192,12 @@ namespace LtiLibrary.NetCore.Clients
                                 }
                                 else
                                 {
-                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, out var result) 
+                                    // The TP is supposed to use "en" language format, but this allows
+                                    // a little bit of misbehaving. If the TP does not include a language, "en" will
+                                    // be used. If the TP does include a language (even a non-en language), it will
+                                    // be used.
+                                    var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language??"en");
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var result) 
                                         ? new Result { Score = result, SourcedId = lisResultSourcedId } 
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
                                 }
@@ -347,7 +352,7 @@ namespace LtiLibrary.NetCore.Clients
                     XmlWriter.Create(ms, new XmlWriterSettings
                     {
                         Async = true,
-                        Encoding = Encoding.UTF8,
+                        Encoding = new UTF8Encoding(false),
                         Indent = true
                     }))
                 {

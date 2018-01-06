@@ -22,12 +22,11 @@ namespace LtiLibrary.NetCore.Common
         /// String representation of the HttpWebRequest similar to Fiddler's.
         /// </summary>
         public string HttpRequest { get; set; }
-
+#endif
         /// <summary>
         /// String representation of the HttpWebResponse similar to Fiddler's.
         /// </summary>
         public string HttpResponse { get; set; }
-#endif
     }
 
     /// <summary>

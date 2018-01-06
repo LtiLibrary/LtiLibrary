@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -31,9 +32,13 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
         }
 
-        [Fact]
-        public async void LaunchAContentItemSelectionTool_WithValidCredentials()
+        [Theory]
+        [InlineData("en-US")]
+        [InlineData("nl-NL")]
+        public async void LaunchAContentItemSelectionTool_WithValidCredentials(string lcid)
         {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(lcid);
+
             var ltiRequest = GetLtiContentItemSelectionRequest("contentitemsprovider/library");
 
             // Substitute custom variables and calculate the signature
@@ -42,7 +47,9 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
             using (var response = await _client.PostAsync(ltiRequest.Url.AbsoluteUri, GetContent(ltiRequest, signature)))
             {
                 Assert.True(response.IsSuccessStatusCode, $"Response status code does not indicate success: {response.StatusCode}");
-                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), LtiConstants.ContentItemSelectionRequestLtiMessageType);
+                var referenceJson = TestUtils.LoadReferenceJsonFile(LtiConstants.ContentItemSelectionRequestLtiMessageType)
+                    .Replace("{lcid}", lcid);
+                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), JObject.Parse(referenceJson));
             }
         }
 

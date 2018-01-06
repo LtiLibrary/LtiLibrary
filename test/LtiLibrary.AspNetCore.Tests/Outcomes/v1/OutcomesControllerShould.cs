@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -31,21 +32,49 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         }
 
         [Fact]
-        public async void ReplaceResult()
+        public async void ReplaceResult_WhenCultureIsEN()
         {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-EN");
             var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
-            Assert.True(replaceResult.StatusCode == HttpStatusCode.OK, $"{replaceResult.StatusCode} == {HttpStatusCode.OK}");
+            Assert.Equal(HttpStatusCode.OK, replaceResult.StatusCode);
+
+            var start = replaceResult.HttpResponse.IndexOf("<imsx_description>", StringComparison.Ordinal) + "<imsx_description>".Length;
+            var end = replaceResult.HttpResponse.IndexOf("</imsx_description>", StringComparison.Ordinal);
+            Assert.Equal("Score for testId is now 0.5", replaceResult.HttpResponse.Substring(start, end-start));
         }
 
         [Fact]
-        public async void ReadResult()
+        public async void ReplaceResult_WhenCultureIsNL()
         {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("nl-NL");
+            var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            Assert.Equal(HttpStatusCode.OK, replaceResult.StatusCode);
+
+            var start = replaceResult.HttpResponse.IndexOf("<imsx_description>", StringComparison.Ordinal) + "<imsx_description>".Length;
+            var end = replaceResult.HttpResponse.IndexOf("</imsx_description>", StringComparison.Ordinal);
+            Assert.Equal("Score for testId is now 0.5", replaceResult.HttpResponse.Substring(start, end - start));
+        }
+
+        [Fact]
+        public async void ReadResult_WhenCultureIsEN()
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("en-EN");
             await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
             var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, Secret, Id);
             Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
             // ReSharper disable once CompareOfFloatsByEqualityOperator
-            Assert.True(readResult.Response.Score == Value, $"{readResult.Response.Score} == {Value}");
-            Assert.True(readResult.Response.SourcedId == Id, $"{readResult.Response.SourcedId} == {Id}");
+            Assert.Equal(Value, readResult.Response.Score);
+        }
+
+        [Fact]
+        public async void ReadResult_WhenCultureIsNL()
+        {
+            CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("nl-NL");
+            await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value);
+            var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, Secret, Id);
+            Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            Assert.Equal(Value, readResult.Response.Score);
         }
 
         [Fact]

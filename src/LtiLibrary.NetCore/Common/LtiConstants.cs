@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Linq;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 

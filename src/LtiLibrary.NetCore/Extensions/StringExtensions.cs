@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using LtiLibrary.NetCore.Lis.v1;
 
 namespace LtiLibrary.NetCore.Extensions
 {
@@ -52,6 +53,56 @@ namespace LtiLibrary.NetCore.Extensions
 
             // Return the fully-RFC3986-escaped string.
             return escaped.ToString();
+        }
+
+
+        /// <summary>
+        /// Convert the string value of a ContextRole, InstitutionalRole, or SystemRole
+        /// into the corresponding enum.
+        /// </summary>
+        public static bool TryParseRole(this string value, out Enum outEnum)
+        {
+            outEnum = null;
+
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            if (value.StartsWith("urn:lti:instrole"))
+            {
+                foreach (Enum roleEnum in Enum.GetValues(typeof(InstitutionalRole)))
+                {
+                    if (value.Equals(roleEnum.GetUrn()))
+                    {
+                        outEnum = roleEnum;
+                        return true;
+                    }
+                }
+            }
+
+            if (value.StartsWith("urn:lti:sysrole"))
+            {
+                foreach (Enum roleEnum in Enum.GetValues(typeof(SystemRole)))
+                {
+                    if (value.Equals(roleEnum.GetUrn()))
+                    {
+                        outEnum = roleEnum;
+                        return true;
+                    }
+                }
+            }
+
+            foreach (Enum roleEnum in Enum.GetValues(typeof(ContextRole)))
+            {
+                if (value.Equals(roleEnum.ToString()) || value.Equals(roleEnum.GetUrn()))
+                {
+                    outEnum = roleEnum;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

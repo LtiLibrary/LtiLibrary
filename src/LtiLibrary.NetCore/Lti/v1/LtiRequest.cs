@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.OAuth;
 
@@ -2278,28 +2279,26 @@ namespace LtiLibrary.NetCore.Lti.v1
         }
 
         /// <summary>
-        /// Get the roles in the LtiRequest as an IList of LtiRoles.
+        /// Get the roles in the LtiRequest as an IList of ContextRole, InstitutionalRole, and SystemRole enums.
         /// </summary>
-        /// <returns></returns>
-        public IList<Role> GetRoles()
+        public IList<Enum> GetRoles()
         {
-            var roles = new List<Role>();
-            var value = Parameters[LtiConstants.RolesParameter];
-            if (string.IsNullOrWhiteSpace(value))
+            var roles = new List<Enum>();
+            if (string.IsNullOrWhiteSpace(Roles))
             {
                 return roles;
             }
-            foreach (var roleName in value.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var roleValue in Roles.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (Enum.TryParse(roleName, true, out Role role))
+                if (Enum.TryParse(roleValue, true, out ContextRole role))
                 {
                     roles.Add(role);
                 }
                 else
                 {
-                    if (LtiConstants.RoleUrns.ContainsKey(roleName))
+                    if (LtiConstants.RoleUrns.ContainsKey(roleValue))
                     {
-                        roles.Add(LtiConstants.RoleUrns[roleName]);
+                        roles.Add(LtiConstants.RoleUrns[roleValue]);
                     }
                 }
             }
@@ -2323,12 +2322,27 @@ namespace LtiLibrary.NetCore.Lti.v1
         }
 
         /// <summary>
-        /// Set the roles in the LtiRequest from an IList of LtiRoles.
+        /// Set the roles in the LtiRequest from an IList of ContextRole, InstitutionalRole, and SystemRole.
         /// </summary>
-        /// <param name="roles">An IList of LtiRoles.</param>
-        public void SetRoles(IList<Role> roles)
+        public void SetRoles(IList<Enum> roleEnums)
         {
-            Roles = roles.Any() ? string.Join(",", roles.ToList()) : string.Empty;
+            var roles = new List<string>();
+            foreach (var roleEnum in roleEnums)
+            {
+                if (roleEnum is ContextRole)
+                {
+                    roles.Add(roleEnum.ToString());
+                }
+                else
+                {
+                    var urn = roleEnum.GetUrn();
+                    if (!string.IsNullOrEmpty(urn))
+                    {
+                        roles.Add(urn);
+                    }
+                }
+            }
+            Roles = roles.Any() ? string.Join(",", roles) : string.Empty;
         }
 
         /// <summary>

@@ -1,6 +1,10 @@
 ﻿using System;
 using LtiLibrary.NetCore.Common;
+using LtiLibrary.NetCore.Extensions;
+using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Tests.SimpleHelpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace LtiLibrary.NetCore.Tests
@@ -61,6 +65,19 @@ namespace LtiLibrary.NetCore.Tests
             };
             JsonAssertions.AssertSameJsonLdObject(child, "InternalContextOnly");
         }
+
+        [Fact]
+        public void ContextRolesAreConvertedToJsonLdValues()
+        {
+            const ContextRole contextRole = ContextRole.Instructor;
+            Assert.Equal("\"lism:Instructor\"", contextRole.ToJsonLdString());
+        }
+
+        [Fact]
+        void ContextRolesAreConvertedFromJsonLdObjects()
+        {
+            var contextRole = JsonConvert.DeserializeObject<RoleTestObject>("{ roles: [\"lism:Instructor\"] }");
+        }
     }
 
     public class Parent : JsonLdObject
@@ -87,5 +104,10 @@ namespace LtiLibrary.NetCore.Tests
         public string Name { get; set; }
 
         public Child GrandChild { get; set; }
+    }
+
+    class RoleTestObject : JsonLdObject
+    {
+        public ContextRole[] Roles { get; set; }
     }
 }

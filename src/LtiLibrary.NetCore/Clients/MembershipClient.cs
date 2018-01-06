@@ -30,7 +30,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         public static async Task<ClientResponse<List<Membership>>> GetMembershipAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            string rlid = null, Role? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string rlid = null, ContextRole? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
             var pageResponse = await GetFilteredMembershipPageAsync(
@@ -100,7 +100,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         public static async Task<ClientResponse<MembershipContainerPage>> GetMembershipPageAsync(
             HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
-            int? limit = null, string rlid = null, Role? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            int? limit = null, string rlid = null, ContextRole? role = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, limit, rlid, role);
             return await GetFilteredMembershipPageAsync(
@@ -163,7 +163,7 @@ namespace LtiLibrary.NetCore.Clients
             }
         }
 
-        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, Role? role)
+        private static string GetFilteredServiceUrl(string serviceUrl, int? limit, string rlid, ContextRole? role)
         {
             var query = new StringBuilder();
             if (limit.HasValue)

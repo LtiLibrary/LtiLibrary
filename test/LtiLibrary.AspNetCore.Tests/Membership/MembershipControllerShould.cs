@@ -72,7 +72,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipAsync with the Learner role filter
-            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-1", Key, Secret, role: Role.Learner);
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-1", Key, Secret, role: ContextRole.Learner);
             // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             // And the response is not null

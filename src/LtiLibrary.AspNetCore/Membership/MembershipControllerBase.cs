@@ -42,7 +42,7 @@ namespace LtiLibrary.AspNetCore.Membership
         /// <param name="role">Optional. The role for a membership. The result set will be filtered so that it includes only those memberships that contain this role. The value of the parameter should be the full URI for the role, although the simple name may be used for context-level roles. If omitted, the result set will include all memberships with any role.</param>
         /// <returns></returns>
         [HttpGet]
-        public virtual async Task<IActionResult> GetAsync(string contextId, int? limit = null, string rlid = null, Role? role = null)
+        public virtual async Task<IActionResult> GetAsync(string contextId, int? limit = null, string rlid = null, ContextRole? role = null)
         {
             try
             {

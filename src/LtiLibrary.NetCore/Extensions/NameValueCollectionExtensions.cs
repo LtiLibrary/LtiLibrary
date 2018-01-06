@@ -15,12 +15,12 @@ namespace LtiLibrary.NetCore.Extensions
     public static class NameValueCollectionExtensions
     {
         /// <summary>
-        /// Add a list of <see cref="Role"/> values as a comma separated string.
+        /// Add a list of <see cref="Enum"/> values as a comma separated string.
         /// </summary>
         /// <param name="parameters">The <see cref="NameValueCollection"/>.</param>
         /// <param name="name">The key of the entry to add.</param>
-        /// <param name="values">The list of <see cref="Role"/> values to add.</param>
-        public static void AddParameter(this NameValueCollection parameters, string name, IList<Role> values)
+        /// <param name="values">The list of <see cref="Enum"/> values to add.</param>
+        public static void AddParameter(this NameValueCollection parameters, string name, IList<Enum> values)
         {
             if (values.Count > 0)
             {

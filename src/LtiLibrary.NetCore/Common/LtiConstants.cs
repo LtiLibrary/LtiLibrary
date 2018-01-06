@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 
 namespace LtiLibrary.NetCore.Common
@@ -16,21 +17,25 @@ namespace LtiLibrary.NetCore.Common
         // Build a lookup table of role URNs
         static LtiConstants()
         {
-            RoleUrns =  new Dictionary<string, Role>(StringComparer.OrdinalIgnoreCase);
-            var type = typeof(Role);
-            foreach (Role role in Enum.GetValues(type))
+            RoleUrns =  new Dictionary<string, Enum>(StringComparer.OrdinalIgnoreCase);
+            foreach (Enum role in Enum.GetValues(typeof(ContextRole)))
             {
-                var memInfo = type.GetTypeInfo().GetMember(role.ToString());
-                var attributes = memInfo[0].GetCustomAttributes(typeof(UrnAttribute), false).ToArray();
-                var urn = ((UrnAttribute)attributes[0]).Urn;
-                RoleUrns.Add(urn, role);
+                RoleUrns.Add(role.GetUrn(), role);
+            }
+            foreach (Enum role in Enum.GetValues(typeof(InstitutionalRole)))
+            {
+                RoleUrns.Add(role.GetUrn(), role);
+            }
+            foreach (Enum role in Enum.GetValues(typeof(SystemRole)))
+            {
+                RoleUrns.Add(role.GetUrn(), role);
             }
         }
 
         /// <summary>
         /// Dictionary of Role URN's where the key is the short Role name (e.g. Learner).
         /// </summary>
-        public static readonly Dictionary<string, Role> RoleUrns;
+        public static readonly Dictionary<string, Enum> RoleUrns;
 
         #region LTI 1.0
 

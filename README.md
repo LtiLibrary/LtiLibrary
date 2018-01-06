@@ -29,5 +29,5 @@ There are also two xUnit test projects: one for each project above. These can be
 
 | Assembly | Status |
 | --- | --- |
-| LtiLibrary.NetCore | [![NuGet Status](http://nugetstatus.com/LtiLibrary.NetCore.png)](http://nugetstatus.com/packages/LtiLibrary.NetCore) |
+| LtiLibrary.NetCore | [![NuGet Status](https://img.shields.io/nuget/v/LtiLibrary.NetCore.svg)](http://nugetstatus.com/packages/LtiLibrary.NetCore) |
 | LtiLibrary.AspNetCore | [![NuGet Status](http://nugetstatus.com/LtiLibrary.AspNetCore.png)](http://nugetstatus.com/packages/LtiLibrary.NetCore) |

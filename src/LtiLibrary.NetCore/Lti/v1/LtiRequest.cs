@@ -2184,6 +2184,9 @@ namespace LtiLibrary.NetCore.Lti.v1
 
         #region Properties
 
+        /// <summary>
+        /// Get a list of LTI parameters in the current LtiRequest.
+        /// </summary>
         public IList<KeyValuePair<string, string>> Parameters
         {
             get
@@ -2209,6 +2212,9 @@ namespace LtiLibrary.NetCore.Lti.v1
 
         #region Methods
 
+        /// <summary>
+        /// Add a single parameter to the current LtiRequest.
+        /// </summary>
         public void AddParameter(string name, string value)
         {
             if (string.IsNullOrWhiteSpace(name))

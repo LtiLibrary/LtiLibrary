@@ -29,10 +29,14 @@ namespace LtiLibrary.NetCore.Extensions
             {
                 if (excludedNames.Contains(key)) continue;
                 var values = collection.GetValues(key);
-                foreach (var value in values)
+                // Ignore keys with null values
+                if (values != null)
                 {
-                    list.Add(new KeyValuePair<string, string>(key.ToRfc3986EncodedString(),
-                        value.ToRfc3986EncodedString()));
+                    foreach (var value in values)
+                    {
+                        list.Add(new KeyValuePair<string, string>(key.ToRfc3986EncodedString(),
+                            value.ToRfc3986EncodedString()));
+                    }
                 }
             }
 

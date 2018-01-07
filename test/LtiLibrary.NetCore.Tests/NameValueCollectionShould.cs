@@ -1,4 +1,5 @@
 ﻿using System.Collections.Specialized;
+using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.OAuth;
 using Xunit;
@@ -60,6 +61,37 @@ namespace LtiLibrary.NetCore.Tests
                 {OAuthConstants.RealmParameter, "realm"}
             };
             Assert.Equal(_expected, collection.ToNormalizedString());
+        }
+
+        [Fact]
+        public void ShouldIncludeParametersWithNullValues()
+        {
+            var collection = new NameValueCollection(_collection)
+            {
+                // These create a key, but do not add values
+                {"z", null}, 
+                {"z", null},
+                {"z", null}
+            };
+            Assert.Equal(_expected, collection.ToNormalizedString());
+        }
+
+        [Fact]
+        public void ShouldIncludeParametersWithEmptyAndWhiteSpaceValues()
+        {
+            var collection = new NameValueCollection(_collection)
+            {
+                // This creates a Key, but does not add a value
+                {"z", null},
+                // This adds the first value to the existing "z" key
+                {"z", string.Empty},
+                // This adds the second value to the existing "z" key
+                {"z", " "}
+            };
+            // Note that NameValueCollection does keep track of the null
+            // value. It looks like there are two values for the "z" key
+            var expected = _expected + "&z=&z=%20";
+            Assert.Equal(expected, collection.ToNormalizedString());
         }
     }
 }

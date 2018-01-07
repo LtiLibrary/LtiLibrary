@@ -2591,15 +2591,29 @@ namespace LtiLibrary.NetCore.Lti.v1
 
         private void SubstituteCustomVariables(NameValueCollection parameters)
         {
-            foreach (var key in parameters.AllKeys)
+            foreach (var name in parameters.AllKeys)
             {
-                if (key.StartsWith("custom_"))
+                if (name.StartsWith("custom_"))
                 {
-                    // Per the LTI 1.x specs, custom parameter
-                    // names must be lowercase letters or numbers. Any other
-                    // character is replaced with an underscore.
-                    var value = SubstituteCustomVariable(parameters[key]);
-                    InternalParameters[key] = value;
+                    var oldValues = parameters.GetValues(name);
+                    var newValues = new List<string>();
+                    InternalParameters.Remove(name);
+
+                    if (oldValues != null)
+                    {
+                        foreach (var oldValue in oldValues)
+                        {
+                            // Per the LTI 1.x specs, custom parameter
+                            // names must be lowercase letters or numbers. Any other
+                            // character is replaced with an underscore.
+                            newValues.Add(SubstituteCustomVariable(oldValue));
+                        }
+                    }
+
+                    foreach (var newValue in newValues)
+                    {
+                        AddCustomParameter(name, newValue);
+                    }
                 }
             }
         }

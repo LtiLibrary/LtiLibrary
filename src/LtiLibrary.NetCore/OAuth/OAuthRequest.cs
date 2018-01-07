@@ -43,7 +43,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// </summary>
         public OAuthRequest()
         {
-            Parameters = new NameValueCollection();
+            InternalParameters = new NameValueCollection();
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.BodyHashParameter];
+                return InternalParameters[OAuthConstants.BodyHashParameter];
             }
             set
             {
-                Parameters[OAuthConstants.BodyHashParameter] = value;
+                InternalParameters[OAuthConstants.BodyHashParameter] = value;
             }
         }
 
@@ -81,11 +81,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.CallbackParameter];
+                return InternalParameters[OAuthConstants.CallbackParameter];
             }
             set
             {
-                Parameters[OAuthConstants.CallbackParameter] = value;
+                InternalParameters[OAuthConstants.CallbackParameter] = value;
             }
         }
 
@@ -97,43 +97,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.ConsumerKeyParameter];
+                return InternalParameters[OAuthConstants.ConsumerKeyParameter];
             }
             set
             {
-                Parameters[OAuthConstants.ConsumerKeyParameter] = value;
-            }
-        }
-
-        /// <summary>
-        /// The custom_ and ext_ parameters in Querystring format suitable for saving in the database.
-        /// </summary>
-        [DataMember]
-        public string CustomParameters
-        {
-            get
-            {
-                var customParameters = new UrlEncodingParser("");
-                foreach (var key in Parameters.AllKeys)
-                {
-                    if (key.StartsWith("custom_") || key.StartsWith("ext_"))
-                    {
-                        customParameters.Add(key, Parameters[key]);
-                    }
-                }
-
-                return customParameters.Count == 0 ? null : customParameters.ToString();
-            }
-            set
-            {
-                var customParameters = new UrlEncodingParser(value);
-                foreach (var key in customParameters.AllKeys)
-                {
-                    if (key.StartsWith("custom_") || key.StartsWith("_ext"))
-                    {
-                        Parameters[key] = customParameters[key];
-                    }
-                }
+                InternalParameters[OAuthConstants.ConsumerKeyParameter] = value;
             }
         }
 
@@ -143,6 +111,11 @@ namespace LtiLibrary.NetCore.OAuth
         public string HttpMethod { get; set; }
 
         /// <summary>
+        /// All the parameters in the request
+        /// </summary>
+        protected NameValueCollection InternalParameters { get; }
+
+        /// <summary>
         /// OAuth nonce
         /// </summary>
         [DataMember(Name = OAuthConstants.NonceParameter)]
@@ -150,18 +123,13 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.NonceParameter];
+                return InternalParameters[OAuthConstants.NonceParameter];
             }
             set
             {
-                Parameters[OAuthConstants.NonceParameter] = value;
+                InternalParameters[OAuthConstants.NonceParameter] = value;
             }
         }
-
-        /// <summary>
-        /// All the OAuth parameters in the request
-        /// </summary>
-        public NameValueCollection Parameters { get; }
 
         /// <summary>
         /// OAuth signature
@@ -171,11 +139,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.SignatureParameter];
+                return InternalParameters[OAuthConstants.SignatureParameter];
             }
             set
             {
-                Parameters[OAuthConstants.SignatureParameter] = value;
+                InternalParameters[OAuthConstants.SignatureParameter] = value;
             }
         }
 
@@ -187,11 +155,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.SignatureMethodParameter];
+                return InternalParameters[OAuthConstants.SignatureMethodParameter];
             }
             set
             {
-                Parameters[OAuthConstants.SignatureMethodParameter] = value;
+                InternalParameters[OAuthConstants.SignatureMethodParameter] = value;
             }
         }
 
@@ -203,11 +171,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Convert.ToInt64(Parameters[OAuthConstants.TimestampParameter]);
+                return Convert.ToInt64(InternalParameters[OAuthConstants.TimestampParameter]);
             }
             set
             {
-                Parameters[OAuthConstants.TimestampParameter] = Convert.ToString(value);
+                InternalParameters[OAuthConstants.TimestampParameter] = Convert.ToString(value);
             }
         }
 
@@ -240,11 +208,11 @@ namespace LtiLibrary.NetCore.OAuth
         {
             get
             {
-                return Parameters[OAuthConstants.VersionParameter];
+                return InternalParameters[OAuthConstants.VersionParameter];
             }
             set
             {
-                Parameters[OAuthConstants.VersionParameter] = value;
+                InternalParameters[OAuthConstants.VersionParameter] = value;
             }
         }
 
@@ -261,7 +229,7 @@ namespace LtiLibrary.NetCore.OAuth
             var authorizationHeader = new StringBuilder(OAuthConstants.AuthScheme).Append(" ");
             foreach (var key in RequiredOauthAuthorizationHeaderParameters)
             {
-                authorizationHeader.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(Parameters[key]));
+                authorizationHeader.AppendFormat("{0}=\"{1}\",", key, WebUtility.UrlEncode(InternalParameters[key]));
             }
             return AuthenticationHeaderValue.Parse(authorizationHeader.ToString(0, authorizationHeader.Length - 1));
         }
@@ -277,14 +245,14 @@ namespace LtiLibrary.NetCore.OAuth
             // If there is no BodyHashReceived, calculate signature based on form parameters
             if (string.IsNullOrEmpty(BodyHashReceived) && string.IsNullOrEmpty(BodyHash))
             {
-                return GenerateSignature(HttpMethod, Url, Parameters, consumerSecret);
+                return GenerateSignature(HttpMethod, Url, InternalParameters, consumerSecret);
             }
 
             // Otherwise calculate the signature using the body hash instead of form parameters
             var parameters = new NameValueCollection();
             foreach (var key in RequiredOauthAuthorizationHeaderParameters)
             {
-                parameters[key] = Parameters[key];
+                parameters[key] = InternalParameters[key];
             }
             if (!string.IsNullOrEmpty(BodyHashReceived))
             {

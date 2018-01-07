@@ -26,6 +26,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         string LisPersonSourcedId { get; set; }
         string LtiMessageType { get; set; }
         string LtiVersion { get; set; }
+        IList<KeyValuePair<string, string>> Parameters { get; }
         string Roles { get; set; }
         string ToolConsumerInfoProductFamilyCode { get; set; }
         string ToolConsumerInfoVersion { get; set; }
@@ -39,6 +40,7 @@ namespace LtiLibrary.NetCore.Lti.v1
 
         void AddCustomParameter(string name, string value);
         void AddCustomParameters(string parameters);
+        string CustomParameters { get; set; }
         IList<Enum> GetRoles();
         void SetRoles(IList<Enum> roles);
         string SubstituteCustomVariablesAndGenerateSignature(string consumerSecret);

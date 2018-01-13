@@ -2244,7 +2244,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         /// to include one of those characters in the value, use <see cref="AddCustomParameter"/>.
         /// </summary>
         /// <remarks>
-        /// Use <see cref="CustomParameters"/> to replace the custom paramters in the
+        /// Use <see cref="SetCustomParameters"/> to replace the custom paramters in the
         /// LtiRequest.
         /// </remarks>
         public void AddCustomParameters(string parameters)
@@ -2350,41 +2350,6 @@ namespace LtiLibrary.NetCore.Lti.v1
         }
 
         /// <summary>
-        /// Gets or sets the custom_ and ext_ parameters of the <see cref="OAuthRequest"/>. Setting the value
-        /// will replace all the custom_ and ext_ parameters in the request. Use <see cref="Lti.v1.LtiRequest.AddCustomParameters"/>
-        /// to add parameters. Getting the value will return all the custom_ and ext_ parameters in querystring format.
-        /// </summary>
-        [DataMember]
-        public string CustomParameters
-        {
-            get
-            {
-                var customParameters = new UrlEncodingParser("");
-                foreach (var pair in Parameters)
-                {
-                    if (pair.Key.StartsWith("custom_") || pair.Key.StartsWith("ext_"))
-                    {
-                        customParameters.Add(pair.Key, pair.Value);
-                    }
-                }
-                return customParameters.Count == 0 ? null : customParameters.ToString();
-            }
-            set
-            {
-                // Remove all the existing custom parameters
-                foreach (var name in InternalParameters.AllKeys)
-                {
-                    if (name.StartsWith("custom_") || name.StartsWith("ext_"))
-                    {
-                        InternalParameters.Remove(name);
-                    }
-                }
-                // Add the new custom_ and _ext parameters
-                AddCustomParameters(value);
-            }
-        }
-
-        /// <summary>
         /// Get the roles in the LtiRequest as an IList of ContextRole, InstitutionalRole, and SystemRole enums.
         /// </summary>
         public IList<Enum> GetRoles()
@@ -2425,6 +2390,24 @@ namespace LtiLibrary.NetCore.Lti.v1
                 var missingParameters = string.Join(", ", missing.ToArray());
                 throw new LtiException($"Missing parameter(s): {missingParameters}.");
             }
+        }
+
+        /// <summary>
+        /// Replace the custom_ and ext_ parameters of the <see cref="LtiRequest"/>. Use 
+        /// <see cref="Lti.v1.LtiRequest.AddCustomParameters"/> to add custom parameters.
+        /// </summary>
+        public void SetCustomParameters(string parameters)
+        {
+            // Remove all the existing custom parameters
+            foreach (var name in InternalParameters.AllKeys)
+            {
+                if (name.StartsWith("custom_") || name.StartsWith("ext_"))
+                {
+                    InternalParameters.Remove(name);
+                }
+            }
+            // Add the new custom_ and _ext parameters
+            AddCustomParameters(parameters);
         }
 
         /// <summary>

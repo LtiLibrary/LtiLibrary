@@ -40,8 +40,8 @@ namespace LtiLibrary.NetCore.Lti.v1
 
         void AddCustomParameter(string name, string value);
         void AddCustomParameters(string parameters);
-        string CustomParameters { get; set; }
         IList<Enum> GetRoles();
+        void SetCustomParameters(string parameters);
         void SetRoles(IList<Enum> roles);
         string SubstituteCustomVariablesAndGenerateSignature(string consumerSecret);
     }

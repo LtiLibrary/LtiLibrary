@@ -12,6 +12,7 @@ using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -49,7 +50,7 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
                 Assert.True(response.IsSuccessStatusCode, $"Response status code does not indicate success: {response.StatusCode}");
                 var referenceJson = TestUtils.LoadReferenceJsonFile(LtiConstants.BasicLaunchLtiMessageType)
                     .Replace("{lcid}", lcid);
-                JsonAssertions.AssertSameObjectJson(await GetContentAsJObject(response), JObject.Parse(referenceJson));
+                JsonAssertions.AssertSameObjectJson(JObject.Parse(referenceJson), await GetContentAsJObject(response));
             }
         }
 

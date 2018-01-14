@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
+using LtiLibrary.NetCore.Tests.TestHelpers;
 using Xunit;
 
 namespace LtiLibrary.NetCore.Tests
@@ -313,7 +313,7 @@ namespace LtiLibrary.NetCore.Tests
         [InlineData("Username", "$User.Username", "custom_username=amiller")]
         public void AddIndividualCustomParameters(string name, string value, string customParameters)
         {
-            var request = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
+            var request = new TestLtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
                 Url = new Uri("http://lti.tools/test/tp.php"),
                 ConsumerKey = "12345",
@@ -335,7 +335,7 @@ namespace LtiLibrary.NetCore.Tests
         [InlineData("Username=$User.Username,Username=$User.Id", "custom_username=amiller&custom_username=12345")]
         public void AddMultipleCustomParameters(string customParameters, string expectedCustomParameters)
         {
-            var request = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
+            var request = new TestLtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
                 Url = new Uri("http://lti.tools/test/tp.php"),
                 ConsumerKey = "12345",
@@ -365,7 +365,7 @@ namespace LtiLibrary.NetCore.Tests
             //
             // LtiRequest custom parameters should treat the data the
             // same way.
-            var request = new LtiRequest();
+            var request = new TestLtiRequest();
             request.AddCustomParameter("firstname", "Mickey");
             request.AddCustomParameter("lastname", "Mouse");
             request.AddCustomParameter("lastname", "Mouse");
@@ -375,7 +375,7 @@ namespace LtiLibrary.NetCore.Tests
         [Fact]
         public void TreatDuplicateCustomParametersWithSubstitutionSeparately()
         {
-            var request = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
+            var request = new TestLtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
                 Url = new Uri("http://lti.tools/test/tp.php"),
                 ConsumerKey = "12345",

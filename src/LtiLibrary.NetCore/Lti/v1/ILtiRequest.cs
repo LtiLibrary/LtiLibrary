@@ -26,7 +26,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         string LisPersonSourcedId { get; set; }
         string LtiMessageType { get; set; }
         string LtiVersion { get; set; }
-        IList<KeyValuePair<string, string>> Parameters { get; }
+        KeyValuePair<string, string>[] Parameters { get; }
         string Roles { get; set; }
         string ToolConsumerInfoProductFamilyCode { get; set; }
         string ToolConsumerInfoVersion { get; set; }

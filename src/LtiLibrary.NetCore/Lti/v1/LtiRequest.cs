@@ -2189,7 +2189,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         /// <summary>
         /// Get a list of LTI parameters in the current LtiRequest.
         /// </summary>
-        public IList<KeyValuePair<string, string>> Parameters
+        public KeyValuePair<string, string>[] Parameters
         {
             get
             {
@@ -2206,7 +2206,7 @@ namespace LtiLibrary.NetCore.Lti.v1
                     }
                 }
 
-                return parameters;
+                return parameters.ToArray();
             }
         }
 

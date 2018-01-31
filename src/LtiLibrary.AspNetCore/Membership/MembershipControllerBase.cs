@@ -49,17 +49,17 @@ namespace LtiLibrary.AspNetCore.Membership
                 // Check for required Authorization header with parameters dictated by the OAuth Body Hash Protocol
                 if (!Request.IsAuthenticatedWithLti())
                 {
-                    return Unauthorized();
+                    return base.Unauthorized();
                 }
 
                 if (OnGetMembershipAsync == null)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound);
+                    return base.NotFound($"{nameof(OnGetMembershipAsync)} is not defined");
                 }
 
                 if (string.IsNullOrEmpty(contextId))
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, $"{nameof(contextId)} is null or empty.");
+                    return base.BadRequest($"{nameof(contextId)} is null or empty");
                 }
 
                 // Invoke OnGetMembershipAsync in the application's controller to fill in the membership
@@ -71,12 +71,70 @@ namespace LtiLibrary.AspNetCore.Membership
                 {
                     return new MembershipContainerPageResult(response.MembershipContainerPage);
                 }
-                return StatusCode(response.StatusCode);
+                return StatusCode(response.StatusCode, response.StatusValue);
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
+        }
+
+
+        /// <summary>
+        /// Creates a <see cref="BadRequestResponse" /> that produces a <see cref="StatusCodes.Status400BadRequest" /> response.
+        /// </summary>
+        /// <returns>The created <see cref="BadRequestResponse" /> for the response.</returns>
+        public new BadRequestResponse BadRequest()
+        {
+            return new BadRequestResponse();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BadRequestResponse" /> that produces a <see cref="StatusCodes.Status400BadRequest" /> response.
+        /// </summary>
+        /// <param name="value">The content value to format in the entity body.</param>
+        /// <returns>The created <see cref="BadRequestResponse" /> for the response.</returns>
+        public new BadRequestResponse BadRequest(object value)
+        {
+            return new BadRequestResponse(value);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="NotFoundResponse" /> that produces a <see cref="StatusCodes.Status404NotFound" /> response.
+        /// </summary>
+        /// <returns>The created <see cref="NotFoundResponse" /> for the response.</returns>
+        public new NotFoundResponse NotFound()
+        {
+            return new NotFoundResponse();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="NotFoundResponse" /> that produces a <see cref="StatusCodes.Status404NotFound" /> response.
+        /// </summary>
+        /// <param name="value">The content value to format in the entity body.</param>
+        /// <returns>The created <see cref="NotFoundResponse" /> for the response.</returns>
+        public new NotFoundResponse NotFound(object value)
+        {
+            return new NotFoundResponse(value);
+        }
+
+        /// <summary>
+        /// Creates a <see cref="UnauthorizedResponse" /> that produces a <see cref="StatusCodes.Status401Unauthorized" /> response.
+        /// </summary>
+        /// <returns>The created <see cref="UnauthorizedResponse" /> for the response.</returns>
+        public new UnauthorizedResponse Unauthorized()
+        {
+            return new UnauthorizedResponse();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="UnauthorizedResponse" /> that produces a <see cref="StatusCodes.Status401Unauthorized" /> response.
+        /// </summary>
+        /// <param name="value">The content value to format in the entity body.</param>
+        /// <returns>The created <see cref="UnauthorizedResponse" /> for the response.</returns>
+        public UnauthorizedResponse Unauthorized(object value)
+        {
+            return new UnauthorizedResponse(value);
         }
     }
 }

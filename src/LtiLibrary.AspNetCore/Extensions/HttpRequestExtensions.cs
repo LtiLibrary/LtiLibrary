@@ -89,14 +89,28 @@ namespace LtiLibrary.AspNetCore.Extensions
                 var form = await request.ReadFormAsync().ConfigureAwait(false);
                 foreach (var pair in form)
                 {
-                    ltiRequest.Parameters.Add(pair.Key, string.Join(",", pair.Value));
+                    foreach (var stringValue in pair.Value)
+                    {
+                        ltiRequest.AddParameter(pair.Key, stringValue);
+                    }
                 }
                 return ltiRequest;
             }
 
             // All other LTI requests pass the authentication parameters in an
             // Authorization header
-            ltiRequest.Parameters.Add(request.ParseAuthenticationHeader());
+            var headerParameters = request.ParseAuthenticationHeader();
+            foreach (var name in headerParameters.AllKeys)
+            {
+                var values = headerParameters.GetValues(name);
+                if (values != null)
+                {
+                    foreach (var value in values)
+                    {
+                        ltiRequest.AddParameter(name, value);
+                    }
+                }
+            }
             // Save the BodyHash calculated by the AddBodyHashHeaderAttribute
             if (request.Headers["BodyHash"].Any())
             {

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Tests.SimpleHelpers;
 using LtiLibrary.NetCore.Clients;
 using LtiLibrary.NetCore.Lis.v1;
@@ -30,7 +31,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void ReturnMembershipPage()
+        public async Task ReturnMembershipPage()
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipPageAsync without any filters
@@ -44,7 +45,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void ReturnNotFound_WhenTheSpecifiedPageDoesNotExist()
+        public async Task ReturnNotFound_WhenTheSpecifiedPageDoesNotExist()
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipPageAsync with an invalid page number
@@ -54,7 +55,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void ReturnAllMemberships()
+        public async Task ReturnAllMemberships()
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipAsync without any filters
@@ -68,7 +69,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void ReturnsLearners_WhenRoleFilterIsLearner()
+        public async Task ReturnsLearners_WhenRoleFilterIsLearner()
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipAsync with the Learner role filter
@@ -82,7 +83,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void ReturnNotFound_WhenThereIsNoContextId()
+        public async Task ReturnNotFound_WhenThereIsNoContextId()
         {
             // Given a working LTI Membership Service endpoint
             // When I do not specify a contextId
@@ -92,13 +93,21 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async void ReturnNotFound_WhenThereIsAnUnknownContextId()
+        public async Task ReturnNotFound_WhenThereIsAnUnknownContextId()
         {
             // Given a working LTI Membership Service endpoint
             // When I specify an unknown contextId
             var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-2", Key, Secret);
             // Then I get a NotFound response
             Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
+        }
+
+
+        [Fact]
+        public async Task ReturnUnauthorized_WhenSecretIsWrong()
+        {
+            var clientResponse = await MembershipClient.GetMembershipPageAsync(_client, "/ims/membership/context/context-1", Key, "notsecret");
+            Assert.Equal(HttpStatusCode.Unauthorized, clientResponse.StatusCode);
         }
 
         public void Dispose()

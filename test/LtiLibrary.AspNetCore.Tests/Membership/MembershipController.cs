@@ -21,15 +21,13 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
             var signature = ltiRequest.GenerateSignature("secret");
             if (!ltiRequest.Signature.Equals(signature))
             {
-                response.StatusCode = StatusCodes.Status401Unauthorized;
-                return response;
+                return Unauthorized();
             }
 
             // If the contextId is unknown, return NotFound
             if (!request.ContextId.Equals("context-1"))
             {
-                response.StatusCode = StatusCodes.Status404NotFound;
-                return response;
+                return NotFound($"Cannot find {nameof(request.ContextId)}");
             }
 
             // If the Role filter is specified, only return the corresponding page
@@ -59,11 +57,9 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
                 // Otherwise, we don't know what page they want
                 else
                 {
-                    response.StatusCode = StatusCodes.Status404NotFound;
-                    return response;
+                    return NotFound($"Cannot find page {page}");
                 }
             }
-            response.StatusCode = StatusCodes.Status200OK;
             return response;
         }
 

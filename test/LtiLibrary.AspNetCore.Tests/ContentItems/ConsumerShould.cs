@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -134,10 +133,12 @@ namespace LtiLibrary.AspNetCore.Tests.ContentItems
             return ltiRequest;
         }
 
-        private static FormUrlEncodedContent GetContent(IOAuthRequest request, string signature)
+        private static FormUrlEncodedContent GetContent(LtiRequest request, string signature)
         {
-            var list = request.Parameters.AllKeys.Select(key => new KeyValuePair<string, string>(key, request.Parameters[key])).ToList();
-            list.Add(new KeyValuePair<string, string>(OAuthConstants.SignatureParameter, signature));
+            var list = new List<KeyValuePair<string, string>>(request.Parameters)
+            {
+                new KeyValuePair<string, string>(OAuthConstants.SignatureParameter, signature)
+            };
             return new FormUrlEncodedContent(list);
         }
 

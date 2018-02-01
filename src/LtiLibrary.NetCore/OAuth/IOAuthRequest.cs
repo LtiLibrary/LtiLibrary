@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 
 namespace LtiLibrary.NetCore.OAuth
 {
@@ -41,7 +40,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// </summary>
         string Version { get; set; }
 
-        #region Custom Parameters
+        #region Non-OAuth Properties
 
         /// <summary>
         /// Hash of the request content.
@@ -49,19 +48,9 @@ namespace LtiLibrary.NetCore.OAuth
         string BodyHash { get; set; }
 
         /// <summary>
-        /// Comma delimited list of custom LTI parameters.
-        /// </summary>
-        string CustomParameters { get; set; }
-
-        /// <summary>
         /// HTTP Method of the request.
         /// </summary>
         string HttpMethod { get; set; }
-
-        /// <summary>
-        /// LTI parameters.
-        /// </summary>
-        NameValueCollection Parameters { get; }
 
         /// <summary>
         /// Request signature.

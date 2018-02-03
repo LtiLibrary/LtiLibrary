@@ -27,7 +27,7 @@ namespace LtiLibrary.AspNetCore.Extensions
             form.AppendFormat("<form method='post' action='{0}' id='form'>", request.Url.AbsoluteUri).AppendLine();
             foreach (var pair in request.Parameters)
             {
-                form.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", pair.Key, pair.Value)
+                form.AppendFormat("<input type='hidden' name='{0}' value='{1}' />", pair.Key, System.Net.WebUtility.HtmlEncode(pair.Value))
                     .AppendLine();
             }
             form.AppendLine("</form>");

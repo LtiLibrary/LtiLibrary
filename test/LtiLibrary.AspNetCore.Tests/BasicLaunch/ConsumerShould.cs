@@ -37,8 +37,8 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
         public async void EncodeBasicLaunchFormValues_Using_HttpResponseExtensions_WriteLtiRequest()
         {
             var url = new Uri(_client.BaseAddress, "toolconsumer/launch");
-            var response = await _client.GetStringAsync(url);
-            var expected = TestUtils.LoadReferenceTextFile(LtiConstants.BasicLaunchLtiMessageType);
+            var response = (await _client.GetStringAsync(url)).Replace("\r\n", "\n");
+            var expected = TestUtils.LoadReferenceTextFile(LtiConstants.BasicLaunchLtiMessageType).Replace("\r\n", "\n");
             Assert.Equal(expected, response);
         }
 

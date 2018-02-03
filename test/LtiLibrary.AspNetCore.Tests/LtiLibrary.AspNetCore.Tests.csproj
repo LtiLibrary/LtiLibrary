@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Remove="ReferenceJson\ContentItemSelection.json" />
+    <None Remove="ReferenceText\basic-lti-launch-request.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceJson\ToolConsumerProfile.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceText\basic-lti-launch-request.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

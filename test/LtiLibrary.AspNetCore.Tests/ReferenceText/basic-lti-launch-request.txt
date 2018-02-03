@@ -1,0 +1,22 @@
+﻿<html>
+<head><title></title></head>
+<body>
+<form method='post' action='http://localhost/toolconsumer/launch' id='form'>
+<input type='hidden' name='oauth_callback' value='about:blank' />
+<input type='hidden' name='oauth_nonce' value='f68bdf5dbed34d7aa6ff18456bf3185e' />
+<input type='hidden' name='oauth_signature_method' value='HMAC-SHA1' />
+<input type='hidden' name='oauth_timestamp' value='1517630398' />
+<input type='hidden' name='oauth_version' value='1.0' />
+<input type='hidden' name='launch_presentation_locale' value='en-US' />
+<input type='hidden' name='lti_message_type' value='basic-lti-launch-request' />
+<input type='hidden' name='lti_version' value='LTI-1p0' />
+<input type='hidden' name='oauth_consumer_key' value='12345' />
+<input type='hidden' name='lis_person_name_full' value='d&#39;Artagnan' />
+<input type='hidden' name='resource_link_id' value='link' />
+<input type='hidden' name='oauth_signature' value='k2Y0+/dW5ryPlpcok1qgxosUyD4=' />
+</form>
+<script>
+ document.getElementById('form').submit();
+</script>
+</body>
+</html>

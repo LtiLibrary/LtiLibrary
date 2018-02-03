@@ -33,6 +33,15 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             Directory.SetCurrentDirectory(AppContext.BaseDirectory);
         }
 
+        [Fact]
+        public async void EncodeBasicLaunchFormValues_Using_HttpResponseExtensions_WriteLtiRequest()
+        {
+            var url = new Uri(_client.BaseAddress, "toolconsumer/launch");
+            var response = await _client.GetStringAsync(url);
+            var expected = TestUtils.LoadReferenceTextFile(LtiConstants.BasicLaunchLtiMessageType);
+            Assert.Equal(expected, response);
+        }
+
         [Theory]
         [InlineData("en-US")]
         [InlineData("nl-NL")]
@@ -84,7 +93,6 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
             var ltiRequest = new LtiRequest(LtiConstants.BasicLaunchLtiMessageType)
             {
                 ConsumerKey = "12345",
-                //LaunchPresentationLocale = "en-US",
                 ResourceLinkId = "launch",
                 Url = new Uri(_client.BaseAddress, "toolprovider/tool/1")
             };

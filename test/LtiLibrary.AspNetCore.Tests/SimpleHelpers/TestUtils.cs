@@ -8,5 +8,10 @@ namespace LtiLibrary.AspNetCore.Tests.SimpleHelpers
         {
             return File.ReadAllText("ReferenceJson/" + refJsonName + ".json");
         }
+
+        public static string LoadReferenceTextFile(string filename)
+        {
+            return File.ReadAllText("ReferenceText/" + filename + ".txt");
+        }
     }
 }

@@ -5,12 +5,11 @@ using System.Xml.Serialization;
 
 namespace LtiLibrary.NetCore.Lti.v1
 {
-
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
+    
+    /// <remarks/>
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    //[XmlType(TypeName = "Text.Type", Namespace = "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0")]
     [XmlRoot("resultScore", Namespace = "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0", IsNullable = false)]
     public partial class LtiReponseType
     {
@@ -31,7 +30,7 @@ namespace LtiLibrary.NetCore.Lti.v1
         }
     }
 
-   
+    
     public partial class ResultType
     {
         private LtiReponseType resultDataField;        

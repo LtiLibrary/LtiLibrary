@@ -20,6 +20,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         private const string Secret = "secret";
         private const string Id = "testId";
         private const double Value = 0.5;
+        private const string ResultLtiLauncUrl = "http://ltiapps.net/test/tp.php";
 
         public OutcomesControllerShould()
         {
@@ -64,6 +65,18 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             Assert.Equal(Value, readResult.Response.Score);
+        }
+
+        [Fact]
+        public async void ReplaceResult_WhenLtiResponseUrlProvided()
+        {
+            var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value,  ResultLtiLauncUrl );
+            Assert.Equal(HttpStatusCode.OK, replaceResult.StatusCode);
+
+            var start = replaceResult.HttpResponse.IndexOf("<imsx_description>", StringComparison.Ordinal) + "<imsx_description>".Length;
+            var end = replaceResult.HttpResponse.IndexOf("</imsx_description>", StringComparison.Ordinal);
+            
+            Assert.Equal("Score for testId is now 0.5", replaceResult.HttpResponse.Substring(start, end - start));
         }
 
         [Fact]

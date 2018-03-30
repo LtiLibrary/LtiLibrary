@@ -247,10 +247,11 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
         /// <param name="score">The score.</param>
+        /// <param name="resultLtiLaunchUrl"></param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
-            string lisResultSourcedId, double? score, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string lisResultSourcedId, double? score, string resultLtiLaunchUrl = "", SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
@@ -277,9 +278,15 @@ namespace LtiLibrary.NetCore.Clients
                             // always be formatted using “en” formatting
                             // (http://www.imsglobal.org/LTI/v1p1p1/ltiIMGv1p1p1.html#_Toc330273034).
                             textString = score?.ToString(new CultureInfo(LtiConstants.ScoreLanguage))
-                        }
+                        }                       
                     }
                 };
+
+                if (!String.IsNullOrEmpty(resultLtiLaunchUrl))
+                    imsxBody.resultRecord.result.resultData = new LtiReponseType
+                    {
+                        ltiLaunchUrl = resultLtiLaunchUrl
+                    };
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -363,4 +370,7 @@ namespace LtiLibrary.NetCore.Clients
             }
         }
     }
+    /// <summary>
+    /// Helper methods for the Basic Outcomes service introduced in LTI 1.1 + Canvas.
+    /// </summary>
 }

@@ -10,10 +10,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
-using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
+using LtiLibrary.Canvas.Lti.v1;
 
-namespace LtiLibrary.NetCore.Clients
+namespace LtiLibrary.Canvas.Clients
 {
     /// <summary>
     /// Helper methods for the Basic Outcomes service introduced in LTI 1.1.
@@ -197,15 +197,9 @@ namespace LtiLibrary.NetCore.Clients
                                     // be used. If the TP does include a language (even a non-en language), it will
                                     // be used.
                                     var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language??"en");
-                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var score) 
-                                        ? new Result { Score = score, SourcedId = lisResultSourcedId } 
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var result) 
+                                        ? new Result { Score = result, SourcedId = lisResultSourcedId } 
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
-                                    
-                                    // Optional Canvas-style submission details
-                                    var resultData = imsxResponseBody.result.resultData;
-                                    outcomeResponse.Response.LtiLaunchUrl = resultData?.ltiLaunchUrl;
-                                    outcomeResponse.Response.Text = resultData?.text;
-                                    outcomeResponse.Response.Url = resultData?.url;
                                 }
                             }
                             else

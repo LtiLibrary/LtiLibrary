@@ -3,12 +3,12 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using LtiLibrary.NetCore.Clients;
+using LtiLibrary.Canvas.Clients;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
-namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
+namespace LtiLibrary.Canvas.Tests.Outcomes.v1
 {
     public class OutcomesControllerShould : IDisposable
     {
@@ -137,17 +137,14 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         }
 
         [Theory]
-        [InlineData("some text", null, null)]
-        [InlineData(null, "some url", null)]
-        [InlineData(null, null, "some lti url")]
-        public async void ReplaceResult_WithSubmissionDetails(string text, string url, string ltiLaunchUrl)
+        [InlineData(null, null, HttpStatusCode.BadRequest)]
+        [InlineData(null, "some text", HttpStatusCode.BadRequest)]
+        [InlineData(1.0, null, HttpStatusCode.OK)]
+        [InlineData(1.0, "some text", HttpStatusCode.OK)]
+        public async void ReplaceResultWithText_IfPlatformIsCanvas(double? score, string text, HttpStatusCode statusCode)
         {
-            await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value, text, url, ltiLaunchUrl);
-            var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, Secret, Id);
-            Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
-            Assert.Equal(text, readResult.Response.Text);
-            Assert.Equal(url, readResult.Response.Url);
-            Assert.Equal(ltiLaunchUrl, readResult.Response.LtiLaunchUrl);
+            var replaceResult = await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, score, text);
+            Assert.True(replaceResult.StatusCode == statusCode, $"{replaceResult.StatusCode} == {statusCode}");
         }
 
         public void Dispose()

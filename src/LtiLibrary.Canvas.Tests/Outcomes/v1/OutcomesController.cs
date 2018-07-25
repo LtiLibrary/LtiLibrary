@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Extensions;
-using LtiLibrary.AspNetCore.Outcomes.v1;
+using LtiLibrary.Canvas.Outcomes.v1;
 using LtiLibrary.NetCore.Lti.v1;
 using Microsoft.AspNetCore.Http;
 
-namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
+namespace LtiLibrary.Canvas.Tests.Outcomes.v1
 {
     /// <summary>
     /// The OutcomesoApiController is hosted by the Tool Consumer and provides
@@ -72,11 +72,6 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
 
             _result.Score = request.Result.Score;
             _result.SourcedId = request.Result.SourcedId;
-
-            // Optional fields supported by Canvas
-            _result.LtiLaunchUrl = request.Result.LtiLaunchUrl;
-            _result.Text = request.Result.Text;
-            _result.Url = request.Result.Url;
 
             return response;
         }

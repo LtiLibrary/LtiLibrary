@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using LtiLibrary.AspNetCore.Common;
 using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.NetCore.Common;
-using LtiLibrary.NetCore.Lti.v1;
+using LtiLibrary.Canvas.Lti.v1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LtiLibrary.AspNetCore.Outcomes.v1
+namespace LtiLibrary.Canvas.Outcomes.v1
 {
     /// <summary>
     /// A <see cref="Controller" /> that implements the LTI Outcomes Management 1.0 service.
@@ -172,7 +172,6 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     }
                 }
 
-                // Get the optional Canvas-style submission details
                 result.Text = resultRecord.result.resultData?.text;
                 result.Url = resultRecord.result.resultData?.url;
                 result.LtiLaunchUrl = resultRecord.result.resultData?.ltiLaunchUrl;
@@ -228,21 +227,10 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                         response.StatusCode, response.StatusDescription ?? "TC did not read result.");
                 }
 
-                readResponse.result = new ResultType { resultScore = new TextType() };
-                // Add optional responseData if present
-                if (!string.IsNullOrEmpty(response.Result.LtiLaunchUrl + response.Result.Text + response.Result.Url))
-                {
-                    readResponse.result.resultData = new DataType
-                    {
-                        ltiLaunchUrl = response.Result.LtiLaunchUrl,
-                        text = response.Result.Text,
-                        url = response.Result.Url
-                    };
-                }
-
                 if (response.Result.Score.HasValue)
                 {
                     // The score exists
+                    readResponse.result = new ResultType { resultScore = new TextType() };
                     var cultureInfo = new CultureInfo("en");
                     readResponse.result.resultScore.language = cultureInfo.Name;
                     readResponse.result.resultScore.textString = response.Result.Score.Value.ToString(cultureInfo);
@@ -256,6 +244,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     // response with a present but empty textString element. The TC should not return 0.0 to indicate a
                     // non-existent grade and the TC should not return a failure status when a grade does not exist.
                     // It should simply return an "empty" grade.
+                    readResponse.result = new ResultType { resultScore = new TextType() };
                     var cultureInfo = new CultureInfo("en");
                     readResponse.result.resultScore.language = cultureInfo.Name;
                     readResponse.result.resultScore.textString = string.Empty;

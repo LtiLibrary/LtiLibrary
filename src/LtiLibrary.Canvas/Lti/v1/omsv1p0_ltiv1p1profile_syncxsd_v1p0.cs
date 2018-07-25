@@ -15,7 +15,7 @@
 using System;
 using System.Xml.Serialization;
 
-namespace LtiLibrary.NetCore.Lti.v1 {
+namespace LtiLibrary.Canvas.Lti.v1 {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.17929")]
     [System.SerializableAttribute()]
@@ -333,33 +333,17 @@ namespace LtiLibrary.NetCore.Lti.v1 {
             }
         }
 
-        /// <summary>
-        /// Get or set optional resultData element supported by Canvas.
-        /// </summary>
+        // Added element 
         public DataType resultData { get; set; }
     }
 
-    /// <summary>
-    /// resultData data type supported by Canvas.
-    /// </summary>
     [Serializable]
     [XmlType(TypeName = "Data.Type", Namespace="http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0")]
     [XmlRoot("resultData", Namespace="http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0", IsNullable = true)]
     public class DataType
     {
-        /// <summary>
-        /// Get or set optional submission detail text. Can contain HTML. Supported by Canvas.
-        /// </summary>
         public string text { get; set; }
-
-        /// <summary>
-        /// Get or set optional submission detail URL. Supported by Canvas.
-        /// </summary>
         public string url { get; set; }
-
-        /// <summary>
-        /// Get or set optional submission detail LTI Launch URL. Supported by Canvas.
-        /// </summary>
         public string ltiLaunchUrl { get; set; }
     }
     

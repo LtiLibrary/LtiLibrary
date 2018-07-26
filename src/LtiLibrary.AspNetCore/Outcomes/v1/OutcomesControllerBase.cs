@@ -173,9 +173,9 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 }
 
                 // Get the optional Canvas-style submission details
-                result.Text = resultRecord.result.resultData?.text;
-                result.Url = resultRecord.result.resultData?.url;
-                result.LtiLaunchUrl = resultRecord.result.resultData?.ltiLaunchUrl;
+                result.Text = resultRecord.result.ResultData?.Text;
+                result.Url = resultRecord.result.ResultData?.Url;
+                result.LtiLaunchUrl = resultRecord.result.ResultData?.LtiLaunchUrl;
             }
             return result;
         }
@@ -232,11 +232,11 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 // Add optional responseData if present
                 if (!string.IsNullOrEmpty(response.Result.LtiLaunchUrl + response.Result.Text + response.Result.Url))
                 {
-                    readResponse.result.resultData = new DataType
+                    readResponse.result.ResultData = new DataType
                     {
-                        ltiLaunchUrl = response.Result.LtiLaunchUrl,
-                        text = response.Result.Text,
-                        url = response.Result.Url
+                        LtiLaunchUrl = response.Result.LtiLaunchUrl,
+                        Text = response.Result.Text,
+                        Url = response.Result.Url
                     };
                 }
 

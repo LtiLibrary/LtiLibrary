@@ -140,7 +140,8 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
         [InlineData("some text", null, null)]
         [InlineData(null, "some url", null)]
         [InlineData(null, null, "some lti url")]
-        public async void ReplaceResult_WithSubmissionDetails(string text, string url, string ltiLaunchUrl)
+        [InlineData("some text", "some url", "some lti url")]
+        public async void ReplaceResultWithData_WhenDataIsSupplied(string text, string url, string ltiLaunchUrl)
         {
             await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value, text, url, ltiLaunchUrl);
             var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, Secret, Id);

@@ -202,10 +202,10 @@ namespace LtiLibrary.NetCore.Clients
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
                                     
                                     // Optional Canvas-style submission details
-                                    var resultData = imsxResponseBody.result.resultData;
-                                    outcomeResponse.Response.LtiLaunchUrl = resultData?.ltiLaunchUrl;
-                                    outcomeResponse.Response.Text = resultData?.text;
-                                    outcomeResponse.Response.Url = resultData?.url;
+                                    var resultData = imsxResponseBody.result.ResultData;
+                                    outcomeResponse.Response.LtiLaunchUrl = resultData?.LtiLaunchUrl;
+                                    outcomeResponse.Response.Text = resultData?.Text;
+                                    outcomeResponse.Response.Url = resultData?.Url;
                                 }
                             }
                             else
@@ -253,9 +253,9 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
         /// <param name="score">The score.</param>
-        /// <param name="text">Optional text result (Canvas extension)</param>
-        /// <param name="url"></param>
-        /// <param name="ltiLaunchUrl"></param>
+        /// <param name="text">Optional text data (Canvas extension)</param>
+        /// <param name="url">Optional url data</param>
+        /// <param name="ltiLaunchUrl">Optional LTI launch URL data</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
@@ -290,28 +290,13 @@ namespace LtiLibrary.NetCore.Clients
                     }
                 };
 
-                if (!string.IsNullOrEmpty(url))
+                // If any ResultData is supplied, add the ResultData element
+                if (!string.IsNullOrEmpty(text + url + ltiLaunchUrl))
                 {
-                    imsxBody.resultRecord.result.resultData = new DataType
-                    {
-                        url = url
-                    };
-                }
-
-                if (!string.IsNullOrEmpty(text))
-                {
-                    imsxBody.resultRecord.result.resultData = new DataType
-                    {
-                        text = text
-                    };
-                }
-
-                if (!string.IsNullOrEmpty(ltiLaunchUrl))
-                {
-                    imsxBody.resultRecord.result.resultData = new DataType
-                    {
-                        ltiLaunchUrl = ltiLaunchUrl
-                    };
+                    var resultData = imsxBody.resultRecord.result.ResultData = new DataType();
+                    resultData.LtiLaunchUrl = ltiLaunchUrl;
+                    resultData.Text = text;
+                    resultData.Url = url;
                 }
 
                 var outcomeResponse = new ClientResponse();

@@ -243,9 +243,8 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                 if (response.Result.Score.HasValue)
                 {
                     // The score exists
-                    var cultureInfo = new CultureInfo("en");
-                    readResponse.result.resultScore.language = cultureInfo.Name;
-                    readResponse.result.resultScore.textString = response.Result.Score.Value.ToString(cultureInfo);
+                    readResponse.result.resultScore.language = LtiConstants.ScoreCultureInfo.Name;
+                    readResponse.result.resultScore.textString = response.Result.Score.Value.ToString(LtiConstants.ScoreCultureInfo);
                     return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
                         response.StatusDescription ?? $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
                 }
@@ -256,8 +255,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     // response with a present but empty textString element. The TC should not return 0.0 to indicate a
                     // non-existent grade and the TC should not return a failure status when a grade does not exist.
                     // It should simply return an "empty" grade.
-                    var cultureInfo = new CultureInfo("en");
-                    readResponse.result.resultScore.language = cultureInfo.Name;
+                    readResponse.result.resultScore.language = LtiConstants.ScoreCultureInfo.Name;
                     readResponse.result.resultScore.textString = string.Empty;
                     return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
                         response.StatusDescription ?? $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is null");

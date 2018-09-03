@@ -136,6 +136,21 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             Assert.True(deleteResult.StatusCode == HttpStatusCode.Unauthorized, $"{deleteResult.StatusCode} == {HttpStatusCode.Unauthorized}");
         }
 
+        [Theory]
+        [InlineData("some text", null, null)]
+        [InlineData(null, "some url", null)]
+        [InlineData(null, null, "some lti url")]
+        [InlineData("some text", "some url", "some lti url")]
+        public async void ReplaceResultWithData_WhenDataIsSupplied(string text, string url, string ltiLaunchUrl)
+        {
+            await Outcomes1Client.ReplaceResultAsync(_client, Url, Key, Secret, Id, Value, text, url, ltiLaunchUrl);
+            var readResult = await Outcomes1Client.ReadResultAsync(_client, Url, Key, Secret, Id);
+            Assert.True(readResult.StatusCode == HttpStatusCode.OK, $"{readResult.StatusCode} == {HttpStatusCode.OK}");
+            Assert.Equal(text, readResult.Response.Text);
+            Assert.Equal(url, readResult.Response.Url);
+            Assert.Equal(ltiLaunchUrl, readResult.Response.LtiLaunchUrl);
+        }
+
         public void Dispose()
         {
             _client?.Dispose();

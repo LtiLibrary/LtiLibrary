@@ -1,37 +1,32 @@
-﻿namespace LtiLibrary.NetCore.Lti.v1
+﻿using System;
+using System.Xml.Serialization;
+
+namespace LtiLibrary.NetCore.Lti.v1
 {
     /// <summary>
-    /// Represents an Outcomes 1.0 result.
+    /// resultData data type supported by Canvas.
     /// </summary>
-    public class Result
+    [Serializable]
+    [XmlType(TypeName = "Data.Type", Namespace="http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0")]
+    [XmlRoot("resultData", Namespace="http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0", IsNullable = true)]
+    public class DataType
     {
-        /// <summary>
-        /// Get or set the score for this result. Can be null.
-        /// </summary>
-        public double? Score { get; set; }
-
-        #region Optional submission details supported by Canvas 
-
         /// <summary>
         /// Get or set optional submission detail text. Can contain HTML. Supported by Canvas.
         /// </summary>
+        [XmlElement(ElementName = "text")]
         public string Text { get; set; }
 
         /// <summary>
         /// Get or set optional submission detail URL. Supported by Canvas.
         /// </summary>
+        [XmlElement(ElementName = "url")]
         public string Url { get; set; }
 
         /// <summary>
         /// Get or set optional submission detail LTI Launch URL. Supported by Canvas.
         /// </summary>
+        [XmlElement(ElementName = "ltiLaunchUrl")]
         public string LtiLaunchUrl { get; set; }
-
-        #endregion
-
-        /// <summary>
-        /// Get or set the SourcedId for this result.
-        /// </summary>
-        public string SourcedId { get; set; }
     }
 }

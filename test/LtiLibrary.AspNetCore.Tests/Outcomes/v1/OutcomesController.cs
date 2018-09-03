@@ -73,6 +73,11 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v1
             _result.Score = request.Result.Score;
             _result.SourcedId = request.Result.SourcedId;
 
+            // Optional fields supported by Canvas
+            _result.LtiLaunchUrl = request.Result.LtiLaunchUrl;
+            _result.Text = request.Result.Text;
+            _result.Url = request.Result.Url;
+
             return response;
         }
     }

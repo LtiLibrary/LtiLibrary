@@ -196,10 +196,16 @@ namespace LtiLibrary.NetCore.Clients
                                     // a little bit of misbehaving. If the TP does not include a language, "en" will
                                     // be used. If the TP does include a language (even a non-en language), it will
                                     // be used.
-                                    var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language??"en");
-                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var result) 
-                                        ? new Result { Score = result, SourcedId = lisResultSourcedId } 
+                                    var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language??LtiConstants.ScoreLanguage);
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var score) 
+                                        ? new Result { Score = score, SourcedId = lisResultSourcedId } 
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
+                                    
+                                    // Optional Canvas-style submission details
+                                    var resultData = imsxResponseBody.result.ResultData;
+                                    outcomeResponse.Response.LtiLaunchUrl = resultData?.LtiLaunchUrl;
+                                    outcomeResponse.Response.Text = resultData?.Text;
+                                    outcomeResponse.Response.Url = resultData?.Url;
                                 }
                             }
                             else
@@ -247,10 +253,13 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth secret to sign the request.</param>
         /// <param name="lisResultSourcedId">The LisResult to receive the score.</param>
         /// <param name="score">The score.</param>
+        /// <param name="text">Optional text data (Canvas extension)</param>
+        /// <param name="url">Optional url data</param>
+        /// <param name="ltiLaunchUrl">Optional LTI launch URL data</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
         public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
-            string lisResultSourcedId, double? score, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string lisResultSourcedId, double? score, string text = null, string url = null, string ltiLaunchUrl = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
@@ -280,6 +289,15 @@ namespace LtiLibrary.NetCore.Clients
                         }
                     }
                 };
+
+                // If any ResultData is supplied, add the ResultData element
+                if (!string.IsNullOrEmpty(text + url + ltiLaunchUrl))
+                {
+                    var resultData = imsxBody.resultRecord.result.ResultData = new DataType();
+                    resultData.LtiLaunchUrl = ltiLaunchUrl;
+                    resultData.Text = text;
+                    resultData.Url = url;
+                }
 
                 var outcomeResponse = new ClientResponse();
                 try

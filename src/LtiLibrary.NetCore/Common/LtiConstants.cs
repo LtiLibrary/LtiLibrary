@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 
@@ -518,6 +519,11 @@ namespace LtiLibrary.NetCore.Common
         /// en encoding.
         /// </summary>
         public const string ScoreLanguage = "en";
+
+        /// <summary>
+        /// CultureInfo using ScoreLanguage ("en").
+        /// </summary>
+        public static CultureInfo ScoreCultureInfo = new CultureInfo(ScoreLanguage);
 
         #endregion
 

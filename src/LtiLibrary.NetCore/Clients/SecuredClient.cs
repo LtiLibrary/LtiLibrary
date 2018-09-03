@@ -12,9 +12,20 @@ namespace LtiLibrary.NetCore.Clients
     /// <summary>
     /// Base class for LTI client helpers that make secured requests.
     /// </summary>
-    internal static class SecuredClient
+    public static class SecuredClient
     {
-        internal static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
+        /// <summary>
+        /// Add a signed authorization header to the client request using the signatureMethod.
+        /// </summary>
+        /// <param name="client">The HttpClient that will make the request.</param>
+        /// <param name="method">The HttpMethod of the request.</param>
+        /// <param name="serviceUrl">The service URL.</param>
+        /// <param name="content">The Content of the request (used to calculate the body hash).</param>
+        /// <param name="consumerKey">The OAuth consumer key.</param>
+        /// <param name="consumerSecret">The OAuth consumer secret.</param>
+        /// <param name="signatureMethod">The SignatureMethod used to sign the request.</param>
+        /// <returns></returns>
+        public static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
             HttpContent content, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
         {
             if (client == null)
@@ -54,8 +65,7 @@ namespace LtiLibrary.NetCore.Clients
             HashAlgorithm sha;
             switch(signatureMethod)
             {
-                default:
-                case SignatureMethod.HmacSha1:
+                default: //HmacSha1
                     sha = SHA1.Create();
                     break;
                 case SignatureMethod.HmacSha256:

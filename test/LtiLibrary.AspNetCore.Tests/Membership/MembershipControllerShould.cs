@@ -69,6 +69,22 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
+        public async Task ReturnsInstructors_WhenRoleFilterIsInstructor()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync with the Learner role filter
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/membership/context/context-1", Key, Secret, role: ContextRole.Instructor);
+            // Then I get an OK response
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And there is exactly one membership
+            Assert.Equal(1, clientResponse.Response.Count);
+            // And the role is Instructor
+            Assert.Equal(clientResponse.Response[0].Role[0], ContextRole.Instructor);
+        }
+
+        [Fact]
         public async Task ReturnsLearners_WhenRoleFilterIsLearner()
         {
             // Given a working LTI Membership Service endpoint
@@ -80,6 +96,8 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
             Assert.NotNull(clientResponse.Response);
             // And there is exactly one membership
             Assert.Equal(1, clientResponse.Response.Count);
+            // And the role is Learner
+            Assert.Equal(clientResponse.Response[0].Role[0], ContextRole.Learner);
         }
 
         [Fact]

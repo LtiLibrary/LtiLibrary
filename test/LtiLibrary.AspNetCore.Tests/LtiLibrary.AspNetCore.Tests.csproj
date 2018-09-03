@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <None Remove="ReferenceJson\ContentItemSelection.json" />
+    <None Remove="ReferenceJson\MembershipsWithNoImages.json" />
+    <None Remove="ReferenceJson\RawMemberships.json" />
+    <None Remove="ReferenceJson\RawMembershipsWithInvalidImageUrl.json" />
     <None Remove="ReferenceText\basic-lti-launch-request.txt" />
   </ItemGroup>
 
@@ -38,6 +41,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceJson\LtiLinkContentItem.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceJson\MembershipsWithNoImages.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceJson\RawMembershipsWithInvalidImageUrl.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ReferenceJson\RawMemberships.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ReferenceJson\Memberships.json">

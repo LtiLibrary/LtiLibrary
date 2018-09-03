@@ -1,0 +1,71 @@
+﻿{
+  "@context": [
+    "http://purl.imsglobal.org/ctx/lis/v2/MembershipContainer",
+    {
+      "liss": "http://purl.imsglobal.org/vocab/lis/v2/status#",
+      "lism": "http://purl.imsglobal.org/vocab/lis/v2/membership#"
+    }
+  ],
+  "@id": "http://localhost/ims/membership/context/context-1?page=1",
+  "@type": "Page",
+  "differences": "http://localhost/ims/membership/context/context-1?diff=1422554502",
+  "pageOf": {
+    "@type": "LISMembershipContainer",
+    "membershipSubject": {
+      "@type": "Context",
+      "contextId": "context-1",
+      "membership": [
+        {
+          "member": {
+            "@type": "LISPerson",
+            "email": "user@school.edu",
+            "familyName": "Public",
+            "givenName": "Jane",
+            "image": 12345,
+            "name": "Jane Q. Public",
+            "sourcedId": "sis:942a8dd9",
+            "userId": "instructor-1"
+          },
+          "message": [
+            {
+              "message_type": "basic-lti-launch-request",
+              "lis_result_sourcedid": "83873872987329873264783687634",
+              "ext": { "user_username": "jpublic" },
+              "custom": {
+                "country": "Canada",
+                "user_mobile": "123-456-7890"
+              }
+            }
+          ],
+          "role": [ "lism:Instructor" ],
+          "status": "liss:Active"
+        },
+        {
+          "member": {
+            "@type": "LISPerson",
+            "email": "user@school.edu",
+            "familyName": "Public",
+            "givenName": "John",
+            "image": 12345,
+            "name": "John Q. Public",
+            "sourcedId": "sis:123abc456",
+            "userId": "student-1"
+          },
+          "message": [
+            {
+              "message_type": "basic-lti-launch-request",
+              "lis_result_sourcedid": "838738729873298732647836876342",
+              "ext": { "user_username": "jpublic2" },
+              "custom": {
+                "country": "Canada",
+                "user_mobile": "123-456-7890"
+              }
+            }
+          ],
+          "role": [ "lism:Learner" ],
+          "status": "liss:Active"
+        }
+      ]
+    }
+  }
+}

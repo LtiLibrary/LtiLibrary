@@ -35,6 +35,10 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
             {
                 response.MembershipContainerPage = GetMembershipPageOfLearners();
             }
+            else if (request.Role == ContextRole.Instructor)
+            {
+                response.MembershipContainerPage = GetMembershipPageOfInstructors();
+            }
             else
             {
                 var page = Request.Query["page"];

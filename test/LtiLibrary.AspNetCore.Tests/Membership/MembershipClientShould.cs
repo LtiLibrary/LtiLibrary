@@ -11,7 +11,7 @@ using Xunit;
 
 namespace LtiLibrary.AspNetCore.Tests.Membership
 {
-    public class MembershipClientThatIgnoresInvalidImageUrlsShould : IDisposable
+    public class MembershipClientShould : IDisposable
     {
         private readonly TestServer _server;
         private readonly HttpClient _client;
@@ -19,7 +19,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         private const string Key = "12345";
         private const string Secret = "secret";
 
-        public MembershipClientThatIgnoresInvalidImageUrlsShould()
+        public MembershipClientShould()
         {
             _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             _client = _server.CreateClient();
@@ -34,7 +34,7 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipAsync without any filters
-            var clientResponse = await MembershipClientThatIgnoresInvalidImageUrls.GetMembershipAsync(_client, "/ims/rawmembership/RawMemberships", Key, Secret);
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/rawmembership/RawMemberships", Key, Secret);
             // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             // And the response is not null
@@ -44,17 +44,42 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
         }
 
         [Fact]
-        public async Task ReturnAllMemberships_WhenImageUrlsAreInvalid()
+        public async Task ReturnNoMemberships_WhenImageUrlsAreInvalid_AndErrorHandlerIsNull()
         {
             // Given a working LTI Membership Service endpoint
             // When I call GetMembershipAsync without any filters
-            var clientResponse = await MembershipClientThatIgnoresInvalidImageUrls.GetMembershipAsync(_client, "/ims/rawmembership/RawMembershipsWithInvalidImageUrl", Key, Secret);
+            var clientResponse = await MembershipClient.GetMembershipAsync(_client, "/ims/rawmembership/RawMembershipsWithInvalidImageUrl", Key, Secret);
+            // Then I get an OK response
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And the response is empty
+            Assert.Equal(0, clientResponse.Response.Count);
+        }
+        
+        [Fact]
+        public async Task ReturnAllMemberships_WhenImageUrlsAreInvalid_AndErrorHandlerIgnoresErrors()
+        {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync without any filters
+            var clientResponse = await MembershipClient.GetMembershipAsync
+                (
+                    _client, "/ims/rawmembership/RawMembershipsWithInvalidImageUrl", Key, Secret,
+                    // Ignore deserialization errors
+                    deserializationErrorHandler: HandleDeserializationError
+                );
             // Then I get an OK response
             Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
             // And the response is not null
             Assert.NotNull(clientResponse.Response);
             // And the response matches the response in Memberships.json
             JsonAssertions.AssertSameObjectJson(new {clientResponse.Response}, "MembershipsWithNoImages");
+        }
+        
+        // Ignore deserialization errors
+        private static void HandleDeserializationError(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        {
+            e.ErrorContext.Handled = true;
         }
 
         public void Dispose()

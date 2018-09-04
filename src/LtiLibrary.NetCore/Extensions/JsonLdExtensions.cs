@@ -48,10 +48,10 @@ namespace LtiLibrary.NetCore.Extensions
         /// <summary>
         /// Deserializes the JSON response to the specified .NET type.
         /// <param name="response">The HttpResponseMessage to deserialize.</param>
-        /// <param name="handleDeserializationError">The EventHandler to call if there is a deserialization error. Defaults to null.</param>
+        /// <param name="deserializationErrorHandler">The EventHandler to call if there is a deserialization error. Defaults to null.</param>
         /// </summary>
         public static async Task<T> DeserializeJsonObjectAsync<T>(this HttpResponseMessage response, 
-            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> handleDeserializationError = null)
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace LtiLibrary.NetCore.Extensions
                 {
                     var body = await reader.ReadToEndAsync().ConfigureAwait(false);
 
-                    return JsonConvert.DeserializeObject<T>(body, new JsonSerializerSettings { Error = handleDeserializationError });
+                    return JsonConvert.DeserializeObject<T>(body, new JsonSerializerSettings { Error = deserializationErrorHandler });
                 }
             }
 

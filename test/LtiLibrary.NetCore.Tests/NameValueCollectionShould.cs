@@ -1,5 +1,4 @@
 ﻿using System.Collections.Specialized;
-using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.OAuth;
 using Xunit;

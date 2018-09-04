@@ -60,6 +60,6 @@ namespace LtiLibrary.NetCore.Lis.v1
         /// <summary>
         /// </summary>
         [Urn("urn:lti:sysrole:ims/lis/User")]
-        User,
+        User
     }
 }

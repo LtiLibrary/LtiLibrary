@@ -4,7 +4,6 @@ using LtiLibrary.NetCore.Extensions;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Tests.SimpleHelpers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace LtiLibrary.NetCore.Tests
@@ -74,7 +73,7 @@ namespace LtiLibrary.NetCore.Tests
         }
 
         [Fact]
-        void ContextRolesAreConvertedFromJsonLdObjects()
+        private void ContextRolesAreConvertedFromJsonLdObjects()
         {
             var contextRole = JsonConvert.DeserializeObject<RoleTestObject>("{ roles: [\"lism:Instructor\"] }");
         }
@@ -106,7 +105,7 @@ namespace LtiLibrary.NetCore.Tests
         public Child GrandChild { get; set; }
     }
 
-    class RoleTestObject : JsonLdObject
+    internal class RoleTestObject : JsonLdObject
     {
         public ContextRole[] Roles { get; set; }
     }

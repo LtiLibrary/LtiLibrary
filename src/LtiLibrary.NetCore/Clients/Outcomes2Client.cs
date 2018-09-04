@@ -57,11 +57,17 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the LineItem specified in the REST endpoint, but without the results property filled in.</returns>
         public static async Task<ClientResponse<LineItem>> GetLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType, signatureMethod)
+            return await GetOutcomeAsync<LineItem>
+                (
+                    client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -73,11 +79,17 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the LineItem specified in the REST endpoint, including results.</returns>
         public static async Task<ClientResponse<LineItem>> GetLineItemWithResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
-            return await GetOutcomeAsync<LineItem>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType, signatureMethod)
+            return await GetOutcomeAsync<LineItem>
+                (
+                    client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemResultsMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -93,12 +105,18 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="p">The page (2 to ?) of lineitems requested.</param>
         /// <param name="activityId">If specified, the result set will be filtered to only include lineitems that are associated with this activity.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the LineItemContainerPage.</returns>
         public static async Task<ClientResponse<LineItemContainerPage>> GetLineItemsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, string activityId = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p, activityId);
-            return await GetOutcomeAsync<LineItemContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType, signatureMethod)
+            return await GetOutcomeAsync<LineItemContainerPage>
+                (
+                    client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisLineItemContainerMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -111,6 +129,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="lineItem">The LineItem to create within the server.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the LineItem with @id and results filled in.</returns>
         /// <remarks>
         /// https://www.imsglobal.org/specs/ltiomv2p0/specification-3
@@ -121,9 +140,14 @@ namespace LtiLibrary.NetCore.Clients
         /// result may be a PUT or a GET request.
         /// </remarks>
         public static async Task<ClientResponse<LineItem>> PostLineItemAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, LineItem lineItem, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, LineItem lineItem, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod)
+            return await PostOutcomeAsync
+                (
+                    client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -189,11 +213,17 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerKey">The OAuth consumer key to use to form the Authorization header.</param>
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the LISResult specified in the REST endpoint.</returns>
         public static async Task<ClientResponse<Result>> GetResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
-            return await GetOutcomeAsync<Result>(client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType, signatureMethod)
+            return await GetOutcomeAsync<Result>
+                (
+                    client, serviceUrl, consumerKey, consumerSecret, LtiConstants.LisResultMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -208,12 +238,18 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="firstPage">True to request the first page of results.</param>
         /// <param name="p">The page (2 to ?) of results requested.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the ResultContainerPage.</returns>
         public static async Task<ClientResponse<ResultContainerPage>> GetResultsAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, int? limit = null, bool? firstPage = null, int? p = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
             var servicePageUrl = GetPagingServiceUrl(serviceUrl, limit, firstPage, p);
-            return await GetOutcomeAsync<ResultContainerPage>(client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType, signatureMethod)
+            return await GetOutcomeAsync<ResultContainerPage>
+                (
+                    client, servicePageUrl, consumerKey, consumerSecret, LtiConstants.LisResultContainerMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -226,11 +262,17 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="consumerSecret">The OAuth consumer secret to use to form the Authorization header.</param>
         /// <param name="result">The LISResult to create within the server.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
+        /// <param name="deserializationErrorHandler">A deserialization error handler. Defaults to null.</param>
         /// <returns>If successful, the LISResult with @id filled in.</returns>
         public static async Task<ClientResponse<Result>> PostResultAsync(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, Result result, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
+            string consumerSecret, Result result, SignatureMethod signatureMethod = SignatureMethod.HmacSha1,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler = null)
         {
-            return await PostOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod)
+            return await PostOutcomeAsync
+                (
+                    client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, 
+                    signatureMethod, deserializationErrorHandler
+                )
                 .ConfigureAwait(false);
         }
 
@@ -301,7 +343,8 @@ namespace LtiLibrary.NetCore.Clients
         }
 
         private static async Task<ClientResponse<T>> GetOutcomeAsync<T>(HttpClient client, string serviceUrl, string consumerKey,
-            string consumerSecret, string contentType, SignatureMethod signatureMethod) where T : class
+            string consumerSecret, string contentType, SignatureMethod signatureMethod,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler) where T : class
         {
             try
             {
@@ -318,7 +361,7 @@ namespace LtiLibrary.NetCore.Clients
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>();
+                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>(deserializationErrorHandler);
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
@@ -380,7 +423,8 @@ namespace LtiLibrary.NetCore.Clients
         }
 
         private static async Task<ClientResponse<T>> PostOutcomeAsync<T>(HttpClient client, string serviceUrl,
-            string consumerKey, string consumerSecret, T content, string contentType, SignatureMethod signatureMethod) where T : class
+            string consumerKey, string consumerSecret, T content, string contentType, SignatureMethod signatureMethod,
+            EventHandler<Newtonsoft.Json.Serialization.ErrorEventArgs> deserializationErrorHandler) where T : class
         {
             try
             {
@@ -396,7 +440,7 @@ namespace LtiLibrary.NetCore.Clients
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.Created)
                         {
-                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>();
+                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>(deserializationErrorHandler);
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();

@@ -95,6 +95,6 @@ namespace LtiLibrary.NetCore.Lis.v1
         /// <summary>
         /// </summary>
         [Urn("urn:lti:instrole:ims/lis/Student")]
-        Student,
+        Student
     }
 }

@@ -257,6 +257,6 @@ namespace LtiLibrary.NetCore.Lis.v1
         /// <summary>
         /// </summary>
         [Urn("urn:lti:role:ims/lis/TeachingAssistant/TeachingAssistantGroup")]
-        TeachingAssistantTeachingAssistantGroup,
+        TeachingAssistantTeachingAssistantGroup
     }
 }

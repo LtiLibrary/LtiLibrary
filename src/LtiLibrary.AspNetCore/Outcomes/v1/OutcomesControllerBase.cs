@@ -248,18 +248,16 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
                         response.StatusDescription ?? $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is read");
                 }
-                else
-                {
-                    // The score could exist, but not found. If the grade has not yet been set via a replaceResult operation
-                    // or an existing grade has been deleted via a deleteResult operation, the TC should return a valid
-                    // response with a present but empty textString element. The TC should not return 0.0 to indicate a
-                    // non-existent grade and the TC should not return a failure status when a grade does not exist.
-                    // It should simply return an "empty" grade.
-                    readResponse.result.resultScore.language = LtiConstants.ScoreCultureInfo.Name;
-                    readResponse.result.resultScore.textString = string.Empty;
-                    return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
-                        response.StatusDescription ?? $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is null");
-                }
+
+                // The score could exist, but not found. If the grade has not yet been set via a replaceResult operation
+                // or an existing grade has been deleted via a deleteResult operation, the TC should return a valid
+                // response with a present but empty textString element. The TC should not return 0.0 to indicate a
+                // non-existent grade and the TC should not return a failure status when a grade does not exist.
+                // It should simply return an "empty" grade.
+                readResponse.result.resultScore.language = LtiConstants.ScoreCultureInfo.Name;
+                readResponse.result.resultScore.textString = string.Empty;
+                return CreateSuccessResponse(readResponse, requestHeader.imsx_messageIdentifier,
+                    response.StatusDescription ?? $"Score for {readRequest.resultRecord.sourcedGUID.sourcedId} is null");
             }
             catch (Exception ex)
             {

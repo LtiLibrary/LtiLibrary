@@ -4,7 +4,6 @@ using LtiLibrary.AspNetCore.Extensions;
 using LtiLibrary.AspNetCore.Membership;
 using LtiLibrary.NetCore.Lis.v1;
 using LtiLibrary.NetCore.Lis.v2;
-using Microsoft.AspNetCore.Http;
 
 namespace LtiLibrary.AspNetCore.Tests.Membership
 {
@@ -30,39 +29,40 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
                 return NotFound($"Cannot find {nameof(request.ContextId)}");
             }
 
-            // If the Role filter is specified, only return the corresponding page
-            if (request.Role == ContextRole.Learner)
+            switch (request.Role)
             {
-                response.MembershipContainerPage = GetMembershipPageOfLearners();
-            }
-            else if (request.Role == ContextRole.Instructor)
-            {
-                response.MembershipContainerPage = GetMembershipPageOfInstructors();
-            }
-            else
-            {
-                var page = Request.Query["page"];
-                
-                // If this is the first page, return the list of instructors
-                // and set the next page URL to include page=2
-                if (page.Count == 0)
-                {
-                    response.MembershipContainerPage = GetMembershipPageOfInstructors();
-                    response.MembershipContainerPage.NextPage = new Uri(Request.GetUri(), "/ims/membership/context/context-1?page=2").AbsoluteUri;
-                }
-
-                // If this is the second page, return the list of learners
-                // but do not set the next page URL
-                else if (page[0].Equals("2"))
-                {
+                // If the Role filter is specified, only return the corresponding page
+                case ContextRole.Learner:
                     response.MembershipContainerPage = GetMembershipPageOfLearners();
-                }
+                    break;
+                case ContextRole.Instructor:
+                    response.MembershipContainerPage = GetMembershipPageOfInstructors();
+                    break;
+                default:
+                    var page = Request.Query["page"];
+                
+                    // If this is the first page, return the list of instructors
+                    // and set the next page URL to include page=2
+                    if (page.Count == 0)
+                    {
+                        response.MembershipContainerPage = GetMembershipPageOfInstructors();
+                        response.MembershipContainerPage.NextPage = new Uri(Request.GetUri(), "/ims/membership/context/context-1?page=2").AbsoluteUri;
+                    }
 
-                // Otherwise, we don't know what page they want
-                else
-                {
-                    return NotFound($"Cannot find page {page}");
-                }
+                    // If this is the second page, return the list of learners
+                    // but do not set the next page URL
+                    else if (page[0].Equals("2"))
+                    {
+                        response.MembershipContainerPage = GetMembershipPageOfLearners();
+                    }
+
+                    // Otherwise, we don't know what page they want
+                    else
+                    {
+                        return NotFound($"Cannot find page {page}");
+                    }
+
+                    break;
             }
             return response;
         }

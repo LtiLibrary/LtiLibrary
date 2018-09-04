@@ -24,6 +24,6 @@
         /// <summary>
         /// Computes the <see cref="System.Security.Cryptography.SHA512"/> hash for the input data.
         /// </summary>
-        HmacSha512,
+        HmacSha512
     }
 }

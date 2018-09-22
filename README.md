@@ -6,7 +6,7 @@ See the [LtiLibrary1.6 repository](https://github.com/andyfmiller/LtiLibrary1.6)
 ## LtiLibrary.NetCore
 This is the only library you need if you are going to roll your own support for web pages or native apps.
 
-This library includes the classes, properties, and methods to support LTI 1.x launch, outcomes, content items and tool consumer profiles for both Tool Consumers and Tool Providers.
+This library includes the classes, properties, and methods to support LTI 1.1.1 launch, outcomes, content items and tool consumer profiles for both Tool Consumers and Tool Providers.
 
 Available on NuGet: https://www.nuget.org/packages/LtiLibrary.NetCore
 

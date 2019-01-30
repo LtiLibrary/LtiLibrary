@@ -35,6 +35,10 @@ namespace LtiLibrary.NetCore.Lis.v1
                     {
                         return contextRole;
                     }
+                    if (Enum.TryParse(value.Substring(value.LastIndexOf("/") + 1), out contextRole))
+                    {
+                        return contextRole;
+                    }
                     throw new JsonSerializationException($"Cannot convert {value} to {objectType.Name}.");
                 }
                 throw new JsonSerializationException($"Cannot convert {value} to {objectType.Name}.");

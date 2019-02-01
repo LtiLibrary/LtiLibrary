@@ -69,12 +69,15 @@ namespace LtiLibrary.NetCore.Clients
                     sha = SHA1.Create();
                     break;
                 case SignatureMethod.HmacSha256:
+                    ltiRequest.SignatureMethod = "HMAC-SHA256";
                     sha = SHA256.Create();
                     break;
                 case SignatureMethod.HmacSha384:
+                    ltiRequest.SignatureMethod = "HMAC-SHA384";
                     sha = SHA384.Create();
                     break;
                 case SignatureMethod.HmacSha512:
+                    ltiRequest.SignatureMethod = "HMAC-SHA512";
                     sha = SHA512.Create();
                     break;
             }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -33,8 +33,8 @@ namespace LtiLibrary.NetCore.Clients
             ImsxRequestSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType),
                 null, null, new XmlRootAttribute("imsx_POXEnvelopeRequest"),
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
-            ImsxResponseSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType), 
-                null, null, new XmlRootAttribute("imsx_POXEnvelopeResponse"), 
+            ImsxResponseSerializer = new XmlSerializer(typeof(imsx_POXEnvelopeType),
+                null, null, new XmlRootAttribute("imsx_POXEnvelopeResponse"),
                     "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
         }
 
@@ -48,42 +48,43 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="sourcedId">The LisResultSourcedId to be deleted.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+        public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string sourcedId, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
                 var imsxEnvelope = new imsx_POXEnvelopeType
                 {
-                    imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
-                    imsx_POXBody = new imsx_POXBodyType {Item = new deleteResultRequest()}
+                    imsx_POXHeader = new imsx_POXHeaderType { Item = new imsx_RequestHeaderInfoType() },
+                    imsx_POXBody = new imsx_POXBodyType { Item = new deleteResultRequest() }
                 };
 
-                var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
+                var imsxHeader = (imsx_RequestHeaderInfoType)imsxEnvelope.imsx_POXHeader.Item;
                 imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
                 imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
 
-                var imsxBody = (deleteResultRequest) imsxEnvelope.imsx_POXBody.Item;
+                var imsxBody = (deleteResultRequest)imsxEnvelope.imsx_POXBody.Item;
                 imsxBody.resultRecord = new ResultRecordType
                 {
-                    sourcedGUID = new SourcedGUIDType {sourcedId = sourcedId}
+                    sourcedGUID = new SourcedGUIDType { sourcedId = sourcedId }
                 };
 
                 var outcomeResponse = new ClientResponse();
                 try
                 {
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-
                     // Create a UTF8 encoding of the request
                     var xml = await GetXmlAsync(imsxEnvelope).ConfigureAwait(false);
                     var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest(
-                        client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret, signatureMethod)
+                    HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, serviceUrl)
+                    {
+                        Content = xmlContent
+                    };
+                    webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
+                    await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
-                    using (var response = await client.PostAsync(serviceUrl, xmlContent).ConfigureAwait(false))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.IsSuccessStatusCode)
@@ -138,7 +139,7 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="lisResultSourcedId">The LisResult to read.</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse<Result>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+        public static async Task<ClientResponse<Result>> ReadResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string lisResultSourcedId, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
@@ -162,18 +163,19 @@ namespace LtiLibrary.NetCore.Clients
                 var outcomeResponse = new ClientResponse<Result>();
                 try
                 {
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-
                     // Create a UTF8 encoding of the request
                     var xml = await GetXmlAsync(imsxEnvelope).ConfigureAwait(false);
                     var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest
-                        (client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret, signatureMethod)
+                    HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, serviceUrl)
+                    {
+                        Content = xmlContent
+                    };
+                    webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
+                    await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
-                    using (var response = await client.PostAsync(serviceUrl, xmlContent).ConfigureAwait(false))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.IsSuccessStatusCode)
@@ -196,11 +198,11 @@ namespace LtiLibrary.NetCore.Clients
                                     // a little bit of misbehaving. If the TP does not include a language, "en" will
                                     // be used. If the TP does include a language (even a non-en language), it will
                                     // be used.
-                                    var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language??LtiConstants.ScoreLanguage);
-                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var score) 
-                                        ? new Result { Score = score, SourcedId = lisResultSourcedId } 
+                                    var cultureInfo = new CultureInfo(imsxResponseBody.result.resultScore.language ?? LtiConstants.ScoreLanguage);
+                                    outcomeResponse.Response = double.TryParse(imsxResponseBody.result.resultScore.textString, NumberStyles.Number, cultureInfo, out var score)
+                                        ? new Result { Score = score, SourcedId = lisResultSourcedId }
                                         : new Result { Score = null, SourcedId = lisResultSourcedId };
-                                    
+
                                     // Optional Canvas-style submission details
                                     var resultData = imsxResponseBody.result.ResultData;
                                     outcomeResponse.Response.LtiLaunchUrl = resultData?.LtiLaunchUrl;
@@ -258,25 +260,25 @@ namespace LtiLibrary.NetCore.Clients
         /// <param name="ltiLaunchUrl">Optional LTI launch URL data</param>
         /// <param name="signatureMethod">The signatureMethod. Defaults to <see cref="SignatureMethod.HmacSha1"/></param>
         /// <returns>A <see cref="ClientResponse"/>.</returns>
-        public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
+        public static async Task<ClientResponse> ReplaceResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret,
             string lisResultSourcedId, double? score, string text = null, string url = null, string ltiLaunchUrl = null, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
             try
             {
                 var imsxEnvelope = new imsx_POXEnvelopeType
                 {
-                    imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
-                    imsx_POXBody = new imsx_POXBodyType {Item = new replaceResultRequest()}
+                    imsx_POXHeader = new imsx_POXHeaderType { Item = new imsx_RequestHeaderInfoType() },
+                    imsx_POXBody = new imsx_POXBodyType { Item = new replaceResultRequest() }
                 };
 
-                var imsxHeader = (imsx_RequestHeaderInfoType) imsxEnvelope.imsx_POXHeader.Item;
+                var imsxHeader = (imsx_RequestHeaderInfoType)imsxEnvelope.imsx_POXHeader.Item;
                 imsxHeader.imsx_version = imsx_GWSVersionValueType.V10;
                 imsxHeader.imsx_messageIdentifier = Guid.NewGuid().ToString();
 
-                var imsxBody = (replaceResultRequest) imsxEnvelope.imsx_POXBody.Item;
+                var imsxBody = (replaceResultRequest)imsxEnvelope.imsx_POXBody.Item;
                 imsxBody.resultRecord = new ResultRecordType
                 {
-                    sourcedGUID = new SourcedGUIDType {sourcedId = lisResultSourcedId},
+                    sourcedGUID = new SourcedGUIDType { sourcedId = lisResultSourcedId },
                     result = new ResultType
                     {
                         resultScore = new TextType
@@ -302,17 +304,19 @@ namespace LtiLibrary.NetCore.Clients
                 var outcomeResponse = new ClientResponse();
                 try
                 {
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-
                     // Create a UTF8 encoding of the request
                     var xml = await GetXmlAsync(imsxEnvelope).ConfigureAwait(false);
                     var xmlContent = new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType);
-                    await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, xmlContent, consumerKey, consumerSecret, signatureMethod)
+                    HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, serviceUrl)
+                    {
+                        Content = xmlContent
+                    };
+                    webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
+                    await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
-                    using (var response = await client.PostAsync(serviceUrl, xmlContent).ConfigureAwait(false))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.IsSuccessStatusCode)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -37,7 +37,7 @@ namespace LtiLibrary.NetCore.Clients
             var filteredServiceUrl = GetFilteredServiceUrl(serviceUrl, null, rlid, role);
             var pageResponse = await GetFilteredMembershipPageAsync
                 (
-                    client, filteredServiceUrl, consumerKey, consumerSecret, 
+                    client, filteredServiceUrl, consumerKey, consumerSecret,
                     LtiConstants.LisMembershipContainerMediaType, signatureMethod,
                     deserializationErrorHandler
                 ).ConfigureAwait(false);
@@ -70,13 +70,13 @@ namespace LtiLibrary.NetCore.Clients
                     return result;
                 }
                 pageId = pageResponse.Response.Id;
-                
+
                 // Add the memberships to the list (the collection cannot be null)
                 if (pageResponse.Response.MembershipContainer?.MembershipSubject?.Membership != null)
                 {
                     result.Response.AddRange(pageResponse.Response.MembershipContainer.MembershipSubject.Membership);
                 }
-                
+
                 // Repeat until there is no NextPage
                 if (string.IsNullOrWhiteSpace(pageResponse.Response.NextPage)) break;
 
@@ -84,7 +84,7 @@ namespace LtiLibrary.NetCore.Clients
                 filteredServiceUrl = GetFilteredServiceUrl(pageResponse.Response.NextPage, null, rlid, role);
                 pageResponse = await GetFilteredMembershipPageAsync
                     (
-                        client, filteredServiceUrl, consumerKey, consumerSecret, 
+                        client, filteredServiceUrl, consumerKey, consumerSecret,
                         LtiConstants.LisMembershipContainerMediaType, signatureMethod,
                         deserializationErrorHandler
                     ).ConfigureAwait(false);
@@ -126,16 +126,14 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-
-                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey,
-                    consumerSecret, signatureMethod);
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                await SecuredClient.SignRequest(request, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse<MembershipContainerPage>();
                 try
                 {
-                    using (var response = await client.GetAsync(serviceUrl).ConfigureAwait(false))
+                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.OK)

@@ -17,46 +17,23 @@ namespace LtiLibrary.NetCore.Clients
         /// <summary>
         /// Add a signed authorization header to the client request using the signatureMethod.
         /// </summary>
-        /// <param name="client">The HttpClient that will make the request.</param>
-        /// <param name="method">The HttpMethod of the request.</param>
-        /// <param name="serviceUrl">The service URL.</param>
-        /// <param name="content">The Content of the request (used to calculate the body hash).</param>
+        /// <param name="request">The request object that will be sent</param>
         /// <param name="consumerKey">The OAuth consumer key.</param>
         /// <param name="consumerSecret">The OAuth consumer secret.</param>
         /// <param name="signatureMethod">The SignatureMethod used to sign the request.</param>
         /// <returns></returns>
-        public static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
-            HttpContent content, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
+        public static async Task SignRequest(HttpRequestMessage request, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
         {
-            if (client == null)
+            if (request == null)
             {
-                throw new ArgumentNullException(nameof(client));
-            }
-
-            if (string.IsNullOrEmpty(serviceUrl))
-            {
-                throw new ArgumentNullException(nameof(serviceUrl));
-            }
-
-            var serviceUri = new Uri(serviceUrl, UriKind.RelativeOrAbsolute);
-            if (!serviceUri.IsAbsoluteUri)
-            {
-                if (client.BaseAddress == null)
-                {
-                    throw new LtiException("If serviceUrl is relative, client.BaseAddress cannot be null.");
-                }
-
-                if (!Uri.TryCreate(client.BaseAddress, serviceUrl, out serviceUri))
-                {
-                    throw new LtiException($"Cannot form a valid URI from {client.BaseAddress} and {serviceUrl}.");
-                }
+                throw new ArgumentNullException(nameof(request));
             }
             
             var ltiRequest = new LtiRequest(LtiConstants.LtiOauthBodyHashMessageType)
             {
                 ConsumerKey = consumerKey,
-                HttpMethod = method.Method,
-                Url = serviceUri
+                HttpMethod = request.Method.Method,
+                Url = request.RequestUri
             };
 
             AuthenticationHeaderValue authorizationHeader;
@@ -85,12 +62,12 @@ namespace LtiLibrary.NetCore.Clients
             // Create an Authorization header using the body hash
             using (sha)
             {
-                var hash = sha.ComputeHash(await content.ReadAsByteArrayAsync());
+                var hash = sha.ComputeHash(await (request.Content ?? new StringContent(string.Empty)).ReadAsByteArrayAsync());
                 authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
             }
 
             // Attach the header to the client request
-            client.DefaultRequestHeaders.Authorization = authorizationHeader;
+            request.Headers.Authorization = authorizationHeader;
         }
     }
 }

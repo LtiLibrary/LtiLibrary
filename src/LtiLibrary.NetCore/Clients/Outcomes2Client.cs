@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -302,7 +302,8 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                await SecuredClient.SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
+                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -310,7 +311,7 @@ namespace LtiLibrary.NetCore.Clients
                     // HttpClient does not send content in a DELETE request. So there is no Content-Type
                     // header. Therefore, all representations of the resource will be deleted.
                     // See https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html#DELETE
-                    using (var response = await client.DeleteAsync(serviceUrl))
+                    using (var response = await client.SendAsync(webRequest))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
 #if DEBUG
@@ -348,15 +349,14 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-
-                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
+                webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
                 
                 var outcomeResponse = new ClientResponse<T>();
                 try
                 {
-                    using (var response = await client.GetAsync(serviceUrl))
+                    using (var response = await client.SendAsync(webRequest))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.OK)
@@ -428,14 +428,16 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
-
-                await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, serviceUrl)
+                {
+                    Content = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType)
+                };
+                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse<T>();
                 try
                 {
-                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+                    using (var response = await client.SendAsync(webRequest))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.Created)
@@ -476,14 +478,16 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
-
-                await SecuredClient.SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Put, serviceUrl)
+                {
+                    Content = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType)
+                };
+                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse();
                 try
                 {
-                    using (var response = await client.PutAsync(serviceUrl, httpContent))
+                    using (var response = await client.SendAsync(webRequest))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
 #if DEBUG

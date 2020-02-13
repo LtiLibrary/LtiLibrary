@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -17,23 +17,47 @@ namespace LtiLibrary.NetCore.Clients
         /// <summary>
         /// Add a signed authorization header to the client request using the signatureMethod.
         /// </summary>
+        /// <param name="client">May need BaseAddress value from this</param>
         /// <param name="request">The request object that will be sent</param>
         /// <param name="consumerKey">The OAuth consumer key.</param>
         /// <param name="consumerSecret">The OAuth consumer secret.</param>
         /// <param name="signatureMethod">The SignatureMethod used to sign the request.</param>
         /// <returns></returns>
-        public static async Task SignRequest(HttpRequestMessage request, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
+        public static async Task SignRequest(HttpClient client, HttpRequestMessage request, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
         {
+            if (client == null)
+            {
+               throw new ArgumentNullException(nameof(client));
+            }
+
             if (request == null)
             {
                 throw new ArgumentNullException(nameof(request));
             }
-            
+
+            string serviceUrl = request.RequestUri.OriginalString;
+
+            if (!request.RequestUri.IsAbsoluteUri)
+            {
+                if (!string.IsNullOrWhiteSpace(client.BaseAddress.PathAndQuery) && client.BaseAddress.PathAndQuery != "/")
+                {
+
+                    // This is trying to replicate the behavior of httpclient combining base address with a relative path - 
+                    // if a path is in the base address, it MUST have a trailing slash, and the relative url must NOT,
+                    // so this simple combination should work
+                    serviceUrl = client.BaseAddress.AbsoluteUri + serviceUrl;
+                }
+                else
+                {
+                    serviceUrl = new Uri(client.BaseAddress, serviceUrl).AbsoluteUri;
+                }
+            }
+
             var ltiRequest = new LtiRequest(LtiConstants.LtiOauthBodyHashMessageType)
             {
                 ConsumerKey = consumerKey,
                 HttpMethod = request.Method.Method,
-                Url = request.RequestUri
+                Url = new Uri(serviceUrl)
             };
 
             AuthenticationHeaderValue authorizationHeader;

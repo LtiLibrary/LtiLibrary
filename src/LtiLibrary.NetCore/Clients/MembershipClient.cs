@@ -128,7 +128,7 @@ namespace LtiLibrary.NetCore.Clients
             {
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-                await SecuredClient.SignRequest(request, consumerKey, consumerSecret, signatureMethod);
+                await SecuredClient.SignRequest(client, request, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse<MembershipContainerPage>();
                 try

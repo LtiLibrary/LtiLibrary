@@ -303,7 +303,7 @@ namespace LtiLibrary.NetCore.Clients
             try
             {
                 HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
-                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -351,7 +351,7 @@ namespace LtiLibrary.NetCore.Clients
             {
                 HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
                 webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod);
                 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -432,7 +432,7 @@ namespace LtiLibrary.NetCore.Clients
                 {
                     Content = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType)
                 };
-                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse<T>();
                 try
@@ -482,7 +482,7 @@ namespace LtiLibrary.NetCore.Clients
                 {
                     Content = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType)
                 };
-                await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod);
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod);
 
                 var outcomeResponse = new ClientResponse();
                 try

@@ -80,7 +80,7 @@ namespace LtiLibrary.NetCore.Clients
                         Content = xmlContent
                     };
                     webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod)
+                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
@@ -171,7 +171,7 @@ namespace LtiLibrary.NetCore.Clients
                         Content = xmlContent
                     };
                     webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod)
+                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response
@@ -312,7 +312,7 @@ namespace LtiLibrary.NetCore.Clients
                         Content = xmlContent
                     };
                     webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    await SecuredClient.SignRequest(webRequest, consumerKey, consumerSecret, signatureMethod)
+                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod)
                         .ConfigureAwait(false);
 
                     // Post the request and check the response

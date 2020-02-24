@@ -69,22 +69,19 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
                     }
-                    return await HandleDeleteResultRequest(requestHeader, requestBody)
-                        .ConfigureAwait(false);
+                    return await HandleDeleteResultRequest(requestHeader, requestBody).ConfigureAwait(false);
                 case readResultRequest _:
                     if (OnReadResultAsync == null)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
                     }
-                    return await HandleReadResultRequest(requestHeader, requestBody)
-                        .ConfigureAwait(false);
+                    return await HandleReadResultRequest(requestHeader, requestBody).ConfigureAwait(false);
                 case replaceResultRequest _:
                     if (OnReplaceResultAsync == null)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
                     }
-                    return await HandleReplaceResultRequest(requestHeader, requestBody)
-                        .ConfigureAwait(false);
+                    return await HandleReplaceResultRequest(requestHeader, requestBody).ConfigureAwait(false);
             }
             return BadRequest("Request type not supported.");
         }
@@ -189,7 +186,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             try
             {
                 var request = new DeleteResultRequest(result.SourcedId);
-                var response = await OnDeleteResultAsync(request);
+                var response = await OnDeleteResultAsync(request).ConfigureAwait(false);
 
                 if (response.StatusCode != StatusCodes.Status200OK)
                 {
@@ -214,7 +211,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             try
             {
                 var request = new ReadResultRequest(readRequest.resultRecord.sourcedGUID.sourcedId);
-                var response = await OnReadResultAsync(request);
+                var response = await OnReadResultAsync(request).ConfigureAwait(false);
 
                 if (response.StatusCode != StatusCodes.Status200OK)
                 {
@@ -285,7 +282,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             try
             {
                 var request = new ReplaceResultRequest(result);
-                var response = await OnReplaceResultAsync(request);
+                var response = await OnReplaceResultAsync(request).ConfigureAwait(false);
 
                 if (response.StatusCode != StatusCodes.Status200OK)
                 {

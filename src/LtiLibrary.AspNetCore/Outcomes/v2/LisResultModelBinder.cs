@@ -23,7 +23,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
                 {
                     using (var reader = new StreamReader(bindingContext.HttpContext.Request.Body))
                     {
-                        var body = await reader.ReadToEndAsync();
+                        var body = await reader.ReadToEndAsync().ConfigureAwait(false);
                         var model = JsonConvert.DeserializeObject<Result>(body);
                         bindingContext.Result = ModelBindingResult.Success(model);
                     }

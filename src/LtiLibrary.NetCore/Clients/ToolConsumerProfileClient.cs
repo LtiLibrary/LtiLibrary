@@ -32,10 +32,8 @@ namespace LtiLibrary.NetCore.Clients
                         await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>().ConfigureAwait(false);
                 }
 #if DEBUG
-                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync()
-                    .ConfigureAwait(false);
-                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
-                    .ConfigureAwait(false);
+                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
             }
             return profileResponse;

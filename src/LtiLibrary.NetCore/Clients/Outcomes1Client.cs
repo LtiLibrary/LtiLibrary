@@ -80,8 +80,7 @@ namespace LtiLibrary.NetCore.Clients
                         Content = xmlContent
                     };
                     webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod)
-                        .ConfigureAwait(false);
+                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
 
                     // Post the request and check the response
                     using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
@@ -100,11 +99,9 @@ namespace LtiLibrary.NetCore.Clients
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync
-                            (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType))
-                            .ConfigureAwait(false);
+                            (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType)).ConfigureAwait(false);
 #endif
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
-                            .ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException ex)
@@ -171,8 +168,7 @@ namespace LtiLibrary.NetCore.Clients
                         Content = xmlContent
                     };
                     webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.ImsxOutcomeMediaType));
-                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod)
-                        .ConfigureAwait(false);
+                    await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
 
                     // Post the request and check the response
                     using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
@@ -217,11 +213,9 @@ namespace LtiLibrary.NetCore.Clients
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync
-                            (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType))
-                            .ConfigureAwait(false);
+                            (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType)).ConfigureAwait(false);
 #endif
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
-                            .ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException ex)
@@ -332,11 +326,9 @@ namespace LtiLibrary.NetCore.Clients
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync
-                            (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType))
-                            .ConfigureAwait(false);
+                            (new StringContent(xml, Encoding.UTF8, LtiConstants.ImsxOutcomeMediaType)).ConfigureAwait(false);
 #endif
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
-                            .ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException ex)
@@ -379,7 +371,7 @@ namespace LtiLibrary.NetCore.Clients
                     }))
                 {
                     ImsxRequestSerializer.Serialize(writer, imsxEnvelope);
-                    await writer.FlushAsync();
+                    await writer.FlushAsync().ConfigureAwait(false);
                 }
                 return Encoding.UTF8.GetString(ms.ToArray());
             }

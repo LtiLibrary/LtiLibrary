@@ -86,7 +86,7 @@ namespace LtiLibrary.NetCore.Clients
             // Create an Authorization header using the body hash
             using (sha)
             {
-                var hash = sha.ComputeHash(await (request.Content ?? new StringContent(string.Empty)).ReadAsByteArrayAsync());
+                var hash = sha.ComputeHash(await (request.Content ?? new StringContent(string.Empty)).ReadAsByteArrayAsync().ConfigureAwait(false));
                 authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
             }
 

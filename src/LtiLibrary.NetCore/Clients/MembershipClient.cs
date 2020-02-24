@@ -128,7 +128,7 @@ namespace LtiLibrary.NetCore.Clients
             {
                 HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
                 request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-                await SecuredClient.SignRequest(client, request, consumerKey, consumerSecret, signatureMethod);
+                await SecuredClient.SignRequest(client, request, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
 
                 var outcomeResponse = new ClientResponse<MembershipContainerPage>();
                 try
@@ -138,14 +138,11 @@ namespace LtiLibrary.NetCore.Clients
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<MembershipContainerPage>(deserializationErrorHandler)
-                                .ConfigureAwait(false);
+                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<MembershipContainerPage>(deserializationErrorHandler).ConfigureAwait(false);
                         }
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync()
-                            .ConfigureAwait(false);
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
-                            .ConfigureAwait(false);
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
                     }
                 }

@@ -143,8 +143,8 @@ namespace LtiLibrary.NetCore.Clients
             {
                 var imsxEnvelope = new imsx_POXEnvelopeType
                 {
-                    imsx_POXHeader = new imsx_POXHeaderType { Item = new imsx_RequestHeaderInfoType() },
-                    imsx_POXBody = new imsx_POXBodyType { Item = new readResultRequest() }
+                    imsx_POXHeader = new imsx_POXHeaderType {Item = new imsx_RequestHeaderInfoType()},
+                    imsx_POXBody = new imsx_POXBodyType {Item = new readResultRequest()}
                 };
 
                 var imsxHeader = (imsx_RequestHeaderInfoType)imsxEnvelope.imsx_POXHeader.Item;
@@ -323,6 +323,8 @@ namespace LtiLibrary.NetCore.Clients
                             outcomeResponse.StatusCode = imsxResponseStatus == imsx_CodeMajorType.success
                                 ? HttpStatusCode.OK
                                 : HttpStatusCode.BadRequest;
+                            outcomeResponse.Severity = imsxResponseHeader.imsx_statusInfo.imsx_severity;
+                            outcomeResponse.MinorCode = imsxResponseHeader.imsx_statusInfo.imsx_codeMinor;
                         }
 #if DEBUG
                         outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync

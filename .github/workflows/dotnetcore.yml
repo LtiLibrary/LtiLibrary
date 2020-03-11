@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy: 
       matrix:
-        dotnet: [2.1.202, 3.1.101]
+        dotnet: [2.1.202]
 
     steps:
     - uses: actions/checkout@v2

@@ -13,7 +13,7 @@
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/LtiLibrary/LtiLibrary</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

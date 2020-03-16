@@ -23,4 +23,15 @@ jobs:
       run: dotnet build --configuration Release
     - name: Run Tests
       run: dotnet test --configuration Release --results-directory artifacts --no-build
+    - name: Package
+      if: github.event_name != 'pull_request'
+      run: dotnet pack --configuration Release --no-build
+    - name: Setup nuget config
+      run: sed 's/GITHUB_TOKEN/${{ secrets.GITHUB_TOKEN }}/g' .nuget.config > nuget.config
+    - name: Publish nuget
+      run: dotnet nuget push src/bin/Release/*.nupkg -s "github"
+
+        
+        
+        
       

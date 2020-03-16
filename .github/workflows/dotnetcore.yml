@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+    - name: Restore NuGet
+      run: dotnet restore --source nuget
     - name: Build
       run: dotnet build --configuration Release
     - name: Run Tests

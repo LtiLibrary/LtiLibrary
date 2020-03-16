@@ -20,7 +20,7 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet }}
     - name: Restore NuGet
-      run: dotnet restore --source nuget
+      run: dotnet restore --source "nuget"
     - name: Build
       run: dotnet build --configuration Release
     - name: Run Tests

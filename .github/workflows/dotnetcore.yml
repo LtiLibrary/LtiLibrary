@@ -19,10 +19,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
-    - name: Configure add GPR source
-      run: nuget sources Add -Name "GitHub" -Source "https://nuget.pkg.github.com/LtiLibrary/index.json"
-    - name: Set Api Key
-      run: nuget setApiKey ${{ secrets.GITHUB_TOKEN }} -Source "https://nuget.pkg.github.com/LtiLibrary/index.json"
+        source-url: https://nuget.pkg.github.com/LtiLibrary/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     - name: Build
       run: dotnet build --configuration Release
     - name: Run Tests
@@ -31,4 +30,4 @@ jobs:
       if: github.event_name != 'pull_request'
       run: dotnet pack --configuration Release --no-build
     - name: Publish nuget
-      run: dotnet nuget push src/bin/Release/*.nupkg -s "GitHub" #-k ${{ secrets.GITHUB_TOKEN }}
+      run: dotnet nuget push src/bin/Release/*.nupkg

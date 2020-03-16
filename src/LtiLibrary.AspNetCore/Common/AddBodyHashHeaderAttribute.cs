@@ -45,7 +45,7 @@ namespace LtiLibrary.AspNetCore.Common
                 }
             }
 
-            await next();
+            await next().ConfigureAwait(false);
         }
     }
 }

@@ -84,6 +84,42 @@ namespace LtiLibrary.AspNetCore.Tests.Membership
             Assert.Equal(clientResponse.Response[0].Role[0], ContextRole.Instructor);
         }
 
+         [Fact]
+         public async Task ReturnsInstructors_WhenRoleFilterIsInstructorWithNoBaseAddress()
+         {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync with the Learner role filter
+            var client = _server.CreateClient();
+            client.BaseAddress = null;
+            var clientResponse = await MembershipClient.GetMembershipAsync(client, "http://localhost/ims/membership/context/context-1", Key, Secret, role: ContextRole.Instructor);
+            // Then I get an OK response
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And there is exactly one membership
+            Assert.Equal(1, clientResponse.Response.Count);
+            // And the role is Instructor
+            Assert.Equal(clientResponse.Response[0].Role[0], ContextRole.Instructor);
+         }
+
+         [Fact]
+         public async Task ReturnsInstructors_WhenRoleFilterIsInstructorWithExtendedBaseAddress()
+         {
+            // Given a working LTI Membership Service endpoint
+            // When I call GetMembershipAsync with the Learner role filter
+            var client = _server.CreateClient();
+            client.BaseAddress = new Uri("http://localhost/ims/");
+            var clientResponse = await MembershipClient.GetMembershipAsync(client, "membership/context/context-1", Key, Secret, role: ContextRole.Instructor);
+            // Then I get an OK response
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            // And the response is not null
+            Assert.NotNull(clientResponse.Response);
+            // And there is exactly one membership
+            Assert.Equal(1, clientResponse.Response.Count);
+            // And the role is Instructor
+            Assert.Equal(clientResponse.Response[0].Role[0], ContextRole.Instructor);
+         }
+
         [Fact]
         public async Task ReturnsLearners_WhenRoleFilterIsLearner()
         {

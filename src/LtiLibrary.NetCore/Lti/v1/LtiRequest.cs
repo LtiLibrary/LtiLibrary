@@ -2229,12 +2229,6 @@ namespace LtiLibrary.NetCore.Lti.v1
                 throw new ArgumentException($"{nameof(value)} cannot be null.");
             }
 
-            // Trim any whitespace that surrounds the name
-            name = name.Trim();
-
-            // Trim any whitespace that surrounds the value
-            value = value.Trim();
-
             // At this point the value may contain custom substitution
             // variables. They will be substituted immediately before launch.
             InternalParameters.Add(name, value);

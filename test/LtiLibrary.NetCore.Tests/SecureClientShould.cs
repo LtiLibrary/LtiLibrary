@@ -21,8 +21,12 @@ namespace LtiLibrary.NetCore.Tests
             //arrange
             var httpClient = new HttpClient();
 
+            var requestMessage = new HttpRequestMessage(HttpMethod.Get, "https://www.test.com/membership") 
+            {
+                Content = new StringContent("", System.Text.Encoding.UTF8)
+            };
             //act
-            await SecuredClient.SignRequest(httpClient, new HttpMethod("GET"), "https://www.test.com/membership", new StringContent("", System.Text.Encoding.UTF8), "TestConsumerKey",
+            await SecuredClient.SignRequest(httpClient, requestMessage, "TestConsumerKey",
                 "TestConsumerSecret", SignatureMethod.HmacSha256);
 
             //assert

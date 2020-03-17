@@ -30,10 +30,9 @@ namespace LtiLibrary.NetCore.Tests
                 "TestConsumerSecret", SignatureMethod.HmacSha256);
 
             //assert
-            Assert.NotNull(httpClient);
-            Assert.NotNull(httpClient.DefaultRequestHeaders);
-            Assert.NotNull(httpClient.DefaultRequestHeaders.Authorization);
-            var headervalues = httpClient.DefaultRequestHeaders.Authorization.Parameter;
+            Assert.NotNull(requestMessage.Headers);
+            Assert.NotNull(requestMessage.Headers.Authorization);
+            var headervalues = requestMessage.Headers.Authorization.Parameter;
             var headerValuesList = headervalues.Split(',');
             Assert.True(headervalues.Contains("oauth_signature_method=\"HMAC-SHA256\""));
         }

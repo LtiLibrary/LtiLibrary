@@ -19,7 +19,8 @@ namespace LtiLibrary.AspNetCore.Tests.BasicLaunch
                 Nonce = "f68bdf5dbed34d7aa6ff18456bf3185e",
                 ResourceLinkId = "link",
                 Timestamp = 1517630398,
-                Url = Request.GetUri()
+                Url = Request.GetUri(),
+                LaunchPresentationLocale = "en-US"
             };
             await Response.WriteLtiRequest(request, "secret");
         }

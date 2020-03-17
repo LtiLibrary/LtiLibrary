@@ -3,7 +3,7 @@ There are two .NET Core 2.0 projects in this solution to support IMS LTI Tool Pr
 
 See the [LtiLibrary1.6 repository](https://github.com/andyfmiller/LtiLibrary1.6) for the last non-.NET Core source for LtiLibrary.
 
-[![Discord](https://img.shields.io/discord/643735856406069248)](https://discord.gg/DQ2t32h)  
+[![Discord](https://img.shields.io/discord/643735856406069248?label=Discord chat)](https://discord.gg/DQ2t32h)  
 ![GitHub](https://img.shields.io/github/license/LtiLibrary/LtiLibrary)
 
 ## LtiLibrary.NetCore

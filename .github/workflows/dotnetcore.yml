@@ -15,6 +15,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Build Reason
+      run: "echo ref: ${{github.ref}} event: ${{github.event_name}}"
+    - name: Build Version
+      id: version
+      uses: thefringeninja/action-minver
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:

@@ -37,7 +37,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
             {
                 ImsxResponseSerializer.Serialize(writer, context.Object);
-                await writer.FlushAsync();
+                await writer.FlushAsync().ConfigureAwait(false);
             }
         }
     }

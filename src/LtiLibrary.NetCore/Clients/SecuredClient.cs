@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -17,46 +17,47 @@ namespace LtiLibrary.NetCore.Clients
         /// <summary>
         /// Add a signed authorization header to the client request using the signatureMethod.
         /// </summary>
-        /// <param name="client">The HttpClient that will make the request.</param>
-        /// <param name="method">The HttpMethod of the request.</param>
-        /// <param name="serviceUrl">The service URL.</param>
-        /// <param name="content">The Content of the request (used to calculate the body hash).</param>
+        /// <param name="client">May need BaseAddress value from this</param>
+        /// <param name="request">The request object that will be sent</param>
         /// <param name="consumerKey">The OAuth consumer key.</param>
         /// <param name="consumerSecret">The OAuth consumer secret.</param>
         /// <param name="signatureMethod">The SignatureMethod used to sign the request.</param>
         /// <returns></returns>
-        public static async Task SignRequest(HttpClient client, HttpMethod method, string serviceUrl,
-            HttpContent content, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
+        public static async Task SignRequest(HttpClient client, HttpRequestMessage request, string consumerKey, string consumerSecret, SignatureMethod signatureMethod)
         {
             if (client == null)
             {
-                throw new ArgumentNullException(nameof(client));
+               throw new ArgumentNullException(nameof(client));
             }
 
-            if (string.IsNullOrEmpty(serviceUrl))
+            if (request == null)
             {
-                throw new ArgumentNullException(nameof(serviceUrl));
+                throw new ArgumentNullException(nameof(request));
             }
 
-            var serviceUri = new Uri(serviceUrl, UriKind.RelativeOrAbsolute);
-            if (!serviceUri.IsAbsoluteUri)
+            string serviceUrl = request.RequestUri.OriginalString;
+
+            if (!request.RequestUri.IsAbsoluteUri)
             {
-                if (client.BaseAddress == null)
+                if (!string.IsNullOrWhiteSpace(client.BaseAddress.PathAndQuery) && client.BaseAddress.PathAndQuery != "/")
                 {
-                    throw new LtiException("If serviceUrl is relative, client.BaseAddress cannot be null.");
-                }
 
-                if (!Uri.TryCreate(client.BaseAddress, serviceUrl, out serviceUri))
+                    // This is trying to replicate the behavior of httpclient combining base address with a relative path - 
+                    // if a path is in the base address, it MUST have a trailing slash, and the relative url must NOT,
+                    // so this simple combination should work
+                    serviceUrl = client.BaseAddress.AbsoluteUri + serviceUrl;
+                }
+                else
                 {
-                    throw new LtiException($"Cannot form a valid URI from {client.BaseAddress} and {serviceUrl}.");
+                    serviceUrl = new Uri(client.BaseAddress, serviceUrl).AbsoluteUri;
                 }
             }
-            
+
             var ltiRequest = new LtiRequest(LtiConstants.LtiOauthBodyHashMessageType)
             {
                 ConsumerKey = consumerKey,
-                HttpMethod = method.Method,
-                Url = serviceUri
+                HttpMethod = request.Method.Method,
+                Url = new Uri(serviceUrl)
             };
 
             AuthenticationHeaderValue authorizationHeader;
@@ -85,12 +86,12 @@ namespace LtiLibrary.NetCore.Clients
             // Create an Authorization header using the body hash
             using (sha)
             {
-                var hash = sha.ComputeHash(await content.ReadAsByteArrayAsync());
+                var hash = sha.ComputeHash(await (request.Content ?? new StringContent(string.Empty)).ReadAsByteArrayAsync().ConfigureAwait(false));
                 authorizationHeader = ltiRequest.GenerateAuthorizationHeader(hash, consumerSecret);
             }
 
             // Attach the header to the client request
-            client.DefaultRequestHeaders.Authorization = authorizationHeader;
+            request.Headers.Authorization = authorizationHeader;
         }
     }
 }

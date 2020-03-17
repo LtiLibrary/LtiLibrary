@@ -23,7 +23,8 @@ namespace LtiLibrary.AspNetCore.Extensions
             // Normal LTI launch with form parameters
             if (request.HasFormContentType)
             {
-                var messageType = request.Form[LtiConstants.LtiMessageTypeParameter][0] ?? string.Empty;
+                var messageTypeArray = request.Form[LtiConstants.LtiMessageTypeParameter];
+                var messageType = messageTypeArray.Count > 0 ? messageTypeArray[0] : string.Empty;
                 return request.Method.Equals("POST")
                        && (
                            messageType.Equals(LtiConstants.BasicLaunchLtiMessageType,

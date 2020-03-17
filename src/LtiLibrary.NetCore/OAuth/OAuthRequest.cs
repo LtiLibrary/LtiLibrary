@@ -298,7 +298,7 @@ namespace LtiLibrary.NetCore.OAuth
         /// <param name="parametersIn">The collection of parameters to sign</param>
         /// <param name="consumerSecret">The OAuth consumer secret used to generate the signature</param>
         /// <returns>A base64 string of the hash value</returns>
-        private static string GenerateSignature(string httpMethod, Uri url, NameValueCollection parametersIn, string consumerSecret)
+        public static string GenerateSignature(string httpMethod, Uri url, NameValueCollection parametersIn, string consumerSecret)
         {
             // Work with a copy of the parameters so the caller's data is not changed
             var parameters = new NameValueCollection(parametersIn);

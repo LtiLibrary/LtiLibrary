@@ -4,7 +4,6 @@ There are two .NET Core 2.0 projects in this solution to support IMS LTI Tool Pr
 See the [LtiLibrary1.6 repository](https://github.com/andyfmiller/LtiLibrary1.6) for the last non-.NET Core source for LtiLibrary.
 
 [![Discord](https://img.shields.io/discord/643735856406069248)](https://discord.gg/DQ2t32h)  
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/LtiLibrary/LtiLibrary/.NET%20Core)  
 ![GitHub](https://img.shields.io/github/license/LtiLibrary/LtiLibrary)
 
 ## LtiLibrary.NetCore
@@ -26,8 +25,8 @@ There are also two xUnit test projects: one for each project above. These can be
 
 | CI | Env | Status |
 | --- | --- | --- |
-| AppVeyor | Windows | [![Build status](https://ci.appveyor.com/api/projects/status/qpkjtvp91mra9ogr?svg=true)](https://ci.appveyor.com/project/andyfmiller/ltilibrary) |
-| travis-ci | Ubuntu | [![Build Status](https://travis-ci.org/andyfmiller/LtiLibrary.svg?branch=master)](https://travis-ci.org/andyfmiller/LtiLibrary) |
+| GitHub | Windows | ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/LtiLibrary/LtiLibrary/.NET%20Core)  
+
 
 ## NuGet Status
 

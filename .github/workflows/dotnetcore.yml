@@ -42,4 +42,5 @@ jobs:
       if: github.event_name != 'pull_request'
       run: dotnet pack --configuration Release --no-build
     - name: Publish nuget
+      if: github.event_name != 'pull_request'
       run: dotnet nuget push src/*/bin/Release/*.nupkg

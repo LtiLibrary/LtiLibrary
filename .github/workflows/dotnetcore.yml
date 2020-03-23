@@ -44,3 +44,11 @@ jobs:
     - name: Publish nuget
       if: github.event_name != 'pull_request'
       run: dotnet nuget push src/*/bin/Release/*.nupkg
+    - name: Publish Release Packages
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: dotnet nuget push src/*/bin/Release/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_TOKEN }}
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: artifacts
+        path: artifacts

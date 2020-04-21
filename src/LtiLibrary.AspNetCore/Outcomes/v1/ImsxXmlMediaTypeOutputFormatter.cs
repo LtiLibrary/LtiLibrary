@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -34,10 +35,16 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             var response = context.HttpContext.Response;
             response.ContentType = context.ContentType.Value ?? "application/xml";
 
-            using (var writer = context.WriterFactory(response.Body, Encoding.UTF8))
+
+            using (var ms = new MemoryStream())
             {
-                ImsxResponseSerializer.Serialize(writer, context.Object);
-                await writer.FlushAsync().ConfigureAwait(false);
+                using (var writer = context.WriterFactory(ms, Encoding.UTF8))
+                {
+                    ImsxResponseSerializer.Serialize(writer, context.Object);
+                    await writer.FlushAsync().ConfigureAwait(false);
+                }
+
+                await response.Body.WriteAsync(ms.ToArray(), 0, (int)ms.Length);
             }
         }
     }

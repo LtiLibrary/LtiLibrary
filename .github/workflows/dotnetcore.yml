@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Fetch tags
       run: |
-        git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+        git fetch origin +refs/tags/*:refs/tags/*
         git fetch --prune --unshallow
     - name: Build Reason
       run: "echo ref: ${{github.ref}} event: ${{github.event_name}}"

@@ -14,7 +14,6 @@ namespace LtiLibrary.AspNetCore.Profiles
     /// Unless it is overridden, the route for this controller will be "ims/[controller]" named "ToolConsumerProfileApi".
     /// </remarks>
     [Route("ims/[controller]", Name = "ToolConsumerProfileApi")]
-    [Consumes(LtiConstants.LtiToolConsumerProfileMediaType)]
     [Produces(LtiConstants.LtiToolConsumerProfileMediaType)]
     public abstract class ToolConsumerProfileControllerBase : Controller
     {

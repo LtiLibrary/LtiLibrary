@@ -18,7 +18,6 @@ namespace LtiLibrary.AspNetCore.Membership
     /// </remarks>
     [AddBodyHashHeader]
     [Route("ims/[controller]/context/{contextid}", Name = "MembershipApi")]
-    [Consumes(LtiConstants.LisMembershipContainerMediaType)]
     [Produces(LtiConstants.LisMembershipContainerMediaType)]
     public abstract class MembershipControllerBase : Controller
     {

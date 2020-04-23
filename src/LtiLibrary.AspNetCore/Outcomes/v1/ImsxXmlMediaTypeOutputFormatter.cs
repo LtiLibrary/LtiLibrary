@@ -44,7 +44,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
                     await writer.FlushAsync().ConfigureAwait(false);
                 }
 
-                await response.Body.WriteAsync(ms.ToArray(), 0, (int)ms.Length);
+                await response.Body.WriteAsync(ms.ToArray(), 0, (int)ms.Length).ConfigureAwait(false);
             }
         }
     }

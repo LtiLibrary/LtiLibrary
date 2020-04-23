@@ -6,6 +6,7 @@ using LtiLibrary.NetCore.Common;
 using LtiLibrary.NetCore.Lti.v1;
 using LtiLibrary.NetCore.OAuth;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace LtiLibrary.AspNetCore.Extensions
 {
@@ -17,29 +18,55 @@ namespace LtiLibrary.AspNetCore.Extensions
         /// <summary>
         /// Get a value indicating whether the current request is authenticated
         /// using LTI.
+        /// Warning: This method uses request.Form which may be problematic.
+        /// See here: https://github.com/dotnet/aspnetcore/blob/master/src/Http/Http/src/Features/FormFeature.cs#L100
         /// </summary>
         public static bool IsAuthenticatedWithLti(this HttpRequest request)
         {
             // Normal LTI launch with form parameters
             if (request.HasFormContentType)
             {
-                var messageTypeArray = request.Form[LtiConstants.LtiMessageTypeParameter];
-                var messageType = messageTypeArray.Count > 0 ? messageTypeArray[0] : string.Empty;
-                return request.Method.Equals("POST")
-                       && (
-                           messageType.Equals(LtiConstants.BasicLaunchLtiMessageType,
-                               StringComparison.OrdinalIgnoreCase)
-                           || messageType.Equals(LtiConstants.ContentItemSelectionRequestLtiMessageType,
-                               StringComparison.OrdinalIgnoreCase)
-                           || messageType.Equals(LtiConstants.ContentItemSelectionLtiMessageType,
-                               StringComparison.OrdinalIgnoreCase)
-                       );
+                StringValues messageTypeArray = request.Form[LtiConstants.LtiMessageTypeParameter];
+                string messageType = messageTypeArray.Count > 0 ? messageTypeArray[0] : string.Empty;
+                return PostMessageIsAuthenticated( request, messageType );
             }
 
             // Otherwise look for an OAuth Authorization header
             return request.ParseAuthenticationHeader().HasKeys();
         }
 
+        /// <summary>
+        /// Get a value indicating whether the current request is authenticated
+        /// using LTI.
+        /// </summary>
+        public static async Task<bool> IsAuthenticatedWithLtiAsync(this HttpRequest request)
+        {
+            // Normal LTI launch with form parameters
+            if (request.HasFormContentType)
+            {
+                IFormCollection requestForm = await request.ReadFormAsync();
+                StringValues messageTypeArray = requestForm[LtiConstants.LtiMessageTypeParameter];
+                string messageType = messageTypeArray.Count > 0 ? messageTypeArray[0] : string.Empty;
+                return PostMessageIsAuthenticated( request, messageType );
+            }
+
+            // Otherwise look for an OAuth Authorization header
+            return request.ParseAuthenticationHeader().HasKeys();
+        }
+
+        private static bool PostMessageIsAuthenticated( HttpRequest request, string messageType )
+        {
+         return request.Method.Equals( "POST" )
+                && (
+                    messageType.Equals( LtiConstants.BasicLaunchLtiMessageType,
+                        StringComparison.OrdinalIgnoreCase )
+                    || messageType.Equals( LtiConstants.ContentItemSelectionRequestLtiMessageType,
+                        StringComparison.OrdinalIgnoreCase )
+                    || messageType.Equals( LtiConstants.ContentItemSelectionLtiMessageType,
+                         StringComparison.OrdinalIgnoreCase )
+                 );
+        }
+      
         /// <summary>
         /// Parse the Authentication header into a <see cref="NameValueCollection"/> of OAuth parameters.
         /// Non-OAuth parameters are ignored.

@@ -37,7 +37,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/{OutcomesDataFixture.LineItemId}";
             var clientResponse = await Outcomes2Client.GetLineItemAsync(_client, url, Key, Secret);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.NotFound, $"{clientResponse.StatusCode} == {HttpStatusCode.NotFound}");
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
             var clientResponse = await Outcomes2Client.GetLineItemsAsync(_client, url, Key, Secret, limit: 10);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"{clientResponse.StatusCode} == {HttpStatusCode.NotFound}");
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -58,9 +58,9 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
             var clientResponse = await Outcomes2Client.PostLineItemAsync(_client, url, Key, Secret, lineitem);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.Created, $"clientResponse.StatusCode == {HttpStatusCode.Created}");
-            Assert.True(clientResponse.Response.Id != null, "clientResponse.Response.Id != null");
-            Assert.True(clientResponse.Response.LineItemOf.ContextId == OutcomesDataFixture.ContextId, $"clientResponse.Response.LineItemOf.ContextId == {OutcomesDataFixture.ContextId}");
+            Assert.Equal(HttpStatusCode.Created, clientResponse.StatusCode);
+            Assert.NotNull(clientResponse.Response.Id);
+            Assert.Equal(OutcomesDataFixture.ContextId, clientResponse.Response.LineItemOf.ContextId);
         }
 
         [Fact]
@@ -74,9 +74,9 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             url = clientResponse.Response.Id.AbsoluteUri;
             clientResponse = await Outcomes2Client.GetLineItemAsync(_client, url, Key, Secret);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
-            Assert.True(clientResponse.Response.Id.AbsoluteUri == url, $"clientResponse.Response.Id == {url}");
-            Assert.True(clientResponse.Response.LineItemOf.ContextId == OutcomesDataFixture.ContextId, $"clientResponse.Response.LineItemOf.ContextId == {OutcomesDataFixture.ContextId}");
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
+            Assert.Equal(url, clientResponse.Response.Id.AbsoluteUri);
+            Assert.Equal(OutcomesDataFixture.ContextId, clientResponse.Response.LineItemOf.ContextId);
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
             var clientResponse = await Outcomes2Client.PostLineItemAsync(_client, url, Key, Secret, lineitem);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.Created, $"clientResponse.StatusCode == {HttpStatusCode.Created}");
+            Assert.Equal(HttpStatusCode.Created, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
             var clientResponse = await Outcomes2Client.PostLineItemAsync(_client, url, Key, "nosecret", lineitem);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.Unauthorized, $"clientResponse.StatusCode == {HttpStatusCode.Unauthorized}");
+            Assert.Equal(HttpStatusCode.Unauthorized, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -109,7 +109,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems";
             var clientResponse = await Outcomes2Client.PutLineItemAsync(_client, url, Key, Secret, lineitem);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.NotFound, $"clientResponse.StatusCode == {HttpStatusCode.NotFound}");
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -124,11 +124,11 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             lineitem.Label = "Updated";
             var clientResponse = await Outcomes2Client.PutLineItemAsync(_client, lineitem.Id.AbsoluteUri, Key, Secret, lineitem);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
 
             var readResponse = await Outcomes2Client.GetLineItemAsync(_client, lineitem.Id.AbsoluteUri, Key, Secret);
-            Assert.True(readResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
-            Assert.True(readResponse.Response.Label == "Updated", "LineItem.Label == \"Updated\"");
+            Assert.Equal(HttpStatusCode.OK, readResponse.StatusCode);
+            Assert.Equal("Updated", readResponse.Response.Label);
         }
 
         [Fact]
@@ -139,7 +139,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
 
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/lineitem-1";
             var clientResponse = await Outcomes2Client.PutLineItemAsync(_client, url, Key, "nosecret", lineitem);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.Unauthorized, $"{clientResponse.StatusCode} == {HttpStatusCode.Unauthorized}");
+            Assert.Equal(HttpStatusCode.Unauthorized, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             _fixture.InitializeData();
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/nolineitem";
             var clientResponse = await Outcomes2Client.DeleteLineItemAsync(_client, url, Key, Secret);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.NotFound, $"{clientResponse.StatusCode} == {HttpStatusCode.NotFound}");
+            Assert.Equal(HttpStatusCode.NotFound, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -157,7 +157,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             _fixture.InitializeData();
             var url = $"/ims/courses/{OutcomesDataFixture.ContextId}/lineitems/nolineitem";
             var clientResponse = await Outcomes2Client.DeleteLineItemAsync(_client, url, Key, "nosecret");
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.Unauthorized, $"{clientResponse.StatusCode} == {HttpStatusCode.Unauthorized}");
+            Assert.Equal(HttpStatusCode.Unauthorized, clientResponse.StatusCode);
         }
 
         [Fact]
@@ -171,7 +171,7 @@ namespace LtiLibrary.AspNetCore.Tests.Outcomes.v2
             lineitem = postResponse.Response;
 
             var clientResponse = await Outcomes2Client.DeleteLineItemAsync(_client, lineitem.Id.AbsoluteUri, Key, Secret);
-            Assert.True(clientResponse.StatusCode == HttpStatusCode.OK, $"clientResponse.StatusCode == {HttpStatusCode.OK}");
+            Assert.Equal(HttpStatusCode.OK, clientResponse.StatusCode);
         }
 
         public void Dispose()

@@ -19,7 +19,7 @@ namespace LtiLibrary.AspNetCore.Tests
         {
             services.AddMvc(opt =>
             {
-                opt.EnableEndpointRouting = true;
+                opt.EnableEndpointRouting = false;
             });
             services.AddLogging(opt =>
             {

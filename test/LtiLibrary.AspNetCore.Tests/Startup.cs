@@ -20,12 +20,13 @@ namespace LtiLibrary.AspNetCore.Tests
             services.AddMvc(opt =>
             {
                 opt.EnableEndpointRouting = false;
-            });
+            }).AddNewtonsoftJson();
             services.AddLogging(opt =>
             {
                 opt.AddConsole();
                 opt.AddDebug();
             });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

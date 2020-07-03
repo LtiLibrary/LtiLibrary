@@ -75,7 +75,22 @@ namespace LtiLibrary.NetCore.Tests
         [Fact]
         private void ContextRolesAreConvertedFromJsonLdObjects()
         {
-            var contextRole = JsonConvert.DeserializeObject<RoleTestObject>("{ roles: [\"lism:Instructor\"] }");
+            var expectedContextRoles = new ContextRole[]
+            {
+                ContextRole.Instructor,
+                ContextRole.Administrator,
+                ContextRole.Learner,
+                ContextRole.ContentDeveloper
+            };
+
+            var inputContextRoles = "{ roles: [ " +
+                "\"lism:Instructor\", " +
+                "\"http://purl.imsglobal.org/vocab/lis/v2/person#Administrator\", " +
+                "\"Learner\", " +
+                "\"urn:lti:role:ims/lis/ContentDeveloper/ContentExpert\"" +
+            "]}";
+            var actualContextRoles = JsonConvert.DeserializeObject<RoleTestObject>(inputContextRoles);
+            Assert.Equal(actualContextRoles.Roles, expectedContextRoles);
         }
     }
 

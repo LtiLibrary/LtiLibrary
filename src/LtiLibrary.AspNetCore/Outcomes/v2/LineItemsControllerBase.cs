@@ -16,8 +16,6 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
     /// </summary>
     [AddBodyHashHeader]
     [Route("ims/courses/{contextId}/lineitems/{id?}", Name = "LineItemsApi")]
-    [Consumes(LtiConstants.LisLineItemMediaType, LtiConstants.LisLineItemResultsMediaType, LtiConstants.LisLineItemContainerMediaType)]
-    [Produces(LtiConstants.LisLineItemMediaType, LtiConstants.LisLineItemResultsMediaType, LtiConstants.LisLineItemContainerMediaType)]
     public abstract class LineItemsControllerBase : Controller
     {
         /// <summary>
@@ -87,6 +85,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Get a paginated list of LineItem resources from a LineItemContainer, or get a representation of a particular LineItem instance.
         /// </summary>
         [HttpGet]
+        [Produces(LtiConstants.LisLineItemMediaType, LtiConstants.LisLineItemResultsMediaType)]
         public async Task<IActionResult> GetAsync(string contextId = null, string id = null, int? limit = null, string activityId = null, string firstPage = null, int? p = null)
         {
             try
@@ -156,6 +155,8 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// </summary>
         //[HttpPost("courses/{contextId}/lineitems/{id?}")]
         [HttpPost]
+        [Consumes(LtiConstants.LisLineItemMediaType)]
+        [Produces(LtiConstants.LisLineItemMediaType)]
         public async Task<IActionResult> PostAsync(string contextId, [ModelBinder(BinderType = typeof(LineItemModelBinder))] LineItem lineItem)
         {
             try
@@ -180,6 +181,8 @@ namespace LtiLibrary.AspNetCore.Outcomes.v2
         /// Update a particular LineItem instance.
         /// </summary>
         [HttpPut]
+        [Consumes(LtiConstants.LisLineItemMediaType)]
+        [Produces(LtiConstants.LisLineItemMediaType)]
         public async Task<IActionResult> PutAsync([ModelBinder(BinderType = typeof(LineItemModelBinder))] LineItem lineItem)
         {
             try

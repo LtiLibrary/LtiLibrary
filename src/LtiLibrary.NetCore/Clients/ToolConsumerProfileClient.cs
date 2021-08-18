@@ -20,11 +20,10 @@ namespace LtiLibrary.NetCore.Clients
         /// <returns>A <see cref="ClientResponse"/> with the <see cref="ToolConsumerProfile"/> successful.</returns>
         public static async Task<ClientResponse<ToolConsumerProfile>> GetToolConsumerProfileAsync(HttpClient client, string serviceUrl)
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.LtiToolConsumerProfileMediaType));
-
             var profileResponse = new ClientResponse<ToolConsumerProfile>();
-            using (var response = await client.GetAsync(serviceUrl).ConfigureAwait(false))
+            HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
+            webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(LtiConstants.LtiToolConsumerProfileMediaType));
+            using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
             {
                 profileResponse.StatusCode = response.StatusCode;
                 if (response.IsSuccessStatusCode)
@@ -33,10 +32,8 @@ namespace LtiLibrary.NetCore.Clients
                         await response.Content.ReadJsonAsObjectAsync<ToolConsumerProfile>().ConfigureAwait(false);
                 }
 #if DEBUG
-                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync()
-                    .ConfigureAwait(false);
-                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync()
-                    .ConfigureAwait(false);
+                profileResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                profileResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
             }
             return profileResponse;

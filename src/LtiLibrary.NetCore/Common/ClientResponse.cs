@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LtiLibrary.NetCore.Lti.v1;
+using System;
 using System.Net;
 
 namespace LtiLibrary.NetCore.Common
@@ -27,6 +28,8 @@ namespace LtiLibrary.NetCore.Common
         /// String representation of the HttpWebResponse similar to Fiddler's.
         /// </summary>
         public string HttpResponse { get; set; }
+        public imsx_SeverityType Severity { get; internal set; }
+        public imsx_CodeMinorFieldType[] MinorCode { get; internal set; }
     }
 
     /// <summary>

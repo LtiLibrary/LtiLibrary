@@ -17,7 +17,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             null, null, new XmlRootAttribute("imsx_POXEnvelopeRequest"),
             "http://www.imsglobal.org/services/ltiv1p1/xsd/imsoms_v1p0");
 
-        public async Task BindModelAsync(ModelBindingContext bindingContext)
+        public Task BindModelAsync(ModelBindingContext bindingContext)
         {
             if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
 
@@ -42,7 +42,7 @@ namespace LtiLibrary.AspNetCore.Outcomes.v1
             }
 
             // To avoid warning that there are no await call in this async method
-            await Task.Yield();
+            return Task.CompletedTask;
         }
     }
 }

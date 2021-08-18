@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-#if NETSTANDARD2_0 
+#if NETSTANDARD2_0 || NETCOREAPP3_1
 using Microsoft.AspNetCore.Http;
 #else
 using Microsoft.AspNetCore.Http.Internal;
@@ -33,7 +33,7 @@ namespace LtiLibrary.AspNetCore.Common
             // HTTP: Synchronous IO disabled in all servers
             // https://docs.microsoft.com/en-us/dotnet/core/compatibility/2.2-3.0#http-synchronous-io-disabled-in-all-servers
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1
             request.EnableBuffering();
 #else
             request.EnableRewind();
@@ -74,7 +74,7 @@ namespace LtiLibrary.AspNetCore.Common
                 }
             }
 
-            await next();
+            await next().ConfigureAwait(false);
         }
     }
 }

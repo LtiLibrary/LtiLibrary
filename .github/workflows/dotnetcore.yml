@@ -1,0 +1,50 @@
+name: .NET Core
+
+on: [push, pull_request]
+
+jobs:
+  build:  
+    runs-on: windows-latest
+    strategy: 
+      matrix:
+        dotnet: [3.1.100]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Fetch tags
+      run: |
+        git fetch origin +refs/tags/*:refs/tags/*
+        git fetch --prune --unshallow
+    - name: Build Reason
+      run: "echo ref: ${{github.ref}} event: ${{github.event_name}}"
+    - name: Build Version
+      id: version
+      uses: thefringeninja/action-minver@2.0.0-preview1
+      with:
+        tag-prefix: v
+        verbosity: trace
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+        source-url: https://nuget.pkg.github.com/LtiLibrary/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    - name: Build
+      run: dotnet build --configuration Release
+    - name: Run Tests
+      run: dotnet test --configuration Release --results-directory artifacts --no-build
+    - name: Package
+      if: github.event_name != 'pull_request'
+      run: dotnet pack --configuration Release --no-build
+    - name: Publish nuget
+      if: github.event_name != 'pull_request'
+      run: dotnet nuget push src/*/bin/Release/*.nupkg
+    - name: Publish Release Packages
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: dotnet nuget push src/*/bin/Release/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_TOKEN }}
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: artifacts
+        path: artifacts

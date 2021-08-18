@@ -13,10 +13,15 @@
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/LtiLibrary/LtiLibrary</RepositoryUrl>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MinVer" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 

@@ -308,7 +308,7 @@ namespace LtiLibrary.NetCore.Tests
 
         [Theory]
         [InlineData("name", "value", "custom_name=value")]
-        [InlineData(" name ", " value ", "custom_name=value")]
+        [InlineData(" name ", " value ", "custom_name=%20value%20")]
         [InlineData("Review:Chapter", "1.2.56", "custom_review_chapter=1.2.56")]
         [InlineData("Username", "$User.Username", "custom_username=amiller")]
         public void AddIndividualCustomParameters(string name, string value, string customParameters)

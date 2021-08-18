@@ -17,15 +17,21 @@ namespace LtiLibrary.AspNetCore.Tests
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(opt =>
+            {
+                opt.EnableEndpointRouting = false;
+            }).AddNewtonsoftJson();
+            services.AddLogging(opt =>
+            {
+                opt.AddConsole();
+                opt.AddDebug();
+            });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole();
-            loggerFactory.AddDebug();
-
             app.UseStaticFiles();
             app.Map("/basepath", a =>
             {

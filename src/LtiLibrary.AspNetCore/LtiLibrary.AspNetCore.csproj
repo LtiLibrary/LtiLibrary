@@ -6,14 +6,15 @@
     <AssemblyTitle>LtiLibrary.AspNetCore</AssemblyTitle>
     <Version>3.1.1</Version>
     <Authors>andyfmiller.com</Authors>
-    <TargetFrameworks>netstandard1.6;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.6;netstandard2.0;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>LtiLibrary.AspNetCore</AssemblyName>
     <PackageId>LtiLibrary.AspNetCore</PackageId>
     <PackageTags>IMS;LTI;.NET Core;ASP.NET Core</PackageTags>
     <PackageProjectUrl>https://github.com/andyfmiller/LtiLibrary</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/andyfmiller/LtiLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/andyfmiller/LtiLibrary.git</RepositoryUrl>
+    <RepositoryUrl>https://github.com/LtiLibrary/LtiLibrary</RepositoryUrl>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,6 +23,10 @@
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack.NetCore" Version="1.5.0.1" />
+    <PackageReference Include="MinVer" Version="2.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
@@ -31,12 +36,14 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http">
-      <Version>2.2.2</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>

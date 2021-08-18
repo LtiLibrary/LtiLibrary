@@ -7,6 +7,8 @@ namespace LtiLibrary.NetCore.Lis.v1
 {
     internal class JsonLdContextRoleConverter : StringEnumConverter
     {
+        private const string UrnPrefix = "urn:lti:role:ims/lis/";
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
@@ -31,7 +33,7 @@ namespace LtiLibrary.NetCore.Lis.v1
             {
                 if (value.Length > index)
                 {
-                    if (Enum.TryParse(value.Substring(5), out ContextRole contextRole))
+                    if (TryExtractRole(value, out ContextRole contextRole))
                     {
                         return contextRole;
                     }
@@ -59,6 +61,35 @@ namespace LtiLibrary.NetCore.Lis.v1
                 return;
             }
             base.WriteJson(writer, value, serializer);
+        }
+
+        private bool TryExtractRole(string source, out ContextRole role)
+        {
+            var roleFound = true;
+            role = default(ContextRole);
+
+            do
+            {
+                // Parse cases like lism:<role>
+                int start = source.IndexOf(':') + 1;
+                if (Enum.TryParse(source.Substring(start), out role))
+                    break;
+
+                // Parse cases like urn: urn:lti:role:ims/lis/<role>/<sub-role>
+                start = source.IndexOf(UrnPrefix) + UrnPrefix.Length;
+                var end = source.IndexOf('/', start);
+                if (Enum.TryParse(source.Substring(start, end - start), out role))
+                    break;
+
+                // Parse cases like uri: http://purl.imsglobal.org/vocab/lis/v2/mm#<role>
+                start = source.LastIndexOf('#') + 1;
+                if (Enum.TryParse(source.Substring(start), out role))
+                    break;
+
+                roleFound = false;
+            } while (!roleFound);
+
+            return roleFound;
         }
     }
 }

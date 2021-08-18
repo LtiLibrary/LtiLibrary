@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -164,8 +164,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> PutLineItemAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, 
             LineItem lineItem, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod)
-                .ConfigureAwait(false);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, lineItem, LtiConstants.LisLineItemMediaType, signatureMethod).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -201,8 +200,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> DeleteResultAsync(HttpClient client, string serviceUrl, string consumerKey,
             string consumerSecret, SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod)
-                .ConfigureAwait(false);
+            return await DeleteOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -289,8 +287,7 @@ namespace LtiLibrary.NetCore.Clients
         public static async Task<ClientResponse> PutResultAsync(HttpClient client, string serviceUrl, string consumerKey, string consumerSecret, Result result,
             SignatureMethod signatureMethod = SignatureMethod.HmacSha1)
         {
-            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod)
-                .ConfigureAwait(false);
+            return await PutOutcomeAsync(client, serviceUrl, consumerKey, consumerSecret, result, LtiConstants.LisResultMediaType, signatureMethod).ConfigureAwait(false);
         }
 
         #endregion
@@ -302,7 +299,8 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                await SecuredClient.SignRequest(client, HttpMethod.Delete, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Delete, serviceUrl);
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
 
                 var outcomeResponse = new ClientResponse();
                 try
@@ -310,12 +308,12 @@ namespace LtiLibrary.NetCore.Clients
                     // HttpClient does not send content in a DELETE request. So there is no Content-Type
                     // header. Therefore, all representations of the resource will be deleted.
                     // See https://www.imsglobal.org/lti/model/uml/purl.imsglobal.org/vocab/lis/v2/outcomes/LineItem/service.html#DELETE
-                    using (var response = await client.DeleteAsync(serviceUrl))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
                     }
                 }
@@ -348,24 +346,23 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-
-                await SecuredClient.SignRequest(client, HttpMethod.Get, serviceUrl, new StringContent(string.Empty), consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Get, serviceUrl);
+                webRequest.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
                 
                 var outcomeResponse = new ClientResponse<T>();
                 try
                 {
-                    using (var response = await client.GetAsync(serviceUrl))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
-                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>(deserializationErrorHandler);
+                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>(deserializationErrorHandler).ConfigureAwait(false);
                         }
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
                     }
                 }
@@ -428,23 +425,25 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
-
-                await SecuredClient.SignRequest(client, HttpMethod.Post, serviceUrl, httpContent, consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Post, serviceUrl)
+                {
+                    Content = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType)
+                };
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
 
                 var outcomeResponse = new ClientResponse<T>();
                 try
                 {
-                    using (var response = await client.PostAsync(serviceUrl, httpContent))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
                         if (response.StatusCode == HttpStatusCode.Created)
                         {
-                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>(deserializationErrorHandler);
+                            outcomeResponse.Response = await response.DeserializeJsonObjectAsync<T>(deserializationErrorHandler).ConfigureAwait(false);
                         }
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
                     }
                 }
@@ -476,19 +475,21 @@ namespace LtiLibrary.NetCore.Clients
         {
             try
             {
-                var httpContent = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType);
-
-                await SecuredClient.SignRequest(client, HttpMethod.Put, serviceUrl, httpContent, consumerKey, consumerSecret, signatureMethod);
+                HttpRequestMessage webRequest = new HttpRequestMessage(HttpMethod.Put, serviceUrl)
+                {
+                    Content = new StringContent(content.ToJsonLdString(), Encoding.UTF8, contentType)
+                };
+                await SecuredClient.SignRequest(client, webRequest, consumerKey, consumerSecret, signatureMethod).ConfigureAwait(false);
 
                 var outcomeResponse = new ClientResponse();
                 try
                 {
-                    using (var response = await client.PutAsync(serviceUrl, httpContent))
+                    using (var response = await client.SendAsync(webRequest).ConfigureAwait(false))
                     {
                         outcomeResponse.StatusCode = response.StatusCode;
 #if DEBUG
-                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync();
-                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync();
+                        outcomeResponse.HttpRequest = await response.RequestMessage.ToFormattedRequestStringAsync().ConfigureAwait(false);
+                        outcomeResponse.HttpResponse = await response.ToFormattedResponseStringAsync().ConfigureAwait(false);
 #endif
                     }
                 }

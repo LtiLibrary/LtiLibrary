@@ -1,5 +1,5 @@
 ﻿<html>
-<head><title></title></head>
+<head><title></title><meta charset='utf-8'/></head>
 <body>
 <form method='post' action='http://localhost/toolconsumer/launch' id='form'>
 <input type='hidden' name='oauth_callback' value='about:blank' />

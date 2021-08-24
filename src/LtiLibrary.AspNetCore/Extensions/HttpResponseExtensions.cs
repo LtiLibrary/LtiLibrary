@@ -22,7 +22,7 @@ namespace LtiLibrary.AspNetCore.Extensions
             request.Signature = request.SubstituteCustomVariablesAndGenerateSignature(consumerSecret);
             var form = new StringBuilder();
             form.AppendLine("<html>");
-            form.AppendLine("<head><title></title></head>");
+            form.AppendLine("<head><title></title><meta charset='utf-8'/></head>");
             form.AppendLine("<body>");
             form.AppendFormat("<form method='post' action='{0}' id='form'>", request.Url.AbsoluteUri).AppendLine();
             foreach (var pair in request.Parameters)

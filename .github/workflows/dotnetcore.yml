@@ -3,7 +3,8 @@ name: .NET Core
 on: 
   push:
   pull_request:
-  release: [published]
+  release: 
+    types: [published]
 
 jobs:
   build:  

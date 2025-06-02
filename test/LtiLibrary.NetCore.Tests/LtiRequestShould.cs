@@ -265,6 +265,28 @@ namespace LtiLibrary.NetCore.Tests
             var signature = request.GenerateSignature("secret");
             Assert.Equal(expectedSignature, signature);
         }
+        
+        [Theory]
+        [InlineData("HMAC-SHA1", "Dp8HRLM0OrWFVXwtzJVKCGV9aEM=")]
+        [InlineData("HMAC-SHA256", "w3gXRIoBPBEsXBQdFRc9DYsCXcp+k0yF/Zw+mW83uf8=")]
+        [InlineData("HMAC-SHA384", "pjJZpR+++g+mwqsRqbbNKUUdaaFA/gCXfXq5qCunJCmzkapKOYlqTq5r10mBlKQQ")]
+        [InlineData("HMAC-SHA512", "SJYrwBY6lthjf1IjttSbatoVLi942i0S7EXDKYIBIyD7eYE0fBzj+jELXouZP1KGqW4gCCvf+DX9oYfJfydRxQ==")]
+        public void GenerateKnownSignature_LaunchUrlWithQueryString_IncludesQueryString(string signatureMethod, string expectedSignature)
+        {
+            var request = new LtiRequest
+            {
+                BodyHash = "zxNf/lJoveI1hmN1ENbcdZdQ4Js=",
+                ConsumerKey = "jisc.ac.uk",
+                HttpMethod = HttpMethod.Post.Method,
+                Nonce = "83e29bff47b7690a3f6b371c77526405",
+                SignatureMethod = signatureMethod,
+                Timestamp = 1493164209,
+                Url = new Uri("http://lti.tools/test/tc-outcomes.php?lti-tool"),
+                Version = "1.0"
+            };
+            var signature = request.GenerateSignature("secret");
+            Assert.Equal(expectedSignature, signature);
+        }
 
         #endregion
 

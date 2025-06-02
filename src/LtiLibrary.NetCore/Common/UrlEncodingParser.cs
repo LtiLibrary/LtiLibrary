@@ -96,6 +96,10 @@ namespace LtiLibrary.NetCore.Common
                     {
                         Add(pair.Substring(0, index2), pair.Substring(index2 + 1));
                     }
+                    else
+                    {
+                        Add(pair, "");
+                    }
                 }
             }
 

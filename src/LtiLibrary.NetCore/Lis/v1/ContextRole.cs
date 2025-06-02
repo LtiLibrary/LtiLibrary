@@ -9,7 +9,7 @@ namespace LtiLibrary.NetCore.Lis.v1
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The role is one of the three main data items which is passed from the Tool Consumer
+    /// The role is one of the three main data items that are passed from the Tool Consumer
     /// when a user launches a Tool (the other two items are context and user).
     /// The role represents the level of privilege a user has been given within a context in a Tool Consumer. 
     /// Typical roles are learner, instructor and administrator.  
@@ -21,14 +21,14 @@ namespace LtiLibrary.NetCore.Lis.v1
     /// <para>
     /// Within an LTI request, if the namespace for a role is ommitted, then
     /// the context role namespace (urn:lti:rule:ims/lis/) is assumed. In practice, 
-    /// consumers typically take advantage of this an omit the namespace for context roles.
+    /// consumers typically take advantage of this and omit the namespace for context roles.
     /// For example,  they will send "Learner" rather than "urn:lti:role:ims/lis/Learner".
     /// </para>
     /// <para>
     /// Some consumers (including consumers using previous versions of this
     /// library) also omit the namespace for non-context roles. While this is
     /// not technically correct, you should be aware of that behavior and 
-    /// be ready to accept those non-context roles (e.g. Student).
+    /// be ready to accept those non-context roles (e.g., Student).
     /// </para>
     /// </remarks>
     [JsonConverter(typeof(JsonLdContextRoleConverter))]
@@ -107,12 +107,12 @@ namespace LtiLibrary.NetCore.Lis.v1
         /// <summary>
         /// </summary>
         [Urn("urn:lti:role:ims/lis/Instructor/ExternalInstructor")]
-        InstructorExternalInstuctor,
+        InstructorExternalInstructor,
 
         /// <summary>
         /// </summary>
         [Urn("urn:lti:role:ims/lis/Instructor/GuestInstructor")]
-        InstructorGuestInstuctor,
+        InstructorGuestInstructor,
 
         /// <summary>
         /// </summary>
@@ -122,7 +122,7 @@ namespace LtiLibrary.NetCore.Lis.v1
         /// <summary>
         /// </summary>
         [Urn("urn:lti:role:ims/lis/Instructor/PrimaryInstructor")]
-        InstructorPrimaryInstuctor,
+        InstructorPrimaryInstructor,
 
         /// <summary>
         /// </summary>
@@ -252,7 +252,7 @@ namespace LtiLibrary.NetCore.Lis.v1
         /// <summary>
         /// </summary>
         [Urn("urn:lti:role:ims/lis/TeachingAssistant/TeachingAssistantTemplate")]
-        TeachingAssistantTeachingAssistantTempltae,
+        TeachingAssistantTeachingAssistantTemplate,
 
         /// <summary>
         /// </summary>
